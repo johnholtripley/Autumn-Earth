@@ -13,17 +13,32 @@
 $itemsAvailable = array('wheat' => 'some wheat', 'field' => 'an empty field', 'wheatfield' => 'a wheat field', 'wheatseeds' => 'some wheat seeds');
 $priceList = array('wheat' => '100','eggs' => '200','wheatseeds' => '100');
 // [result], [array of pre-conditions]
+/*
 $actionsAvailable = array(
 array('use',array('own')),
 array('own',array('buy')),
-array('own',array('gather')),
-array('own',array('steal')),
-array('own:gold',array('sell')),
-array('buy',array('gold','at:market')),
-array('sell',array('x','at:market')),
+//array('own',array('gather')),
+//array('own',array('steal')),
+array('gold',array('sell')),
+array('buy',array('at:market','gold')),
+array('sell',array('own','at:market')),
 array('gather:wheat',array('at:wheatfield')),
 array('gather:wheat',array('at:field','plant:wheatseeds')),
 array('plant',array('own'))
+);
+*/
+
+
+// 'result' => [array of pre-conditions]
+$actionsAvailable = array(
+array('use' => array('own')),
+array('own' => array('buy')),
+array('gold' => array('sell')),
+array('buy' => array('at:market','gold')),
+array('sell' => array('own','at:market')),
+array('gather:wheat' => array('at:wheatfield')),
+array('gather:wheat' => array('at:field','plant:wheatseeds')),
+array('plant' => array('own'))
 );
 
 
@@ -31,10 +46,10 @@ array('plant',array('own'))
 
 // needs - [verb][noun][value/reward]:
 $thisNPCsNeeds = array(array("own","wheat","0"));
-$thisNPCsItems = array("pineapple");
+$thisNPCsItems = array("eggs");
 $thisNPCsLocation = "house";
-$thisNPCsGold = 500;
-$herosItems = array("eggs");
+$thisNPCsGold = 5;
+$herosItems = array("pineapple");
 
 // if more than 1 need, determine which is the most urgent:
 // ###############
@@ -45,37 +60,104 @@ $mostImportantNeed = 0;
 
 $needsQueue = array();
 $uncheckedQueue = array();
+$allCheckedNeeds = array();
 $endNodeList = array();
 
+
+
+class NPCneed {
+  public function __construct($parent, $key, $npcState) {
+    global $uncheckedQueue, $allCheckedNeeds;
+    $this->parent = $parent;
+
+    /*
+    // make a unique key
+    $thisNewKey = $key."/".$parent;
+    $thisNewKeySplit = explode("/", $thisNewKey);
+    if(end($thisNewKeySplit) != $location) {
+      $thisNewKey .= "/".$location;
+    }
+    $this->key = $thisNewKey;
+    */
+
+    $this->key = $key;
+    $this->npcState = $npcState;
+    array_push($uncheckedQueue, $this);
+    array_push($allCheckedNeeds, $this);
+  }
+  /*
+  public function getKey() {
+    return explode("/",$this->key)[0];
+  }
+  */
+}
+
+
+
+$thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
+$thisNPCsState = array("location" => $thisNPCsLocation, "gold" => $thisNPCsGold, "items" => $thisNPCsItems);
+new NPCneed("targetNeed", $thisArrayKey, $thisNPCsState);
+
+
+   echo "<pre>";
+   print_r(array_values($allCheckedNeeds));
+    echo "</pre>";
+
+
+
+
+$debugCounter = 0;
+do {
+  $thisNeed = array_shift($uncheckedQueue);
+  echo "<br>".$debugCounter.". checking ".$thisNeed->key ." (from ".$thisNeed->parent.") - current status: loc:".$thisNeed->npcState['location'].", £".$thisNeed->npcState['gold'].", items: ".implode(", ",$thisNeed->npcState['items'])."<br>";
+  $theseParameters = explode("_", $thisNeed->key);
+
+  switch($theseParameters[0]) {
+    case "own":
+    if (in_array($theseParameters[1], $thisNeed->npcState['items'])) {
+      echo "has needed item<br>";
+    }
+    break;
+  }
+
+  $debugCounter++;
+} while (count($uncheckedQueue) >0);
+
+
+
+
+
+
+
+
+/*
 // build array key:
 $thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
 // add array key in with value of parent:
 $needsQueue[$thisArrayKey] = "targetNeed";
 
-array_push($uncheckedQueue,$thisArrayKey);
+// array_push($uncheckedQueue,$thisArrayKey);
+new NPCneed("targetNeed", $thisArrayKey, $thisNPCsLocation);
 
 $currentGold = $thisNPCsGold;
 
-
+$debugCounter = 0;
 do {
-
 $thisNeedHasBeenMet = false;
-
 // remove this from list
 $thisNeed = array_shift($uncheckedQueue);
-
-echo "<br>checking ".$thisNeed ."...<br>";
-
-$theseParameters = explode("_", $thisNeed);
-
-
+echo "<br>".$debugCounter.". checking ".$thisNeed->getKey() ." (".$thisNeed->parent.")...<br>";
+$theseParameters = explode("_", $thisNeed->getKey());
 
 switch($theseParameters[0]) {
  case "own":
+
+
 // check inventory:
 if (in_array($theseParameters[1], $thisNPCsItems)) {
 $thisNeedHasBeenMet = true;
 }
+
 break;
 
  case "gold":
@@ -86,26 +168,29 @@ $currentGold -=$priceList[$theseParameters[1]];
 } else {
 // add a need of acquiring some gold:
 $thisArrayKey = "own_gold";
-        array_push($uncheckedQueue,$thisArrayKey);
-echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
-        $needsQueue[$thisArrayKey] = $thisNeed; 
+     //   array_push($uncheckedQueue,$thisArrayKey);
+         new NPCneed($thisNeed->key, $thisArrayKey, $thisNeed->location);
+echo $debugCounter.". adding £ ".$thisArrayKey." from ".$thisNeed->getKey()." to queue<br />";
+     //   $needsQueue[$thisArrayKey] = $thisNeed; 
 }
 break;
 
 case "goto":
-$thisNPCsLocation = $theseParameters[1];
+//$thisNPCsLocation = $theseParameters[1];
+$thisNeed->location = $theseParameters[1];
 $thisNeedHasBeenMet = true;
 break;
 
 case "at":
-if ($thisNPCsLocation == $theseParameters[1]) {
+if ($thisNeed->location == $theseParameters[1]) {
 $thisNeedHasBeenMet = true;
 } else {
 // add a need of getting to location:
 $thisArrayKey = "goto_".$theseParameters[1];
-        array_push($uncheckedQueue,$thisArrayKey);
-echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
-        $needsQueue[$thisArrayKey] = $thisNeed; 
+     // array_push($uncheckedQueue,$thisArrayKey);
+        new NPCneed($thisNeed->key, $thisArrayKey, $theseParameters[1]);
+echo $debugCounter.". adding ".$thisArrayKey." from ".$thisNeed->getKey()." to queue<br />";
+      //  $needsQueue[$thisArrayKey] = $thisNeed; 
 }
 break;
   
@@ -119,18 +204,31 @@ if (!$thisNeedHasBeenMet) {
       for ($j=0; $j<count($actionsAvailable[$i][1]); $j++) {
         // check if a noun exists for this precondition, if not, use the parent's noun:
         if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
+          
         $thisNoun = $theseParameters[1];
         $thisVerb = $actionsAvailable[$i][1][$j];
+if($thisVerb == "sell") {
+  // check for items to sell, don't use the parent (target) noun:
+  // check all sellable items and check if sell price covers the buy price of the target noun ################
+  $thisNoun = $thisNPCsItems[0];
+}
         } else {
         $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
         $thisNoun = $splitParameters[1];
         $thisVerb = $splitParameters[0];
         }
         $thisArrayKey = $thisVerb."_".$thisNoun;
-        array_push($uncheckedQueue,$thisArrayKey);
+
+        // can't buy gold:
+if($thisArrayKey != "buy_gold") {
+     //  array_push($uncheckedQueue,$thisArrayKey);
+        new NPCneed($thisNeed->key, $thisArrayKey, $thisNeed->location);
         // add reference to parent:
-        echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
-        $needsQueue[$thisArrayKey] = $thisNeed; 
+        echo $debugCounter.". adding ".$thisArrayKey." from ".$thisNeed->getKey()." to queue.<br />";
+        //$needsQueue[$thisArrayKey] = $thisNeed; 
+}
+
+ 
       }
     }
   }
@@ -140,12 +238,12 @@ if (!$thisNeedHasBeenMet) {
 
 array_push($endNodeList,$thisNeed);
 
-echo "need met at ".$thisNeed.".<br>";
+echo $debugCounter.". need met at ".$thisNeed->getKey()." - ".count($uncheckedQueue)." remaining<br>";
 }
 
 
 
-
+$debugCounter++;
 
 // keep looping while still options to check
 } while (count($uncheckedQueue) >0);
@@ -153,63 +251,68 @@ echo "need met at ".$thisNeed.".<br>";
 echo "<hr />";
 
 
+
+   echo "<pre>";
+   print_r(array_values($endNodeList));
+    echo "</pre>";
+
+
+
 // iterate through parents to determine plan
 
 $thisPlan = array();
+
+
+
+function findNodeByKey($keyToLookFor) {
+  global $allCheckedNeeds;
+    $item = null;
+foreach($allCheckedNeeds as $nodeKey => $nodeValue) {
+    if ($nodeValue->key == $keyToLookFor) {
+        $item = $nodeValue;
+        break;
+    }
+}
+return $item;
+}
+
 
 // find an end node:
 if( count($endNodeList) != 0) {
 
 
+// loop backwards finding each node's parent:
+  $sequence = array();
 
-for ($i=0; $i<count($endNodeList); $i++) {
-$thisLoopsPlan = array();
-$thisNode = $endNodeList[$i];
-array_push($thisLoopsPlan, $thisNode);
-$thisChainInEntirety = "";
 do {
-$thisNeedsParent = $needsQueue[$thisNode];
+  $thisNeedToBuild = array_shift($endNodeList); 
+  echo "new loop: ";
+  $thisNodeToCheck = $thisNeedToBuild;
+  echo $thisNodeToCheck->getKey()." (parent =".$thisNodeToCheck->parent.")<br>";
+  do {
+    $newNode = findNodeByKey($thisNodeToCheck->parent);
+    echo $newNode->getKey()." (parent =".$newNode->parent.")<br>";
+    $thisNodeToCheck = $newNode;
+  } while ($thisNodeToCheck->parent != "targetNeed");
 
 
-if (in_array($thisNeedsParent, $thisPlan)) {
-$thisChainInEntirety = $thisNeedsParent;
-break;
-}
-
-
-array_push($thisLoopsPlan, $thisNeedsParent);
-$thisNode = $thisNeedsParent;
-
-// check this node, if it already exists in the overall plan, that add the chain in after the shared node:
-
-} while($needsQueue[$thisNode] != "targetNeed");
-if($thisChainInEntirety == "") {
-// add whole chain:
-$thisPlan = array_merge($thisPlan, $thisLoopsPlan);
-} else {
-// find the node to insert fragment at:
-$insertNode = array_search($thisChainInEntirety, $thisPlan);
-// need to insert before this node:
-array_splice($thisPlan, ($insertNode-1), 0, $thisLoopsPlan);
-
-
-}
-}
+} while(count($endNodeList)>0);
 
 
 
 
 
- echo "<pre>";
- print_r(array_values($thisPlan));
-  echo "</pre>";
+
+   echo "<pre>";
+  // print_r(array_values($thisPlan));
+    echo "</pre>";
 
 
 } else {
 echo "<br>no plan found.<br>";
 }
 
-
+*/
 
 
 ?>
