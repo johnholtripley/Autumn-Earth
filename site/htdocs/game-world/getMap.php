@@ -202,6 +202,8 @@ mysqli_free_result($eventsResult);
 
 
 
+
+
 if(!$isInside) {
 // change local coordinates from JSON to global coordinates based on the map's position:
 // items:
@@ -1221,10 +1223,11 @@ mysqli_free_result($colourResult);
 $colourIndicesToUse = [1,2,4,6,8,16];
  
 
+
 // get active events:
 $activeSeasonQuery = 'tblinventoryitems.activeduringseason is null';
 if(count($activeEvents)>0) {
-   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in ('.implode(",",$activeEventsId).') or tblinventoryitems.activeduringseason is null)'; 
+   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in ('.implode(",",$activeEventsID).') or tblinventoryitems.activeduringseason is null)'; 
 }
 
 

@@ -1,6 +1,7 @@
 function setupWeather() {
 updatePossibleWeather();
     if (isOverWorldMap) {
+
         // check if any outside weather is stored:
         if (outsideWeather != "") {
             changeWeather(outsideWeather);

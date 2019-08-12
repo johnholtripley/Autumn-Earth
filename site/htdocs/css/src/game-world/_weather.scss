@@ -17,3 +17,21 @@
 #rain {
     background: rgba(0, 0, 0, 0.4);
 }
+
+#clouds {
+    background: url(/images/game-world/weather/clouds.png) repeat 50% 50%;
+    @include animation(clouds-drift 12s linear infinite);
+}
+
+
+
+  
+  
+  @include keyframes('clouds-drift') {
+    from {
+        background-position: -200% 100%; 
+    }
+    to {
+        background-position: 0% 0%;
+    }
+}

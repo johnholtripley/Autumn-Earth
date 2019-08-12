@@ -54,6 +54,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
   <div id="weather">
     <div id="rain"></div>
     <div id="snow"></div>
+    <div id="clouds"></div>
   </div>
 
   <div id="interface" class="active">

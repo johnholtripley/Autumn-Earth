@@ -189,7 +189,7 @@
             "centreY": 399
         }
     ],
-        "weather": [""],
+        "weather": ["", "clouds"],
         "shops": [],
         "npcs": [{
                 "name": "brown hen",
