@@ -10,5 +10,6 @@ var KeyBindings = {
     'toggleUI': 9,
     'toggleJournal': 81,
     'toggleToolLeft': 219,
-    'toggleToolRight': 221
+    'toggleToolRight': 221,
+    'printScreen': 44
 }

@@ -2070,6 +2070,19 @@ case "^":
     }
 }
 
+function getCurrentDateTimeFormatted() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    return dd + '-' + mm + '-' + today.getFullYear() + '_' + today.getHours() + "-" + today.getMinutes() + "-"+today.getSeconds();
+}
+
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
@@ -3341,12 +3354,12 @@ const Input = {
 
             window.addEventListener("gamepadconnected", function() {
                 Input.isUsingGamePad = true;
-             //   Input.gamePad = navigator.getGamepads()[0];
-               
+                //   Input.gamePad = navigator.getGamepads()[0];
+
             });
             window.addEventListener("gamepaddisconnected", function(e) {
                 Input.isUsingGamePad = false;
-              //  Input.gamePad = null;
+                //  Input.gamePad = null;
             });
         }
 
@@ -3407,6 +3420,13 @@ const Input = {
                 case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
+                case KeyBindings.printScreen:
+                    // action should only be on key Up:
+                    key[11] = 0;
+                    if (type === "up") {
+                        key[11] = 1;
+                    }
+                    break;
             }
         }
     },
@@ -3425,13 +3445,13 @@ const Input = {
             // stop the map being dragged (needs the passive: false to work):
             e.preventDefault();
             //   deltaX = e.touches[0].pageX - startPointX;
-           // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+            // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
             moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
-        //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+            //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
 
-        
+
             // check if was dragging, and if so:
             key[0] = false;
             key[1] = false;
@@ -4324,7 +4344,8 @@ var KeyBindings = {
     'toggleUI': 9,
     'toggleJournal': 81,
     'toggleToolLeft': 219,
-    'toggleToolRight': 221
+    'toggleToolRight': 221,
+    'printScreen': 44
 }
 
 if (window.Worker) {
@@ -9604,6 +9625,10 @@ function update() {
             key[10] = false;
         }
 
+     if (key[11]) {
+           printScreen();
+            key[11] = false;
+        }
 
 
 
@@ -11482,6 +11507,14 @@ function isVisibleOnScreen(isoX, isoY) {
         return false;
     }
     return true;
+}
+
+function printScreen() {
+    var fullQualityJpeg = gameCanvas.toDataURL('image/jpeg', 1.0);
+    var printScreenAnchor = document.getElementById('printScreenAnchor');
+    printScreenAnchor.href = fullQualityJpeg;
+    printScreenAnchor.setAttribute("download","screenshot_"+getCurrentDateTimeFormatted()+".jpg");
+    printScreenAnchor.click();
 }
 
 function draw() {

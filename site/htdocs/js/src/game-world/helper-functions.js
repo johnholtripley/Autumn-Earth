@@ -185,6 +185,19 @@ case "^":
     }
 }
 
+function getCurrentDateTimeFormatted() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    return dd + '-' + mm + '-' + today.getFullYear() + '_' + today.getHours() + "-" + today.getMinutes() + "-"+today.getSeconds();
+}
+
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);

@@ -292,6 +292,8 @@ $theseCatalogues = json_decode($catalogues, true);
   </div>
 </div>
 
+<a id="printScreenAnchor" download="screenshot.jpg">Download a screenshot</a>
+
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/hnefatafl-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>

@@ -11,12 +11,12 @@ const Input = {
 
             window.addEventListener("gamepadconnected", function() {
                 Input.isUsingGamePad = true;
-             //   Input.gamePad = navigator.getGamepads()[0];
-               
+                //   Input.gamePad = navigator.getGamepads()[0];
+
             });
             window.addEventListener("gamepaddisconnected", function(e) {
                 Input.isUsingGamePad = false;
-              //  Input.gamePad = null;
+                //  Input.gamePad = null;
             });
         }
 
@@ -77,6 +77,13 @@ const Input = {
                 case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
+                case KeyBindings.printScreen:
+                    // action should only be on key Up:
+                    key[11] = 0;
+                    if (type === "up") {
+                        key[11] = 1;
+                    }
+                    break;
             }
         }
     },
@@ -95,13 +102,13 @@ const Input = {
             // stop the map being dragged (needs the passive: false to work):
             e.preventDefault();
             //   deltaX = e.touches[0].pageX - startPointX;
-           // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+            // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
             moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
-        //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+            //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
 
-        
+
             // check if was dragging, and if so:
             key[0] = false;
             key[1] = false;

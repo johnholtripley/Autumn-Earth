@@ -1620,6 +1620,10 @@ function update() {
             key[10] = false;
         }
 
+     if (key[11]) {
+           printScreen();
+            key[11] = false;
+        }
 
 
 
@@ -3498,6 +3502,14 @@ function isVisibleOnScreen(isoX, isoY) {
         return false;
     }
     return true;
+}
+
+function printScreen() {
+    var fullQualityJpeg = gameCanvas.toDataURL('image/jpeg', 1.0);
+    var printScreenAnchor = document.getElementById('printScreenAnchor');
+    printScreenAnchor.href = fullQualityJpeg;
+    printScreenAnchor.setAttribute("download","screenshot_"+getCurrentDateTimeFormatted()+".jpg");
+    printScreenAnchor.click();
 }
 
 function draw() {
