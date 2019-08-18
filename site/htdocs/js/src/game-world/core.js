@@ -3506,8 +3506,10 @@ function isVisibleOnScreen(isoX, isoY) {
 
 function printScreen() {
     var fullQualityJpeg = gameCanvas.toDataURL('image/jpeg', 1.0);
+    // Chrome currently has a 2Mb maximum, so convert to a blob:
+    var objecturl = URL.createObjectURL(dataURItoBlob(fullQualityJpeg));
     var printScreenAnchor = document.getElementById('printScreenAnchor');
-    printScreenAnchor.href = fullQualityJpeg;
+    printScreenAnchor.href = objecturl;
     printScreenAnchor.setAttribute("download","screenshot_"+getCurrentDateTimeFormatted()+".jpg");
     printScreenAnchor.click();
 }
