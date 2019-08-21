@@ -31,14 +31,14 @@ array('plant',array('own'))
 
 // 'result' => [array of pre-conditions]
 $actionsAvailable = array(
-array('use' => array('own')),
-array('own' => array('buy')),
-array('gold' => array('sell')),
-array('buy' => array('at:market','gold')),
-array('sell' => array('own','at:market')),
-array('gather:wheat' => array('at:wheatfield')),
-array('gather:wheat' => array('at:field','plant:wheatseeds')),
-array('plant' => array('own'))
+'use' => array('own'),
+'own' => array('buy'),
+'gold' => array('sell'),
+'buy' => array('at:market','gold'),
+'sell' => array('own','at:market'),
+'gather:wheat' => array('at:wheatfield'),
+'gather:wheat' => array('at:field','plant:wheatseeds'),
+'plant' => array('own')
 );
 
 
@@ -46,6 +46,7 @@ array('plant' => array('own'))
 
 // needs - [verb][noun][value/reward]:
 $thisNPCsNeeds = array(array("own","wheat","0"));
+$thisNPCsNeeds = array(array("sell","eggs","0"));
 $thisNPCsItems = array("eggs");
 $thisNPCsLocation = "house";
 $thisNPCsGold = 5;
@@ -118,6 +119,64 @@ do {
       echo "has needed item<br>";
     }
     break;
+
+
+    case "goto":
+    //$thisNPCsLocation = $theseParameters[1];
+    $thisNeed->npcState['location'] = $theseParameters[1];
+    echo "moved to ".$theseParameters[1]."<br>";
+    //$thisNeedHasBeenMet = true;
+    break;
+
+    case "at":
+
+
+
+    if ($thisNeed->npcState['location'] == $theseParameters[1]) {
+    //$thisNeedHasBeenMet = true;
+      echo "already at ".$theseParameters[1]."<br>";
+    } else {
+      // add a need to get there
+      echo "need to move to ".$theseParameters[1];
+     new NPCneed($thisArrayKey, 'goto_'.$theseParameters[1], $thisNeed->npcState);
+    }
+    break;
+
+    default: 
+
+
+            
+      foreach ($actionsAvailable as $key => $value) {     
+        if($key == $theseParameters[0]) {
+          for ($j=0; $j<count($value); $j++) {
+            // check if a noun exists for this precondition, if not, use the parent's noun:
+            if(stristr($value[$j], ':') === FALSE) {
+              $thisNoun = $theseParameters[1];
+              $thisVerb = $value[$j];
+              if($thisVerb == "sell") {
+                // check for items to sell, don't use the parent (target) noun:
+                // check all sellable items and check if sell price covers the buy price of the target noun ################
+                $thisNoun = $thisNPCsItems[0];
+              }
+            } else {
+              $splitParameters = explode(":",$value[$j]);
+              $thisNoun = $splitParameters[1];
+              $thisVerb = $splitParameters[0];
+            }
+            $thisNewArrayKey = $thisVerb."_".$thisNoun;
+            // can't buy gold:
+            if($thisNewArrayKey != "buy_gold") {
+              //  array_push($uncheckedQueue,$thisArrayKey);
+              new NPCneed($thisArrayKey, $thisNewArrayKey, $thisNeed->npcState);
+            }
+          }
+        }
+      }
+
+
+
+    break;
+
   }
 
   $debugCounter++;
@@ -125,7 +184,7 @@ do {
 
 
 
-
+  echo "<br>After wards status: loc:".$thisNeed->npcState['location'].", £".$thisNeed->npcState['gold'].", items: ".implode(", ",$thisNeed->npcState['items'])."<br>";
 
 
 

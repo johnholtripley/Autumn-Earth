@@ -140,6 +140,15 @@ p {
   font-variant-numeric: oldstyle-nums;
 }
 
+a {
+  text-decoration: none;
+}
+p {
+  a {
+    text-decoration: underline;
+  }
+}
+
 // https://alistapart.com/article/web-typography-numerals
 sub { font-feature-settings: "subs" 1; }
 
