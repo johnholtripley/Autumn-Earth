@@ -232,7 +232,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
   <option value="1">1</option><option value="2">2</option><option value="3">3</option>
 </select>
 </div>
-<input type="checkbox" value="1" id="checkboxInput" checked="checked"> <label for="checkboxInput"><span></span>Checkbox</label>
+<input type="checkbox" value="1" id="checkboxInput" checked="checked"> <label for="checkboxInput">Checkbox</label>
  
 
 
@@ -240,7 +240,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 
 
 
-<input type="checkbox" value="1" id="switchInput" checked="checked" class="switch"> <label for="switchInput"><span></span>Checkbox Switch</label>
+<input type="checkbox" value="1" id="switchInput" checked="checked" class="switch"> <label for="switchInput">Checkbox Switch</label>
 
 
   <input type="file" name="file" id="file" class="fileInput" data-multiple-caption="{count} files selected" multiple>

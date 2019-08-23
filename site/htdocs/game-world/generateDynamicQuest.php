@@ -67,7 +67,7 @@ $endNodeList = array();
 
 
 class NPCneed {
-  public function __construct($parent, $key, $npcState) {
+  public function __construct($parent, $key, $npcState, $complete) {
     global $uncheckedQueue, $allCheckedNeeds;
     $this->parent = $parent;
 
@@ -83,8 +83,10 @@ class NPCneed {
 
     $this->key = $key;
     $this->npcState = $npcState;
+    $this->complete = $complete;
     array_push($uncheckedQueue, $this);
-    array_push($allCheckedNeeds, $this);
+  //  array_push($allCheckedNeeds, $this);
+    $allCheckedNeeds[$key] = $this;
   }
   /*
   public function getKey() {
@@ -97,7 +99,7 @@ class NPCneed {
 
 $thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
 $thisNPCsState = array("location" => $thisNPCsLocation, "gold" => $thisNPCsGold, "items" => $thisNPCsItems);
-new NPCneed("targetNeed", $thisArrayKey, $thisNPCsState);
+new NPCneed("targetNeed", $thisArrayKey, $thisNPCsState, "false");
 
 
    echo "<pre>";
@@ -108,15 +110,18 @@ new NPCneed("targetNeed", $thisArrayKey, $thisNPCsState);
 
 
 $debugCounter = 0;
+$metNeed = false;
 do {
   $thisNeed = array_shift($uncheckedQueue);
-  echo "<br>".$debugCounter.". checking ".$thisNeed->key ." (from ".$thisNeed->parent.") - current status: loc:".$thisNeed->npcState['location'].", £".$thisNeed->npcState['gold'].", items: ".implode(", ",$thisNeed->npcState['items'])."<br>";
+  $thisLoopNeedMeet = false;
+  echo "<br>".$debugCounter.". checking ".$thisNeed->key ." (from ".$thisNeed->parent.") - current status: loc:".$thisNeed->npcState['location'].", £".$thisNeed->npcState['gold'].", items: ".implode(", ",$thisNeed->npcState['items'])." - complete: ".$thisNeed->complete."<br>";
   $theseParameters = explode("_", $thisNeed->key);
 
   switch($theseParameters[0]) {
     case "own":
     if (in_array($theseParameters[1], $thisNeed->npcState['items'])) {
       echo "has needed item<br>";
+      $thisLoopNeedMeet = true;
     }
     break;
 
@@ -125,7 +130,7 @@ do {
     //$thisNPCsLocation = $theseParameters[1];
     $thisNeed->npcState['location'] = $theseParameters[1];
     echo "moved to ".$theseParameters[1]."<br>";
-    //$thisNeedHasBeenMet = true;
+    $thisLoopNeedMeet = true;
     break;
 
     case "at":
@@ -135,17 +140,18 @@ do {
     if ($thisNeed->npcState['location'] == $theseParameters[1]) {
     //$thisNeedHasBeenMet = true;
       echo "already at ".$theseParameters[1]."<br>";
+      $thisLoopNeedMeet = true;
     } else {
       // add a need to get there
       echo "need to move to ".$theseParameters[1];
-     new NPCneed($thisArrayKey, 'goto_'.$theseParameters[1], $thisNeed->npcState);
+     new NPCneed($thisNeed->key, 'goto_'.$theseParameters[1], $thisNeed->npcState, "false");
     }
     break;
 
     default: 
 
 
-            
+            echo "checking ".$theseParameters[0]."... ";
       foreach ($actionsAvailable as $key => $value) {     
         if($key == $theseParameters[0]) {
           for ($j=0; $j<count($value); $j++) {
@@ -167,7 +173,8 @@ do {
             // can't buy gold:
             if($thisNewArrayKey != "buy_gold") {
               //  array_push($uncheckedQueue,$thisArrayKey);
-              new NPCneed($thisArrayKey, $thisNewArrayKey, $thisNeed->npcState);
+              echo "adding need of ".$thisNewArrayKey.". ";
+              new NPCneed($thisNeed->key, $thisNewArrayKey, $thisNeed->npcState, "false");
             }
           }
         }
@@ -180,14 +187,106 @@ do {
   }
 
   $debugCounter++;
+
+if($thisLoopNeedMeet) {
+  // mark this need as being satisfied:
+  $allCheckedNeeds[$thisNeed->key]->complete = 'true';
+  echo $thisNeed->key." complete<br>";
+
+
+  // check the parent to see if all siblings (if any) are also complete
+  $thisNeedsParentKey = $thisNeed->parent;
+  echo "looking for parent key: ".$thisNeedsParentKey;
+  
+
+$shouldKeepLooping = false;
+do {
+
+  $allSiblingsComplete = true; 
+  // find siblings:
+  foreach ($allCheckedNeeds as $key => $value) {
+    if($value->parent == $thisNeedsParentKey) {
+      // check it's not this key:
+      if($key != $thisNeed->key) {
+        echo ". found sibling: ".$key;
+        if($value->complete == 'false') {
+          $allSiblingsComplete = false;
+          echo ". sibling not complete ";
+        } else {
+          echo ". sibling is complete ";
+        }
+      }
+    } 
+  }
+
+  if($allSiblingsComplete) {
+    echo " - all siblings complete. mark the parent as complete<br>";
+
+    // repeat while there are siblings, or reached the targetNeed
+    $allCheckedNeeds[$thisNeed->parent]->complete = 'true';
+    // process this so the NPC's state is correct
+    
+
+
+  $theseParameters = explode("_", $thisNeed->parent);
+  switch($theseParameters[0]) {
+    case "sell":
+    echo "processing selling: BEFORE<br>";
+    var_dump($allCheckedNeeds[$thisNeed->parent]->npcState);
+
+$salePrice = $priceList[$theseParameters[1]];
+$allCheckedNeeds[$thisNeed->parent]->npcState['gold'] += $salePrice;
+
+foreach ($allCheckedNeeds[$thisNeed->parent]->npcState['items'] as $inventoryKey => $inventoryValue) {
+  if($inventoryValue == $theseParameters[1]) {
+unset($allCheckedNeeds[$thisNeed->parent]->npcState['items'][$inventoryKey]);
+  }
+}
+echo "AFTER<br>";
+var_dump($allCheckedNeeds[$thisNeed->parent]->npcState);
+    break;
+    /*
+    case "at":
+    $allCheckedNeeds[$thisNeed->parent]->npcState['location'] = $theseParameters[1];
+    break;
+    */
+  }
+
+
+
+    $shouldKeepLooping = true;
+    $thisNeed = $allCheckedNeeds[$thisNeed->parent];
+    $thisNeedsParentKey = $thisNeed->parent;
+    if($thisNeedsParentKey == "targetNeed") {
+      echo "Got to parent need";
+      $metNeed = true;
+$shouldKeepLooping = false;
+    }
+  }
+
+
+
+} while ($shouldKeepLooping);
+
+
+
+
+}
+
+
+
 } while (count($uncheckedQueue) >0);
 
 
-
+if($metNeed) {
+  echo "<br>successfully found a sequence";
+} else {
+  echo "<br>couldn't find a solution";
+}
   echo "<br>After wards status: loc:".$thisNeed->npcState['location'].", £".$thisNeed->npcState['gold'].", items: ".implode(", ",$thisNeed->npcState['items'])."<br>";
 
 
-
+   
 
 /*
 // build array key:
