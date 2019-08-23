@@ -236,7 +236,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
  
 
 
-<input type="radio" name="radioInputs" id="radioInput1" value="1" checked="checked" /><label for="radioInput1"><span></span>Tweedledum</label> <input type="radio" name="radioInputs" id="radioInput2" value="0" /> <label for="radioInput2"><span></span>Tweedledee</label> 
+<input type="radio" name="radioInputs" id="radioInput1" value="1" checked="checked" /><label for="radioInput1">Tweedledum</label> <input type="radio" name="radioInputs" id="radioInput2" value="0" /> <label for="radioInput2">Tweedledee</label> 
 
 
 
