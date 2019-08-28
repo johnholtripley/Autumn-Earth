@@ -88,6 +88,7 @@ const Input = {
         }
     },
     initTouchEvents: function() {
+        document.getElementById('touchTapAction').style.display = 'block';
         /*
         document.body.addEventListener("touchstart", function(e) {
             // startPointX = e.touches[0].pageX;

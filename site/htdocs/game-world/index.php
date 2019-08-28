@@ -274,8 +274,9 @@ $theseCatalogues = json_decode($catalogues, true);
       <button id="questAccept">Accept</button>
     </div>
 
-    <div id="quickHold">
-    </div>
+    <div id="quickHold"></div>
+
+    <div id="touchTapAction"></div>
 
   </div>
   <div id="cardGameWrapper">

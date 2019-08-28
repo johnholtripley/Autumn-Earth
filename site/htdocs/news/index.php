@@ -125,7 +125,7 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 		// remove any [CONTINUE] tag
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
 		// use article element to help trigger Reader Mode (https://erikrunyon.com/2018/06/designing-web-content-for-watchos/)
-		echo '<article itemprop="description">'.$newsContent.'</article>';
+		echo '<article itemprop="description" id="articleContent">'.$newsContent.'</article>';
 	
 ?>
 
@@ -135,6 +135,18 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 <p><a class="shareLink" target="_blank" href="https://twitter.com/intent/tweet/?url=<?php echo $urlToShare; ?>">Share</a></p>
 
 
+
+<p><button id="readArticleAloud" onclick="readArticle()">Read this aloud</button></p>
+<script>
+function readArticle() {
+	console.log("clcik");
+	var wordsToSay = "hello people";
+	wordsToSay = document.getElementById('articleContent').textContent;
+speechSynthesis.speak(new SpeechSynthesisUtterance(wordsToSay));
+}
+
+
+</script>
 <?php
 
 

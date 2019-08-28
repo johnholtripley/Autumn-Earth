@@ -204,6 +204,7 @@ var UI = {
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
         document.getElementById('hireRetinueFollowerYes').onclick = hireNewFollower;
+        document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -2633,5 +2634,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         hireRetinueFollowerPanel.classList.remove('active');
         dialogue.classList.add("slowerFade");
         dialogue.classList.remove("active");
+    },
+    touchTapAction: function() {
+        // simulate the Action key being pressed:
+        key[4] = 1;
     }
 }

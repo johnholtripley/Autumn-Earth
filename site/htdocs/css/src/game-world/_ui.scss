@@ -394,3 +394,14 @@ img {
     opacity: 0;
     pointer-events: none;
 }
+
+#touchTapAction {
+    display: none;
+    width: 140px;
+    height: 140px;
+    border-radius: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    @include transform(translate(-70px,-92px));
+}

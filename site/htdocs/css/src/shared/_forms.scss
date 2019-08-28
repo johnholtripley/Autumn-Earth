@@ -121,6 +121,7 @@ input:not(:focus):valid {
         position: relative;
         @include border-radius($radioAndCheckboxSize);
         margin-right: 0.5em;
+        margin-bottom: 0;
     }
 
     input[type="radio"]:focus {
@@ -141,8 +142,8 @@ input:not(:focus):valid {
         display: block;
         @include border-radius($radioAndCheckboxSize);
         opacity: 0;
-        left: ($radioAndCheckboxSize*0.125);
-        top: ($radioAndCheckboxSize*0.125);
+        left: 1px;
+        top: 1px;
         position: absolute;
         @include transition(opacity 0.3s);
     }
@@ -179,6 +180,8 @@ input:not(:focus):valid {
         height: $radioAndCheckboxSize;
         border: 1px solid #000;
         background: none;
+        margin-bottom: 0;
+        outline: none;
     }
 
     input[type="checkbox"]:focus {
@@ -217,9 +220,9 @@ input:not(:focus):valid {
 
 @supports(-webkit-appearance: none) {
 
- input[type='checkbox'].switch {
+    input[type='checkbox'].switch {
 
-      -webkit-appearance: none;
+        -webkit-appearance: none;
 
         outline: none;
         display: inline-block;
@@ -232,6 +235,7 @@ input:not(:focus):valid {
         background: #fff;
         border-radius: $radioAndCheckboxSize;
         @include transition(background 0.4s ease);
+
         &:after {
             color: $titleColour;
             line-height: 1;
@@ -240,22 +244,25 @@ input:not(:focus):valid {
             display: block;
             content: "";
             opacity: 1;
-            width: $radioAndCheckboxSize;
-            height: $radioAndCheckboxSize;
-            border-radius: $radioAndCheckboxSize;
+            width: $radioAndCheckboxSize*0.8;
+            height: $radioAndCheckboxSize*0.8;
+            border-radius: $radioAndCheckboxSize*0.8;
             background: #fff;
             border: 1px solid #000;
             left: 0;
+            top: 0;
             @include transition(left 0.4s ease);
             @include transform(scale(1));
         }
-    &:checked {
-        background: #64bd63;
-        &:after {
-            left: $radioAndCheckboxSize;
+
+        &:checked {
+            background: #64bd63;
+
+            &:after {
+                left: $radioAndCheckboxSize;
+            }
         }
     }
-}
 
 }
 
