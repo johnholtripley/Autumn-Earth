@@ -1165,11 +1165,11 @@ function tileIsClear(globalTileX, globalTileY) {
     var tileY = getLocalCoordinatesY(globalTileY);
     if (isOverWorldMap) {
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
-            return 1;
+            return false;
         }
     } else {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-            return 1;
+            return false;
         }
     }
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);

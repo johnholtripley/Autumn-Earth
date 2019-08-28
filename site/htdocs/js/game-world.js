@@ -7042,7 +7042,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                                     gathering.itemObject = foundItem;
                                     gathering.itemMap = findMapNumberFromGlobalCoordinates(foundItem.tileX, foundItem.tileY)
                                     gathering.quality = parseInt(foundItem.quality);
-
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(foundItem.quantity);
                                     gathering.purity = parseInt(foundItem.purity);
@@ -7075,8 +7074,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                                     gathering.purity = capValues(gathering.purity, 10, 100);
                                     gathering.stability = capValues(gathering.stability, 10, 100);
                                     gathering.quantity = capValues(gathering.quantity, 10, 100);
-
-
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
                                     gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
                                     // quantity remaining will continuously drop:
@@ -7126,14 +7123,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     break;
 
                 case "plant-breeding":
-
                     if (activeAction == "survey") {
                         surveyingStopped();
                     }
                     activeAction = "pollinating";
-
                     var foundItem = findItemWithinArmsLength();
-
                     if (foundItem != -1) {
                         // found an item - check source node and the action match categories:
                         console.log(currentActiveInventoryItems[thisMapData.items[foundItem].type].category);
@@ -7180,13 +7174,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     }
                     var foundItem = findItemWithinArmsLength();
                     if (foundItem != null) {
-
-
-
                         var additionalText = '';
                         // check if it's required for a catalogue quest:
                         for (var i in hero.catalogues) {
-                          
                             if (!hero.catalogues[i].completed) {
                                 var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
                                 if (indexPosition !== -1) {
@@ -7420,7 +7410,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         for (var i = 0; i < allRetinueQuestTimers.length; i++) {
             retinueQuestTimers.push([allRetinueQuestTimers[i], new Date().getTime() + (allRetinueQuestTimers[i].dataset.minutes) * 60 * 1000, ""]);
         }
-
     },
 
     updateRetinueTimers: function() {
@@ -7453,7 +7442,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 thisTimerText = "1 second remaining";
             } else {
                 thisTimerText = "complete";
-
             }
             if (thisTimerText != retinueQuestTimers[i][2]) {
                 // only access the DOM if the text has changed:
@@ -7517,15 +7505,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
         if (e.target.classList.contains('undiscovered')) {
             if (e.target.classList.contains('explorable')) {
-
                 UI.resetRetinuePanels();
-
-
                 retinueExplorePanel.classList.add('active');
-
-
                 retinueObject.openQuestDetail = 'Exploring';
-
                 retinueObject.destinationLocationX = e.target.getAttribute('data-locationx');
                 retinueObject.destinationLocationY = e.target.getAttribute('data-locationy');
                 // determine distance to see how long and how many followers are required:
@@ -7541,11 +7523,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 }
 
                 for (var i = 0; i < retinueObject.followersRequired; i++) {
-
                     document.getElementById('dropFollowersPanelExplore-' + i).style.display = 'block';
                 }
-
-
 
                 retinueObject.hasToReturnToBase = 1;
                 retinueObject.questName = 'Exploring'
@@ -7561,21 +7540,13 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         } else {
             // get the corresponding Quest panel:
             var whichPanelId = e.target.id.substring(20);
-
-
             UI.resetRetinuePanels();
-
             retinueExplorePanel.classList.remove('active');
             retinueObject.openQuestDetail = whichPanelId;
-
             var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
-
             retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
             retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
             retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
-
-
-
             retinueObject.hasToReturnToBase = thisPanelElement.getAttribute('data-requiresreturn');
             retinueObject.questName = thisPanelElement.getAttribute('data-questname');
             retinueObject.followersAdded = [];
@@ -7643,38 +7614,27 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     addFollowersToQuest: function() {
         var followersAssigned = [];
         for (i = 0; i < retinueObject.followersAdded.length; i++) {
-
             // show status in follower panel:
-
             document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' p').innerHTML = 'active on "' + retinueObject.questName + '" <span class="retinueQuestTimer" data-minutes="' + retinueObject.timeRequired + '"></span>';
             // add to timers:
             retinueQuestTimers.push([document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
-
             followersAssigned.push(retinueObject.followersAdded[i]);
-
-
-
             document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
-
 
         if (retinueObject.openQuestDetail == "Exploring") {
             var thisHex = document.getElementById('undiscovered_' + retinueObject.hexCoordX + '_' + retinueObject.hexCoordY);
             thisHex.classList.remove('explorable');
             thisHex.classList.add('beingExplored');
             getJSON("/game-world/generateExplorationRetinueQuest.php?chr=" + characterId + "&followers=" + followersAssigned.join("|") + "&hexCoordX=" + retinueObject.hexCoordX + "&hexCoordY=" + retinueObject.hexCoordY, function(data) {
-
-
                 if (data.markup) {
                     retinuePanel.insertAdjacentHTML('beforeend', data.markup);
                     // update the follower's panels with the correct quest id:
                     var thisQuestFollowers = data.followers.split(",");
                     console.log(data.followers);
                     for (i = 0; i < thisQuestFollowers.length; i++) {
-
                         document.getElementById('retinueFollower' + thisQuestFollowers[i]).setAttribute('data-activeonquest', data.questId);
                     }
-
                 }
             }, function(status) {
                 // error ####
@@ -7718,15 +7678,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             case 'reHireFollowerNo':
                 e.preventDefault();
                 // remove follower:
-
                 var whichFollower = e.target.getAttribute('data-follower');
                 retinueList.removeChild(document.getElementById('retinueFollower' + whichFollower));
-
-                // ####
-                // john
-
                 sendDataWithoutNeedingAResponse("/game-world/removeHiredFollower.php?id=" + questId);
-
                 // close panel:       
                 parentPanel.classList.remove('active');
                 break;
@@ -7838,8 +7792,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         // sort this array so that the order is always preserved: (for ... in don't keep order)
-
-
         keysFound = keysFound.sort();
 
         // add unequip slot:
@@ -7855,23 +7807,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
             quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
 
-
-
-
             thisFileColourSuffix = "";
             thisColourName = getColourName(hero.inventory[key].colour, hero.inventory[key].type);
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
 
-
-
-
-
-
             quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + thisFileColourSuffix + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
             counter++;
-
         }
 
         quickHoldMarkup += '</ul>';
@@ -7927,13 +7870,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         document.getElementById('treasureMap' + mapId).classList.add("active");
     },
     openHireFollowerPanel: function(whichNPC) {
-
-
-
-
-
         hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/' + whichNPC.followerId + '.png" alt="">Would you like to hire ' + whichNPC.name + '?';
-
         hireRetinueFollowerPanel.classList.add('active');
         hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.uniqueIndex);
     },
@@ -9187,11 +9124,11 @@ function tileIsClear(globalTileX, globalTileY) {
     var tileY = getLocalCoordinatesY(globalTileY);
     if (isOverWorldMap) {
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
-            return 1;
+            return false;
         }
     } else {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-            return 1;
+            return false;
         }
     }
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
