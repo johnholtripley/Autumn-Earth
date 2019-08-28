@@ -84,6 +84,9 @@ const Input = {
                         key[11] = 1;
                     }
                     break;
+                case KeyBindings.escape:
+                    key[12] = to;
+                    break;
             }
         }
     },

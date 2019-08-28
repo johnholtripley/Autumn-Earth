@@ -1196,41 +1196,44 @@ function tileIsClear(globalTileX, globalTileY) {
     }
 
     // check against hero:
-    if (tileX == hero.tileX) {
-        if (tileY == hero.tileY) {
+    if (globalTileX == hero.tileX) {
+        if (globalTileY == hero.tileY) {
             return false;
         }
     }
+
     // against items:
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        if (tileX == thisMapData[currentMap].items[i].tileX) {
-            if (tileY == thisMapData[currentMap].items[i].tileY) {
-                if (thisMapData[currentMap].items[i].isCollidable) {
-                    return false;
-                }
-            }
-        }
-    }
-    // against pets:
-    if (hasActivePet) {
-        for (var i = 0; i < hero.activePets.length; i++) {
-            if (tileX == hero.allPets[hero.activePets[i]].tileX) {
-                if (tileY == hero.allPets[hero.activePets[i]].tileY) {
+    for (var i = 0; i < thisMapData[thisMap].items.length; i++) {
+        if (globalTileX == thisMapData[thisMap].items[i].tileX) {
+            if (globalTileY == thisMapData[thisMap].items[i].tileY) {
+                if (thisMapData[thisMap].items[i].isCollidable) {
                     return false;
                 }
             }
         }
     }
     // against NPCs:
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        if (thisMapData[currentMap].npcs[i].isCollidable) {
-            if (tileX == thisMapData[currentMap].npcs[i].tileX) {
-                if (tileY == thisMapData[currentMap].npcs[i].tileY) {
+    for (var i = 0; i < thisMapData[thisMap].npcs.length; i++) {
+        if (thisMapData[thisMap].npcs[i].isCollidable) {
+            if (globalTileX == thisMapData[thisMap].npcs[i].tileX) {
+                if (globalTileY == thisMapData[thisMap].npcs[i].tileY) {
                     return false;
                 }
             }
         }
     }
+
+    // against pets:
+    if (hasActivePet) {
+        for (var i = 0; i < hero.activePets.length; i++) {
+            if (globalTileX == hero.allPets[hero.activePets[i]].tileX) {
+                if (globalTileY == hero.allPets[hero.activePets[i]].tileY) {
+                    return false;
+                }
+            }
+        }
+    }
+
     return true;
 }
 
@@ -1620,18 +1623,27 @@ function update() {
             key[10] = false;
         }
 
-     if (key[11]) {
-           printScreen();
+        if (key[11]) {
+            printScreen();
             key[11] = false;
         }
-
-
+        if (key[12]) {
+            // cancel any active actions:
+            switch (activeAction) {
+                case "survey":
+                    surveyingStopped();
+                    break;
+                case "gather":
+                    gatheringPanel.classList.remove("active");
+                    gatheringStopped();
+                    break;
+            }
+            activeAction = "";
+            key[12] = false;
+        }
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();
-
-
-
 
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
@@ -3510,7 +3522,7 @@ function printScreen() {
     var objecturl = URL.createObjectURL(dataURItoBlob(fullQualityJpeg));
     var printScreenAnchor = document.getElementById('printScreenAnchor');
     printScreenAnchor.href = objecturl;
-    printScreenAnchor.setAttribute("download","screenshot_"+getCurrentDateTimeFormatted()+".jpg");
+    printScreenAnchor.setAttribute("download", "screenshot_" + getCurrentDateTimeFormatted() + ".jpg");
     printScreenAnchor.click();
 }
 
@@ -3837,7 +3849,7 @@ function draw() {
                                 drawIsoRectangle(thisOverlayX, thisOverlayY, thisOverlayX + tileW, thisOverlayY + tileW, true, thisOverlayFill);
                             }
                         }
-                        console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
+                        //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
                     }
                     gameContext.globalCompositeOperation = 'source-over';
                     break;

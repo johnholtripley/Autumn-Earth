@@ -27,7 +27,14 @@ $chr = $_GET['chr'];
 $outputJSON = '{';
 
 
-
+// get player housing:
+$hasAPlayerHouse = 'false';
+$query = "SELECT * from tblplayerhousing where characterID='".$chr."'";
+   $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+	$hasAPlayerHouse = 'true';
+}
+mysqli_free_result($result);
 
 // get core data:
 $query = "SELECT * from tblcharacters where charID='".$chr."'";
@@ -68,7 +75,8 @@ $outputJSON .= '"lineOfSightRange": '.$lineOfSightRange.',';
 $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"catalogues": '.$catalogues.',';
-$outputJSON .= '"actions": '.$actions;
+$outputJSON .= '"actions": '.$actions.',';
+$outputJSON .= '"hasAPlayerHouse": '.$hasAPlayerHouse;
 $outputJSON .= '}';
 
 

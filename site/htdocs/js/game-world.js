@@ -1248,27 +1248,27 @@ for (var i = 0; i < scrollBarElements.length; i++) {
 }
 
 function processDowsing() {
+    var closestDistance = Infinity;
+    var thisDistance = -1;
     for (var m = 0; m < visibleMaps.length; m++) {
         whichVisibleMap = visibleMaps[m];
         if (thisMapData[whichVisibleMap].hiddenResources[dowsing.category]) {
-            var closestDistance = Infinity;
-            var thisDistance;
-            var whichIndex = -1;
             // find the nearest node - of the correct type and react to that:
             for (var i = 0; i < thisMapData[whichVisibleMap].hiddenResources[dowsing.category].length; i++) {
                 thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisMapData[whichVisibleMap].hiddenResources[dowsing.category][i].tileX, thisMapData[whichVisibleMap].hiddenResources[dowsing.category][i].tileY);
                 if (thisDistance < closestDistance) {
                     closestDistance = thisDistance;
-                    whichIndex = i;
+
                 }
             }
-            if (whichIndex != -1) {
-                dowsing.proximity = 100 - (100 * ((closestDistance) / dowsing.range));
-                dowsing.proximity = capValues(dowsing.proximity, 0, 100);
-            } else {
-                dowsing.proximity = 0;
-            }
+
         }
+    }
+    if (thisDistance != -1) {
+        dowsing.proximity = 100 - (100 * ((closestDistance) / dowsing.range));
+        dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+    } else {
+        dowsing.proximity = 0;
     }
 }
 
@@ -3438,6 +3438,9 @@ const Input = {
                         key[11] = 1;
                     }
                     break;
+                case KeyBindings.escape:
+                    key[12] = to;
+                    break;
             }
         }
     },
@@ -4012,12 +4015,16 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "deed":
                     // #####
-                    var actionValueSplit = whichActionValue.split('x');
-                    plotPlacement.width = actionValueSplit[0];
-                    plotPlacement.length = actionValueSplit[1];
-                    activeAction = "plotPlacement";
-                    document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                    //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    if(!hero.hasAPlayerHouse) {
+                        var actionValueSplit = whichActionValue.split('x');
+                        plotPlacement.width = actionValueSplit[0];
+                        plotPlacement.length = actionValueSplit[1];
+                        activeAction = "plotPlacement";
+                        document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                        //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    } else {
+                        UI.showNotification("<p>I already have a house&hellip;</p>");
+                    }
                     break;
             }
         }
@@ -4357,7 +4364,8 @@ var KeyBindings = {
     'toggleJournal': 81,
     'toggleToolLeft': 219,
     'toggleToolRight': 221,
-    'printScreen': 44
+    'printScreen': 44,
+    'escape': 27
 }
 
 if (window.Worker) {
@@ -9155,41 +9163,44 @@ function tileIsClear(globalTileX, globalTileY) {
     }
 
     // check against hero:
-    if (tileX == hero.tileX) {
-        if (tileY == hero.tileY) {
+    if (globalTileX == hero.tileX) {
+        if (globalTileY == hero.tileY) {
             return false;
         }
     }
+
     // against items:
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        if (tileX == thisMapData[currentMap].items[i].tileX) {
-            if (tileY == thisMapData[currentMap].items[i].tileY) {
-                if (thisMapData[currentMap].items[i].isCollidable) {
-                    return false;
-                }
-            }
-        }
-    }
-    // against pets:
-    if (hasActivePet) {
-        for (var i = 0; i < hero.activePets.length; i++) {
-            if (tileX == hero.allPets[hero.activePets[i]].tileX) {
-                if (tileY == hero.allPets[hero.activePets[i]].tileY) {
+    for (var i = 0; i < thisMapData[thisMap].items.length; i++) {
+        if (globalTileX == thisMapData[thisMap].items[i].tileX) {
+            if (globalTileY == thisMapData[thisMap].items[i].tileY) {
+                if (thisMapData[thisMap].items[i].isCollidable) {
                     return false;
                 }
             }
         }
     }
     // against NPCs:
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        if (thisMapData[currentMap].npcs[i].isCollidable) {
-            if (tileX == thisMapData[currentMap].npcs[i].tileX) {
-                if (tileY == thisMapData[currentMap].npcs[i].tileY) {
+    for (var i = 0; i < thisMapData[thisMap].npcs.length; i++) {
+        if (thisMapData[thisMap].npcs[i].isCollidable) {
+            if (globalTileX == thisMapData[thisMap].npcs[i].tileX) {
+                if (globalTileY == thisMapData[thisMap].npcs[i].tileY) {
                     return false;
                 }
             }
         }
     }
+
+    // against pets:
+    if (hasActivePet) {
+        for (var i = 0; i < hero.activePets.length; i++) {
+            if (globalTileX == hero.allPets[hero.activePets[i]].tileX) {
+                if (globalTileY == hero.allPets[hero.activePets[i]].tileY) {
+                    return false;
+                }
+            }
+        }
+    }
+
     return true;
 }
 
@@ -9579,18 +9590,28 @@ function update() {
             key[10] = false;
         }
 
-     if (key[11]) {
-           printScreen();
+        if (key[11]) {
+            printScreen();
             key[11] = false;
         }
-
+        if (key[12]) {
+            // cancel any active actions:
+            switch (activeAction) {
+                case "survey":
+                    surveyingStopped();
+                    break;
+                case "gather":
+                    gatheringPanel.classList.remove("active");
+                    gatheringStopped();
+                    break;
+            }
+            activeAction = "";
+            key[12] = false;
+        }
 
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();
-
-
-
 
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
@@ -11469,7 +11490,7 @@ function printScreen() {
     var objecturl = URL.createObjectURL(dataURItoBlob(fullQualityJpeg));
     var printScreenAnchor = document.getElementById('printScreenAnchor');
     printScreenAnchor.href = objecturl;
-    printScreenAnchor.setAttribute("download","screenshot_"+getCurrentDateTimeFormatted()+".jpg");
+    printScreenAnchor.setAttribute("download", "screenshot_" + getCurrentDateTimeFormatted() + ".jpg");
     printScreenAnchor.click();
 }
 
@@ -11796,7 +11817,7 @@ function draw() {
                                 drawIsoRectangle(thisOverlayX, thisOverlayY, thisOverlayX + tileW, thisOverlayY + tileW, true, thisOverlayFill);
                             }
                         }
-                        console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
+                        //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
                     }
                     gameContext.globalCompositeOperation = 'source-over';
                     break;

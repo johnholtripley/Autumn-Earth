@@ -537,12 +537,16 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "deed":
                     // #####
-                    var actionValueSplit = whichActionValue.split('x');
-                    plotPlacement.width = actionValueSplit[0];
-                    plotPlacement.length = actionValueSplit[1];
-                    activeAction = "plotPlacement";
-                    document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                    //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    if(!hero.hasAPlayerHouse) {
+                        var actionValueSplit = whichActionValue.split('x');
+                        plotPlacement.width = actionValueSplit[0];
+                        plotPlacement.length = actionValueSplit[1];
+                        activeAction = "plotPlacement";
+                        document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                        //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    } else {
+                        UI.showNotification("<p>I already have a house&hellip;</p>");
+                    }
                     break;
             }
         }
