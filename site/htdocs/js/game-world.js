@@ -8495,6 +8495,7 @@ thisCurrentMap = parseInt(currentMap);
 }
 
             visibleMaps.push(thisCurrentMap);
+            console.log("visible maps is now...", visibleMaps);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
             processInitialMap();
@@ -9105,7 +9106,7 @@ function changeMaps(doorX, doorY) {
         var whichDoor = doorX + "," + doorY;
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-                console.log('changeMaps', hero.tileX, hero.tileY, currentMap);
+                
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -9119,7 +9120,9 @@ function changeMaps(doorX, doorY) {
     if (hero.tileY != "?") {
         hero.tileY = parseInt(hero.tileY);
     }
+    console.log('changeMaps', hero.tileX, hero.tileY, currentMap);
     visibleMaps = [];
+    console.log("cleared visible maps",visibleMaps);
     loadMap();
 }
 
