@@ -101,9 +101,9 @@
         {
             "0,3":
             {
-                "map": "2",
-                "startX": 29,
-                "startY": 33
+                "map": 14,
+                "startX": 46,
+                "startY": 43
             }
         },
         "items": [

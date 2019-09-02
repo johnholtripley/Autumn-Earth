@@ -607,7 +607,7 @@ function loadMapAssets() {
         if (newMap.toString().indexOf('housing') !== -1) {
 
             imagesToLoad.push({
-                name: "backgroundImg",
+                name: "backgroundImg" + currentMap,
                 src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
             });
         } else {
@@ -858,7 +858,6 @@ function loadInventoryItemData(itemIdsToLoad) {
 
 
 function initialiseNPC(whichNPC) {
-    console.log("initialiseNPC =================");
     whichNPC.x = getTileCentreCoordX(whichNPC.tileX);
     whichNPC.y = getTileCentreCoordY(whichNPC.tileY);
     whichNPC.z = getElevation(whichNPC.tileX, whichNPC.tileY);
@@ -882,10 +881,6 @@ function initialiseNPC(whichNPC) {
     if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
     }
-
-
-
-
 }
 
 function initialiseItem(whichItem) {
@@ -1137,19 +1132,15 @@ function loadingProgress() {
 
 
 function changeMaps(doorX, doorY) {
-    console.log();
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
-
-
-
     if (jumpMapId == null) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-        //        console.log('changeMaps', hero.tileX, hero.tileY);
+                console.log('changeMaps', hero.tileX, hero.tileY, currentMap);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -1157,15 +1148,12 @@ function changeMaps(doorX, doorY) {
         hero.tileX = doorX;
         hero.tileY = doorY;
     }
-
-
     if (hero.tileX != "?") {
         hero.tileX = parseInt(hero.tileX);
     }
     if (hero.tileY != "?") {
         hero.tileY = parseInt(hero.tileY);
     }
-
     visibleMaps = [];
     loadMap();
 }
