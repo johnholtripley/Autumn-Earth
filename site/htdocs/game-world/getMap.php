@@ -1396,7 +1396,7 @@ $thisShopsSpecialism = $mapData['map']['shops'][$i]["specialism"];
 
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
     array_push($shopAllItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
-$shopMarkupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
+$shopMarkupToOutput .= '<li id="shopSlot'.$map.'-'.$i.'-'.$j.'">';
 $colourSuffix = '';
 if($inventoryDataToSort[$j]['colourName'] != '') {
     $colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));

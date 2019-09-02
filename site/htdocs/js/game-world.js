@@ -4014,14 +4014,14 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "deed":
-                    // #####
                     if(!hero.hasAPlayerHouse) {
                         var actionValueSplit = whichActionValue.split('x');
                         plotPlacement.width = actionValueSplit[0];
                         plotPlacement.length = actionValueSplit[1];
                         activeAction = "plotPlacement";
                         document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                        //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                        document.addEventListener("click", placePlotPlacement, false);
+                        
                     } else {
                         UI.showNotification("<p>I already have a house&hellip;</p>");
                     }
@@ -9595,8 +9595,12 @@ function update() {
             key[11] = false;
         }
         if (key[12]) {
-            // cancel any active actions:
+            // escape - cancel any active actions:
             switch (activeAction) {
+                case "plotPlacement":
+                document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                document.removeEventListener("click", placePlotPlacement, false);
+                break;
                 case "survey":
                     surveyingStopped();
                     break;
@@ -9608,7 +9612,6 @@ function update() {
             activeAction = "";
             key[12] = false;
         }
-
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();
@@ -9869,6 +9872,24 @@ function checkForHotspots() {
     }
 }
 
+function placePlotPlacement() {
+    document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+    document.removeEventListener("click", placePlotPlacement, false);
+    activeAction = "";
+
+
+    // copied from plotPlacementOverlay in draw function:
+    var xDiff = cursorPositionX - (canvasWidth / 2);
+    var yDiff = cursorPositionY - (canvasHeight / 2);
+    var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+    var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+
+    // draw marker:
+// update local map array
+    // post to server to create files for this character
+    // ###
+    // john
+}
 function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
 
