@@ -121,7 +121,6 @@ if(stripos($map, "housing") !== false) {
     $isPlayerHousing = true;
     $housingDetails = explode("-",$map);
     // eg. // house-999-floor0
-
     $mapDataFile = file_get_contents('../data/chr' .  $housingDetails[1] . '/housing/' . $housingDetails[2] . '.json');
 } else {
     if($map>0) {
@@ -766,7 +765,7 @@ if($isAValidHousingTile) {
                 }
             }
             $mapData['map']['collisions'][$thisLocalHousingTileY][$thisLocalHousingTileX] = $housingData['map']['collisions'][$j][$i];
-            $mapData['map']['elevation'][$thisLocalHousingTileY][$thisLocalHousingTileX] = $housingData['map']['elevation'][$j][$i];
+            $mapData['map']['properties'][$thisLocalHousingTileY][$thisLocalHousingTileX] = $housingData['map']['properties'][$j][$i];
         }
 
 }

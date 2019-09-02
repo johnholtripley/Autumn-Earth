@@ -2000,7 +2000,7 @@ function getTileY(y) {
 
 function getElevation(tileX, tileY) {
     var localTileX, localTileY, thisMap;
-    if (isOverWorldMap) {
+       if (isOverWorldMap) {
         thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
         localTileX = getLocalCoordinatesX(tileX);
         localTileY = getLocalCoordinatesY(tileY);
@@ -2010,10 +2010,8 @@ function getElevation(tileX, tileY) {
         localTileY = tileY;
     }
     var elevation = 0;
-
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
-   
-        elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+           elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     }
 
     return elevation;
@@ -6486,10 +6484,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 console.log("has Contains", thisSlotImageElement.getAttribute('data-contains'));
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
-            console.log(thisSlotImageElement.hasAttribute('data-contains'));
-            console.log(thisSlotImageElement);
+            // console.log(thisSlotImageElement.hasAttribute('data-contains'));
+            // console.log(thisSlotImageElement);
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
-            console.log(thisBoughtObject);
+            // console.log(thisBoughtObject);
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();
@@ -8169,6 +8167,9 @@ function prepareCoreAssets() {
 
 function processInitialMap() {
 
+console.log("processInitialMap",currentMap);
+
+console.log(visibleMaps);
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -8481,9 +8482,19 @@ function loadNewVisibleMap(whichNewMap) {
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
+
+console.log(data.mapData.map);
+
             currentMap = data.mapData.map.mapId;
 
-            visibleMaps.push(parseInt(currentMap));
+            console.log(currentMap);
+
+var thisCurrentMap = currentMap;
+if(thisCurrentMap.indexOf('housing') === -1) {
+thisCurrentMap = parseInt(currentMap);
+}
+
+            visibleMaps.push(thisCurrentMap);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
             processInitialMap();
@@ -8812,6 +8823,7 @@ function loadInventoryItemData(itemIdsToLoad) {
 
 
 function initialiseNPC(whichNPC) {
+    console.log("initialiseNPC =================");
     whichNPC.x = getTileCentreCoordX(whichNPC.tileX);
     whichNPC.y = getTileCentreCoordY(whichNPC.tileY);
     whichNPC.z = getElevation(whichNPC.tileX, whichNPC.tileY);
@@ -9090,6 +9102,7 @@ function loadingProgress() {
 
 
 function changeMaps(doorX, doorY) {
+    console.log();
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
@@ -9099,7 +9112,6 @@ function changeMaps(doorX, doorY) {
     if (jumpMapId == null) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
-
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
         //        console.log('changeMaps', hero.tileX, hero.tileY);

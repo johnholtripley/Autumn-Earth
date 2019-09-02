@@ -1171,10 +1171,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 console.log("has Contains", thisSlotImageElement.getAttribute('data-contains'));
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
-            console.log(thisSlotImageElement.hasAttribute('data-contains'));
-            console.log(thisSlotImageElement);
+            // console.log(thisSlotImageElement.hasAttribute('data-contains'));
+            // console.log(thisSlotImageElement);
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
-            console.log(thisBoughtObject);
+            // console.log(thisBoughtObject);
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();

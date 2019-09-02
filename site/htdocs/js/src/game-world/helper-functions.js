@@ -115,7 +115,7 @@ function getTileY(y) {
 
 function getElevation(tileX, tileY) {
     var localTileX, localTileY, thisMap;
-    if (isOverWorldMap) {
+       if (isOverWorldMap) {
         thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
         localTileX = getLocalCoordinatesX(tileX);
         localTileY = getLocalCoordinatesY(tileY);
@@ -125,10 +125,8 @@ function getElevation(tileX, tileY) {
         localTileY = tileY;
     }
     var elevation = 0;
-
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
-   
-        elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+           elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     }
 
     return elevation;
