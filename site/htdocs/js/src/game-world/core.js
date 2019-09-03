@@ -1910,40 +1910,46 @@ function checkForHotspots() {
 }
 
 function placePlotPlacement() {
+    if (plotPlacement.numberOfBlockedTiles == 0) {
 
-if(plotPlacement.numberOfBlockedTiles == 0) { 
+        document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+        document.removeEventListener("click", placePlotPlacement, false);
+        activeAction = "";
 
-    document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-    document.removeEventListener("click", placePlotPlacement, false);
-    activeAction = "";
+        // copied from plotPlacementOverlay in draw function:
+        var xDiff = cursorPositionX - (canvasWidth / 2);
+        var yDiff = cursorPositionY - (canvasHeight / 2);
+        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
 
-    // copied from plotPlacementOverlay in draw function:
-    var xDiff = cursorPositionX - (canvasWidth / 2);
-    var yDiff = cursorPositionY - (canvasHeight / 2);
-    var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-    var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
- 
- // post to server to create files for this character
-    getJSONWithParams("/game-world/addPlot.php", 'width='+plotPlacement.width+'&height='+plotPlacement.length+'&tileX='+getTileX(nonIsoCoordX)+'&tileY='+getTileY(nonIsoCoordY)+'&chr='+characterId, function(data) {
-        if (data.success == 'true') {
-                
-    // ###
+
+
+
+        // post to server to create files for this character
+        getJSONWithParams("/game-world/addPlot.php", 'width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId, function(data) {
+            if (data.success == 'true') {
+
+
+
+                // ###
+                // john
                 // draw marker:
-// update local map array
-        } else {
-
-            // try again ?
-        }
-    }, function(status) {
-        // try again 
-    });
-
-
-    // john
-} else {
-    UI.showNotification("<p>I can't put a plot there</p>");
+                // remove plot item from inventory:
+                removeFromInventory(plotPlacement.whichSlot, 1);
+                // update local map array
+            } else {
+                // try again ?
+            }
+        }, function(status) {
+            // try again 
+        });
+    } else {
+        UI.showNotification("<p>I can't put a plot there</p>");
+    }
 }
-}
+
+
+
 function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
 

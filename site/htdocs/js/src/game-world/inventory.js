@@ -540,6 +540,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         var actionValueSplit = whichActionValue.split('x');
                         plotPlacement.width = actionValueSplit[0];
                         plotPlacement.length = actionValueSplit[1];
+                        plotPlacement.whichSlot = whichSlotNumber;
                         activeAction = "plotPlacement";
                         document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
                         document.addEventListener("click", placePlotPlacement, false);
