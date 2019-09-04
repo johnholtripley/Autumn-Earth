@@ -536,11 +536,12 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "deed":
+                if(isOverWorldMap) {
                     if(!hero.hasAPlayerHouse) {
                         var actionValueSplit = whichActionValue.split('x');
                         plotPlacement.width = actionValueSplit[0];
                         plotPlacement.length = actionValueSplit[1];
-                        plotPlacement.whichSlot = whichSlotNumber;
+                        plotPlacement.whichType = hero.inventory[whichSlotNumber].type;
                         activeAction = "plotPlacement";
                         document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
                         document.addEventListener("click", placePlotPlacement, false);
@@ -548,6 +549,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     } else {
                         UI.showNotification("<p>I already have a house&hellip;</p>");
                     }
+                } else {
+                     UI.showNotification("<p>I can't do that indoors&hellip;</p>");
+                }
                     break;
             }
         }

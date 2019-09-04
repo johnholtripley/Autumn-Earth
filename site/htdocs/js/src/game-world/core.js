@@ -194,17 +194,7 @@ function prepareCoreAssets() {
 }
 
 
-
-
-
-
-
-
 function processInitialMap() {
-
-console.log("processInitialMap",currentMap);
-
-console.log(visibleMaps);
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -518,11 +508,8 @@ function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
 
-            console.log(data.mapData.map);
-
             currentMap = data.mapData.map.mapId;
 
-            console.log(currentMap);
 
             var thisCurrentMap = currentMap;
             if (thisCurrentMap.indexOf('housing') === -1) {
@@ -530,7 +517,6 @@ function loadMapJSON(mapFilePath) {
             }
 
             visibleMaps.push(thisCurrentMap);
-            console.log("visible maps is now...", visibleMaps);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
             processInitialMap();
@@ -1921,21 +1907,24 @@ function placePlotPlacement() {
         var yDiff = cursorPositionY - (canvasHeight / 2);
         var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
         var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+// get the top left corner:
+      nonIsoCoordX -= (plotPlacement.width / 2)*tileW;
+      nonIsoCoordY -= (plotPlacement.length / 2)*tileW;
 
-
-
-
+console.log(hero.tileX,hero.tileY,getTileX(nonIsoCoordX),getTileY(nonIsoCoordY));
+  
         // post to server to create files for this character
-        getJSONWithParams("/game-world/addPlot.php", 'width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId, function(data) {
+        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
             if (data.success == 'true') {
 
-
+           // remove plot item from inventory:
+              removeItemTypeFromInventory(plotPlacement.whichType, 1);
 
                 // ###
                 // john
                 // draw marker:
-                // remove plot item from inventory:
-                removeFromInventory(plotPlacement.whichSlot, 1);
+     
+       
                 // update local map array
             } else {
                 // try again ?

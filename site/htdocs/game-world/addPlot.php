@@ -28,7 +28,7 @@ $worldMap = $mapJson['worldMap'];
 $worldMapTileLength = 50;
 $whichMapX = floor($plotNorthWestX / $worldMapTileLength);
 $whichMapY = floor($plotNorthWestY / $worldMapTileLength);
-$worldMapRequired = $worldMap[$whichMapX][$whichMapY];
+$worldMapRequired = $worldMap[$whichMapY][$whichMapX];
 $thisPlacementJsonMapResults = file_get_contents('../data/chr' .  $chr . '/map' . $worldMapRequired . '.json');
 $thisPlacementMapJson = json_decode($thisPlacementJsonMapResults, true);
 
