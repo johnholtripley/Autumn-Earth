@@ -1518,6 +1518,7 @@ function gameLoop() {
             break;
         case "housing":
             //housingNameSpace.draw();
+            housingNameSpace.update();
             updateSurroundingGameWorld();
             break;
         case "play":
@@ -1635,6 +1636,7 @@ function update() {
                     break;
             }
             activeAction = "";
+
             key[12] = false;
         }
 

@@ -557,7 +557,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "house":
-                    if (hero.hasAPlayerHouse) {
+                    if (hero.housing.hasAPlayerHouse) {
                         UI.openHousingPanel();
                     } else {
                         UI.showNotification("<p>I don't have a house yet&hellip;</p>");

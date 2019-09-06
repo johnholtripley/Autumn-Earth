@@ -3069,8 +3069,18 @@ window.Loader = (function() {
 
 // -----------------------------------------------------------
 var housingNameSpace = {
-//draw: function() {
-//}
+    //draw: function() {
+    //}
+    update: function() {
+        if (key[12]) {
+            // escape - cancel any active actions:
+
+            if (gameMode == 'housing') {
+                gameMode = "play";
+            }
+            key[12] = false;
+        }
+    }
 }
 var allCardPacks = [
     [1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3],
@@ -4037,7 +4047,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "house":
-                    if (hero.hasAPlayerHouse) {
+                    if (hero.housing.hasAPlayerHouse) {
                         UI.openHousingPanel();
                     } else {
                         UI.showNotification("<p>I don't have a house yet&hellip;</p>");
@@ -9506,6 +9516,7 @@ function gameLoop() {
             break;
         case "housing":
             //housingNameSpace.draw();
+            housingNameSpace.update();
             updateSurroundingGameWorld();
             break;
         case "play":
@@ -9623,6 +9634,7 @@ function update() {
                     break;
             }
             activeAction = "";
+
             key[12] = false;
         }
 
