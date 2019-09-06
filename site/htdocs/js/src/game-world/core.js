@@ -1501,10 +1501,7 @@ function updateSurroundingGameWorld() {
 function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
-            //    console.log("loading map assets...");
-            break;
-        case "paused":
-            //
+            // console.log("loading map assets...");
             break;
         case "cardGame":
             cardGameNameSpace.update();
@@ -1517,7 +1514,6 @@ function gameLoop() {
             updateSurroundingGameWorld();
             break;
         case "housing":
-            //housingNameSpace.draw();
             housingNameSpace.update();
             updateSurroundingGameWorld();
             break;

@@ -1,10 +1,7 @@
 var housingNameSpace = {
-    //draw: function() {
-    //}
     update: function() {
         if (key[12]) {
-            // escape - cancel any active actions:
-
+            // escape - cancel
             if (gameMode == 'housing') {
                 gameMode = "play";
             }
