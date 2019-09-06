@@ -3875,7 +3875,7 @@ function draw() {
                     break;
                 case "houseGroundPlan":
                 // draw house foot print:
-                drawIsoRectangle(hero.northWestCornerTileX*tileW, hero.northWestCornerTileY*tileW, (hero.southEastCornerTileX)*tileW, (hero.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.8)');
+                drawIsoRectangle(hero.northWestCornerTileX*tileW, hero.northWestCornerTileY*tileW, (hero.southEastCornerTileX)*tileW, (hero.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
