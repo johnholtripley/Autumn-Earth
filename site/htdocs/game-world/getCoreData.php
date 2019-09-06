@@ -79,14 +79,10 @@ $outputJSON .= '"lineOfSightRange": '.$lineOfSightRange.',';
 $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"catalogues": '.$catalogues.',';
-
-$outputJSON .= '"hasAPlayerHouse": '.$hasAPlayerHouse.',';
-if($hasAPlayerHouse == 'true') {
-	$outputJSON .= '"northWestCornerTileX": '.$northWestCornerTileX.',';
-	$outputJSON .= '"northWestCornerTileY": '.$northWestCornerTileY.',';
-	$outputJSON .= '"southEastCornerTileX": '.$southEastCornerTileX.',';
-	$outputJSON .= '"southEastCornerTileY": '.$southEastCornerTileY.',';
+if($housing == '') {
+$housing = '{"hasAPlayerHouse": false}';
 }
+$outputJSON .= '"housing": '.$housing.',';
 $outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
 

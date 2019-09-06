@@ -537,7 +537,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "deed":
                     if (isOverWorldMap) {
-                        if (!hero.hasAPlayerHouse) {
+                        if (!hero.housing.hasAPlayerHouse) {
                             if (hasItemsInInventory([{ type: 86 }])) {
                                 var actionValueSplit = whichActionValue.split('x');
                                 plotPlacement.width = actionValueSplit[0];

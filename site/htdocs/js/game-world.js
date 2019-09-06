@@ -4017,7 +4017,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "deed":
                     if (isOverWorldMap) {
-                        if (!hero.hasAPlayerHouse) {
+                        if (!hero.housing.hasAPlayerHouse) {
                             if (hasItemsInInventory([{ type: 86 }])) {
                                 var actionValueSplit = whichActionValue.split('x');
                                 plotPlacement.width = actionValueSplit[0];
@@ -9911,18 +9911,18 @@ function placePlotPlacement() {
            // remove plot item from inventory:
               removeItemTypeFromInventory(plotPlacement.whichType, 1);
 
-              hero.hasAPlayerHouse = true;
-              hero.northWestCornerTileX = getTileX(nonIsoCoordX);
-              hero.northWestCornerTileY = getTileY(nonIsoCoordY);
-hero.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width*tileW));
-hero.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length*tileW));
+              hero.housing.hasAPlayerHouse = true;
+              hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
+              hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
+hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width*tileW));
+hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length*tileW));
                 // ###
                 // john
-                // draw marker:
+              
      
        
                 // update local map array
-
+hero.housing.showFootprintInEditMode = true;
 
                 UI.openHousingPanel();
                 gameMode = 'housing';
@@ -11589,7 +11589,9 @@ function draw() {
                     break;
             }
             if(gameMode == 'housing') {
+             if(hero.housing.showFootprintInEditMode) {
                 assetsToDraw.push([0, "houseGroundPlan"]);
+            }
             }
         }
 
@@ -11863,7 +11865,7 @@ function draw() {
                     break;
                 case "houseGroundPlan":
                 // draw house foot print:
-                drawIsoRectangle(hero.northWestCornerTileX*tileW, hero.northWestCornerTileY*tileW, (hero.southEastCornerTileX)*tileW, (hero.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.2)');
+                drawIsoRectangle(hero.housing.northWestCornerTileX*tileW, hero.housing.northWestCornerTileY*tileW, (hero.housing.southEastCornerTileX)*tileW, (hero.housing.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
