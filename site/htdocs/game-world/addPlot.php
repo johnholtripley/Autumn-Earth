@@ -88,12 +88,15 @@ $internalJSONOutput .= $baseJSONOutput;
 
 $query = "insert into tblplayerhousing (characterID, northWestCornerTileX, northWestCornerTileY, southEastCornerTileX, southEastCornerTileY) values ('".$chr."','".$plotNorthWestX."','".$plotNorthWestY."','".($plotNorthWestX + $plotWidth)."','".($plotNorthWestY + $plotHeight)."')";
 
+header('Content-Type: application/json');
+
+
 if($debug) {
 echo $externalJSONOutput;
-echo "<hr>";
-echo $internalJSONOutput;
-echo "<hr>";
-echo $query; 
+//echo "<hr>";
+//echo $internalJSONOutput;
+//echo "<hr>";
+//echo $query; 
 } else {
     $savedirectory = '../data/chr'.$chr.'/housing/';
     if(!file_exists($savedirectory)) {

@@ -536,22 +536,32 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "deed":
-                if(isOverWorldMap) {
-                    if(!hero.hasAPlayerHouse) {
-                        var actionValueSplit = whichActionValue.split('x');
-                        plotPlacement.width = actionValueSplit[0];
-                        plotPlacement.length = actionValueSplit[1];
-                        plotPlacement.whichType = hero.inventory[whichSlotNumber].type;
-                        activeAction = "plotPlacement";
-                        document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                        document.addEventListener("click", placePlotPlacement, false);
-                        
+                    if (isOverWorldMap) {
+                        if (!hero.hasAPlayerHouse) {
+                            if (hasItemsInInventory([{ type: 86 }])) {
+                                var actionValueSplit = whichActionValue.split('x');
+                                plotPlacement.width = actionValueSplit[0];
+                                plotPlacement.length = actionValueSplit[1];
+                                plotPlacement.whichType = hero.inventory[whichSlotNumber].type;
+                                activeAction = "plotPlacement";
+                                document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                                document.addEventListener("click", placePlotPlacement, false);
+                            } else {
+                                UI.showNotification("<p>I need to buy a housing tool first</p>");
+                            }
+                        } else {
+                            UI.showNotification("<p>I already have a house&hellip;</p>");
+                        }
                     } else {
-                        UI.showNotification("<p>I already have a house&hellip;</p>");
+                        UI.showNotification("<p>I can't do that indoors&hellip;</p>");
                     }
-                } else {
-                     UI.showNotification("<p>I can't do that indoors&hellip;</p>");
-                }
+                    break;
+                case "house":
+                    if (hero.hasAPlayerHouse) {
+                        UI.openHousingPanel();
+                    } else {
+                        UI.showNotification("<p>I don't have a house yet&hellip;</p>");
+                    }
                     break;
             }
         }

@@ -33,6 +33,10 @@ $query = "SELECT * from tblplayerhousing where characterID='".$chr."'";
    $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
 	$hasAPlayerHouse = 'true';
+	 while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+   
+}
 }
 mysqli_free_result($result);
 
@@ -75,8 +79,15 @@ $outputJSON .= '"lineOfSightRange": '.$lineOfSightRange.',';
 $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"catalogues": '.$catalogues.',';
-$outputJSON .= '"actions": '.$actions.',';
-$outputJSON .= '"hasAPlayerHouse": '.$hasAPlayerHouse;
+
+$outputJSON .= '"hasAPlayerHouse": '.$hasAPlayerHouse.',';
+if($hasAPlayerHouse == 'true') {
+	$outputJSON .= '"northWestCornerTileX": '.$northWestCornerTileX.',';
+	$outputJSON .= '"northWestCornerTileY": '.$northWestCornerTileY.',';
+	$outputJSON .= '"southEastCornerTileX": '.$southEastCornerTileX.',';
+	$outputJSON .= '"southEastCornerTileY": '.$southEastCornerTileY.',';
+}
+$outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
 
 

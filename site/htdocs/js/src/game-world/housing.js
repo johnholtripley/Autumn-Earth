@@ -1,0 +1,4 @@
+var housingNameSpace = {
+//draw: function() {
+//}
+}

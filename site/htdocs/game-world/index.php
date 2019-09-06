@@ -261,6 +261,16 @@ $theseCatalogues = json_decode($catalogues, true);
       </ol>
     </div>
 
+    <div id="housingPanel">
+      <div class="draggableBar">Housing</div>
+      <button class="closePanel">close</button>
+      <ul>
+        <li><button>Construct</button></li>
+        <li><button>Door Permissions</button></li>
+        <li><img src="/images/game-world/inventory-items/53.png" alt="Home stone"></li>
+      </ul>
+    </div>
+
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>
       <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">

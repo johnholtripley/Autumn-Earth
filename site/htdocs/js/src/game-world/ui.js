@@ -82,6 +82,7 @@ const treasureMapPanels = document.getElementById('treasureMapPanels');
 const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPanel');
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
+const housingPanel = document.getElementById('housingPanel');
 
 
 
@@ -2575,5 +2576,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     touchTapAction: function() {
         // simulate the Action key being pressed:
         key[4] = 1;
+    },
+    openHousingPanel: function() {
+        housingPanel.classList.add('active');
     }
 }

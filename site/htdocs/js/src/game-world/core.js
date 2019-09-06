@@ -1140,9 +1140,7 @@ function changeMaps(doorX, doorY) {
     if (hero.tileY != "?") {
         hero.tileY = parseInt(hero.tileY);
     }
-    console.log('changeMaps', hero.tileX, hero.tileY, currentMap);
     visibleMaps = [];
-    console.log("cleared visible maps",visibleMaps);
     loadMap();
 }
 
@@ -1511,12 +1509,16 @@ function gameLoop() {
         case "cardGame":
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
-            updateSurroundingGameWorld()
+            updateSurroundingGameWorld();
             break;
         case "hnefataflGame":
             hnefataflNameSpace.update();
             hnefataflNameSpace.draw();
-            updateSurroundingGameWorld()
+            updateSurroundingGameWorld();
+            break;
+        case "housing":
+            //housingNameSpace.draw();
+            updateSurroundingGameWorld();
             break;
         case "play":
             update();
@@ -1911,26 +1913,35 @@ function placePlotPlacement() {
       nonIsoCoordX -= (plotPlacement.width / 2)*tileW;
       nonIsoCoordY -= (plotPlacement.length / 2)*tileW;
 
-console.log(hero.tileX,hero.tileY,getTileX(nonIsoCoordX),getTileY(nonIsoCoordY));
+//console.log(hero.tileX,hero.tileY,getTileX(nonIsoCoordX),getTileY(nonIsoCoordY));
   
         // post to server to create files for this character
         getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
-            if (data.success == 'true') {
+                
+            if (data) {
 
            // remove plot item from inventory:
               removeItemTypeFromInventory(plotPlacement.whichType, 1);
 
+              hero.hasAPlayerHouse = true;
+              hero.northWestCornerTileX = getTileX(nonIsoCoordX);
+              hero.northWestCornerTileY = getTileY(nonIsoCoordY);
+hero.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width*tileW));
+hero.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length*tileW));
                 // ###
                 // john
                 // draw marker:
      
        
                 // update local map array
-            } else {
-                // try again ?
-            }
+
+
+                UI.openHousingPanel();
+                gameMode = 'housing';
+            } 
         }, function(status) {
             // try again 
+            // ######
         });
     } else {
         UI.showNotification("<p>I can't put a plot there</p>");
@@ -3589,6 +3600,9 @@ function draw() {
                     assetsToDraw.push([0, "plotPlacementOverlay"]);
                     break;
             }
+            if(gameMode == 'housing') {
+                assetsToDraw.push([0, "houseGroundPlan"]);
+            }
         }
 
         // draw fae:
@@ -3858,6 +3872,10 @@ function draw() {
                     drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize / 2, false, 'rgba(255,255,0,0.3)');
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
+                    break;
+                case "houseGroundPlan":
+                // draw house foot print:
+                drawIsoRectangle(hero.northWestCornerTileX*tileW, hero.northWestCornerTileY*tileW, (hero.southEastCornerTileX)*tileW, (hero.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.8)');
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
