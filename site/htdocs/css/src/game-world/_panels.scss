@@ -846,6 +846,12 @@ font-size: 0;
         margin: 0;
     }
 }
+#housingConstructionPanel {
+          @include togglePanel(0.4s);
+        left: 80px;
+        bottom: 80px;
+        background: #53160d;
+}
 
 #catalogueQuestPanels {
     .catalogue {

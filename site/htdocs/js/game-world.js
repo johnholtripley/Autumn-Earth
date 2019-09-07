@@ -3069,17 +3069,23 @@ window.Loader = (function() {
 
 // -----------------------------------------------------------
 var housingNameSpace = {
-    //draw: function() {
-    //}
     update: function() {
         if (key[12]) {
-            // escape - cancel any active actions:
-
+            // escape - cancel
             if (gameMode == 'housing') {
                 gameMode = "play";
             }
             key[12] = false;
         }
+    },
+    toggleShowPlotFootprint: function(e) {
+        console.log(e,e.target);
+        if(e.target.checked) {
+hero.housing.showFootprintInEditMode = true;
+        } else {
+            hero.housing.showFootprintInEditMode = false;
+        }
+        
     }
 }
 var allCardPacks = [
@@ -5425,6 +5431,8 @@ const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPan
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
+const housingConstructionPanel = document.getElementById('housingConstructionPanel');
+const showHousingFootprintCheckbox = document.getElementById('showHousingFootprintCheckbox');
 
 
 
@@ -5543,6 +5551,7 @@ var UI = {
         startCrafting.onclick = startCraftingTimer;
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
+        showHousingFootprintCheckbox.onchange = housingNameSpace.toggleShowPlotFootprint;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
@@ -7921,6 +7930,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     openHousingPanel: function() {
         housingPanel.classList.add('active');
+    },
+    openHousingConstructionPanel: function() {
+        housingConstructionPanel.classList.add('active');
     }
 }
 function setupWeather() {
@@ -9499,10 +9511,7 @@ function updateSurroundingGameWorld() {
 function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
-            //    console.log("loading map assets...");
-            break;
-        case "paused":
-            //
+            // console.log("loading map assets...");
             break;
         case "cardGame":
             cardGameNameSpace.update();
@@ -9515,7 +9524,6 @@ function gameLoop() {
             updateSurroundingGameWorld();
             break;
         case "housing":
-            //housingNameSpace.draw();
             housingNameSpace.update();
             updateSurroundingGameWorld();
             break;
@@ -9899,46 +9907,34 @@ function checkForHotspots() {
 
 function placePlotPlacement() {
     if (plotPlacement.numberOfBlockedTiles == 0) {
-
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
         document.removeEventListener("click", placePlotPlacement, false);
         activeAction = "";
-
         // copied from plotPlacementOverlay in draw function:
         var xDiff = cursorPositionX - (canvasWidth / 2);
         var yDiff = cursorPositionY - (canvasHeight / 2);
         var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
         var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
-// get the top left corner:
-      nonIsoCoordX -= (plotPlacement.width / 2)*tileW;
-      nonIsoCoordY -= (plotPlacement.length / 2)*tileW;
-
-//console.log(hero.tileX,hero.tileY,getTileX(nonIsoCoordX),getTileY(nonIsoCoordY));
-  
+        // get the top left corner:
+        nonIsoCoordX -= (plotPlacement.width / 2) * tileW;
+        nonIsoCoordY -= (plotPlacement.length / 2) * tileW;
         // post to server to create files for this character
         getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
-                
             if (data) {
-
-           // remove plot item from inventory:
-              removeItemTypeFromInventory(plotPlacement.whichType, 1);
-
-              hero.housing.hasAPlayerHouse = true;
-              hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
-              hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
-hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width*tileW));
-hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length*tileW));
-                // ###
-                // john
-              
-     
-       
-                // update local map array
-hero.housing.showFootprintInEditMode = true;
-
+                // remove plot item from inventory:
+                removeItemTypeFromInventory(plotPlacement.whichType, 1);
+                hero.housing.hasAPlayerHouse = true;
+                hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
+                hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
+                hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
+                hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                // show footprint so the player knows it's worked:
+                hero.housing.showFootprintInEditMode = true;
+                showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
+                UI.openHousingConstructionPanel();
                 gameMode = 'housing';
-            } 
+            }
         }, function(status) {
             // try again 
             // ######

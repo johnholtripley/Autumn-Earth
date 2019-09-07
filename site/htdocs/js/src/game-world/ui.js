@@ -83,6 +83,8 @@ const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPan
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
+const housingConstructionPanel = document.getElementById('housingConstructionPanel');
+const showHousingFootprintCheckbox = document.getElementById('showHousingFootprintCheckbox');
 
 
 
@@ -201,6 +203,7 @@ var UI = {
         startCrafting.onclick = startCraftingTimer;
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
+        showHousingFootprintCheckbox.onchange = housingNameSpace.toggleShowPlotFootprint;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
@@ -2579,5 +2582,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     openHousingPanel: function() {
         housingPanel.classList.add('active');
+    },
+    openHousingConstructionPanel: function() {
+        housingConstructionPanel.classList.add('active');
     }
 }

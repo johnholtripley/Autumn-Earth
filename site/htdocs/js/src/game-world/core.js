@@ -1897,46 +1897,34 @@ function checkForHotspots() {
 
 function placePlotPlacement() {
     if (plotPlacement.numberOfBlockedTiles == 0) {
-
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
         document.removeEventListener("click", placePlotPlacement, false);
         activeAction = "";
-
         // copied from plotPlacementOverlay in draw function:
         var xDiff = cursorPositionX - (canvasWidth / 2);
         var yDiff = cursorPositionY - (canvasHeight / 2);
         var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
         var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
-// get the top left corner:
-      nonIsoCoordX -= (plotPlacement.width / 2)*tileW;
-      nonIsoCoordY -= (plotPlacement.length / 2)*tileW;
-
-//console.log(hero.tileX,hero.tileY,getTileX(nonIsoCoordX),getTileY(nonIsoCoordY));
-  
+        // get the top left corner:
+        nonIsoCoordX -= (plotPlacement.width / 2) * tileW;
+        nonIsoCoordY -= (plotPlacement.length / 2) * tileW;
         // post to server to create files for this character
         getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
-                
             if (data) {
-
-           // remove plot item from inventory:
-              removeItemTypeFromInventory(plotPlacement.whichType, 1);
-
-              hero.housing.hasAPlayerHouse = true;
-              hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
-              hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
-hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width*tileW));
-hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length*tileW));
-                // ###
-                // john
-              
-     
-       
-                // update local map array
-hero.housing.showFootprintInEditMode = true;
-
+                // remove plot item from inventory:
+                removeItemTypeFromInventory(plotPlacement.whichType, 1);
+                hero.housing.hasAPlayerHouse = true;
+                hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
+                hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
+                hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
+                hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                // show footprint so the player knows it's worked:
+                hero.housing.showFootprintInEditMode = true;
+                showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
+                UI.openHousingConstructionPanel();
                 gameMode = 'housing';
-            } 
+            }
         }, function(status) {
             // try again 
             // ######

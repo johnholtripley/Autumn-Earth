@@ -270,6 +270,11 @@ $theseCatalogues = json_decode($catalogues, true);
         <li><img src="/images/game-world/inventory-items/53.png" alt="Home stone"></li>
       </ul>
     </div>
+    <div id="housingConstructionPanel">
+      <div class="draggableBar">Housing</div>
+      <button class="closePanel">close</button>
+      <label for="showHousingFootprintCheckbox">Show plot footprint?</label><input type="checkbox" checked="checked" id="showHousingFootprintCheckbox" class="switch">
+    </div>
 
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>
