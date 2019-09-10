@@ -1,6 +1,7 @@
 #herbariumCatalogue {
     list-style: none;
-    background: #dbd7be;
+    background: #dbd7be url(/images/herbarium/catalogue-background-NOT_MINE.jpg) repeat-y 50% 0;
+    @include background-size(100%);
     li div {
         @include pxRem('padding', 20px 0);
     }
@@ -37,7 +38,11 @@ img {
     shape-margin: 40px;
 }
 p {
-    color: #111;
+    color: #000;
+    opacity: 0.85;
+     @include pxRem('font-size', 13px);
+     @include pxRem('line-height', 19px);
+     font-weight: bold;
 }
 
 }
