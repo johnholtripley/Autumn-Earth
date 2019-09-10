@@ -5557,6 +5557,7 @@ var UI = {
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
         document.getElementById('hireRetinueFollowerYes').onclick = hireNewFollower;
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
+        document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -7933,6 +7934,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     openHousingConstructionPanel: function() {
         housingConstructionPanel.classList.add('active');
+        gameMode = 'housing';
     }
 }
 function setupWeather() {
@@ -9933,7 +9935,7 @@ function placePlotPlacement() {
                 showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
                 UI.openHousingConstructionPanel();
-                gameMode = 'housing';
+                
             }
         }, function(status) {
             // try again 

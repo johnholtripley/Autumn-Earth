@@ -83,8 +83,6 @@ function detectKonamiCode() {
 
 
 
-
-
 function createCookie(name,value,days) {
   // http://www.quirksmode.org/js/cookies.html
   if (days) {

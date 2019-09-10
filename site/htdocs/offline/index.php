@@ -18,15 +18,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <h1>Ooh - sorry. Looks like you're offline</h1>
 
-
+<p>Pages that are available offline for you:</p>
+<ul id="offlinePageList"></ul>
 
 
 </div>
 </div>
-
-
-
-
 
 
 

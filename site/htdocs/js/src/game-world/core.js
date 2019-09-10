@@ -1923,7 +1923,7 @@ function placePlotPlacement() {
                 showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
                 UI.openHousingConstructionPanel();
-                gameMode = 'housing';
+                
             }
         }, function(status) {
             // try again 

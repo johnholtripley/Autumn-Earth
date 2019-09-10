@@ -265,7 +265,7 @@ $theseCatalogues = json_decode($catalogues, true);
       <div class="draggableBar">Housing</div>
       <button class="closePanel">close</button>
       <ul>
-        <li><button>Construct</button></li>
+        <li><button id="openHousingConstructButton">Construct</button></li>
         <li><button>Door Permissions</button></li>
         <li><img src="/images/game-world/inventory-items/53.png" alt="Home stone"></li>
       </ul>
