@@ -94,7 +94,11 @@ if(rand(1,8) == 1) {
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'" data-night="'.$isNight.'"><div '.$innerClass.' itemscope itemtype="http://schema.org/Thing/Species">';
 				$htmlOutput .= '<a itemprop="mainEntityOfPage" href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal" data-url="'.$plantUrl.'">';
 
-picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
+
+
+// picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
+$htmlOutput .= '<img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);">';
+
 
 	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
 $allCommonNames = explode("/",$commonNamesJoined);

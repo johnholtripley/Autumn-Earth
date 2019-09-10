@@ -24,6 +24,17 @@
         @include transform(translateY(2.5%));
     }
 
+img {
+    float: left;
+    width: 754px;
+    height: 754px;
+    display: block;
+ 
+    -webkit-shape-image-threshold: 0.5;
+    shape-image-threshold: 0.5;
+    -webkit-shape-margin: 40px;
+    shape-margin: 40px;
+}
 
 }
 

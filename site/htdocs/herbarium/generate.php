@@ -713,9 +713,14 @@ function drawPlant() {
 	$canvaDimension = 2500;
 	$outputCanvaDimension = 754;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-	$groundColour = array(219, 215, 190);
-	$ground = imagecolorallocate($plantCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
-	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+	imagesavealpha($plantCanvas, true);
+	//$groundColour = array(219, 215, 190);
+
+	// use transparent background:
+	$groundColour = array(0, 0, 0, 127);
+	$ground = imagecolorallocatealpha($plantCanvas, $groundColour[0], $groundColour[1], $groundColour[2], $groundColour[3]);
+	imagefill($plantCanvas, 0, 0, $ground);
+
 
 
 // load brush images:
@@ -1510,9 +1515,20 @@ $destOffsetY += ((($outputCanvaDimension-($spacing*2))-$destinationHeight)/2);
 
 
 $imageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
-$resizedGround = imagecolorallocate($imageResampled, $groundColour[0], $groundColour[1], $groundColour[2]);
+$transparentImageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
+imagesavealpha($transparentImageResampled, true);
+
+	$transparentGroundColour = array(0, 0, 0, 127);
+	$transparentGround = imagecolorallocatealpha($transparentImageResampled, $transparentGroundColour[0], $transparentGroundColour[1], $transparentGroundColour[2], $transparentGroundColour[3]);
+	imagefill($transparentImageResampled, 0, 0, $transparentGround);
+
+
+$filledGroundColour = array(219, 215, 190);
+$resizedGround = imagecolorallocate($imageResampled, $filledGroundColour[0], $filledGroundColour[1], $filledGroundColour[2]);
+
 imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
 imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
+imagecopyresampled($transparentImageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 
 
 
@@ -1524,12 +1540,17 @@ imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $l
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
 imageAlphaBlending($textureOverlay, false);
 imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $outputCanvaDimension);
+imagecopy($transparentImageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $outputCanvaDimension);
+
+
 
 	// output:
 	imagejpeg($imageResampled,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg',95);
+	imagepng($transparentImageResampled,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.png');
 	imagedestroy($plantCanvas);
 	imagedestroy($textureOverlay);
 	imagedestroy($imageResampled);
+	imagedestroy($transparentImageResampled);
 
 if(isset($petalBrush)) {
 imagedestroy($petalBrush);
