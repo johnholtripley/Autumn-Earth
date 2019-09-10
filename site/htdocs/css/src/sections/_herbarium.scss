@@ -5,7 +5,7 @@
     }
     @include mq($widest) {
         .spotlight {
-            width: 40%;
+          //  width: 40%;
         }
         .inbetweenRow {
             width: 25%;
@@ -26,8 +26,8 @@
 
 img {
     float: left;
-    width: 754px;
-    height: 754px;
+    //width: 754px;
+    //height: 754px;
     display: block;
  
     -webkit-shape-image-threshold: 0.5;

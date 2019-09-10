@@ -60,7 +60,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		$i = 1;
 		$offsetClasses = array(1,2,3,4);
 		if(($numberOfEntries>0) && (isset($isInitialPageRequest))) {
-	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-4up widest-5up equalHeights paginatedBlock">';
+	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-3up widest-3up equalHeights paginatedBlock">';
 }
 		while ($row = mysqli_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
@@ -96,8 +96,7 @@ if(rand(1,8) == 1) {
 
 
 
-// picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
-$htmlOutput .= '<img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);">';
+
 
 
 	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
@@ -115,7 +114,10 @@ $htmlOutput .= ' or ';
 }
 
 }
-	$htmlOutput .= '</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate(strtotime($timeCreated))).'</p></a></div></li>';
+	$htmlOutput .= '</h5>';
+	// picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
+$htmlOutput .= '<img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);">';
+	$htmlOutput .= '<p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate(strtotime($timeCreated))).'</p></a></div></li>';
 
 
 

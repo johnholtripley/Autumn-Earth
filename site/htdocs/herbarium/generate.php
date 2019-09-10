@@ -1517,10 +1517,14 @@ $destOffsetY += ((($outputCanvaDimension-($spacing*2))-$destinationHeight)/2);
 $imageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
 $transparentImageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
 imagesavealpha($transparentImageResampled, true);
+$transparentImageMask = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
+imagesavealpha($transparentImageMask, true);
 
 	$transparentGroundColour = array(0, 0, 0, 127);
 	$transparentGround = imagecolorallocatealpha($transparentImageResampled, $transparentGroundColour[0], $transparentGroundColour[1], $transparentGroundColour[2], $transparentGroundColour[3]);
 	imagefill($transparentImageResampled, 0, 0, $transparentGround);
+		$transparentGroundMask = imagecolorallocatealpha($transparentImageMask, $transparentGroundColour[0], $transparentGroundColour[1], $transparentGroundColour[2], $transparentGroundColour[3]);
+	imagefill($transparentImageMask, 0, 0, $transparentGroundMask);
 
 
 $filledGroundColour = array(219, 215, 190);
@@ -1529,7 +1533,7 @@ $resizedGround = imagecolorallocate($imageResampled, $filledGroundColour[0], $fi
 imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
 imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 imagecopyresampled($transparentImageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
-
+imagecopyresampled($transparentImageMask, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 
 
 
@@ -1538,9 +1542,27 @@ imagecopyresampled($transparentImageResampled, $plantCanvas, $destOffsetX, $dest
 
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
-imageAlphaBlending($textureOverlay, false);
+imagealphablending($textureOverlay, false);
 imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $outputCanvaDimension);
 imagecopy($transparentImageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $outputCanvaDimension);
+
+imagealphablending($transparentImageResampled, false);
+// use the original transparent image as a mask to remove any of the texture overlay that is in transparent areas:
+for( $x = 0; $x < $outputCanvaDimension; $x++ ) {
+        for( $y = 0; $y < $outputCanvaDimension; $y++ ) {
+
+$thisPixelFromOriginal = imagecolorat($transparentImageMask, $x, $y);
+$thisPixelTranparency = ($thisPixelFromOriginal >> 24) & 0x7F;
+if($thisPixelTranparency == 127) {
+	// fully transparent:
+imagesetpixel($transparentImageResampled, $x,$y, imagecolorallocatealpha($transparentImageResampled,0,0,0,127));
+
+}
+
+        	
+         
+        }
+    }
 
 
 
@@ -1551,6 +1573,7 @@ imagecopy($transparentImageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaD
 	imagedestroy($textureOverlay);
 	imagedestroy($imageResampled);
 	imagedestroy($transparentImageResampled);
+	imagedestroy($transparentImageMask);
 
 if(isset($petalBrush)) {
 imagedestroy($petalBrush);
