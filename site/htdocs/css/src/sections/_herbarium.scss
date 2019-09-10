@@ -1,5 +1,6 @@
 #herbariumCatalogue {
     list-style: none;
+    background: #dbd7be;
     li div {
         @include pxRem('padding', 20px 0);
     }
@@ -29,16 +30,30 @@ img {
     //width: 754px;
     //height: 754px;
     display: block;
- 
+ margin-left: -20%;
     -webkit-shape-image-threshold: 0.5;
     shape-image-threshold: 0.5;
     -webkit-shape-margin: 40px;
     shape-margin: 40px;
 }
+p {
+    color: #111;
+}
 
 }
 
-
+img.drawAroundPlant {
+     float: left;
+    //width: 754px;
+    //height: 754px;
+    display: block;
+ 
+    -webkit-shape-image-threshold: 0.5;
+    shape-image-threshold: 0.5;
+    -webkit-shape-margin: 40px;
+    shape-margin: 40px;
+    width: 40%;
+}
 
 #modalWrapper {
     visibility: hidden;

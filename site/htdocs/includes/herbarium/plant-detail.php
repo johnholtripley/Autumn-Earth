@@ -13,15 +13,17 @@ extract($row);
 ?>
 
 <div class="row" itemscope itemtype="http://schema.org/Thing/Species">
-    <div class="medium-6 column">
+    
 
 
 
 <?php
 
-picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, array(300,604), true, ' itemprop="image"');
+//picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, array(300,604), true, ' itemprop="image"');
+
 ?>
-</div><div class="medium-6 column">
+<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.png" class="drawAroundPlant" style="-webkit-shape-outside: url(/images/herbarium/plants/<?php echo $plantUrl; ?>.png);shape-outside: url(/images/herbarium/plants/<?php echo $plantUrl; ?>.png);">
+
 	<h2 itemprop="name"><?php echo $latinName; ?></h2>
 	<h3>
         <?php
@@ -97,7 +99,7 @@ $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
 
 
 </ul>
-</div>
+
 </div>
 
 <?php

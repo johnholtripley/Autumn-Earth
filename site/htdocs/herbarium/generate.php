@@ -1101,7 +1101,7 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
 	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
 
-	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	$leafTrans = imagecolorallocatealpha(${'leaf'.$k}, 0, 0, 0, 127);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 
 
@@ -1152,7 +1152,7 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
 	imagealphablending(${'leaf'.$k}, false);
 	imagesavealpha(${'leaf'.$k}, true);
-	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	$leafTrans = imagecolorallocatealpha(${'leaf'.$k}, 0, 0, 0, 127);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 	$leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2]);
 
@@ -1190,7 +1190,7 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
 	imagealphablending(${'leaf'.$k}, false);
 	imagesavealpha(${'leaf'.$k}, true);
-	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	$leafTrans = imagecolorallocatealpha(${'leaf'.$k}, 0, 0, 0, 127);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 	$leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2]);
 	$darkenedOutlineColour = darkenColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2],50);
@@ -1553,7 +1553,7 @@ for( $x = 0; $x < $outputCanvaDimension; $x++ ) {
 
 $thisPixelFromOriginal = imagecolorat($transparentImageMask, $x, $y);
 $thisPixelTranparency = ($thisPixelFromOriginal >> 24) & 0x7F;
-if($thisPixelTranparency == 127) {
+if($thisPixelTranparency > 120) {
 	// fully transparent:
 imagesetpixel($transparentImageResampled, $x,$y, imagecolorallocatealpha($transparentImageResampled,0,0,0,127));
 
