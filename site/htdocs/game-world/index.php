@@ -274,6 +274,7 @@ $theseCatalogues = json_decode($catalogues, true);
       <div class="draggableBar">Housing</div>
       <button class="closePanel">close</button>
       <label for="showHousingFootprintCheckbox">Show plot footprint?</label><input type="checkbox" checked="checked" id="showHousingFootprintCheckbox" class="switch">
+      <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
     </div>
 
     <div id="gameSettings"><button class="closePanel">close</button>

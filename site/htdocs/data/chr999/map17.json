@@ -305,7 +305,57 @@
                 "tileX": 33,
                 "tileY": 38
 
-            }],
+            },
+
+ 
+
+ {
+"type": 88,
+"tileX": 33,
+"tileY": 43
+},
+{
+"type": 88,
+"tileX": 32,
+"tileY": 43
+},
+{
+"type": 87,
+"tileX": 33,
+"tileY": 43
+},
+{
+"type": 95,
+"tileX": 33,
+"tileY": 44
+},
+{
+"type": 87,
+"tileX": 33,
+"tileY": 45
+},
+{
+"type": 91,
+"tileX": 33,
+"tileY": 46
+},
+{
+"type": 93,
+"tileX": 33,
+"tileY": 46
+},
+{
+"type": 93,
+"tileX": 32,
+"tileY": 46
+}
+
+
+
+
+
+
+            ],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

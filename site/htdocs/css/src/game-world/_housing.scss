@@ -1,0 +1,22 @@
+#housingTileSelection {
+    margin: 0;
+    padding: 0;
+    li {
+        display: block;
+        float:left;
+        p {
+            position: absolute;
+            pointer-events: none;
+            bottom: 0;
+            opacity: 0;
+            @include transition(opacity 0.4s ease);
+            width: 120px;
+            background: #fff;
+            font-size: 11px;
+        }
+        &:hover p {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}
