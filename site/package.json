@@ -13,6 +13,7 @@
     "download": "^4.2.0",
     "favicons": "^4.2.7",
     "graceful-fs": "^4.1.11",
+    "growl": "^1.10.0",
     "gulp": "^3.9.1",
     "gulp-accessibility": "^1.2.1",
     "gulp-cache": "^0.2.9",
