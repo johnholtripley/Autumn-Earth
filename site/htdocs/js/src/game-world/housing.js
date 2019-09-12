@@ -21,6 +21,17 @@ function placePlotPlacement() {
                 hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
                 hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
                 hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                // set the empty tile data for the ground floor:
+                hero.housing.draft = [];
+                hero.housing.draft[0] = [];
+                for (var i = 0; i < plotPlacement.length; i++) {
+                    hero.housing.draft[0][i] = [];
+                    for (var j = 0; j < plotPlacement.width; j++) {
+                        hero.housing.draft[0][i].push("*");
+                    }
+                }
+               
+              
                 // show footprint so the player knows it's worked:
                 hero.housing.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
@@ -38,9 +49,9 @@ function placePlotPlacement() {
 }
 
 
-
 var housingNameSpace = {
     'whichTileActive': '',
+    'whichElevationActive': 0,
     update: function() {
         if (key[12]) {
             // escape - cancel
@@ -68,13 +79,16 @@ var housingNameSpace = {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
 
                             // place tile
-                            // ###
+                    
+                             hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY-hero.housing.northWestCornerTileY)][(clickWorldTileX-hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
+
+
+ 
+
                         }
                     }
                 }
             }
-
-
         }
     },
 
@@ -87,16 +101,13 @@ var housingNameSpace = {
         }
 
     },
-    selectNewTile: function(e) {
 
+    selectNewTile: function(e) {
         if (housingNameSpace.whichTileActive != '') {
             document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
         }
-
         var whichTile = getNearestParentId(e.target);
-
         whichTile.classList.add('active');
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-        console.log(housingNameSpace.whichTileActive);
     }
 }

@@ -3552,6 +3552,37 @@ function draw() {
              if(hero.housing.showFootprintInEditMode) {
                 assetsToDraw.push([0, "houseGroundPlan"]);
             }
+            
+
+// draw any draft housing tiles:
+
+
+  for (var i = 0; i < plotPlacement.length; i++) {
+                    for (var j = 0; j < plotPlacement.width; j++) {
+                        if(hero.housing.draft[0][i][j] != "*") {
+
+// add the half for the tile's centre:
+var thisItemX = (hero.housing.northWestCornerTileX + j + 0.5)*tileW;
+var thisItemY = (hero.housing.northWestCornerTileY + i + 0.5)*tileW;
+var thisItemZ = getElevation(hero.housing.northWestCornerTileX + j, hero.housing.northWestCornerTileY + i);
+
+var thisItemCentreX = 71;
+var thisItemCentreY = 100;
+thisItemIdentifier = "item"+hero.housing.draft[0][i][j];
+
+
+
+ thisX = findIsoCoordsX(thisItemX, thisItemY);
+                thisY = findIsoCoordsY(thisItemX, thisItemY);
+
+assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItemCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItemCentreY + (canvasHeight / 2) - thisItemZ)]);
+
+
+
+                        }
+                    }
+                }
+
             }
         }
 
@@ -3704,6 +3735,7 @@ function draw() {
                         }
                     }
                     thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+
 
                     // check for User Generated Content:
                     if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {

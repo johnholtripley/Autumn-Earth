@@ -3091,6 +3091,17 @@ function placePlotPlacement() {
                 hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
                 hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
                 hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                // set the empty tile data for the ground floor:
+                hero.housing.draft = [];
+                hero.housing.draft[0] = [];
+                for (var i = 0; i < plotPlacement.length; i++) {
+                    hero.housing.draft[0][i] = [];
+                    for (var j = 0; j < plotPlacement.width; j++) {
+                        hero.housing.draft[0][i].push("*");
+                    }
+                }
+               
+              
                 // show footprint so the player knows it's worked:
                 hero.housing.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
@@ -3108,9 +3119,9 @@ function placePlotPlacement() {
 }
 
 
-
 var housingNameSpace = {
     'whichTileActive': '',
+    'whichElevationActive': 0,
     update: function() {
         if (key[12]) {
             // escape - cancel
@@ -3138,13 +3149,16 @@ var housingNameSpace = {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
 
                             // place tile
-                            // ###
+                    
+                             hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY-hero.housing.northWestCornerTileY)][(clickWorldTileX-hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
+
+
+ 
+
                         }
                     }
                 }
             }
-
-
         }
     },
 
@@ -3157,17 +3171,14 @@ var housingNameSpace = {
         }
 
     },
-    selectNewTile: function(e) {
 
+    selectNewTile: function(e) {
         if (housingNameSpace.whichTileActive != '') {
             document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
         }
-
         var whichTile = getNearestParentId(e.target);
-
         whichTile.classList.add('active');
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-        console.log(housingNameSpace.whichTileActive);
     }
 }
 var allCardPacks = [
@@ -11653,6 +11664,37 @@ function draw() {
              if(hero.housing.showFootprintInEditMode) {
                 assetsToDraw.push([0, "houseGroundPlan"]);
             }
+            
+
+// draw any draft housing tiles:
+
+
+  for (var i = 0; i < plotPlacement.length; i++) {
+                    for (var j = 0; j < plotPlacement.width; j++) {
+                        if(hero.housing.draft[0][i][j] != "*") {
+
+// add the half for the tile's centre:
+var thisItemX = (hero.housing.northWestCornerTileX + j + 0.5)*tileW;
+var thisItemY = (hero.housing.northWestCornerTileY + i + 0.5)*tileW;
+var thisItemZ = getElevation(hero.housing.northWestCornerTileX + j, hero.housing.northWestCornerTileY + i);
+
+var thisItemCentreX = 71;
+var thisItemCentreY = 100;
+thisItemIdentifier = "item"+hero.housing.draft[0][i][j];
+
+
+
+ thisX = findIsoCoordsX(thisItemX, thisItemY);
+                thisY = findIsoCoordsY(thisItemX, thisItemY);
+
+assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItemCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItemCentreY + (canvasHeight / 2) - thisItemZ)]);
+
+
+
+                        }
+                    }
+                }
+
             }
         }
 
@@ -11805,6 +11847,7 @@ function draw() {
                         }
                     }
                     thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+
 
                     // check for User Generated Content:
                     if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
