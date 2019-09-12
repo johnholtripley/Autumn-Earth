@@ -121,6 +121,31 @@ mysqli_free_result($result);
 
 
 
+
+// 10 is the Item Category for housing tiles
+$query = 'select * from tblinventoryitems where itemCategories="10" ORDER BY "itemID" ASC';
+$outputJSON .= ',"housingItems": {';
+$result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+	while ($row = mysqli_fetch_array($result)) {
+		extract($row);
+			$outputJSON .= '"'.$itemID.'": {';
+		$outputJSON .= '"centreX":"'.$centreX.'",';
+		$outputJSON .= '"centreY":"'.$centreY.'",';
+		$outputJSON .= '"priceCode":"'.$priceCode.'"';
+		$outputJSON .= '},';
+	}
+	$outputJSON = rtrim($outputJSON, ', ');
+}
+mysqli_free_result($result);
+$outputJSON .= '}';
+
+
+
+
+
+
+
 // check for any unhired followers for this characters that were created more than 24 hours ago, and delete them:
 
 $checkHiredFollowerQuery = "DELETE from tblretinuefollowers where isHired='1' and characterIdFollowing='".$chr."' and isEnabled='0' and generatedAtTime < DATE_SUB(NOW(), INTERVAL 24 HOUR)";

@@ -61,6 +61,10 @@ var housingNameSpace = {
             }
             key[12] = false;
         }
+          if (key[7]) {
+            UI.toggleUI();
+            key[7] = false;
+        }
     },
 
     worldClickHandler: function(e) {
