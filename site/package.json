@@ -8,9 +8,11 @@
     "url": "https://github.com/johnholtripley/Autumn-Earth"
   },
   "devDependencies": {
+    "adm-zip": "^0.4.11",
     "broken-link-checker": "^0.6.7",
     "critical": "^0.7.0",
     "cryptiles": "^4.1.2",
+    "deep-extend": "^0.5.1",
     "diff": "^3.5.0",
     "download": "^4.2.0",
     "favicons": "^4.2.7",
@@ -49,6 +51,8 @@
     "phantomcss": "^0.11.0",
     "psi": "^2.0.2",
     "set-value": "^2.0.1",
+    "sshpk": "^1.13.2",
+    "tar": "^2.2.2",
     "webpagetest": "^0.3.4"
   },
   "dependencies": {
