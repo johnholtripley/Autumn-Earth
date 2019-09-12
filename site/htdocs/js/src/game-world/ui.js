@@ -84,7 +84,8 @@ const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFoll
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
-const showHousingFootprintCheckbox = document.getElementById('showHousingFootprintCheckbox');
+
+
 
 
 
@@ -203,13 +204,14 @@ var UI = {
         startCrafting.onclick = startCraftingTimer;
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
-        showHousingFootprintCheckbox.onchange = housingNameSpace.toggleShowPlotFootprint;
+        document.getElementById('showHousingFootprintCheckbox').onchange = housingNameSpace.toggleShowPlotFootprint;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
         document.getElementById('hireRetinueFollowerYes').onclick = hireNewFollower;
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
+        document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -2586,6 +2588,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     openHousingConstructionPanel: function() {
         housingConstructionPanel.classList.add('active');
+        document.addEventListener("click", housingNameSpace.worldClickHandler, false);
         gameMode = 'housing';
+    },
+    closeHousingConstructionPanel: function() {
+        // not called anywhere yet #######
+        document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
     }
 }

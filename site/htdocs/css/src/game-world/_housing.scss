@@ -1,9 +1,13 @@
 #housingTileSelection {
     margin: 0;
     padding: 0;
+
     li {
         display: block;
-        float:left;
+        float: left;
+        background: #fff;
+        position: relative;
+
         p {
             position: absolute;
             pointer-events: none;
@@ -14,7 +18,14 @@
             background: #fff;
             font-size: 11px;
         }
-        &:hover p {
+
+        &.active {
+            box-shadow: 0 0 5px 3px #eebb3f;
+            z-index: 1;
+        }
+
+        &:hover p,
+        &.active p {
             opacity: 1;
             pointer-events: auto;
         }
