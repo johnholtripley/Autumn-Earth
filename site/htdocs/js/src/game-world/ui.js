@@ -84,6 +84,7 @@ const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFoll
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
+const housingTileColour = document.getElementById('housingTileColour');
 
 
 
@@ -205,6 +206,7 @@ var UI = {
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
         document.getElementById('showHousingFootprintCheckbox').onchange = housingNameSpace.toggleShowPlotFootprint;
+        housingTileColour.onchange = housingNameSpace.housingTileColourChange;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;

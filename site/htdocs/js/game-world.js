@@ -3100,8 +3100,8 @@ function placePlotPlacement() {
                         hero.housing.draft[0][i].push("*");
                     }
                 }
-               
-              
+
+
                 // show footprint so the player knows it's worked:
                 hero.housing.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
@@ -3122,6 +3122,7 @@ function placePlotPlacement() {
 var housingNameSpace = {
     'whichTileActive': '',
     'whichElevationActive': 0,
+    'whichDyeColourActive': 0,
     update: function() {
         if (key[12]) {
             // escape - cancel
@@ -3131,7 +3132,7 @@ var housingNameSpace = {
             }
             key[12] = false;
         }
-          if (key[7]) {
+        if (key[7]) {
             UI.toggleUI();
             key[7] = false;
         }
@@ -3152,12 +3153,12 @@ var housingNameSpace = {
                     if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
 
-                            // place tile
-                    
-                             hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY-hero.housing.northWestCornerTileY)][(clickWorldTileX-hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
+                            // place tile:
+
+                            hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY - hero.housing.northWestCornerTileY)][(clickWorldTileX - hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
 
 
- 
+
 
                         }
                     }
@@ -3167,12 +3168,19 @@ var housingNameSpace = {
     },
 
     toggleShowPlotFootprint: function(e) {
-        console.log(e, e.target);
         if (e.target.checked) {
             hero.housing.showFootprintInEditMode = true;
         } else {
             hero.housing.showFootprintInEditMode = false;
         }
+
+    },
+
+    housingTileColourChange: function(e) {
+
+            housingNameSpace.whichDyeColourActive = housingTileColour.value;
+        // change colour of available tiles
+        // ########
 
     },
 
@@ -3183,6 +3191,19 @@ var housingNameSpace = {
         var whichTile = getNearestParentId(e.target);
         whichTile.classList.add('active');
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
+        // load world tile asset if it's not already loaded:
+        // check if the wall is being dyed:
+        var thisFileColourSuffix = '';
+        if (housingNameSpace.whichDyeColourActive != 0) {
+            var thisColourName = getColourName(whichItem.colour, housingNameSpace.whichTileActive);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+        }
+        var itemID = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
+        if (typeof itemImages[itemID] === "undefined") {
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichTile.getAttribute("data-cleanurl") + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+        }
     }
 }
 var allCardPacks = [
@@ -5529,6 +5550,7 @@ const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFoll
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
+const housingTileColour = document.getElementById('housingTileColour');
 
 
 
@@ -5650,6 +5672,7 @@ var UI = {
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
         document.getElementById('showHousingFootprintCheckbox').onchange = housingNameSpace.toggleShowPlotFootprint;
+        housingTileColour.onchange = housingNameSpace.housingTileColourChange;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
