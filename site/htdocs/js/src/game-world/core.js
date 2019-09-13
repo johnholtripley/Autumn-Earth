@@ -3565,21 +3565,42 @@ function draw() {
         if (gameMode == 'housing') {
             // draw any draft housing tiles:
             var whichHousingItem;
-            for (var i = 0; i < plotPlacement.length; i++) {
-                for (var j = 0; j < plotPlacement.width; j++) {
-                    if (hero.housing.draft[0][i][j] != "*") {
-                        whichHousingItem = hero.housing.draft[0][i][j];
+
+for (var i = 0; i < hero.housing.draft.length; i++) {
+for (var j = 0; j < hero.housing.draft[i].length; j++) {
+
+
+whichHousingItem = hero.housing.draft[i][j].type;
                         // add the half for the tile's centre:
-                        var thisItemX = (hero.housing.northWestCornerTileX + j + 0.5) * tileW;
-                        var thisItemY = (hero.housing.northWestCornerTileY + i + 0.5) * tileW;
-                        var thisItemZ = getElevation(hero.housing.northWestCornerTileX + j, hero.housing.northWestCornerTileY + i);
-                        thisItemIdentifier = "item" + whichHousingItem;
+                        var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
+                        var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
+                        var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
+                          thisFileColourSuffix = "";
+                    if (hero.housing.draft[i][j].colour) {
+
+
+  // bypass hasInherent colour checks as won't be in inventory items
+        
+         var thisColourName = colourNames[hero.housing.draft[i][j].colour];
+
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+
+
+                        
+                       
+                    }
+                        thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
                         thisX = findIsoCoordsX(thisItemX, thisItemY);
                         thisY = findIsoCoordsY(thisItemX, thisItemY);
                         assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
-                    }
-                }
-            }
+
+
+
+}
+}
+         
         }
 
 

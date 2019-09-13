@@ -23,13 +23,17 @@ function placePlotPlacement() {
                 hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
+                
+
                 hero.housing.draft[0] = [];
+                /*
                 for (var i = 0; i < plotPlacement.length; i++) {
                     hero.housing.draft[0][i] = [];
                     for (var j = 0; j < plotPlacement.width; j++) {
                         hero.housing.draft[0][i].push("*");
                     }
                 }
+                */
 
 
                 // show footprint so the player knows it's worked:
@@ -51,8 +55,10 @@ function placePlotPlacement() {
 
 var housingNameSpace = {
     'whichTileActive': '',
+      'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
+  
     update: function() {
         if (key[12]) {
             // escape - cancel
@@ -83,9 +89,20 @@ var housingNameSpace = {
                     if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
 
-                            // place tile:
+var newWallTile = {
+    "type": housingNameSpace.whichTileActive,
+               "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
+                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
+                
+}
 
-                            hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY - hero.housing.northWestCornerTileY)][(clickWorldTileX - hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
+ if (housingNameSpace.whichDyeColourActive != 0) {
+    newWallTile.colour = housingNameSpace.whichDyeColourActive;
+ }
+
+                            // place tile:
+hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+                         //   hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY - hero.housing.northWestCornerTileY)][(clickWorldTileX - hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
 
 
 
@@ -109,6 +126,7 @@ var housingNameSpace = {
     housingTileColourChange: function(e) {
 
             housingNameSpace.whichDyeColourActive = housingTileColour.value;
+             housingNameSpace.loadNewTile();
         // change colour of available tiles
         // ########
 
@@ -120,19 +138,30 @@ var housingNameSpace = {
         }
         var whichTile = getNearestParentId(e.target);
         whichTile.classList.add('active');
+
+housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
+
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-        // load world tile asset if it's not already loaded:
+    housingNameSpace.loadNewTile();
+    },
+
+    loadNewTile: function() {
+    // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
         if (housingNameSpace.whichDyeColourActive != 0) {
-            var thisColourName = getColourName(whichItem.colour, housingNameSpace.whichTileActive);
+            // bypass hasInherent colour checks as won't be in inventory items
+        
+         var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
+
         var itemID = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
+       
         if (typeof itemImages[itemID] === "undefined") {
-            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichTile.getAttribute("data-cleanurl") + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive +thisFileColourSuffix+ '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
     }
 }
