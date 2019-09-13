@@ -3093,25 +3093,12 @@ function placePlotPlacement() {
                 hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
-                
-
                 hero.housing.draft[0] = [];
-                /*
-                for (var i = 0; i < plotPlacement.length; i++) {
-                    hero.housing.draft[0][i] = [];
-                    for (var j = 0; j < plotPlacement.width; j++) {
-                        hero.housing.draft[0][i].push("*");
-                    }
-                }
-                */
-
-
                 // show footprint so the player knows it's worked:
                 hero.housing.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
                 UI.openHousingConstructionPanel();
-
             }
         }, function(status) {
             // try again 
@@ -3125,17 +3112,16 @@ function placePlotPlacement() {
 
 var housingNameSpace = {
     'whichTileActive': '',
-      'whichWorldTileActive': '',
+    'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
-  
+
     update: function() {
         if (key[12]) {
-            // escape - cancel
-            // confirm exit, save state or not? ######
-            if (gameMode == 'housing') {
-                gameMode = "play";
-            }
+            // escape - cancel active tile
+            document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
+            housingNameSpace.whichTileActive = '';
+            housingNameSpace.whichWorldTileActive = '';
             key[12] = false;
         }
         if (key[7]) {
@@ -3151,32 +3137,22 @@ var housingNameSpace = {
             var yDiff = e.pageY - (canvasHeight / 2);
             var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
             var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
-
             var clickWorldTileX = getTileX(nonIsoCoordX);
             var clickWorldTileY = getTileY(nonIsoCoordY);
             if (clickWorldTileX >= hero.housing.northWestCornerTileX) {
                 if (clickWorldTileX < hero.housing.southEastCornerTileX) {
                     if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
-
-var newWallTile = {
-    "type": housingNameSpace.whichTileActive,
-               "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
-                
-}
-
- if (housingNameSpace.whichDyeColourActive != 0) {
-    newWallTile.colour = housingNameSpace.whichDyeColourActive;
- }
-
+                            var newWallTile = {
+                                "type": housingNameSpace.whichTileActive,
+                                "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
+                                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
+                            }
+                            if (housingNameSpace.whichDyeColourActive != 0) {
+                                newWallTile.colour = housingNameSpace.whichDyeColourActive;
+                            }
                             // place tile:
-hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-                         //   hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY - hero.housing.northWestCornerTileY)][(clickWorldTileX - hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
-
-
-
-
+                            hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
                         }
                     }
                 }
@@ -3195,8 +3171,8 @@ hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
 
     housingTileColourChange: function(e) {
 
-            housingNameSpace.whichDyeColourActive = housingTileColour.value;
-             housingNameSpace.loadNewTile();
+        housingNameSpace.whichDyeColourActive = housingTileColour.value;
+        housingNameSpace.loadNewTile();
         // change colour of available tiles
         // ########
 
@@ -3209,29 +3185,29 @@ hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
         var whichTile = getNearestParentId(e.target);
         whichTile.classList.add('active');
 
-housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
+        housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
 
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-    housingNameSpace.loadNewTile();
+        housingNameSpace.loadNewTile();
     },
 
     loadNewTile: function() {
-    // load world tile asset if it's not already loaded:
+        // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
         if (housingNameSpace.whichDyeColourActive != 0) {
             // bypass hasInherent colour checks as won't be in inventory items
-        
-         var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
+
+            var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
 
         var itemID = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
-       
+
         if (typeof itemImages[itemID] === "undefined") {
-            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive +thisFileColourSuffix+ '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
     }
 }
@@ -9296,7 +9272,7 @@ function changeMaps(doorX, doorY) {
         var whichDoor = doorX + "," + doorY;
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-                
+
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -9790,9 +9766,9 @@ function update() {
             // escape - cancel any active actions:
             switch (activeAction) {
                 case "plotPlacement":
-                document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                document.removeEventListener("click", placePlotPlacement, false);
-                break;
+                    document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    document.removeEventListener("click", placePlotPlacement, false);
+                    break;
                 case "survey":
                     surveyingStopped();
                     break;
@@ -11724,7 +11700,10 @@ function draw() {
                 }
                 if (housingNameSpace.whichTileActive != '') {
                     // draw ghost of the selected tile graphic:
-                    // #####
+
+
+                    assetsToDraw.push([0, "ghostSelectedHousingTile"]);
+
                     // john
                 }
             }
@@ -11734,41 +11713,29 @@ function draw() {
             // draw any draft housing tiles:
             var whichHousingItem;
 
-for (var i = 0; i < hero.housing.draft.length; i++) {
-for (var j = 0; j < hero.housing.draft[i].length; j++) {
+            for (var i = 0; i < hero.housing.draft.length; i++) {
+                for (var j = 0; j < hero.housing.draft[i].length; j++) {
 
 
-whichHousingItem = hero.housing.draft[i][j].type;
-                        // add the half for the tile's centre:
-                        var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
-                        var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
-                        var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
-                          thisFileColourSuffix = "";
+                    whichHousingItem = hero.housing.draft[i][j].type;
+                    // add the half for the tile's centre:
+                    var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
+                    var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
+                    var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
+                    thisFileColourSuffix = "";
                     if (hero.housing.draft[i][j].colour) {
-
-
-  // bypass hasInherent colour checks as won't be in inventory items
-        
-         var thisColourName = colourNames[hero.housing.draft[i][j].colour];
-
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
-
-
-                        
-                       
+                        // bypass hasInherent colour checks as won't be in inventory items
+                        var thisColourName = colourNames[hero.housing.draft[i][j].colour];
+                        if (thisColourName != "") {
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                        }
                     }
-                        thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
-                        thisX = findIsoCoordsX(thisItemX, thisItemY);
-                        thisY = findIsoCoordsY(thisItemX, thisItemY);
-                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
-
-
-
-}
-}
-         
+                    thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
+                    thisX = findIsoCoordsX(thisItemX, thisItemY);
+                    thisY = findIsoCoordsY(thisItemX, thisItemY);
+                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
+                }
+            }
         }
 
 
@@ -12041,9 +12008,26 @@ whichHousingItem = hero.housing.draft[i][j].type;
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
+                case "ghostSelectedHousingTile":
+                    gameContext.globalAlpha = 0.5;
+                    // draw
+
+
+// john
+
+
+
+
+
+
+
+
+
+                    gameContext.globalAlpha = 1.0;
+                    break;
                 case "houseGroundPlan":
-                // draw house foot print:
-                drawIsoRectangle(hero.housing.northWestCornerTileX*tileW, hero.housing.northWestCornerTileY*tileW, (hero.housing.southEastCornerTileX)*tileW, (hero.housing.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.2)');
+                    // draw house foot print:
+                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';

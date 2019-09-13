@@ -23,25 +23,12 @@ function placePlotPlacement() {
                 hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
-                
-
                 hero.housing.draft[0] = [];
-                /*
-                for (var i = 0; i < plotPlacement.length; i++) {
-                    hero.housing.draft[0][i] = [];
-                    for (var j = 0; j < plotPlacement.width; j++) {
-                        hero.housing.draft[0][i].push("*");
-                    }
-                }
-                */
-
-
                 // show footprint so the player knows it's worked:
                 hero.housing.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
                 UI.openHousingConstructionPanel();
-
             }
         }, function(status) {
             // try again 
@@ -55,17 +42,16 @@ function placePlotPlacement() {
 
 var housingNameSpace = {
     'whichTileActive': '',
-      'whichWorldTileActive': '',
+    'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
-  
+
     update: function() {
         if (key[12]) {
-            // escape - cancel
-            // confirm exit, save state or not? ######
-            if (gameMode == 'housing') {
-                gameMode = "play";
-            }
+            // escape - cancel active tile
+            document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
+            housingNameSpace.whichTileActive = '';
+            housingNameSpace.whichWorldTileActive = '';
             key[12] = false;
         }
         if (key[7]) {
@@ -81,32 +67,22 @@ var housingNameSpace = {
             var yDiff = e.pageY - (canvasHeight / 2);
             var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
             var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
-
             var clickWorldTileX = getTileX(nonIsoCoordX);
             var clickWorldTileY = getTileY(nonIsoCoordY);
             if (clickWorldTileX >= hero.housing.northWestCornerTileX) {
                 if (clickWorldTileX < hero.housing.southEastCornerTileX) {
                     if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
-
-var newWallTile = {
-    "type": housingNameSpace.whichTileActive,
-               "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
-                
-}
-
- if (housingNameSpace.whichDyeColourActive != 0) {
-    newWallTile.colour = housingNameSpace.whichDyeColourActive;
- }
-
+                            var newWallTile = {
+                                "type": housingNameSpace.whichTileActive,
+                                "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
+                                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
+                            }
+                            if (housingNameSpace.whichDyeColourActive != 0) {
+                                newWallTile.colour = housingNameSpace.whichDyeColourActive;
+                            }
                             // place tile:
-hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-                         //   hero.housing.draft[housingNameSpace.whichElevationActive][(clickWorldTileY - hero.housing.northWestCornerTileY)][(clickWorldTileX - hero.housing.northWestCornerTileX)] = housingNameSpace.whichTileActive;
-
-
-
-
+                            hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
                         }
                     }
                 }
@@ -125,8 +101,8 @@ hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
 
     housingTileColourChange: function(e) {
 
-            housingNameSpace.whichDyeColourActive = housingTileColour.value;
-             housingNameSpace.loadNewTile();
+        housingNameSpace.whichDyeColourActive = housingTileColour.value;
+        housingNameSpace.loadNewTile();
         // change colour of available tiles
         // ########
 
@@ -139,29 +115,29 @@ hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
         var whichTile = getNearestParentId(e.target);
         whichTile.classList.add('active');
 
-housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
+        housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
 
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-    housingNameSpace.loadNewTile();
+        housingNameSpace.loadNewTile();
     },
 
     loadNewTile: function() {
-    // load world tile asset if it's not already loaded:
+        // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
         if (housingNameSpace.whichDyeColourActive != 0) {
             // bypass hasInherent colour checks as won't be in inventory items
-        
-         var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
+
+            var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
 
         var itemID = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
-       
+
         if (typeof itemImages[itemID] === "undefined") {
-            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive +thisFileColourSuffix+ '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
     }
 }

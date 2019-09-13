@@ -1128,7 +1128,7 @@ function changeMaps(doorX, doorY) {
         var whichDoor = doorX + "," + doorY;
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-                
+
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -1622,9 +1622,9 @@ function update() {
             // escape - cancel any active actions:
             switch (activeAction) {
                 case "plotPlacement":
-                document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                document.removeEventListener("click", placePlotPlacement, false);
-                break;
+                    document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    document.removeEventListener("click", placePlotPlacement, false);
+                    break;
                 case "survey":
                     surveyingStopped();
                     break;
@@ -3556,7 +3556,10 @@ function draw() {
                 }
                 if (housingNameSpace.whichTileActive != '') {
                     // draw ghost of the selected tile graphic:
-                    // #####
+
+
+                    assetsToDraw.push([0, "ghostSelectedHousingTile"]);
+
                     // john
                 }
             }
@@ -3566,41 +3569,29 @@ function draw() {
             // draw any draft housing tiles:
             var whichHousingItem;
 
-for (var i = 0; i < hero.housing.draft.length; i++) {
-for (var j = 0; j < hero.housing.draft[i].length; j++) {
+            for (var i = 0; i < hero.housing.draft.length; i++) {
+                for (var j = 0; j < hero.housing.draft[i].length; j++) {
 
 
-whichHousingItem = hero.housing.draft[i][j].type;
-                        // add the half for the tile's centre:
-                        var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
-                        var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
-                        var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
-                          thisFileColourSuffix = "";
+                    whichHousingItem = hero.housing.draft[i][j].type;
+                    // add the half for the tile's centre:
+                    var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
+                    var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
+                    var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
+                    thisFileColourSuffix = "";
                     if (hero.housing.draft[i][j].colour) {
-
-
-  // bypass hasInherent colour checks as won't be in inventory items
-        
-         var thisColourName = colourNames[hero.housing.draft[i][j].colour];
-
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
-
-
-                        
-                       
+                        // bypass hasInherent colour checks as won't be in inventory items
+                        var thisColourName = colourNames[hero.housing.draft[i][j].colour];
+                        if (thisColourName != "") {
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                        }
                     }
-                        thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
-                        thisX = findIsoCoordsX(thisItemX, thisItemY);
-                        thisY = findIsoCoordsY(thisItemX, thisItemY);
-                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
-
-
-
-}
-}
-         
+                    thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
+                    thisX = findIsoCoordsX(thisItemX, thisItemY);
+                    thisY = findIsoCoordsY(thisItemX, thisItemY);
+                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
+                }
+            }
         }
 
 
@@ -3873,9 +3864,26 @@ whichHousingItem = hero.housing.draft[i][j].type;
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
+                case "ghostSelectedHousingTile":
+                    gameContext.globalAlpha = 0.5;
+                    // draw
+
+
+// john
+
+
+
+
+
+
+
+
+
+                    gameContext.globalAlpha = 1.0;
+                    break;
                 case "houseGroundPlan":
-                // draw house foot print:
-                drawIsoRectangle(hero.housing.northWestCornerTileX*tileW, hero.housing.northWestCornerTileY*tileW, (hero.housing.southEastCornerTileX)*tileW, (hero.housing.southEastCornerTileY)*tileW, true, 'rgba(255,255,0,0.2)');
+                    // draw house foot print:
+                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
