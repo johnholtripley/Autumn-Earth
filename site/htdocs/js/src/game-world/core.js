@@ -3866,17 +3866,20 @@ function draw() {
                     break;
                 case "ghostSelectedHousingTile":
                     gameContext.globalAlpha = 0.5;
-                    // draw
+                    // draw ghost tile:
 
 
-// john
+thisFileColourSuffix = "";
 
+                        if (housingNameSpace.whichDyeColourActive != "") {
+                        var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                        }
+                        thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
 
-
-
-
-
-
+if (typeof itemImages[thisItemIdentifier] !== "undefined") {
+gameContext.drawImage(itemImages[thisItemIdentifier], getTileIsoCentreCoordX(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]), getTileIsoCentreCoordY(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]));
+}
 
 
                     gameContext.globalAlpha = 1.0;
@@ -3886,31 +3889,22 @@ function draw() {
                     drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
-                    gameContext.globalCompositeOperation = 'soft-light';
-                    // centre under the cursor - but 'snap' to nearest tiles
-                    // find the difference in position between the cursor and the hero (at the centre of the screen):
-                    var xDiff = cursorPositionX - (canvasWidth / 2);
-                    var yDiff = cursorPositionY - (canvasHeight / 2);
+                    gameContext.globalCompositeOperation = 'soft-light';                 
+                    var mouseTilePosition = getTileCoordsFromScreenPosition(cursorPositionX, cursorPositionY);
                     // undefined first time:
                     if (cursorPositionX) {
-                        // use the hero's iso position and that difference and calculate the non-iso coordinates:
-                        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-                        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
                         var thisOverlayX, thisOverlayY, thisOverlayFill;
                         plotPlacement.numberOfBlockedTiles = 0;
                         for (var j = 0 - plotPlacement.width / 2; j < plotPlacement.width / 2; j++) {
                             for (var k = 0 - plotPlacement.length / 2; k < plotPlacement.length / 2; k++) {
-                                thisOverlayX = nonIsoCoordX + tileW * j;
-                                thisOverlayY = nonIsoCoordY + tileW * k;
+                                thisOverlayX = mouseTilePosition[0] + j;
+                                thisOverlayY = mouseTilePosition[1] + k;
                                 thisOverlayFill = 'rgba(0,255,0,0.8)';
-                                if (!tileIsClear(getTileX(thisOverlayX), getTileY(thisOverlayY))) {
+                                if (!tileIsClear(thisOverlayX, thisOverlayY)) {
                                     thisOverlayFill = 'rgba(255,0,0,0.8)';
                                     plotPlacement.numberOfBlockedTiles++;
                                 }
-                                // snap to tiles:
-                                thisOverlayX = Math.floor(thisOverlayX / tileW) * tileW;
-                                thisOverlayY = Math.floor(thisOverlayY / tileW) * tileW;
-                                drawIsoRectangle(thisOverlayX, thisOverlayY, thisOverlayX + tileW, thisOverlayY + tileW, true, thisOverlayFill);
+                                drawIsoRectangle(thisOverlayX*tileW, thisOverlayY*tileW, (thisOverlayX + 1)*tileW, (thisOverlayY + 1)* tileW, true, thisOverlayFill);
                             }
                         }
                         //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);

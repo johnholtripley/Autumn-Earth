@@ -3,24 +3,21 @@ function placePlotPlacement() {
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
         document.removeEventListener("click", placePlotPlacement, false);
         activeAction = "";
-        // copied from plotPlacementOverlay in draw function:
-        var xDiff = cursorPositionX - (canvasWidth / 2);
-        var yDiff = cursorPositionY - (canvasHeight / 2);
-        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+        var mouseTilePosition = getTileCoordsFromScreenPosition(cursorPositionX, cursorPositionY);
         // get the top left corner:
-        nonIsoCoordX -= (plotPlacement.width / 2) * tileW;
-        nonIsoCoordY -= (plotPlacement.length / 2) * tileW;
+        mouseTilePosition[0] -= (plotPlacement.width / 2);
+        mouseTilePosition[1] -= (plotPlacement.length / 2);
         // post to server to create files for this character
-        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
+        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId + '&debug=true', function(data) {
             if (data) {
                 // remove plot item from inventory:
                 removeItemTypeFromInventory(plotPlacement.whichType, 1);
                 hero.housing.hasAPlayerHouse = true;
-                hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
-                hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
-                hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
-                hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                hero.housing.northWestCornerTileX = mouseTilePosition[0];
+                hero.housing.northWestCornerTileY = mouseTilePosition[1];
+                hero.housing.southEastCornerTileX = mouseTilePosition[0] + parseInt(plotPlacement.width);
+                hero.housing.southEastCornerTileY = mouseTilePosition[1] + parseInt(plotPlacement.length);
+            
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
                 hero.housing.draft[0] = [];
@@ -45,6 +42,7 @@ var housingNameSpace = {
     'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
+    'mousePosition': [],
 
     update: function() {
         if (key[12]) {
@@ -88,6 +86,10 @@ var housingNameSpace = {
                 }
             }
         }
+    },
+
+    mouseMove: function(e) {
+        housingNameSpace.mousePosition = getTileCoordsFromScreenPosition(e.pageX,e.pageY);
     },
 
     toggleShowPlotFootprint: function(e) {

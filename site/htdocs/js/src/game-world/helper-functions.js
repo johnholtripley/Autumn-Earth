@@ -93,6 +93,17 @@ function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
 
+
+function getTileCoordsFromScreenPosition(screenCoordinateX, screenCoordinateY) {
+    // find the difference in position between the cursor and the hero (at the centre of the screen):
+    var xDiff = screenCoordinateX - (canvasWidth / 2);
+    var yDiff = screenCoordinateY - (canvasHeight / 2);
+    var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+    var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+    return [getTileX(nonIsoCoordX), getTileY(nonIsoCoordY)];
+}
+
+
 /*
 DUPLICATE
 // find current tile based on non-iso coords

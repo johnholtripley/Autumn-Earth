@@ -2591,10 +2591,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     openHousingConstructionPanel: function() {
         housingConstructionPanel.classList.add('active');
         document.addEventListener("click", housingNameSpace.worldClickHandler, false);
+        document.addEventListener("mousemove", housingNameSpace.mouseMove, false);
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
         // not called anywhere yet #######
         document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
+        document.removeEventListener("mousemove", housingNameSpace.mouseMove, false);
     }
 }

@@ -1978,6 +1978,17 @@ function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
 
+
+function getTileCoordsFromScreenPosition(screenCoordinateX, screenCoordinateY) {
+    // find the difference in position between the cursor and the hero (at the centre of the screen):
+    var xDiff = screenCoordinateX - (canvasWidth / 2);
+    var yDiff = screenCoordinateY - (canvasHeight / 2);
+    var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+    var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+    return [getTileX(nonIsoCoordX), getTileY(nonIsoCoordY)];
+}
+
+
 /*
 DUPLICATE
 // find current tile based on non-iso coords
@@ -3073,24 +3084,21 @@ function placePlotPlacement() {
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
         document.removeEventListener("click", placePlotPlacement, false);
         activeAction = "";
-        // copied from plotPlacementOverlay in draw function:
-        var xDiff = cursorPositionX - (canvasWidth / 2);
-        var yDiff = cursorPositionY - (canvasHeight / 2);
-        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+        var mouseTilePosition = getTileCoordsFromScreenPosition(cursorPositionX, cursorPositionY);
         // get the top left corner:
-        nonIsoCoordX -= (plotPlacement.width / 2) * tileW;
-        nonIsoCoordY -= (plotPlacement.length / 2) * tileW;
+        mouseTilePosition[0] -= (plotPlacement.width / 2);
+        mouseTilePosition[1] -= (plotPlacement.length / 2);
         // post to server to create files for this character
-        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + getTileX(nonIsoCoordX) + '&tileY=' + getTileY(nonIsoCoordY) + '&chr=' + characterId + '&debug=true', function(data) {
+        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId + '&debug=true', function(data) {
             if (data) {
                 // remove plot item from inventory:
                 removeItemTypeFromInventory(plotPlacement.whichType, 1);
                 hero.housing.hasAPlayerHouse = true;
-                hero.housing.northWestCornerTileX = getTileX(nonIsoCoordX);
-                hero.housing.northWestCornerTileY = getTileY(nonIsoCoordY);
-                hero.housing.southEastCornerTileX = getTileX(nonIsoCoordX + (plotPlacement.width * tileW));
-                hero.housing.southEastCornerTileY = getTileY(nonIsoCoordY + (plotPlacement.length * tileW));
+                hero.housing.northWestCornerTileX = mouseTilePosition[0];
+                hero.housing.northWestCornerTileY = mouseTilePosition[1];
+                hero.housing.southEastCornerTileX = mouseTilePosition[0] + parseInt(plotPlacement.width);
+                hero.housing.southEastCornerTileY = mouseTilePosition[1] + parseInt(plotPlacement.length);
+            
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
                 hero.housing.draft[0] = [];
@@ -3115,6 +3123,7 @@ var housingNameSpace = {
     'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
+    'mousePosition': [],
 
     update: function() {
         if (key[12]) {
@@ -3158,6 +3167,10 @@ var housingNameSpace = {
                 }
             }
         }
+    },
+
+    mouseMove: function(e) {
+        housingNameSpace.mousePosition = getTileCoordsFromScreenPosition(e.pageX,e.pageY);
     },
 
     toggleShowPlotFootprint: function(e) {
@@ -8062,11 +8075,13 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     openHousingConstructionPanel: function() {
         housingConstructionPanel.classList.add('active');
         document.addEventListener("click", housingNameSpace.worldClickHandler, false);
+        document.addEventListener("mousemove", housingNameSpace.mouseMove, false);
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
         // not called anywhere yet #######
         document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
+        document.removeEventListener("mousemove", housingNameSpace.mouseMove, false);
     }
 }
 function setupWeather() {
@@ -12010,17 +12025,20 @@ function draw() {
                     break;
                 case "ghostSelectedHousingTile":
                     gameContext.globalAlpha = 0.5;
-                    // draw
+                    // draw ghost tile:
 
 
-// john
+thisFileColourSuffix = "";
 
+                        if (housingNameSpace.whichDyeColourActive != "") {
+                        var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                        }
+                        thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
 
-
-
-
-
-
+if (typeof itemImages[thisItemIdentifier] !== "undefined") {
+gameContext.drawImage(itemImages[thisItemIdentifier], getTileIsoCentreCoordX(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]), getTileIsoCentreCoordY(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]));
+}
 
 
                     gameContext.globalAlpha = 1.0;
@@ -12030,31 +12048,22 @@ function draw() {
                     drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
-                    gameContext.globalCompositeOperation = 'soft-light';
-                    // centre under the cursor - but 'snap' to nearest tiles
-                    // find the difference in position between the cursor and the hero (at the centre of the screen):
-                    var xDiff = cursorPositionX - (canvasWidth / 2);
-                    var yDiff = cursorPositionY - (canvasHeight / 2);
+                    gameContext.globalCompositeOperation = 'soft-light';                 
+                    var mouseTilePosition = getTileCoordsFromScreenPosition(cursorPositionX, cursorPositionY);
                     // undefined first time:
                     if (cursorPositionX) {
-                        // use the hero's iso position and that difference and calculate the non-iso coordinates:
-                        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-                        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
                         var thisOverlayX, thisOverlayY, thisOverlayFill;
                         plotPlacement.numberOfBlockedTiles = 0;
                         for (var j = 0 - plotPlacement.width / 2; j < plotPlacement.width / 2; j++) {
                             for (var k = 0 - plotPlacement.length / 2; k < plotPlacement.length / 2; k++) {
-                                thisOverlayX = nonIsoCoordX + tileW * j;
-                                thisOverlayY = nonIsoCoordY + tileW * k;
+                                thisOverlayX = mouseTilePosition[0] + j;
+                                thisOverlayY = mouseTilePosition[1] + k;
                                 thisOverlayFill = 'rgba(0,255,0,0.8)';
-                                if (!tileIsClear(getTileX(thisOverlayX), getTileY(thisOverlayY))) {
+                                if (!tileIsClear(thisOverlayX, thisOverlayY)) {
                                     thisOverlayFill = 'rgba(255,0,0,0.8)';
                                     plotPlacement.numberOfBlockedTiles++;
                                 }
-                                // snap to tiles:
-                                thisOverlayX = Math.floor(thisOverlayX / tileW) * tileW;
-                                thisOverlayY = Math.floor(thisOverlayY / tileW) * tileW;
-                                drawIsoRectangle(thisOverlayX, thisOverlayY, thisOverlayX + tileW, thisOverlayY + tileW, true, thisOverlayFill);
+                                drawIsoRectangle(thisOverlayX*tileW, thisOverlayY*tileW, (thisOverlayX + 1)*tileW, (thisOverlayY + 1)* tileW, true, thisOverlayFill);
                             }
                         }
                         //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
