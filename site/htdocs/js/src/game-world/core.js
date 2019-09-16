@@ -3555,12 +3555,22 @@ function draw() {
                     assetsToDraw.push([0, "houseGroundPlan"]);
                 }
                 if (housingNameSpace.whichTileActive != '') {
-                    // draw ghost of the selected tile graphic:
+                    // draw ghost of the selected tile graphic - if over the plot footprint:
+ if (housingNameSpace.mousePosition[0] >= hero.housing.northWestCornerTileX) {
+                if (housingNameSpace.mousePosition[0] < hero.housing.southEastCornerTileX) {
+                    if (housingNameSpace.mousePosition[1] >= hero.housing.northWestCornerTileY) {
+                        if (housingNameSpace.mousePosition[1] < hero.housing.southEastCornerTileY) {
 
 
-                    assetsToDraw.push([0, "ghostSelectedHousingTile"]);
 
-                    // john
+
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), 0), "ghostSelectedHousingTile"]);
+                }
+            }
+        }
+    }
+
+                    
                 }
             }
         }
@@ -3587,8 +3597,10 @@ function draw() {
                         }
                     }
                     thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
+
                     thisX = findIsoCoordsX(thisItemX, thisItemY);
                     thisY = findIsoCoordsY(thisItemX, thisItemY);
+
                     assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
                 }
             }
@@ -3746,6 +3758,9 @@ function draw() {
                     thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
 
 
+
+
+
                     // check for User Generated Content:
                     if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
                         if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
@@ -3878,7 +3893,13 @@ thisFileColourSuffix = "";
                         thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
 
 if (typeof itemImages[thisItemIdentifier] !== "undefined") {
-gameContext.drawImage(itemImages[thisItemIdentifier], getTileIsoCentreCoordX(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]), getTileIsoCentreCoordY(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]));
+   
+
+  thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]);
+                    thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]);
+
+
+gameContext.drawImage(itemImages[thisItemIdentifier],Math.floor(thisX - hero.isox - housingData[housingNameSpace.whichTileActive].centreX + (canvasWidth / 2)),Math.floor(thisY - hero.isoy - housingData[housingNameSpace.whichTileActive].centreY + (canvasHeight / 2)));
 }
 
 
