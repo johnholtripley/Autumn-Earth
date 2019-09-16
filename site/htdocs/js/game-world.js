@@ -3232,6 +3232,15 @@ for (var i = 0; i < housingTileSelectionListItems.length; i++) {
         if (typeof itemImages[itemID] === "undefined") {
             Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
+    },
+
+    commitDesign: function() {
+        // check money
+        // save json to file system
+        // check no pet, hero, NPC etc in the way ###
+        // add data to local mapData
+        UI.closeHousingConstructionPanel();
+
     }
 }
 var allCardPacks = [
@@ -5708,6 +5717,7 @@ var UI = {
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
+        document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -8089,9 +8099,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
-        // not called anywhere yet #######
+        // not called anywhere yet
+        housingConstructionPanel.classList.remove('active');
         document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
         document.removeEventListener("mousemove", housingNameSpace.mouseMove, false);
+        gameMode = 'play';
     }
 }
 function setupWeather() {
@@ -11725,21 +11737,15 @@ function draw() {
                 }
                 if (housingNameSpace.whichTileActive != '') {
                     // draw ghost of the selected tile graphic - if over the plot footprint:
- if (housingNameSpace.mousePosition[0] >= hero.housing.northWestCornerTileX) {
-                if (housingNameSpace.mousePosition[0] < hero.housing.southEastCornerTileX) {
-                    if (housingNameSpace.mousePosition[1] >= hero.housing.northWestCornerTileY) {
-                        if (housingNameSpace.mousePosition[1] < hero.housing.southEastCornerTileY) {
-
-
-
-
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), 0), "ghostSelectedHousingTile"]);
-                }
-            }
-        }
-    }
-
-                    
+                    if (housingNameSpace.mousePosition[0] >= hero.housing.northWestCornerTileX) {
+                        if (housingNameSpace.mousePosition[0] < hero.housing.southEastCornerTileX) {
+                            if (housingNameSpace.mousePosition[1] >= hero.housing.northWestCornerTileY) {
+                                if (housingNameSpace.mousePosition[1] < hero.housing.southEastCornerTileY) {
+                                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), 0), "ghostSelectedHousingTile"]);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -11747,11 +11753,8 @@ function draw() {
         if (gameMode == 'housing') {
             // draw any draft housing tiles:
             var whichHousingItem;
-
             for (var i = 0; i < hero.housing.draft.length; i++) {
                 for (var j = 0; j < hero.housing.draft[i].length; j++) {
-
-
                     whichHousingItem = hero.housing.draft[i][j].type;
                     // add the half for the tile's centre:
                     var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
@@ -11766,10 +11769,8 @@ function draw() {
                         }
                     }
                     thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
-
                     thisX = findIsoCoordsX(thisItemX, thisItemY);
                     thisY = findIsoCoordsY(thisItemX, thisItemY);
-
                     assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
                 }
             }
@@ -12053,23 +12054,23 @@ function draw() {
                     // draw ghost tile:
 
 
-thisFileColourSuffix = "";
+                    thisFileColourSuffix = "";
 
-                        if (housingNameSpace.whichDyeColourActive != "") {
+                    if (housingNameSpace.whichDyeColourActive != "0") {
                         var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
-                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-                        }
-                        thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
+                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                    }
+                    thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
 
-if (typeof itemImages[thisItemIdentifier] !== "undefined") {
-   
-
-  thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]);
-                    thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1]);
+                    if (typeof itemImages[thisItemIdentifier] !== "undefined") {
 
 
-gameContext.drawImage(itemImages[thisItemIdentifier],Math.floor(thisX - hero.isox - housingData[housingNameSpace.whichTileActive].centreX + (canvasWidth / 2)),Math.floor(thisY - hero.isoy - housingData[housingNameSpace.whichTileActive].centreY + (canvasHeight / 2)));
-}
+                        thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
+                        thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
+
+
+                        gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[housingNameSpace.whichTileActive].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[housingNameSpace.whichTileActive].centreY + (canvasHeight / 2)));
+                    }
 
 
                     gameContext.globalAlpha = 1.0;
@@ -12079,7 +12080,7 @@ gameContext.drawImage(itemImages[thisItemIdentifier],Math.floor(thisX - hero.iso
                     drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
                     break;
                 case "plotPlacementOverlay":
-                    gameContext.globalCompositeOperation = 'soft-light';                 
+                    gameContext.globalCompositeOperation = 'soft-light';
                     var mouseTilePosition = getTileCoordsFromScreenPosition(cursorPositionX, cursorPositionY);
                     // undefined first time:
                     if (cursorPositionX) {
@@ -12094,7 +12095,7 @@ gameContext.drawImage(itemImages[thisItemIdentifier],Math.floor(thisX - hero.iso
                                     thisOverlayFill = 'rgba(255,0,0,0.8)';
                                     plotPlacement.numberOfBlockedTiles++;
                                 }
-                                drawIsoRectangle(thisOverlayX*tileW, thisOverlayY*tileW, (thisOverlayX + 1)*tileW, (thisOverlayY + 1)* tileW, true, thisOverlayFill);
+                                drawIsoRectangle(thisOverlayX * tileW, thisOverlayY * tileW, (thisOverlayX + 1) * tileW, (thisOverlayY + 1) * tileW, true, thisOverlayFill);
                             }
                         }
                         //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);

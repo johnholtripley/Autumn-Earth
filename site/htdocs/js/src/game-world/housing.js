@@ -151,5 +151,14 @@ for (var i = 0; i < housingTileSelectionListItems.length; i++) {
         if (typeof itemImages[itemID] === "undefined") {
             Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
+    },
+
+    commitDesign: function() {
+        // check money
+        // save json to file system
+        // check no pet, hero, NPC etc in the way ###
+        // add data to local mapData
+        UI.closeHousingConstructionPanel();
+
     }
 }

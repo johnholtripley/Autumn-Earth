@@ -214,6 +214,7 @@ var UI = {
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
+        document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -2595,8 +2596,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
-        // not called anywhere yet #######
+        // not called anywhere yet
+        housingConstructionPanel.classList.remove('active');
         document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
         document.removeEventListener("mousemove", housingNameSpace.mouseMove, false);
+        gameMode = 'play';
     }
 }
