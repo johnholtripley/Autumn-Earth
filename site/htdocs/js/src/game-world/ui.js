@@ -85,7 +85,7 @@ const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
 const housingTileColour = document.getElementById('housingTileColour');
-
+const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 
 
 

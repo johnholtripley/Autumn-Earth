@@ -102,11 +102,21 @@ var housingNameSpace = {
     },
 
     housingTileColourChange: function(e) {
-
+if(housingNameSpace.whichDyeColourActive != housingTileColour.value) {
         housingNameSpace.whichDyeColourActive = housingTileColour.value;
         housingNameSpace.loadNewTile();
         // change colour of available tiles
         // ########
+
+var colourSuffix = "";
+if(housingTileColour.value != "0") {
+colourSuffix = '-'+colourNames[housingNameSpace.whichDyeColourActive];
+}
+for (var i = 0; i < housingTileSelectionListItems.length; i++) {
+    housingTileSelectionListItems[i].firstElementChild.src='/images/game-world/items/'+housingTileSelectionListItems[i].getAttribute('data-cleanurl')+colourSuffix+'.png';
+    }
+
+}
 
     },
 
