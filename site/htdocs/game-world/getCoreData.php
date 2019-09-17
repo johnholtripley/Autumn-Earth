@@ -61,6 +61,7 @@ $housingFiles = scandir('../'.$housingDirectory);
 // sort into external, then floor0, floor1 etc:
 sort($housingFiles);
 foreach ($housingFiles as &$fileName) {
+    
     if (strpos($fileName, '.json') !== false) {
         $thisFileContents = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/'.$housingDirectory.$fileName);
         $thisFileContentsJson = json_decode($thisFileContents, true);

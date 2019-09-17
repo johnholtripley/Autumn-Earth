@@ -13,7 +13,7 @@ $northWestCornerTileY = $_POST["northWestCornerTileY"];
 
 } else {
     $chr = 999;
-    $postData = '[[{"type":"90","tileX":3,"tileY":5,"lockedToPlayerId":999},{"type":"90","tileX":4,"tileY":4,"lockedToPlayerId":999},{"type":"90","tileX":3,"tileY":2,"lockedToPlayerId":999}]]';
+    $postData = '[[{"type":"95","tileX":2,"tileY":5,"lockedToPlayerId":999},{"type":"95","tileX":2,"tileY":6,"lockedToPlayerId":999,"colour":1},{"type":"91","tileX":4,"tileY":6,"lockedToPlayerId":999},{"type":"95","tileX":3,"tileY":1,"lockedToPlayerId":999},{"type":"89","tileX":3,"tileY":3,"lockedToPlayerId":999},{"type":"91","tileX":4,"tileY":4,"lockedToPlayerId":999}],[{"type":"95","tileX":2,"tileY":5,"lockedToPlayerId":999},{"type":"95","tileX":2,"tileY":6,"lockedToPlayerId":999,"colour":1},{"type":"91","tileX":4,"tileY":6,"lockedToPlayerId":999},{"type":"95","tileX":3,"tileY":1,"lockedToPlayerId":999},{"type":"89","tileX":3,"tileY":3,"lockedToPlayerId":999},{"type":"91","tileX":4,"tileY":4,"lockedToPlayerId":999}]]';
     $northWestCornerTileX = 64;
     $northWestCornerTileY = 144;
 }
@@ -30,7 +30,10 @@ $savedirectory = '../data/chr'.$chr.'/housing/';
 $jsonExternalResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].$savedirectory.'external.json');
 $jsonExternal = json_decode($jsonExternalResults, true);
 
-for ($i=0;$i<count($postData);$i++) {
+
+
+// -1 as external is [0]
+for ($i=0;$i<(count($postData)-1);$i++) {
     ${"jsonFloor".$i."Results"} = file_get_contents($_SERVER['DOCUMENT_ROOT'].$savedirectory.'floor'.$i.'.json');
     ${"jsonFloor".$i} = json_decode(${"jsonFloor".$i."Results"}, true);
     ${"jsonFloor".$i}["map"]["items"] = $postData[$i];
@@ -46,7 +49,7 @@ for ($i=0;$i<count($postData);$i++) {
     fclose($saveHandle);
 }
 
-
+echo '{"success":true}';
 
 
 ?>

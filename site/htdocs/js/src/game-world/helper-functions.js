@@ -263,6 +263,12 @@ function isATerrainCollision(x, y) {
 }
 
 
+function findWhichWorldMap(tileX, tileY) {
+    return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+}
+
+
+
 /*
 function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array

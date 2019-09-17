@@ -2148,6 +2148,12 @@ function isATerrainCollision(x, y) {
 }
 
 
+function findWhichWorldMap(tileX, tileY) {
+    return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+}
+
+
+
 /*
 function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array
@@ -3120,6 +3126,7 @@ function placePlotPlacement() {
 }
 
 
+
 var housingNameSpace = {
     'whichTileActive': '',
     'whichWorldTileActive': '',
@@ -3241,10 +3248,25 @@ var housingNameSpace = {
         // check money and confirm #####
 
         // save json to file system:
+
+
+
+
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
+          
             if (data.success) {
+
                 // check no pet, hero, NPC etc in the way - move if so ####
                 // add data to local mapData ####
+
+
+// find which maps this plot is over:
+var whichMapsToUpdate = uniqueValues([findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.southEastCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.southEastCornerTileY)]);
+console.log(whichMapsToUpdate);
+
+
+
+
                 UI.closeHousingConstructionPanel();
 
 
@@ -8387,6 +8409,9 @@ function prepareCoreAssets() {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
         }
     }
+
+
+
     loadMap();
 }
 

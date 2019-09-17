@@ -192,6 +192,9 @@ function prepareCoreAssets() {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
         }
     }
+
+
+
     loadMap();
 }
 
