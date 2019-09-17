@@ -3560,7 +3560,7 @@ function draw() {
                     break;
             }
             if (gameMode == 'housing') {
-                if (hero.housing.showFootprintInEditMode) {
+                if (hero.settings.showFootprintInEditMode) {
                     assetsToDraw.push([0, "houseGroundPlan"]);
                 }
                 if (housingNameSpace.whichTileActive != '') {

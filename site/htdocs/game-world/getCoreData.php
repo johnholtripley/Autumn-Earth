@@ -5,7 +5,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
-header('Content-Type: application/json');
+
 
 
 $debug = false;
@@ -51,18 +51,18 @@ $housing["hasAPlayerHouse"] = false;
     // build housing array:
 
 $housing["hasAPlayerHouse"] = true;
-$housing["northWestCornerTileX"] = $northWestCornerTileX;
-$housing["northWestCornerTileY"] = $northWestCornerTileY;
-$housing["southEastCornerTileX"] = $southEastCornerTileX;
-$housing["southEastCornerTileY"] = $southEastCornerTileY;
+$housing["northWestCornerTileX"] = intval($northWestCornerTileX);
+$housing["northWestCornerTileY"] = intval($northWestCornerTileY);
+$housing["southEastCornerTileX"] = intval($southEastCornerTileX);
+$housing["southEastCornerTileY"] = intval($southEastCornerTileY);
 $housing["draft"] = array();
-$housingDirectory = '../data/chr'.$chr.'/housing/';
-$housingFiles = scandir($housingDirectory);
+$housingDirectory = 'data/chr'.$chr.'/housing/';
+$housingFiles = scandir('../'.$housingDirectory);
 // sort into external, then floor0, floor1 etc:
 sort($housingFiles);
 foreach ($housingFiles as &$fileName) {
     if (strpos($fileName, '.json') !== false) {
-        $thisFileContents = file_get_contents($_SERVER['DOCUMENT_ROOT'].$housingDirectory.$fileName);
+        $thisFileContents = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/'.$housingDirectory.$fileName);
         $thisFileContentsJson = json_decode($thisFileContents, true);
         array_push($housing["draft"],$thisFileContentsJson["map"]["items"]);
     }
@@ -73,7 +73,6 @@ mysqli_free_result($result);
 
 // get core data:
 $query = "SELECT * from tblcharacters where charID='".$chr."'";
-
    $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
 

@@ -3090,9 +3090,9 @@ function placePlotPlacement() {
         mouseTilePosition[1] -= (plotPlacement.length / 2);
         // post to server to create files for this character
         getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId, function(data) {
-           
+
             if (data.success) {
-               
+
                 // remove plot item from inventory:
                 removeItemTypeFromInventory(plotPlacement.whichType, 1);
                 hero.housing.hasAPlayerHouse = true;
@@ -3105,7 +3105,7 @@ function placePlotPlacement() {
                 hero.housing.draft = [];
                 hero.housing.draft[0] = [];
                 // show footprint so the player knows it's worked:
-                hero.housing.showFootprintInEditMode = true;
+                hero.settings.showFootprintInEditMode = true;
                 showHousingFootprintCheckbox.checked = true;
                 UI.openHousingPanel();
                 UI.openHousingConstructionPanel();
@@ -3160,14 +3160,14 @@ var housingNameSpace = {
                                 "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
                                 "lockedToPlayerId": characterId
                             }
-                            
+
                             if (housingNameSpace.whichDyeColourActive != 0) {
                                 newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                             }
-                          
+
                             // place tile:
                             hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-                        
+
                         }
                     }
                 }
@@ -3181,9 +3181,9 @@ var housingNameSpace = {
 
     toggleShowPlotFootprint: function(e) {
         if (e.target.checked) {
-            hero.housing.showFootprintInEditMode = true;
+            hero.settings.showFootprintInEditMode = true;
         } else {
-            hero.housing.showFootprintInEditMode = false;
+            hero.settings.showFootprintInEditMode = false;
         }
 
     },
@@ -3237,27 +3237,23 @@ var housingNameSpace = {
     },
 
     commitDesign: function() {
-        // check money and confirm
-        // save json to file system - send hero.housing.draft to savePlot.php (that needs splitting to elevation files)
 
-console.log(hero.housing.draft);
-console.log(JSON.stringify(hero.housing.draft));
- getJSONWithParams("/game-world/savePlot.php", 'chr='+characterId+'&postData=' + JSON.stringify(hero.housing.draft)+'&northWestCornerTileX='+hero.housing.northWestCornerTileX+'&northWestCornerTileY='+hero.housing.northWestCornerTileY, function(data) {
-        if (data.success) {
-            console.log("user post sent");
-        } else {
-        
+        // check money and confirm #####
+
+        // save json to file system:
+        getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
+            if (data.success) {
+                // check no pet, hero, NPC etc in the way - move if so ####
+                // add data to local mapData ####
+                UI.closeHousingConstructionPanel();
+
+
+            } else {
+                // try again? ########
+            }
+        }, function(status) {
             // try again? ########
-        }
-    }, function(status) {
-         // try again? ########
-    });
-
-
-
-        // check no pet, hero, NPC etc in the way - move if so
-        // add data to local mapData
-        UI.closeHousingConstructionPanel();
+        });
 
     }
 }
@@ -11759,7 +11755,7 @@ function draw() {
                     break;
             }
             if (gameMode == 'housing') {
-                if (hero.housing.showFootprintInEditMode) {
+                if (hero.settings.showFootprintInEditMode) {
                     assetsToDraw.push([0, "houseGroundPlan"]);
                 }
                 if (housingNameSpace.whichTileActive != '') {

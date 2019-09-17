@@ -16,11 +16,6 @@ if(isset($_GET["debug"])) {
 
 
 
-// ##########
-// return json to add to local map (or whatever is added as a placeholder)
-
-
-
 // determine map that this will be placed on, and create region name accordingly
 $jsonMapResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/data/world-map.json');
 $mapJson = json_decode($jsonMapResults, true);
@@ -113,8 +108,6 @@ fclose($saveHandle);
     
 // add to database:
 $result = mysqli_query($connection, $query) or die ("couldn't execute insert");
-
-
 
 
 echo '{"success":true}';
