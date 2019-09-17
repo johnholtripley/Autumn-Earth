@@ -28,17 +28,48 @@ $outputJSON = '{';
 
 
 // get player housing:
-$hasAPlayerHouse = 'false';
+$hasAPlayerHouse = false;
 $query = "SELECT * from tblplayerhousing where characterID='".$chr."'";
    $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
-	$hasAPlayerHouse = 'true';
+	$hasAPlayerHouse = true;
 	 while ($row = mysqli_fetch_array($result)) {
     extract($row);
    
 }
 }
+
+
+
+$housing = array();
+
+
+if(!$hasAPlayerHouse) {
+//$housing = '{"hasAPlayerHouse": false}';
+$housing["hasAPlayerHouse"] = false;
+} else {
+    // build housing array:
+
+$housing["hasAPlayerHouse"] = true;
+$housing["northWestCornerTileX"] = $northWestCornerTileX;
+$housing["northWestCornerTileY"] = $northWestCornerTileY;
+$housing["southEastCornerTileX"] = $southEastCornerTileX;
+$housing["southEastCornerTileY"] = $southEastCornerTileY;
+$housing["draft"] = array();
+$housingDirectory = '../data/chr'.$chr.'/housing/';
+$housingFiles = scandir($housingDirectory);
+// sort into external, then floor0, floor1 etc:
+sort($housingFiles);
+foreach ($housingFiles as &$fileName) {
+    if (strpos($fileName, '.json') !== false) {
+        $thisFileContents = file_get_contents($_SERVER['DOCUMENT_ROOT'].$housingDirectory.$fileName);
+        $thisFileContentsJson = json_decode($thisFileContents, true);
+        array_push($housing["draft"],$thisFileContentsJson["map"]["items"]);
+    }
+}
+}
 mysqli_free_result($result);
+
 
 // get core data:
 $query = "SELECT * from tblcharacters where charID='".$chr."'";
@@ -61,11 +92,11 @@ $outputJSON .= '"cards": '.$cards.',';
 $outputJSON .= '"stats": '.$stats.',';
 $outputJSON .= '"settings": '.$settings.',';
 $outputJSON .= '"titlesEarned": '.$titlesEarned.',';
-$possibleCurrentTitles = explode(",",   str_replace("[", "", str_replace("]", "", $titlesEarned))         );
+$possibleCurrentTitles = explode(",",   str_replace("[", "", str_replace("]", "", $titlesEarned)));
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
 $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
-$heroRecipesKnown =  explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown))         );
+$heroRecipesKnown =  explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown)));
 $outputJSON .= '"holding": '.$holding.',';
 $outputJSON .= '"activeTreasureMaps": '.$activeTreasureMaps.',';
 $outputJSON .= '"plantCrossesKnown": '.$plantCrossesKnown.',';
@@ -79,10 +110,7 @@ $outputJSON .= '"lineOfSightRange": '.$lineOfSightRange.',';
 $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"catalogues": '.$catalogues.',';
-if($housing == '') {
-$housing = '{"hasAPlayerHouse": false}';
-}
-$outputJSON .= '"housing": '.$housing.',';
+$outputJSON .= '"housing": '.json_encode($housing).',';
 $outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
 
@@ -871,6 +899,10 @@ $outputJSON .= ',"journal":{"markup": ["'.addcslashes($journalMarkupToOutput, '"
 
 
 $outputJSON .= '}';
+
+// remove line breaks: https://stackoverflow.com/questions/10757671/how-to-remove-line-breaks-no-characters-from-the-string#answer-10757755
+$outputJSON = preg_replace( "/\r|\n/", "", $outputJSON );
+
 echo $outputJSON;
 
 

@@ -114,6 +114,9 @@ fclose($saveHandle);
 // add to database:
 $result = mysqli_query($connection, $query) or die ("couldn't execute insert");
 
+
+
+
 echo '{"success":true}';
 
 }

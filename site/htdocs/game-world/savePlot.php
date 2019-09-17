@@ -18,7 +18,7 @@ $northWestCornerTileY = $_POST["northWestCornerTileY"];
     $northWestCornerTileY = 144;
 }
 
-$postData = json_decode($postData);
+$postData = json_decode($postData, true);
 
 if(isset($_POST["debug"])) {
     $debug = true;
