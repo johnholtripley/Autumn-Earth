@@ -142,7 +142,7 @@ WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblpo
 					// add anchor with the post id:
 				echo '<p id="post' . $postID . '"><strong>' . $acctusername . '</strong> posted on ' . date('jS F Y',$creationTime) .' at '.  date('G:i',$creationTime).'<br />'."\n";
 				if ($status>0) {
-					echo parseCode(stripslashes($postContent));
+					echo '<span rel="ugc">'.parseCode(stripslashes($postContent)).'</span>';
 				} else {
 					echo 'This post has been hidden by a Moderator.';
 				}

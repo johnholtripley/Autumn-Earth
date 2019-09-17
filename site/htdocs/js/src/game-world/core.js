@@ -555,7 +555,7 @@ function getItemPathAndIdentifier(whichItem) {
     var thisItemIdentifier, thisImagePath;
     var thisFileColourSuffix = "";
     if (whichItem.colour) {
-        thisColourName = getColourName(whichItem.colour, whichItem.type);
+        var thisColourName = getColourName(whichItem.colour, whichItem.type);
         if (thisColourName != "") {
             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
         }
@@ -2189,7 +2189,13 @@ function checkForActions() {
                                 break;
                             default:
                                 // try and pick it up:
-
+var canBePickedUp = true;
+if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
+if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
+canBePickedUp = false;
+}
+}
+if(canBePickedUp){
                                 inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
                                 if (inventoryCheck[0]) {
                                     // remove from map:
@@ -2198,6 +2204,9 @@ function checkForActions() {
                                 } else {
                                     UI.showNotification("<p>I don't have room in my bags for that</p>");
                                 }
+                            } else {
+                                UI.showNotification("<p>I can't pick that up</p>");
+                            }
                         }
                     }
                 }
@@ -3702,7 +3711,7 @@ function draw() {
         }
 
 
-
+var shouldDrawThisItem;
         for (var m = 0; m < visibleMaps.length; m++) {
             whichVisibleMap = visibleMaps[m];
 
@@ -3732,6 +3741,19 @@ function draw() {
             for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
                 thisItem = thisMapData[whichVisibleMap].items[i];
 
+
+shouldDrawThisItem = true;
+if (gameMode == 'housing') {
+    // if this item is part of the current player's plot, don't draw it here - it'll be drawn as part of the draft (and might be deleted) 
+    if (thisItem.lockedToPlayerId) {
+        if (thisItem.lockedToPlayerId == characterId) {
+            shouldDrawThisItem = false;
+        }
+    }
+}
+
+
+if(shouldDrawThisItem) {
                 thisX = findIsoCoordsX(thisItem.x, thisItem.y);
                 thisY = findIsoCoordsY(thisItem.x, thisItem.y);
                 if (isVisibleOnScreen(thisX, thisY)) {
@@ -3770,6 +3792,7 @@ function draw() {
                         assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                     }
                 }
+            }
             }
 
             if (thisMapData[whichVisibleMap].movingPlatforms) {

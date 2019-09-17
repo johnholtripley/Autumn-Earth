@@ -3089,8 +3089,10 @@ function placePlotPlacement() {
         mouseTilePosition[0] -= (plotPlacement.width / 2);
         mouseTilePosition[1] -= (plotPlacement.length / 2);
         // post to server to create files for this character
-        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId + '&debug=true', function(data) {
-            if (data) {
+        getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId, function(data) {
+           
+            if (data.success) {
+               
                 // remove plot item from inventory:
                 removeItemTypeFromInventory(plotPlacement.whichType, 1);
                 hero.housing.hasAPlayerHouse = true;
@@ -3098,7 +3100,7 @@ function placePlotPlacement() {
                 hero.housing.northWestCornerTileY = mouseTilePosition[1];
                 hero.housing.southEastCornerTileX = mouseTilePosition[0] + parseInt(plotPlacement.width);
                 hero.housing.southEastCornerTileY = mouseTilePosition[1] + parseInt(plotPlacement.length);
-            
+
                 // set the empty tile data for the ground floor:
                 hero.housing.draft = [];
                 hero.housing.draft[0] = [];
@@ -3155,13 +3157,17 @@ var housingNameSpace = {
                             var newWallTile = {
                                 "type": housingNameSpace.whichTileActive,
                                 "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY)
+                                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
+                                "lockedToPlayerId": characterId
                             }
+                            
                             if (housingNameSpace.whichDyeColourActive != 0) {
-                                newWallTile.colour = housingNameSpace.whichDyeColourActive;
+                                newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                             }
+                          
                             // place tile:
                             hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+                        
                         }
                     }
                 }
@@ -3170,7 +3176,7 @@ var housingNameSpace = {
     },
 
     mouseMove: function(e) {
-        housingNameSpace.mousePosition = getTileCoordsFromScreenPosition(e.pageX,e.pageY);
+        housingNameSpace.mousePosition = getTileCoordsFromScreenPosition(e.pageX, e.pageY);
     },
 
     toggleShowPlotFootprint: function(e) {
@@ -3183,22 +3189,18 @@ var housingNameSpace = {
     },
 
     housingTileColourChange: function(e) {
-if(housingNameSpace.whichDyeColourActive != housingTileColour.value) {
-        housingNameSpace.whichDyeColourActive = housingTileColour.value;
-        housingNameSpace.loadNewTile();
-        // change colour of available tiles
-        // ########
-
-var colourSuffix = "";
-if(housingTileColour.value != "0") {
-colourSuffix = '-'+colourNames[housingNameSpace.whichDyeColourActive];
-}
-for (var i = 0; i < housingTileSelectionListItems.length; i++) {
-    housingTileSelectionListItems[i].firstElementChild.src='/images/game-world/items/'+housingTileSelectionListItems[i].getAttribute('data-cleanurl')+colourSuffix+'.png';
-    }
-
-}
-
+        if (housingNameSpace.whichDyeColourActive != housingTileColour.value) {
+            housingNameSpace.whichDyeColourActive = housingTileColour.value;
+            housingNameSpace.loadNewTile();
+            // change colour of available tiles:
+            var colourSuffix = "";
+            if (housingTileColour.value != "0") {
+                colourSuffix = '-' + colourNames[housingNameSpace.whichDyeColourActive];
+            }
+            for (var i = 0; i < housingTileSelectionListItems.length; i++) {
+                housingTileSelectionListItems[i].firstElementChild.src = '/images/game-world/items/' + housingTileSelectionListItems[i].getAttribute('data-cleanurl') + colourSuffix + '.png';
+            }
+        }
     },
 
     selectNewTile: function(e) {
@@ -3235,9 +3237,25 @@ for (var i = 0; i < housingTileSelectionListItems.length; i++) {
     },
 
     commitDesign: function() {
-        // check money
-        // save json to file system
-        // check no pet, hero, NPC etc in the way ###
+        // check money and confirm
+        // save json to file system - send hero.housing.draft to savePlot.php (that needs splitting to elevation files)
+
+console.log(hero.housing.draft);
+console.log(JSON.stringify(hero.housing.draft));
+ getJSONWithParams("/game-world/savePlot.php", 'chr='+characterId+'&postData=' + JSON.stringify(hero.housing.draft)+'&northWestCornerTileX='+hero.housing.northWestCornerTileX+'&northWestCornerTileY='+hero.housing.northWestCornerTileY, function(data) {
+        if (data.success) {
+            console.log("user post sent");
+        } else {
+        
+            // try again? ########
+        }
+    }, function(status) {
+         // try again? ########
+    });
+
+
+
+        // check no pet, hero, NPC etc in the way - move if so
         // add data to local mapData
         UI.closeHousingConstructionPanel();
 
@@ -8736,7 +8754,7 @@ function getItemPathAndIdentifier(whichItem) {
     var thisItemIdentifier, thisImagePath;
     var thisFileColourSuffix = "";
     if (whichItem.colour) {
-        thisColourName = getColourName(whichItem.colour, whichItem.type);
+        var thisColourName = getColourName(whichItem.colour, whichItem.type);
         if (thisColourName != "") {
             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
         }
@@ -10370,7 +10388,13 @@ function checkForActions() {
                                 break;
                             default:
                                 // try and pick it up:
-
+var canBePickedUp = true;
+if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
+if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
+canBePickedUp = false;
+}
+}
+if(canBePickedUp){
                                 inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
                                 if (inventoryCheck[0]) {
                                     // remove from map:
@@ -10379,6 +10403,9 @@ function checkForActions() {
                                 } else {
                                     UI.showNotification("<p>I don't have room in my bags for that</p>");
                                 }
+                            } else {
+                                UI.showNotification("<p>I can't pick that up</p>");
+                            }
                         }
                     }
                 }
@@ -11883,7 +11910,7 @@ function draw() {
         }
 
 
-
+var shouldDrawThisItem;
         for (var m = 0; m < visibleMaps.length; m++) {
             whichVisibleMap = visibleMaps[m];
 
@@ -11913,6 +11940,19 @@ function draw() {
             for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
                 thisItem = thisMapData[whichVisibleMap].items[i];
 
+
+shouldDrawThisItem = true;
+if (gameMode == 'housing') {
+    // if this item is part of the current player's plot, don't draw it here - it'll be drawn as part of the draft (and might be deleted) 
+    if (thisItem.lockedToPlayerId) {
+        if (thisItem.lockedToPlayerId == characterId) {
+            shouldDrawThisItem = false;
+        }
+    }
+}
+
+
+if(shouldDrawThisItem) {
                 thisX = findIsoCoordsX(thisItem.x, thisItem.y);
                 thisY = findIsoCoordsY(thisItem.x, thisItem.y);
                 if (isVisibleOnScreen(thisX, thisY)) {
@@ -11951,6 +11991,7 @@ function draw() {
                         assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                     }
                 }
+            }
             }
 
             if (thisMapData[whichVisibleMap].movingPlatforms) {
