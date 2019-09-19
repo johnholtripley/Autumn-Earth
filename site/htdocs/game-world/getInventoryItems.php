@@ -24,7 +24,8 @@ for($i=0;$i<count($allIds);$i++) {
 
 // get the required items, additionally get all plants and seeds so that the data for any resultant new species is available when breeding them:
 // (might need to change this for plants to fetch them when needed instead ####)
-$plantAndSeedQuery = ' or itemcategories = 8 or itemcategories = 9';
+// get housing tiles as well when needed not loading them all initially when some may never be needed #########
+$plantAndSeedQuery = ' or itemcategories = 8 or itemcategories = 9 or itemcategories = 10';
 if($isAnUpdate) {
 $plantAndSeedQuery = '';
 }

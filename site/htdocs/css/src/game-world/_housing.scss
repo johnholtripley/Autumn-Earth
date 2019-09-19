@@ -37,3 +37,30 @@
         max-width: 220px;
     }
 }
+
+#housingConstructionTools {
+    list-style: none;
+
+    button {
+        display: block;
+        width: 26px;
+        height: 26px;
+        outline: 0;
+        border: 1px solid #67332d;
+        @include border-radius(3px);
+        text-indent: -9999px;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        cursor: pointer;
+     
+      
+    }
+        li {
+        margin: 0; padding: 0;display: inline-block;
+      &.active {
+        button {
+              box-shadow: 0 0 5px 3px #eebb3f; 
+          }
+        }
+    }
+}

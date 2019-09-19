@@ -45,6 +45,7 @@ var housingNameSpace = {
     'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
+    'activeTool': 'paint',
     'mousePosition': [],
 
     update: function() {
@@ -53,6 +54,10 @@ var housingNameSpace = {
             document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
             housingNameSpace.whichTileActive = '';
             housingNameSpace.whichWorldTileActive = '';
+            housingNameSpace.activeTool = '';
+              for (var i = 0; i < housingConstructionToolButtons.length; i++) {
+                housingConstructionToolButtons[i].classList.remove('active');
+            }
             key[12] = false;
         }
         if (key[7]) {
@@ -75,7 +80,7 @@ var housingNameSpace = {
                     if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                         if (clickWorldTileY < hero.housing.southEastCornerTileY) {
                             var newWallTile = {
-                                "type": housingNameSpace.whichTileActive,
+                                "type": parseInt(housingNameSpace.whichTileActive),
                                 "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
                                 "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
                                 "lockedToPlayerId": characterId
@@ -161,27 +166,36 @@ var housingNameSpace = {
         // check money and confirm #####
 
         // save json to file system:
-
-
-
-
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
-          
+
             if (data.success) {
-
                 // check no pet, hero, NPC etc in the way - move if so ####
-                // add data to local mapData ####
 
 
-// find which maps this plot is over:
-var whichMapsToUpdate = uniqueValues([findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.southEastCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.southEastCornerTileY)]);
-console.log(whichMapsToUpdate);
+                // add data to local mapData - first, find which maps this plot is over:
+                var whichMapsToUpdate = uniqueValues([findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.southEastCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.southEastCornerTileY)]);
+                // remove existing housing data for this player from these maps:
+                for (var i = 0; i < whichMapsToUpdate.length; i++) {
+                    // need to check if they're within the plot footprint to be safe?  ###
+                    thisMapData[(whichMapsToUpdate[i])].items = thisMapData[(whichMapsToUpdate[i])].items.filter(function(currentItemObject) {
+                        return currentItemObject.lockedToPlayerId !== characterId;
+                    });
+                }
 
-
-
+                // loop through housing.draft[0] for the external tiles, and add those to the relevant map
+                var clonedHousingItem, whichMap;
+                for (var i = 0; i < hero.housing.draft[0].length; i++) {
+                    clonedHousingItem = JSON.parse(JSON.stringify(hero.housing.draft[0][i]));
+                    // adjust the tile coordinates:
+                    clonedHousingItem.tileX += hero.housing.northWestCornerTileX;
+                    clonedHousingItem.tileY += hero.housing.northWestCornerTileY;
+                    // need to get inventory data for this as well #############
+                    whichMap = findWhichWorldMap(clonedHousingItem.tileX, clonedHousingItem.tileY);
+                    thisMapData[whichMap].items.push(clonedHousingItem);
+                    initialiseItem(thisMapData[whichMap].items[thisMapData[whichMap].items.length - 1]);
+                }
 
                 UI.closeHousingConstructionPanel();
-
 
             } else {
                 // try again? ########
@@ -190,5 +204,13 @@ console.log(whichMapsToUpdate);
             // try again? ########
         });
 
+    },
+    changeActiveTool: function(e) {
+      var whichButton = getNearestParentId(e.target);
+      housingNameSpace.activeTool = whichButton.getAttribute("data-action");
+        for (var i = 0; i < housingConstructionToolButtons.length; i++) {
+                housingConstructionToolButtons[i].classList.remove('active');
+            }
+            whichButton.classList.add('active');
     }
 }

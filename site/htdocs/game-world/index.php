@@ -176,16 +176,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       if(mysqli_num_rows($result)>0) {
         while ($row = mysqli_fetch_array($result)) {
           extract($row);
-         if($catalogues != '[]') { 
-          
-
-$theseCatalogues = json_decode($catalogues, true);
-
-          for ($i=0;$i<count($theseCatalogues);$i++) {
-       
-            echo createCatalogueMarkup($theseCatalogues[$i]['ids'], $theseCatalogues[$i]['name'],'false');
+          if($catalogues != '[]') { 
+            $theseCatalogues = json_decode($catalogues, true);
+            for ($i=0;$i<count($theseCatalogues);$i++) {
+              echo createCatalogueMarkup($theseCatalogues[$i]['ids'], $theseCatalogues[$i]['name'],'false');
+            }
           }
-        }
         }
       }
       mysqli_free_result($result);
@@ -274,6 +270,13 @@ $theseCatalogues = json_decode($catalogues, true);
       <div class="draggableBar">Housing</div>
       <button class="closePanel">close</button>
       <label for="showHousingFootprintCheckbox">Show plot footprint?</label><input type="checkbox" checked="checked" id="showHousingFootprintCheckbox" class="switch">
+      <ul id="housingConstructionTools">
+        <li class="active" data-action="paint" id="housingConstructToolPaint"><button  style="background-image:url(/images/game-world/interface/housing/ui-tool-paint.png">Paint</button></li>
+        <li data-action="remove" id="housingConstructToolRemove"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-remove.png">Remove</button></li>
+        <li data-action="fill" id="housingConstructToolFill"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-fill.png">Fill</button></li>
+        <li data-action="eyedropper" id="housingConstructToolEyedropper"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-eyedropper.png">Eyedropper</button></li>
+        <li data-action="move" id="housingConstructToolMove"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-move.png">Move</button></li>
+      </ul>
       <button id="housingConstructionSaveButton">Commit this design</button>
       <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
     </div>

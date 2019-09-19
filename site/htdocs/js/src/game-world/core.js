@@ -2192,24 +2192,24 @@ function checkForActions() {
                                 break;
                             default:
                                 // try and pick it up:
-var canBePickedUp = true;
-if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
-if(thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
-canBePickedUp = false;
-}
-}
-if(canBePickedUp){
-                                inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
-                                if (inventoryCheck[0]) {
-                                    // remove from map:
-                                    thisMapData[(visibleMaps[m])].items.splice(i, 1);
-                                    UI.showChangeInInventory(inventoryCheck[1]);
-                                } else {
-                                    UI.showNotification("<p>I don't have room in my bags for that</p>");
+                                var canBePickedUp = true;
+                                if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
+                                    if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
+                                        canBePickedUp = false;
+                                    }
                                 }
-                            } else {
-                                UI.showNotification("<p>I can't pick that up</p>");
-                            }
+                                if (canBePickedUp) {
+                                    inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
+                                    if (inventoryCheck[0]) {
+                                        // remove from map:
+                                        thisMapData[(visibleMaps[m])].items.splice(i, 1);
+                                        UI.showChangeInInventory(inventoryCheck[1]);
+                                    } else {
+                                        UI.showNotification("<p>I don't have room in my bags for that</p>");
+                                    }
+                                } else {
+                                    UI.showNotification("<p>I can't pick that up</p>");
+                                }
                         }
                     }
                 }
@@ -3566,13 +3566,26 @@ function draw() {
                 if (hero.settings.showFootprintInEditMode) {
                     assetsToDraw.push([0, "houseGroundPlan"]);
                 }
-                if (housingNameSpace.whichTileActive != '') {
-                    // draw ghost of the selected tile graphic - if over the plot footprint:
-                    if (housingNameSpace.mousePosition[0] >= hero.housing.northWestCornerTileX) {
-                        if (housingNameSpace.mousePosition[0] < hero.housing.southEastCornerTileX) {
-                            if (housingNameSpace.mousePosition[1] >= hero.housing.northWestCornerTileY) {
-                                if (housingNameSpace.mousePosition[1] < hero.housing.southEastCornerTileY) {
-                                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), 0), "ghostSelectedHousingTile"]);
+                // check if over the plot footprint:
+                if (housingNameSpace.mousePosition[0] >= hero.housing.northWestCornerTileX) {
+                    if (housingNameSpace.mousePosition[0] < hero.housing.southEastCornerTileX) {
+                        if (housingNameSpace.mousePosition[1] >= hero.housing.northWestCornerTileY) {
+                            if (housingNameSpace.mousePosition[1] < hero.housing.southEastCornerTileY) {
+                                switch (housingNameSpace.activeTool) {
+
+
+                                    case 'paint':
+                                        if (housingNameSpace.whichTileActive != '') {
+                                            // draw ghost of the selected tile graphic 
+                                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), 0), "ghostSelectedHousingTile"]);
+
+                                        }
+                                        break;
+                                    case 'remove':
+                                        // draw a tile outline over the base footprint:
+                                        assetsToDraw.push([0, "ghostRemoveHousingTile"]);
+                                        // identify which tile item that is and ghost that slightly
+                                        break;
                                 }
                             }
                         }
@@ -3714,7 +3727,7 @@ function draw() {
         }
 
 
-var shouldDrawThisItem;
+        var shouldDrawThisItem;
         for (var m = 0; m < visibleMaps.length; m++) {
             whichVisibleMap = visibleMaps[m];
 
@@ -3745,57 +3758,57 @@ var shouldDrawThisItem;
                 thisItem = thisMapData[whichVisibleMap].items[i];
 
 
-shouldDrawThisItem = true;
-if (gameMode == 'housing') {
-    // if this item is part of the current player's plot, don't draw it here - it'll be drawn as part of the draft (and might be deleted) 
-    if (thisItem.lockedToPlayerId) {
-        if (thisItem.lockedToPlayerId == characterId) {
-            shouldDrawThisItem = false;
-        }
-    }
-}
-
-
-if(shouldDrawThisItem) {
-                thisX = findIsoCoordsX(thisItem.x, thisItem.y);
-                thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-                if (isVisibleOnScreen(thisX, thisY)) {
-                    //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
-                    thisFileColourSuffix = "";
-                    if (thisMapData[whichVisibleMap].items[i].colour) {
-                        thisColourName = getColourName(thisItem.colour, thisItem.type);
-                        if (thisColourName != "") {
-                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-
+                shouldDrawThisItem = true;
+                if (gameMode == 'housing') {
+                    // if this item is part of the current player's plot, don't draw it here - it'll be drawn as part of the draft (and might be deleted) 
+                    if (thisItem.lockedToPlayerId) {
+                        if (thisItem.lockedToPlayerId == characterId) {
+                            shouldDrawThisItem = false;
                         }
-                    }
-                    thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
-
-
-
-
-
-                    // check for User Generated Content:
-                    if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
-                        if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
-                            thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
-                        }
-                    }
-                    if (typeof thisItem.animation !== "undefined") {
-                        if (typeof thisItem.state !== "undefined") {
-                            thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
-                            thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
-                        } else {
-                            // use facing:
-                            thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
-                            thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
-                        }
-                        assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
-                    } else {
-                        assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                     }
                 }
-            }
+
+
+                if (shouldDrawThisItem) {
+                    thisX = findIsoCoordsX(thisItem.x, thisItem.y);
+                    thisY = findIsoCoordsY(thisItem.x, thisItem.y);
+                    if (isVisibleOnScreen(thisX, thisY)) {
+                        //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
+                        thisFileColourSuffix = "";
+                        if (thisMapData[whichVisibleMap].items[i].colour) {
+                            thisColourName = getColourName(thisItem.colour, thisItem.type);
+                            if (thisColourName != "") {
+                                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+
+                            }
+                        }
+                        thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+
+
+
+
+
+                        // check for User Generated Content:
+                        if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
+                            if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
+                                thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
+                            }
+                        }
+                        if (typeof thisItem.animation !== "undefined") {
+                            if (typeof thisItem.state !== "undefined") {
+                                thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
+                                thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                            } else {
+                                // use facing:
+                                thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
+                                thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                            }
+                            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+                        } else {
+                            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+                        }
+                    }
+                }
             }
 
             if (thisMapData[whichVisibleMap].movingPlatforms) {
@@ -3894,30 +3907,23 @@ if(shouldDrawThisItem) {
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
+                case "ghostRemoveHousingTile":
+                    drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)');
+                    break;
                 case "ghostSelectedHousingTile":
                     gameContext.globalAlpha = 0.5;
                     // draw ghost tile:
-
-
                     thisFileColourSuffix = "";
-
                     if (housingNameSpace.whichDyeColourActive != "0") {
                         var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
                         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                     }
                     thisItemIdentifier = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
-
                     if (typeof itemImages[thisItemIdentifier] !== "undefined") {
-
-
                         thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
                         thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
-
-
                         gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[housingNameSpace.whichTileActive].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[housingNameSpace.whichTileActive].centreY + (canvasHeight / 2)));
                     }
-
-
                     gameContext.globalAlpha = 1.0;
                     break;
                 case "houseGroundPlan":
