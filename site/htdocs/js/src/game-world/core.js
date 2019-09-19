@@ -3545,7 +3545,7 @@ function draw() {
         gameContext.fill();
     } else {
         // get all assets to be drawn in a list
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem, shouldFadeThisObject;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
@@ -3597,10 +3597,18 @@ function draw() {
         if (gameMode == 'housing') {
             // draw any draft housing tiles:
             var whichHousingItem;
-            for (var i = 0; i < hero.housing.draft.length; i++) {
+        //    for (var i = 0; i < hero.housing.draft.length; i++) {
+          
+                var i=housingNameSpace.whichElevationActive;
                 for (var j = 0; j < hero.housing.draft[i].length; j++) {
                     whichHousingItem = hero.housing.draft[i][j].type;
                     // add the half for the tile's centre:
+
+
+
+
+
+
                     var thisItemX = (hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX + 0.5) * tileW;
                     var thisItemY = (hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY + 0.5) * tileW;
                     var thisItemZ = getElevation(hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX, hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY);
@@ -3615,9 +3623,24 @@ function draw() {
                     thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
                     thisX = findIsoCoordsX(thisItemX, thisItemY);
                     thisY = findIsoCoordsY(thisItemX, thisItemY);
-                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
+               
+               shouldFadeThisObject = false;
+                    // if the remove tool is active, check if this item is on the tile for removal:
+if(housingNameSpace.activeTool=="remove") {
+if((hero.housing.northWestCornerTileX + hero.housing.draft[i][j].tileX) == housingNameSpace.mousePosition[0]) {
+if((hero.housing.northWestCornerTileY + hero.housing.draft[i][j].tileY) == housingNameSpace.mousePosition[1]) {
+shouldFadeThisObject = true;
+}
+}
+}
+if(shouldFadeThisObject) {
+    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ),0.3]);
+} else {
+    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
+}
+                
                 }
-            }
+          //  }
         }
 
 
@@ -3955,8 +3978,14 @@ function draw() {
                     break;
                 case "img":
                     // standard image:
+                    if (typeof assetsToDraw[i][5] !== "undefined") {
+ gameContext.globalAlpha = assetsToDraw[i][5];
+                    }
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                    }
+                    if (typeof assetsToDraw[i][5] !== "undefined") {
+ gameContext.globalAlpha = 1;
                     }
             }
         }

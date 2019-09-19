@@ -55,7 +55,7 @@ var housingNameSpace = {
             housingNameSpace.whichTileActive = '';
             housingNameSpace.whichWorldTileActive = '';
             housingNameSpace.activeTool = '';
-              for (var i = 0; i < housingConstructionToolButtons.length; i++) {
+            for (var i = 0; i < housingConstructionToolButtons.length; i++) {
                 housingConstructionToolButtons[i].classList.remove('active');
             }
             key[12] = false;
@@ -67,32 +67,41 @@ var housingNameSpace = {
     },
 
     worldClickHandler: function(e) {
-        if (housingNameSpace.whichTileActive != '') {
-            // if in bounds of the plot footprint:
-            var xDiff = e.pageX - (canvasWidth / 2);
-            var yDiff = e.pageY - (canvasHeight / 2);
-            var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
-            var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
-            var clickWorldTileX = getTileX(nonIsoCoordX);
-            var clickWorldTileY = getTileY(nonIsoCoordY);
-            if (clickWorldTileX >= hero.housing.northWestCornerTileX) {
-                if (clickWorldTileX < hero.housing.southEastCornerTileX) {
-                    if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
-                        if (clickWorldTileY < hero.housing.southEastCornerTileY) {
-                            var newWallTile = {
-                                "type": parseInt(housingNameSpace.whichTileActive),
-                                "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                                "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
-                                "lockedToPlayerId": characterId
-                            }
 
-                            if (housingNameSpace.whichDyeColourActive != 0) {
-                                newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
-                            }
-
-                            // place tile:
-                            hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-
+        // if in bounds of the plot footprint:
+        var xDiff = e.pageX - (canvasWidth / 2);
+        var yDiff = e.pageY - (canvasHeight / 2);
+        var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+        var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
+        var clickWorldTileX = getTileX(nonIsoCoordX);
+        var clickWorldTileY = getTileY(nonIsoCoordY);
+        if (clickWorldTileX >= hero.housing.northWestCornerTileX) {
+            if (clickWorldTileX < hero.housing.southEastCornerTileX) {
+                if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
+                    if (clickWorldTileY < hero.housing.southEastCornerTileY) {
+                        switch (housingNameSpace.activeTool) {
+                            case 'paint':
+                                if (housingNameSpace.whichTileActive != '') {
+                                    var newWallTile = {
+                                        "type": parseInt(housingNameSpace.whichTileActive),
+                                        "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
+                                        "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
+                                        "lockedToPlayerId": characterId
+                                    }
+                                    if (housingNameSpace.whichDyeColourActive != 0) {
+                                        newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
+                                    }
+                                    // place tile:
+                                    hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+                                }
+                                break;
+                            case 'remove':
+                                console.log("removing");
+                                // find items at this tile and remove them:
+                                hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                    return (!((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY))));
+                                });
+                                break
                         }
                     }
                 }
@@ -206,11 +215,11 @@ var housingNameSpace = {
 
     },
     changeActiveTool: function(e) {
-      var whichButton = getNearestParentId(e.target);
-      housingNameSpace.activeTool = whichButton.getAttribute("data-action");
+        var whichButton = getNearestParentId(e.target);
+        housingNameSpace.activeTool = whichButton.getAttribute("data-action");
         for (var i = 0; i < housingConstructionToolButtons.length; i++) {
-                housingConstructionToolButtons[i].classList.remove('active');
-            }
-            whichButton.classList.add('active');
+            housingConstructionToolButtons[i].classList.remove('active');
+        }
+        whichButton.classList.add('active');
     }
 }
