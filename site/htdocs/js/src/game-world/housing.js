@@ -102,7 +102,17 @@ var housingNameSpace = {
                                 }
                                 break;
                             case 'remove':
-                                console.log("removing");
+                                var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                    return ((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY)));
+                                });
+                                for (var i in tilesBeingRemoved) {
+
+                                    // refund cost:
+                                    housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
+
+                                }
+
+                                housingNameSpace.updateRunningTotal();
                                 // find items at this tile and remove them:
                                 hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
                                     return (!((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY))));
@@ -181,33 +191,21 @@ var housingNameSpace = {
         // check money and confirm #####
         // john
 
-
-if (housingNameSpace.runningCostTotal > hero.currency.money) {
-    housingNotEnoughMoney.classList.add('active');
-} else {
-var titleText;
-if(housingNameSpace.runningCostTotal < 0) {
-titleText = "Commit this design and be refunded "+parseMoney((0-housingNameSpace.runningCostTotal))+"?";
-} else {
-    titleText = "Commit this design at a cost of "+parseMoney(housingNameSpace.runningCostTotal)+"?";
-}
-housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
-
-
-housingHasEnoughMoney.classList.add('active');
-
-
-
-}
-
-
-
-
-
-
+        if (housingNameSpace.runningCostTotal > hero.currency.money) {
+            housingNotEnoughMoney.classList.add('active');
+        } else {
+            var titleText;
+            if (housingNameSpace.runningCostTotal < 0) {
+                titleText = "Commit this design and be refunded " + parseMoney((0 - housingNameSpace.runningCostTotal)) + "?";
+            } else {
+                titleText = "Commit this design at a cost of " + parseMoney(housingNameSpace.runningCostTotal) + "?";
+            }
+            housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
+            housingHasEnoughMoney.classList.add('active');
+        }
     },
 
-publishCommittedDesign: function() {
+    publishCommittedDesign: function() {
 
         // save json to file system:
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
@@ -219,12 +217,12 @@ publishCommittedDesign: function() {
 
 
 
-housingHasEnoughMoney.classList.remove('active');
-    hero.currency.money -= housingNameSpace.runningCostTotal;
-    UI.updateCurrencies();
-    audio.playSound(soundEffects['coins'], 0);
-    housingNameSpace.runningCostTotal = 0;
-    housingNameSpace.updateRunningTotal();
+                housingHasEnoughMoney.classList.remove('active');
+                hero.currency.money -= housingNameSpace.runningCostTotal;
+                UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'], 0);
+                housingNameSpace.runningCostTotal = 0;
+                housingNameSpace.updateRunningTotal();
 
 
 
@@ -260,7 +258,7 @@ housingHasEnoughMoney.classList.remove('active');
         }, function(status) {
             // try again? ########
         });
-},
+    },
 
     changeActiveTool: function(e) {
         var whichButton = getNearestParentId(e.target);
@@ -270,6 +268,7 @@ housingHasEnoughMoney.classList.remove('active');
         }
         whichButton.classList.add('active');
     },
+
     updateRunningTotal: function() {
         if (housingNameSpace.runningCostTotal > hero.currency.money) {
             housingRunningTotal.classList.add('notEnough');

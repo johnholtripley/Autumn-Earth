@@ -644,6 +644,11 @@ function generateHash(sourceString) {
 
 
 function parseMoney(amount) {
+    var isNegative = false;
+    if (amount < 0) {
+        amount = Math.abs(amount);
+        isNegative = true;
+    }
     var moneyOutput = "";
     var copper = amount % 100;
     var gold = Math.floor(amount / 10000);
@@ -655,10 +660,11 @@ function parseMoney(amount) {
         moneyOutput += silver + '<span class="silver"></span>';
     }
     moneyOutput += copper + '<span class="copper"></span>';
+    if (isNegative) {
+        moneyOutput = "-" + moneyOutput;
+    }
     return moneyOutput;
 }
-
-
 
 
 
