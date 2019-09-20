@@ -87,6 +87,9 @@ const housingConstructionPanel = document.getElementById('housingConstructionPan
 const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
+const housingRunningTotal = document.getElementById('housingRunningTotal');
+const housingNotEnoughMoney = document.getElementById('housingNotEnoughMoney');
+const housingHasEnoughMoney = document.getElementById('housingHasEnoughMoney');
 
 
 
@@ -216,6 +219,7 @@ var UI = {
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;
+        document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;

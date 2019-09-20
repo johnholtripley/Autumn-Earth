@@ -277,8 +277,20 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
         <li data-action="eyedropper" id="housingConstructToolEyedropper"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-eyedropper.png">Eyedropper</button></li>
         <li data-action="move" id="housingConstructToolMove"><button style="background-image:url(/images/game-world/interface/housing/ui-tool-move.png">Move</button></li>
       </ul>
+      <p>Cost for this work: <span id="housingRunningTotal">0<span class="copper"></span></span></p>
       <button id="housingConstructionSaveButton">Commit this design</button>
       <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
+    </div>
+    <div id="housingHasEnoughMoney">
+      <h3></h3>
+      <button id="hasEnoughConfirm">Commit design</button>
+      <button id="hasEnoughCancel">Save for later</button>
+    </div>
+    <div id="housingNotEnoughMoney">
+      <h3>Not enough money&hellip;</h3>
+      <p>Would you like to save this for later?</p>
+      <button id="notEnoughSave">Save design</button>
+      <button id="notEnoughCancel">Cancel design</button>
     </div>
 
     <div id="gameSettings"><button class="closePanel">close</button>

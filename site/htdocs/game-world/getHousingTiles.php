@@ -37,7 +37,7 @@ $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
 	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
-		$htmlOutput .= '<li id="housingTile'.$itemID.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
+		$htmlOutput .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
 		$htmlOutput .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
 	}
 }

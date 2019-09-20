@@ -36,6 +36,22 @@
     .selectWrapper {
         max-width: 220px;
     }
+
+    p {
+        color: #fff;
+    }
+
+    #housingTileSelection {
+        p {
+            color: #111;
+        }
+    }
+
+    #housingRunningTotal {
+        &.notEnough {
+            background: red;
+        }
+    }
 }
 
 #housingConstructionTools {
@@ -52,15 +68,39 @@
         background-repeat: no-repeat;
         background-position: 50% 50%;
         cursor: pointer;
-     
-      
+
+
     }
-        li {
-        margin: 0; padding: 0;display: inline-block;
-      &.active {
-        button {
-              box-shadow: 0 0 5px 3px #eebb3f; 
-          }
+
+    li {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+
+        &.active {
+            button {
+                box-shadow: 0 0 5px 3px #eebb3f;
+            }
         }
+    }
+}
+
+
+#housingHasEnoughMoney,
+#housingNotEnoughMoney {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    left: 50%;
+    top: 50%;
+    @include transform(translate(-50%, -50%));
+    background: #53160d;
+    color: #fff;
+    padding: 10px;
+    @include transform(opacity 0.4s ease);
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
     }
 }

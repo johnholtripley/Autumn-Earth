@@ -3132,6 +3132,8 @@ var housingNameSpace = {
     'whichWorldTileActive': '',
     'whichElevationActive': 0,
     'whichDyeColourActive': 0,
+    'runningCostTotal': 0,
+    'costForActiveTile': 0,
     'activeTool': 'paint',
     'mousePosition': [],
 
@@ -3141,6 +3143,7 @@ var housingNameSpace = {
             document.getElementById('housingTile' + housingNameSpace.whichTileActive).classList.remove('active');
             housingNameSpace.whichTileActive = '';
             housingNameSpace.whichWorldTileActive = '';
+            housingNameSpace.costForActiveTile = 0;
             housingNameSpace.activeTool = '';
             for (var i = 0; i < housingConstructionToolButtons.length; i++) {
                 housingConstructionToolButtons[i].classList.remove('active');
@@ -3180,6 +3183,9 @@ var housingNameSpace = {
                                     }
                                     // place tile:
                                     hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+
+                                    housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
+                                    housingNameSpace.updateRunningTotal();
                                 }
                                 break;
                             case 'remove':
@@ -3194,7 +3200,6 @@ var housingNameSpace = {
                 }
             }
         }
-
     },
 
     mouseMove: function(e) {
@@ -3231,7 +3236,7 @@ var housingNameSpace = {
         }
         var whichTile = getNearestParentId(e.target);
         whichTile.classList.add('active');
-
+        housingNameSpace.costForActiveTile = parseInt(whichTile.getAttribute("data-price"));
         housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
 
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
@@ -3261,12 +3266,54 @@ var housingNameSpace = {
     commitDesign: function() {
 
         // check money and confirm #####
+        // john
+
+
+if (housingNameSpace.runningCostTotal > hero.currency.money) {
+    housingNotEnoughMoney.classList.add('active');
+} else {
+var titleText;
+if(housingNameSpace.runningCostTotal < 0) {
+titleText = "Commit this design and be refunded "+parseMoney((0-housingNameSpace.runningCostTotal))+"?";
+} else {
+    titleText = "Commit this design at a cost of "+parseMoney(housingNameSpace.runningCostTotal)+"?";
+}
+housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
+
+
+housingHasEnoughMoney.classList.add('active');
+
+
+
+}
+
+
+
+
+
+
+    },
+
+publishCommittedDesign: function() {
 
         // save json to file system:
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
 
             if (data.success) {
                 // check no pet, hero, NPC etc in the way - move if so ####
+
+
+
+
+
+housingHasEnoughMoney.classList.remove('active');
+    hero.currency.money -= housingNameSpace.runningCostTotal;
+    UI.updateCurrencies();
+    audio.playSound(soundEffects['coins'], 0);
+    housingNameSpace.runningCostTotal = 0;
+    housingNameSpace.updateRunningTotal();
+
+
 
 
                 // add data to local mapData - first, find which maps this plot is over:
@@ -3300,8 +3347,8 @@ var housingNameSpace = {
         }, function(status) {
             // try again? ########
         });
+},
 
-    },
     changeActiveTool: function(e) {
         var whichButton = getNearestParentId(e.target);
         housingNameSpace.activeTool = whichButton.getAttribute("data-action");
@@ -3309,6 +3356,14 @@ var housingNameSpace = {
             housingConstructionToolButtons[i].classList.remove('active');
         }
         whichButton.classList.add('active');
+    },
+    updateRunningTotal: function() {
+        if (housingNameSpace.runningCostTotal > hero.currency.money) {
+            housingRunningTotal.classList.add('notEnough');
+        } else {
+            housingRunningTotal.classList.remove('notEnough');
+        }
+        housingRunningTotal.innerHTML = parseMoney(housingNameSpace.runningCostTotal);
     }
 }
 var allCardPacks = [
@@ -5658,6 +5713,9 @@ const housingConstructionPanel = document.getElementById('housingConstructionPan
 const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
+const housingRunningTotal = document.getElementById('housingRunningTotal');
+const housingNotEnoughMoney = document.getElementById('housingNotEnoughMoney');
+const housingHasEnoughMoney = document.getElementById('housingHasEnoughMoney');
 
 
 
@@ -5787,6 +5845,7 @@ var UI = {
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;
+        document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
