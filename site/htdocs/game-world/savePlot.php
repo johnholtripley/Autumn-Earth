@@ -4,12 +4,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
-
+$saveAsADraft = false;
 if(isset($_POST["chr"])) {
 $chr = $_POST["chr"];
 $postData = $_POST["postData"];
 $northWestCornerTileX = $_POST["northWestCornerTileX"];
 $northWestCornerTileY = $_POST["northWestCornerTileY"];
+if(isset($_POST["draft"])) {
+$saveAsADraft = true;
+}
 
 } else {
     $chr = 999;
@@ -26,6 +29,21 @@ if(isset($_POST["debug"])) {
 
 
 $savedirectory = '../data/chr'.$chr.'/housing/';
+if($saveAsADraft) {
+$savedirectory .= 'draft/';
+} else {
+    // remove draft files
+    
+// https://stackoverflow.com/questions/4594180/deleting-all-files-from-a-folder-using-php
+$files = glob($savedirectory.'draft/*');
+foreach($files as $file){
+  if(is_file($file))
+    unlink($file);
+}
+
+
+
+}
 
 $jsonExternalResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].$savedirectory.'external.json');
 $jsonExternal = json_decode($jsonExternalResults, true);

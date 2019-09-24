@@ -222,6 +222,7 @@ var housingNameSpace = {
                 UI.updateCurrencies();
                 audio.playSound(soundEffects['coins'], 0);
                 housingNameSpace.runningCostTotal = 0;
+                hero.housing.draftCost = 0;
                 housingNameSpace.updateRunningTotal();
 
 
@@ -258,6 +259,34 @@ var housingNameSpace = {
         }, function(status) {
             // try again? ########
         });
+    },
+
+    saveDraftDesign: function() {
+    
+        hero.housing.draftCost = housingNameSpace.runningCostTotal;
+                getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
+
+            if (data.success) {
+                UI.showNotification("<p>I've saved that design for later</p>");
+
+                UI.closeHousingConstructionPanel();
+
+            } else {
+                // try again? ########
+            }
+        }, function(status) {
+            // try again? ########
+        });
+    },
+
+    abandonDesign: function() {
+// show confirm yes/no popup first #######
+// revert draft object to the saved version ######## 
+
+housingNameSpace.runningCostTotal = 0;
+housingNameSpace.updateRunningTotal();
+UI.closeHousingConstructionPanel();
+
     },
 
     changeActiveTool: function(e) {

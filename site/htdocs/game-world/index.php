@@ -279,6 +279,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       </ul>
       <p>Cost for this work: <span id="housingRunningTotal">0<span class="copper"></span></span>
       <button id="housingConstructionSaveButton">Commit this design</button>
+      <button id="housingConstructionCancelButton">Cancel without saving</button>
       <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
     </div>
     <div id="housingHasEnoughMoney">

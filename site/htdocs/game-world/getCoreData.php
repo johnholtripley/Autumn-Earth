@@ -43,6 +43,11 @@ if(mysqli_num_rows($result)>0) {
 
 $housing = array();
 
+function is_dir_empty($dir) {
+    // https://stackoverflow.com/questions/7497733/how-can-i-use-php-to-check-if-a-directory-is-empty#answer-7497848
+  if (!is_readable($dir)) return NULL; 
+  return (count(scandir($dir)) == 2);
+}
 
 if(!$hasAPlayerHouse) {
 //$housing = '{"hasAPlayerHouse": false}';
@@ -57,6 +62,10 @@ $housing["southEastCornerTileX"] = intval($southEastCornerTileX);
 $housing["southEastCornerTileY"] = intval($southEastCornerTileY);
 $housing["draft"] = array();
 $housingDirectory = 'data/chr'.$chr.'/housing/';
+// check if there is a draft version available:
+if (!(is_dir_empty($housingDirectory.'draft/'))) {
+    $housingDirectory .= 'draft/';
+}
 $housingFiles = scandir('../'.$housingDirectory);
 // sort into external, then floor0, floor1 etc:
 sort($housingFiles);

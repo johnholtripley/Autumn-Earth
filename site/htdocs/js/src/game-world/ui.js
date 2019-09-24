@@ -220,6 +220,8 @@ var UI = {
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;
         document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
+        document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.abandonDesign;
+        document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.saveDraftDesign;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -2598,6 +2600,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         housingConstructionPanel.classList.add('active');
         document.addEventListener("click", housingNameSpace.worldClickHandler, false);
         document.addEventListener("mousemove", housingNameSpace.mouseMove, false);
+if(hero.housing.draftCost != 0) {
+    // get the cost for the stored draft version:
+housingNameSpace.runningCostTotal = hero.housing.draftCost;
+}
+
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
