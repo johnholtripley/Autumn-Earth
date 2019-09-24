@@ -2604,6 +2604,7 @@ if(hero.housing.draftCost != 0) {
     // get the cost for the stored draft version:
 housingNameSpace.runningCostTotal = hero.housing.draftCost;
 }
+housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
 
         gameMode = 'housing';
     },

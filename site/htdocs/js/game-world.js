@@ -3355,9 +3355,9 @@ var housingNameSpace = {
     },
 
     saveDraftDesign: function() {
-    
+
         hero.housing.draftCost = housingNameSpace.runningCostTotal;
-                getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
+        getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
 
             if (data.success) {
                 UI.showNotification("<p>I've saved that design for later</p>");
@@ -3373,13 +3373,14 @@ var housingNameSpace = {
     },
 
     abandonDesign: function() {
-// show confirm yes/no popup first #######
-// revert draft object to the saved version ######## 
+        // show confirm yes/no popup first #######
 
-housingNameSpace.runningCostTotal = 0;
-housingNameSpace.updateRunningTotal();
-UI.closeHousingConstructionPanel();
 
+        // revert draft object to the saved version:
+        hero.housing.draft = JSON.parse(JSON.stringify(housingNameSpace.restoreDraft));
+        housingNameSpace.runningCostTotal = 0;
+        housingNameSpace.updateRunningTotal();
+        UI.closeHousingConstructionPanel();
     },
 
     changeActiveTool: function(e) {
@@ -8264,6 +8265,7 @@ if(hero.housing.draftCost != 0) {
     // get the cost for the stored draft version:
 housingNameSpace.runningCostTotal = hero.housing.draftCost;
 }
+housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
 
         gameMode = 'housing';
     },

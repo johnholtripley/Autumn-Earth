@@ -63,9 +63,10 @@ $housing["southEastCornerTileY"] = intval($southEastCornerTileY);
 $housing["draft"] = array();
 $housingDirectory = 'data/chr'.$chr.'/housing/';
 // check if there is a draft version available:
-if (!(is_dir_empty($housingDirectory.'draft/'))) {
+if (!(is_dir_empty('../'.$housingDirectory.'draft/'))) {
     $housingDirectory .= 'draft/';
-}
+   
+} 
 $housingFiles = scandir('../'.$housingDirectory);
 // sort into external, then floor0, floor1 etc:
 sort($housingFiles);
