@@ -96,7 +96,6 @@ var housingNameSpace = {
                                     }
                                     // place tile:
                                     hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-
                                     housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
                                     housingNameSpace.updateRunningTotal();
                                 }
@@ -261,16 +260,27 @@ var housingNameSpace = {
         });
     },
 
-    saveDraftDesign: function() {
 
+    checkSaveDraftDesign: function() {
+        housingAbandonDesign.classList.add("active");
+    },
+
+    abandonLatestChanges: function() {
+        // revert draft object to the saved version:
+        hero.housing.draft = JSON.parse(JSON.stringify(housingNameSpace.restoreDraft));
+        housingNameSpace.runningCostTotal = 0;
+        housingNameSpace.updateRunningTotal();
+        UI.closeHousingConstructionPanel();
+        housingAbandonDesign.classList.remove("active");
+    },
+
+    saveDraftDesign: function() {
         hero.housing.draftCost = housingNameSpace.runningCostTotal;
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
-
             if (data.success) {
                 UI.showNotification("<p>I've saved that design for later</p>");
-
+                housingAbandonDesign.classList.remove("active");
                 UI.closeHousingConstructionPanel();
-
             } else {
                 // try again? ########
             }
@@ -281,13 +291,21 @@ var housingNameSpace = {
 
     abandonDesign: function() {
         // show confirm yes/no popup first #######
+        // remove all changes (make the draft like the committed) - on both the server and locally:
 
+        getJSONWithParams("/game-world/removeDraftPlot.php", 'chr=' + characterId, function(data) {
 
-        // revert draft object to the saved version:
-        hero.housing.draft = JSON.parse(JSON.stringify(housingNameSpace.restoreDraft));
-        housingNameSpace.runningCostTotal = 0;
-        housingNameSpace.updateRunningTotal();
-        UI.closeHousingConstructionPanel();
+            if (data.housing.success) {
+          hero.housing.draft = JSON.parse(data.housing.draft);
+            UI.showNotification("<p>I've abandoned that draft design</p>");
+                housingAbandonDesign.classList.remove("active");
+                UI.closeHousingConstructionPanel();
+            } else {
+                // try again? ########
+            }
+        }, function(status) {
+            // try again? ########
+        });
     },
 
     changeActiveTool: function(e) {

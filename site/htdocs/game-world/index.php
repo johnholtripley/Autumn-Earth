@@ -279,7 +279,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       </ul>
       <p>Cost for this work: <span id="housingRunningTotal">0<span class="copper"></span></span>
       <button id="housingConstructionSaveButton">Commit this design</button>
-      <button id="housingConstructionCancelButton">Cancel without saving</button>
+      <button id="housingConstructionCancelButton">Abandon draft version</button>
       <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
     </div>
     <div id="housingHasEnoughMoney">
@@ -292,6 +292,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <p>Would you like to save this for later?</p>
       <button id="notEnoughSave">Save design</button>
       <button id="notEnoughCancel">Cancel design</button>
+    </div>
+    <div id="housingAbandonDesign">
+      <h3>Save these latest changes to your draft version?</h3>
+      <button id="abandonDesignSaveDraft">Save to draft</button>
+      <button id="abandonDesignConfirm">Abandon changes</button>
     </div>
 
     <div id="gameSettings"><button class="closePanel">close</button>
