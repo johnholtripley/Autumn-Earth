@@ -282,18 +282,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <button id="housingConstructionCancelButton">Abandon draft version</button>
       <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getHousingTiles.php"); ?>
     </div>
-    <div id="housingHasEnoughMoney">
-      <h3></h3>
-      <button id="hasEnoughConfirm">Commit design</button>
-      <button id="hasEnoughCancel">Save for later</button>
-    </div>
-    <div id="housingNotEnoughMoney">
-      <h3>Not enough money&hellip;</h3>
-      <p>Would you like to save this for later?</p>
-      <button id="notEnoughSave">Save design</button>
-      <button id="notEnoughCancel">Cancel design</button>
-    </div>
-
 
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>

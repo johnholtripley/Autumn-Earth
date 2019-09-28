@@ -191,7 +191,11 @@ var housingNameSpace = {
         // john
 
         if (housingNameSpace.runningCostTotal > hero.currency.money) {
-            housingNotEnoughMoney.classList.add('active');
+
+
+
+            UI.showYesNoDialogueBox("Not enough money&hellip;", "Save design", "Cancel design", "housingNameSpace.saveDraftDesign", "housingNameSpace.abandonLatestChanges");
+
         } else {
             var titleText;
             if (housingNameSpace.runningCostTotal < 0) {
@@ -199,8 +203,11 @@ var housingNameSpace = {
             } else {
                 titleText = "Commit this design at a cost of " + parseMoney(housingNameSpace.runningCostTotal) + "?";
             }
-            housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
-            housingHasEnoughMoney.classList.add('active');
+            //  housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
+            //  housingHasEnoughMoney.classList.add('active');
+
+            UI.showYesNoDialogueBox(titleText, "Commit design", "Save for later", "housingNameSpace.publishCommittedDesign", "housingNameSpace.saveDraftDesign");
+
         }
     },
 
@@ -216,7 +223,7 @@ var housingNameSpace = {
 
 
 
-                housingHasEnoughMoney.classList.remove('active');
+                UI.hideYesNoDialogueBox();
                 hero.currency.money -= housingNameSpace.runningCostTotal;
                 UI.updateCurrencies();
                 audio.playSound(soundEffects['coins'], 0);
@@ -290,16 +297,17 @@ var housingNameSpace = {
         });
     },
 
+    checkAbandonDesign: function() {
+        UI.showYesNoDialogueBox("Abandon this draft design entirely?", "Abandon draft", "Keep this changes for now", "housingNameSpace.abandonDesign", "UI.hideYesNoDialogueBox");
+    },
+
     abandonDesign: function() {
-        // show confirm yes/no popup first #######
         // remove all changes (make the draft like the committed) - on both the server and locally:
-
         getJSONWithParams("/game-world/removeDraftPlot.php", 'chr=' + characterId, function(data) {
-
             if (data.housing.success) {
                 hero.housing.draft = JSON.parse(data.housing.draft);
                 UI.showNotification("<p>I've abandoned that draft design</p>");
-                housingAbandonDesign.classList.remove("active");
+                UI.hideYesNoDialogueBox();
                 UI.closeHousingConstructionPanel();
             } else {
                 // try again? ########

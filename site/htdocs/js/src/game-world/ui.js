@@ -88,8 +88,7 @@ const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
-const housingNotEnoughMoney = document.getElementById('housingNotEnoughMoney');
-const housingHasEnoughMoney = document.getElementById('housingHasEnoughMoney');
+
 
 const yesNoDialoguePanel = document.getElementById('yesNoDialoguePanel');
 const yesNoDialogueHeading = document.getElementById('yesNoDialogueHeading');
@@ -224,8 +223,8 @@ var UI = {
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;
-        document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
-        document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.abandonDesign;
+        //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
+        document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
