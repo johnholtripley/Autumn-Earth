@@ -3355,7 +3355,7 @@ var housingNameSpace = {
 
 
     checkSaveDraftDesign: function() {
-        housingAbandonDesign.classList.add("active");
+        UI.showYesNoDialogueBox("Save these latest changes to your draft version?", "Save to draft", "Abandon changes", "housingNameSpace.saveDraftDesign", "housingNameSpace.abandonLatestChanges");
     },
 
     abandonLatestChanges: function() {
@@ -3364,7 +3364,7 @@ var housingNameSpace = {
         housingNameSpace.runningCostTotal = 0;
         housingNameSpace.updateRunningTotal();
         UI.closeHousingConstructionPanel();
-        housingAbandonDesign.classList.remove("active");
+        UI.hideYesNoDialogueBox();
     },
 
     saveDraftDesign: function() {
@@ -3372,7 +3372,8 @@ var housingNameSpace = {
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
             if (data.success) {
                 UI.showNotification("<p>I've saved that design for later</p>");
-                housingAbandonDesign.classList.remove("active");
+                //  housingAbandonDesign.classList.remove("active");
+                UI.hideYesNoDialogueBox();
                 UI.closeHousingConstructionPanel();
             } else {
                 // try again? ########
@@ -3389,8 +3390,8 @@ var housingNameSpace = {
         getJSONWithParams("/game-world/removeDraftPlot.php", 'chr=' + characterId, function(data) {
 
             if (data.housing.success) {
-          hero.housing.draft = JSON.parse(data.housing.draft);
-            UI.showNotification("<p>I've abandoned that draft design</p>");
+                hero.housing.draft = JSON.parse(data.housing.draft);
+                UI.showNotification("<p>I've abandoned that draft design</p>");
                 housingAbandonDesign.classList.remove("active");
                 UI.closeHousingConstructionPanel();
             } else {
@@ -5769,7 +5770,11 @@ const housingConstructionToolButtons = document.querySelectorAll('#housingConstr
 const housingRunningTotal = document.getElementById('housingRunningTotal');
 const housingNotEnoughMoney = document.getElementById('housingNotEnoughMoney');
 const housingHasEnoughMoney = document.getElementById('housingHasEnoughMoney');
-const housingAbandonDesign = document.getElementById('housingAbandonDesign');
+
+const yesNoDialoguePanel = document.getElementById('yesNoDialoguePanel');
+const yesNoDialogueHeading = document.getElementById('yesNoDialogueHeading');
+const yesNoDialogueButton1 = document.getElementById('yesNoDialogueButton1');
+const yesNoDialogueButton2 = document.getElementById('yesNoDialogueButton2');
 
 
 
@@ -5902,8 +5907,7 @@ var UI = {
         document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.abandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
-        document.getElementById('abandonDesignSaveDraft').onclick = housingNameSpace.saveDraftDesign;
-        document.getElementById('abandonDesignConfirm').onclick = housingNameSpace.abandonLatestChanges;
+
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
@@ -8282,13 +8286,13 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         housingConstructionPanel.classList.add('active');
         document.addEventListener("click", housingNameSpace.worldClickHandler, false);
         document.addEventListener("mousemove", housingNameSpace.mouseMove, false);
-        if(hero.housing.draftCost) {
-if(hero.housing.draftCost != 0) {
-    // get the cost for the stored draft version:
-housingNameSpace.runningCostTotal = hero.housing.draftCost;
-}
-}
-housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
+        if (hero.housing.draftCost) {
+            if (hero.housing.draftCost != 0) {
+                // get the cost for the stored draft version:
+                housingNameSpace.runningCostTotal = hero.housing.draftCost;
+            }
+        }
+        housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
 
         gameMode = 'housing';
     },
@@ -8298,6 +8302,27 @@ housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
         document.removeEventListener("click", housingNameSpace.worldClickHandler, false);
         document.removeEventListener("mousemove", housingNameSpace.mouseMove, false);
         gameMode = 'play';
+    },
+    showYesNoDialogueBox: function(heading, button1Text, button2Text, button1Function, button2Function) {
+        yesNoDialogueButton1.innerText = button1Text;
+        var button1FunctionSplit = button1Function.split(".");
+        if (button1FunctionSplit.length > 1) {
+            yesNoDialogueButton1.onclick = window[button1FunctionSplit[0]][button1FunctionSplit[1]];
+        } else {
+            yesNoDialogueButton1.onclick = window[button1Function];
+        }
+        yesNoDialogueButton2.innerText = button2Text;
+        var button2FunctionSplit = button2Function.split(".");
+        if (button2FunctionSplit.length > 1) {
+            yesNoDialogueButton2.onclick = window[button2FunctionSplit[0]][button2FunctionSplit[1]];
+        } else {
+            yesNoDialogueButton2.onclick = window[button2Function];
+        }
+        yesNoDialogueHeading.innerHTML = heading;
+        yesNoDialoguePanel.classList.add('active');
+    },
+    hideYesNoDialogueBox: function() {
+        yesNoDialoguePanel.classList.remove('active');
     }
 }
 function setupWeather() {

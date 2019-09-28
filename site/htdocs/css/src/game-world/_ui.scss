@@ -405,3 +405,21 @@ img {
     top: 50%;
     @include transform(translate(-70px,-92px));
 }
+
+#yesNoDialoguePanel {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    left: 50%;
+    top: 50%;
+    @include transform(translate(-50%, -50%));
+    background: #53160d;
+    color: #fff;
+    padding: 10px;
+    @include transform(opacity 0.4s ease);
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

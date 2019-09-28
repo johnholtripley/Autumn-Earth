@@ -262,7 +262,7 @@ var housingNameSpace = {
 
 
     checkSaveDraftDesign: function() {
-        housingAbandonDesign.classList.add("active");
+        UI.showYesNoDialogueBox("Save these latest changes to your draft version?", "Save to draft", "Abandon changes", "housingNameSpace.saveDraftDesign", "housingNameSpace.abandonLatestChanges");
     },
 
     abandonLatestChanges: function() {
@@ -271,7 +271,7 @@ var housingNameSpace = {
         housingNameSpace.runningCostTotal = 0;
         housingNameSpace.updateRunningTotal();
         UI.closeHousingConstructionPanel();
-        housingAbandonDesign.classList.remove("active");
+        UI.hideYesNoDialogueBox();
     },
 
     saveDraftDesign: function() {
@@ -279,7 +279,8 @@ var housingNameSpace = {
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY + '&draft=true', function(data) {
             if (data.success) {
                 UI.showNotification("<p>I've saved that design for later</p>");
-                housingAbandonDesign.classList.remove("active");
+                //  housingAbandonDesign.classList.remove("active");
+                UI.hideYesNoDialogueBox();
                 UI.closeHousingConstructionPanel();
             } else {
                 // try again? ########
@@ -296,8 +297,8 @@ var housingNameSpace = {
         getJSONWithParams("/game-world/removeDraftPlot.php", 'chr=' + characterId, function(data) {
 
             if (data.housing.success) {
-          hero.housing.draft = JSON.parse(data.housing.draft);
-            UI.showNotification("<p>I've abandoned that draft design</p>");
+                hero.housing.draft = JSON.parse(data.housing.draft);
+                UI.showNotification("<p>I've abandoned that draft design</p>");
                 housingAbandonDesign.classList.remove("active");
                 UI.closeHousingConstructionPanel();
             } else {

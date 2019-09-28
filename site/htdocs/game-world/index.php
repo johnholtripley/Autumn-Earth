@@ -293,11 +293,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <button id="notEnoughSave">Save design</button>
       <button id="notEnoughCancel">Cancel design</button>
     </div>
-    <div id="housingAbandonDesign">
-      <h3>Save these latest changes to your draft version?</h3>
-      <button id="abandonDesignSaveDraft">Save to draft</button>
-      <button id="abandonDesignConfirm">Abandon changes</button>
-    </div>
+
 
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>
@@ -305,6 +301,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">
       <h2>Full screen</h2>
       <input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
+    </div>
+
+    <div id="yesNoDialoguePanel">
+      <h3 id="yesNoDialogueHeading"></h3>
+      <button id="yesNoDialogueButton1"></button>
+      <button id="yesNoDialogueButton2"></button>
     </div>
 
     <div id="acceptQuestChoice">
