@@ -201,7 +201,7 @@
                 "centreX": 22,
                 "centreY": 32,
                 "tileX": 12,
-                "tileY": 42,
+                "tileY": 39,
                 "movement": ["w","?","?","?","?",["animate","peck",1],"?","?","?","?","?","?","?","?","?","?",["animate","peck",1]],
                 "facing": "w",
                 "walkThroughDoors": false,

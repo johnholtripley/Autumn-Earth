@@ -628,22 +628,20 @@ if((!$isPlayerHousing) && (!$isInside)) {
    // see if any part of this falls within the requested map:
 
 
-$eastEdgeTile = $globalPosition[0]*$worldMapTileLength;
-$westEdgeTile = (($globalPosition[0]+1)*$worldMapTileLength)-1;
+$westEdgeTile = $globalPosition[0]*$worldMapTileLength;
+$eastEdgeTile = (($globalPosition[0]+1)*$worldMapTileLength)-1;
 $NorthEdgeTile = $globalPosition[1]*$worldMapTileLength;
 $SouthEdgeTile = (($globalPosition[1]+1)*$worldMapTileLength)-1;
  
 
-//echo $NorthEdgeTile.", ".$eastEdgeTile.", ".$SouthEdgeTile.", ".$westEdgeTile;
- //  echo " - ".$housingWidth.", ".$housingHeight;
-
-
    // house North edge >= $NorthEdgeTile
    // house North edge  <= $SouthEdgeTile - housingHeight
 
-$housingQuery = "SELECT * from tblplayerhousing where northWestCornerTileY >= ".$NorthEdgeTile." and southEastCornerTileY <= ".$SouthEdgeTile." and northWestCornerTileX <= ".$westEdgeTile." and southEastCornerTileX >= ".$eastEdgeTile;
+$housingQuery = "SELECT * from tblplayerhousing where NOT ((northWestCornerTileX  >  ".$eastEdgeTile.") OR (southEastCornerTileX  <  ".$westEdgeTile.") OR (northWestCornerTileY > ".$SouthEdgeTile.") OR (southEastCornerTileY  <  ".$NorthEdgeTile.") )";
+
 $housingResult = mysqli_query($connection,  $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
 $numberOfHouses = mysqli_num_rows( $housingResult );
+
 if ( $numberOfHouses>0) {
     while ( $housingRow = mysqli_fetch_array( $housingResult ) ) {
 //var_dump($housingRow);

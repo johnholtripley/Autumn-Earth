@@ -137,6 +137,7 @@ function getHeroGameState() {
 
         UI.buildQuestJournal(data.journal.markup, data.journal.regions);
 
+housingNameSpace.init();
 
         loadCoreAssets();
     }, function(status) {
@@ -147,6 +148,7 @@ function getHeroGameState() {
 
 
 function loadCoreAssets() {
+
     var coreImagesToLoad = [];
     coreImagesToLoad.push({
         name: "heroImg",
@@ -875,10 +877,13 @@ function initialiseNPC(whichNPC) {
 }
 
 function initialiseItem(whichItem) {
-
     whichItem.x = getTileCentreCoordX(whichItem.tileX);
     whichItem.y = getTileCentreCoordY(whichItem.tileY);
-    whichItem.z = getElevation(whichItem.tileX, whichItem.tileY);
+    if (typeof whichItem.tileZ === "undefined") {
+        whichItem.z = getElevation(whichItem.tileX, whichItem.tileY);
+    } else {
+        whichItem.z = whichItem.tileZ * tileW;
+    }
     whichItem.width = currentActiveInventoryItems[whichItem.type].width;
     whichItem.length = currentActiveInventoryItems[whichItem.type].length;
     whichItem.centreX = currentActiveInventoryItems[whichItem.type].centreX;

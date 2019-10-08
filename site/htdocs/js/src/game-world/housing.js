@@ -50,6 +50,40 @@ var housingNameSpace = {
     'activeTool': 'paint',
     'mousePosition': [],
 
+    init: function() {
+// load in any graphics used in the draft but not already loaded into memory:
+// ####### 
+
+
+    if (hero.housing.hasAPlayerHouse) {
+        if (hero.housing.draft) {
+            var whichColour, whichWorldTile;
+       
+            for (var i = 0; i < hero.housing.draft.length; i++) {
+                for (var j = 0; j < hero.housing.draft[i].length; j++) {
+                  
+
+whichColour = 0;
+if(typeof hero.housing.draft[i][j].colour !== "undefined") {
+whichColour = hero.housing.draft[i][j].colour;
+}
+
+//whichWorldTile = item src #################
+ housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
+
+            
+                
+                }
+            }
+         
+        }
+    }
+
+
+
+
+    },
+
     update: function() {
         if (key[12]) {
             // escape - cancel active tile
@@ -140,7 +174,7 @@ var housingNameSpace = {
     housingTileColourChange: function(e) {
         if (housingNameSpace.whichDyeColourActive != housingTileColour.value) {
             housingNameSpace.whichDyeColourActive = housingTileColour.value;
-            housingNameSpace.loadNewTile();
+            housingNameSpace.loadNewTile(housingNameSpace.whichTileActive,housingNameSpace.whichWorldTileActive,housingNameSpace.whichDyeColourActive);
             // change colour of available tiles:
             var colourSuffix = "";
             if (housingTileColour.value != "0") {
@@ -160,28 +194,34 @@ var housingNameSpace = {
         whichTile.classList.add('active');
         housingNameSpace.costForActiveTile = parseInt(whichTile.getAttribute("data-price"));
         housingNameSpace.whichWorldTileActive = whichTile.getAttribute("data-cleanurl");
-
+        if (housingNameSpace.activeTool == "remove") {
+            housingNameSpace.activeTool = "paint";
+        }
+        housingNameSpace.showActiveTool(document.getElementById('housingConstructToolPaint'));
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-        housingNameSpace.loadNewTile();
+        housingNameSpace.loadNewTile(housingNameSpace.whichTileActive,housingNameSpace.whichWorldTileActive,housingNameSpace.whichDyeColourActive);
+
     },
 
-    loadNewTile: function() {
+    loadNewTile: function(whichTile, whichWorldTile, whichColour) {
+        console.log("loading new tile",whichTile,whichColour);
         // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
-        if (housingNameSpace.whichDyeColourActive != 0) {
+        if (whichColour != 0) {
             // bypass hasInherent colour checks as won't be in inventory items
 
-            var thisColourName = colourNames[housingNameSpace.whichDyeColourActive];
+            var thisColourName = colourNames[whichColour];
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
 
-        var itemID = "item" + housingNameSpace.whichTileActive + thisFileColourSuffix;
+        var itemID = "item" + whichTile + thisFileColourSuffix;
 
         if (typeof itemImages[itemID] === "undefined") {
-            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + housingNameSpace.whichWorldTileActive + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+            console.log(whichTile + thisFileColourSuffix+".png");
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichWorldTile + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
         }
     },
 
@@ -320,6 +360,10 @@ var housingNameSpace = {
     changeActiveTool: function(e) {
         var whichButton = getNearestParentId(e.target);
         housingNameSpace.activeTool = whichButton.getAttribute("data-action");
+        housingNameSpace.showActiveTool(whichButton);
+    },
+
+    showActiveTool: function(whichButton) {
         for (var i = 0; i < housingConstructionToolButtons.length; i++) {
             housingConstructionToolButtons[i].classList.remove('active');
         }
@@ -335,3 +379,4 @@ var housingNameSpace = {
         housingRunningTotal.innerHTML = parseMoney(housingNameSpace.runningCostTotal);
     }
 }
+
