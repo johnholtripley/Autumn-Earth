@@ -137,7 +137,7 @@ function getHeroGameState() {
 
         UI.buildQuestJournal(data.journal.markup, data.journal.regions);
 
-housingNameSpace.init();
+
 
         loadCoreAssets();
     }, function(status) {
@@ -195,7 +195,7 @@ function prepareCoreAssets() {
         }
     }
 
-
+housingNameSpace.init();
 
     loadMap();
 }
@@ -455,7 +455,7 @@ function processNewVisibleMapData(whichNewMap) {
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
-    //  console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
+   //   console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
     if (itemIdsToLoad.length > 0) {
         getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
             // currentActiveInventoryItems = data;

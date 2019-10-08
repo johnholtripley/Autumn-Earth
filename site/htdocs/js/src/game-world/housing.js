@@ -49,39 +49,59 @@ var housingNameSpace = {
     'costForActiveTile': 0,
     'activeTool': 'paint',
     'mousePosition': [],
+    'draftHousingTilesToLoad': [],
+    'whichItemIdsLoading': [],
 
     init: function() {
-// load in any graphics used in the draft but not already loaded into memory:
-// ####### 
+        // load in any graphics used in the draft but not already loaded into memory:
+        // ####### 
 
 
-    if (hero.housing.hasAPlayerHouse) {
-        if (hero.housing.draft) {
-            var whichColour, whichWorldTile;
-       
-            for (var i = 0; i < hero.housing.draft.length; i++) {
-                for (var j = 0; j < hero.housing.draft[i].length; j++) {
-                  
-
-whichColour = 0;
-if(typeof hero.housing.draft[i][j].colour !== "undefined") {
-whichColour = hero.housing.draft[i][j].colour;
-}
-
-//whichWorldTile = item src #################
- housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
-
-            
-                
+        if (hero.housing.hasAPlayerHouse) {
+            if (hero.housing.draft) {
+                var whichColour, whichWorldTile, thisFileColourSuffix, thisColourName;
+                for (var i = 0; i < hero.housing.draft.length; i++) {
+                    for (var j = 0; j < hero.housing.draft[i].length; j++) {
+                        whichColour = 0;
+                        if (typeof hero.housing.draft[i][j].colour !== "undefined") {
+                            whichColour = hero.housing.draft[i][j].colour;
+                        }
+                        //whichWorldTile = item src #################
+                        // whichTile.getAttribute("data-cleanurl")
+                        whichWorldTile = document.querySelector('#housingTileSelection li[data-id="' + hero.housing.draft[i][j].type + '"]').getAttribute('data-cleanurl');
+                        //console.log(whichWorldTile);
+                       
+                        //   housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
+                        thisFileColourSuffix = '';
+                        if (whichColour != 0) {
+                            // bypass hasInherent colour checks as won't be in inventory items
+                            thisColourName = colourNames[whichColour];
+                            if (thisColourName != "") {
+                                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                            }
+                        }
+                        var itemID = "item" + hero.housing.draft[i][j].type + thisFileColourSuffix;
+                        if (housingNameSpace.whichItemIdsLoading.indexOf(itemID) === -1) {
+                             console.log("starting to load img " + whichWorldTile);
+                            housingNameSpace.draftHousingTilesToLoad.push({
+                                name: itemID,
+                                src: '/images/game-world/items/'+whichWorldTile+'.png'
+                            });
+                            housingNameSpace.whichItemIdsLoading.push(itemID);
+                        }
+                    }
                 }
             }
-         
+            Loader.preload(housingNameSpace.draftHousingTilesToLoad, housingNameSpace.prepareDraftHousingAssets, loadingProgress);
         }
-    }
 
+    },
 
-
-
+    prepareDraftHousingAssets: function() {
+        console.log("loaded housing assets!!!!!");
+        for (var i = 0; i < housingNameSpace.whichItemIdsLoading.length; i++) {
+            itemImages[housingNameSpace.whichItemIdsLoading[i]] = Loader.getImage(housingNameSpace.whichItemIdsLoading[i]);
+        }
     },
 
     update: function() {
@@ -174,7 +194,7 @@ whichColour = hero.housing.draft[i][j].colour;
     housingTileColourChange: function(e) {
         if (housingNameSpace.whichDyeColourActive != housingTileColour.value) {
             housingNameSpace.whichDyeColourActive = housingTileColour.value;
-            housingNameSpace.loadNewTile(housingNameSpace.whichTileActive,housingNameSpace.whichWorldTileActive,housingNameSpace.whichDyeColourActive);
+            housingNameSpace.loadNewTile(housingNameSpace.whichTileActive, housingNameSpace.whichWorldTileActive, housingNameSpace.whichDyeColourActive);
             // change colour of available tiles:
             var colourSuffix = "";
             if (housingTileColour.value != "0") {
@@ -199,12 +219,12 @@ whichColour = hero.housing.draft[i][j].colour;
         }
         housingNameSpace.showActiveTool(document.getElementById('housingConstructToolPaint'));
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
-        housingNameSpace.loadNewTile(housingNameSpace.whichTileActive,housingNameSpace.whichWorldTileActive,housingNameSpace.whichDyeColourActive);
+        housingNameSpace.loadNewTile(housingNameSpace.whichTileActive, housingNameSpace.whichWorldTileActive, housingNameSpace.whichDyeColourActive);
 
     },
 
     loadNewTile: function(whichTile, whichWorldTile, whichColour) {
-        console.log("loading new tile",whichTile,whichColour);
+
         // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
@@ -220,8 +240,11 @@ whichColour = hero.housing.draft[i][j].colour;
         var itemID = "item" + whichTile + thisFileColourSuffix;
 
         if (typeof itemImages[itemID] === "undefined") {
-            console.log(whichTile + thisFileColourSuffix+".png");
-            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichWorldTile + thisFileColourSuffix + '.png' }], function() { itemImages[itemID] = Loader.getImage(itemID); }, function() {});
+            //   console.log(itemImages,itemImages[itemID],(typeof itemImages[itemID]),itemID,whichTile, whichWorldTile, whichColour);
+            Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichWorldTile + thisFileColourSuffix + '.png' }], function() {
+                itemImages[itemID] = Loader.getImage(itemID);
+                console.log("completed laoding: " + itemID);
+            }, function() {});
         }
     },
 
@@ -379,4 +402,3 @@ whichColour = hero.housing.draft[i][j].colour;
         housingRunningTotal.innerHTML = parseMoney(housingNameSpace.runningCostTotal);
     }
 }
-

@@ -1128,11 +1128,11 @@ window.Loader = (function() {
 
         // call the user defined callback when an image is loaded
         onProgressUpdate(getProgress());
-
         // check if all images are loaded
         if (imageCount == total) {
             loading = false;
-            //  console.log("Load complete.");
+
+             console.log("Load complete.=============");
             onComplete();
         }
 
@@ -1143,7 +1143,7 @@ window.Loader = (function() {
     }
 
     function loadImage(name, src) {
-        //console.log("loading "+name+" - "+src);
+        console.log("loading "+name+" - "+src);
         try {
             images[name] = new Image();
             images[name].onload = function() {
@@ -1168,7 +1168,7 @@ window.Loader = (function() {
     // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
     function preload(_images, _onComplete, _onProgressUpdate) {
         reset();
-
+console.log("preloading starting",loading);
         if (!loading) {
 
             //  console.log("Loading...");
@@ -1177,10 +1177,12 @@ window.Loader = (function() {
             try {
                 total = _images.length;
                 onProgressUpdate = _onProgressUpdate || (function() {});
+
                 onComplete = _onComplete || (function() {});
 
                 for (var i = 0; i < _images.length; ++i) {
                     loadImage(_images[i].name, _images[i].src);
+
                 }
             } catch (e) {
                 console.log(e.message);

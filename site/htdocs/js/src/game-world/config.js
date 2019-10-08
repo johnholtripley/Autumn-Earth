@@ -19,6 +19,8 @@ var npcImages = [];
 var itemImages = [];
 var backgroundImgs = [];
 
+
+
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
