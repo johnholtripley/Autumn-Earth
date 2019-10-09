@@ -400,5 +400,15 @@ var housingNameSpace = {
             housingRunningTotal.classList.remove('notEnough');
         }
         housingRunningTotal.innerHTML = parseMoney(housingNameSpace.runningCostTotal);
+    },
+
+    toggleTileGroup: function(e) {
+   
+
+for (i = 0; i < housingTileGroups.length; i++) {
+    housingTileGroups[i].classList.remove('active');
+    }
+    document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
+
     }
 }

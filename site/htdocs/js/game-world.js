@@ -3018,8 +3018,6 @@ window.Loader = (function() {
         // check if all images are loaded
         if (imageCount == total) {
             loading = false;
-
-             console.log("Load complete.=============");
             onComplete();
         }
 
@@ -3030,7 +3028,6 @@ window.Loader = (function() {
     }
 
     function loadImage(name, src) {
-        console.log("loading "+name+" - "+src);
         try {
             images[name] = new Image();
             images[name].onload = function() {
@@ -3055,7 +3052,6 @@ window.Loader = (function() {
     // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
     function preload(_images, _onComplete, _onProgressUpdate) {
         reset();
-console.log("preloading starting",loading);
         if (!loading) {
 
             //  console.log("Loading...");
@@ -3064,12 +3060,9 @@ console.log("preloading starting",loading);
             try {
                 total = _images.length;
                 onProgressUpdate = _onProgressUpdate || (function() {});
-
                 onComplete = _onComplete || (function() {});
-
                 for (var i = 0; i < _images.length; ++i) {
                     loadImage(_images[i].name, _images[i].src);
-
                 }
             } catch (e) {
                 console.log(e.message);
@@ -3497,6 +3490,16 @@ var housingNameSpace = {
             housingRunningTotal.classList.remove('notEnough');
         }
         housingRunningTotal.innerHTML = parseMoney(housingNameSpace.runningCostTotal);
+    },
+
+    toggleTileGroup: function(e) {
+   
+
+for (i = 0; i < housingTileGroups.length; i++) {
+    housingTileGroups[i].classList.remove('active');
+    }
+    document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
+
     }
 }
 var allCardPacks = [
@@ -5847,6 +5850,7 @@ const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
+const housingTileGroups = document.querySelectorAll('.housingTileGroup');
 
 
 const yesNoDialoguePanel = document.getElementById('yesNoDialoguePanel');
@@ -5985,6 +5989,13 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
+  
+
+var housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
+for (i = 0; i < housingToggleButtons.length; i++) {
+    housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
+}
+
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;

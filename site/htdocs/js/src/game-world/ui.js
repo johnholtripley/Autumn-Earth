@@ -88,6 +88,7 @@ const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
+const housingTileGroups = document.querySelectorAll('.housingTileGroup');
 
 
 const yesNoDialoguePanel = document.getElementById('yesNoDialoguePanel');
@@ -226,6 +227,13 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
+  
+
+var housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
+for (i = 0; i < housingToggleButtons.length; i++) {
+    housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
+}
+
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;

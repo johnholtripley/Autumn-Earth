@@ -42,6 +42,11 @@
     }
 
     #housingTileSelection {
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
         p {
             color: #111;
         }
@@ -50,6 +55,12 @@
     #housingRunningTotal {
         &.notEnough {
             background: red;
+        }
+    }
+    .housingTileGroup {
+        display: none;
+        &.active {
+            display: block;
         }
     }
 }

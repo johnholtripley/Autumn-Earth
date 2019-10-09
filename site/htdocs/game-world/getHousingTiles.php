@@ -31,19 +31,43 @@ $htmlOutput .= '</select></div>';
 // 10 is the Item Category for housing tiles
 $query = 'select * from tblinventoryitems where itemCategories="10" ORDER BY "itemID" ASC';
 
-$htmlOutput .= '<ul id="housingTileSelection">';
+
+
+$housingTileHtml = '';
+$housingTabsHtml = '';
+
+$htmlOutputToStore = array();
 
 $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
 	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
-		$htmlOutput .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
-		$htmlOutput .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
+
+
+if (!(array_key_exists($itemGroup, $htmlOutputToStore))) {
+	$htmlOutputToStore[$itemGroup] = '';
+}
+
+		$htmlOutputToStore[$itemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
+		$htmlOutputToStore[$itemGroup] .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
 	}
 }
 mysqli_free_result($result);
 
-$htmlOutput .= '</ul>';
+$isTheFirstTimeClass = " active";
+
+foreach ($htmlOutputToStore as $key => $value) {
+	$housingTileHtml .= '<ul id="'.$key.'" class="housingTileGroup'.$isTheFirstTimeClass.'">'.$value.'</ul>';
+	$housingTabsHtml .= '<li><button data-group="'.$key.'">'.ucfirst(str_replace("housing-","",$key)).'</button></li>';
+	$isTheFirstTimeClass = "";
+}
+
+
+$htmlOutput .= '<ul id="housingGroupTabs">'.$housingTabsHtml.'</ul>';
+$htmlOutput .= '<div id="housingTileSelection">';
+$htmlOutput .= $housingTileHtml;
+
+$htmlOutput .= '</div>';
 echo $htmlOutput;
 
 ?>
