@@ -160,8 +160,21 @@ mysqli_free_result($result);
 
 
 
+
+$inventoryJSON = json_decode($inventory);
+$allCurrentInventoryTypes = "";
+foreach ($inventoryJSON as $key => $value) {
+$lookingFor = " ".$value->type.",";
+if(stripos($allCurrentInventoryTypes, $lookingFor) === false) {
+$allCurrentInventoryTypes .= " ".$value->type.",";
+}
+}
+
+$allCurrentInventoryTypes = rtrim($allCurrentInventoryTypes, ',');
+
+
 // 10 is the Item Category for housing tiles
-$query = 'select * from tblinventoryitems where itemCategories="10" ORDER BY "itemID" ASC';
+$query = 'select * from tblinventoryitems where itemCategories="10" or itemid IN ('.$allCurrentInventoryTypes.') ORDER BY "itemID" ASC';
 $outputJSON .= ',"housingItems": {';
 $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {

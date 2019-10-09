@@ -82,7 +82,6 @@ var housingNameSpace = {
                         }
                         var itemID = "item" + hero.housing.draft[i][j].type + thisFileColourSuffix;
                         if (housingNameSpace.whichItemIdsLoading.indexOf(itemID) === -1) {
-                             console.log("starting to load img " + whichWorldTile);
                             housingNameSpace.draftHousingTilesToLoad.push({
                                 name: itemID,
                                 src: '/images/game-world/items/'+whichWorldTile+'.png'
@@ -98,7 +97,6 @@ var housingNameSpace = {
     },
 
     prepareDraftHousingAssets: function() {
-        console.log("loaded housing assets!!!!!");
         for (var i = 0; i < housingNameSpace.whichItemIdsLoading.length; i++) {
             itemImages[housingNameSpace.whichItemIdsLoading[i]] = Loader.getImage(housingNameSpace.whichItemIdsLoading[i]);
         }

@@ -26,10 +26,35 @@ $htmlOutput .= '</select></div>';
 
 
 
+// $inventory will be available from getCoreData when this is included:
+if(!(isset($inventory))) {
+$query1 = "SELECT inventory from tblcharacters where charID='".$_GET['chr']."'";
+   $result1 = mysqli_query($connection, $query1);
+if(mysqli_num_rows($result1)>0) {
+  while ($row = mysqli_fetch_array($result1)) {
+    extract($row);
+ }
+}
+mysqli_free_result($result1);
+}
+
+$inventoryJSON = json_decode($inventory);
+
+$allCurrentInventoryTypes = "";
+
+foreach ($inventoryJSON as $key => $value) {
+	$lookingFor = " ".$value->type.",";
+if(stripos($allCurrentInventoryTypes, $lookingFor) === false) {
+$allCurrentInventoryTypes .= " ".$value->type.",";
+}
+	}
+
+$allCurrentInventoryTypes = rtrim($allCurrentInventoryTypes, ',');
+
 
 
 // 10 is the Item Category for housing tiles
-$query = 'select * from tblinventoryitems where itemCategories="10" ORDER BY "itemID" ASC';
+$query = 'select * from tblinventoryitems where itemCategories="10" or itemid IN ('.$allCurrentInventoryTypes.') ORDER BY "itemID" ASC';
 
 
 
@@ -43,16 +68,26 @@ if(mysqli_num_rows($result)>0) {
 	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
 
+		$thisItemGroup = $itemGroup;
+		//$isAnInventoryItem = false;
+		if(stripos($thisItemGroup, "housing-") === false) {
+			$thisItemGroup = "housing-items";
+			//$isAnInventoryItem = true;
+			// hero already owns these items:
+			$priceCode = 0;
+		}
 
-if (!(array_key_exists($itemGroup, $htmlOutputToStore))) {
-	$htmlOutputToStore[$itemGroup] = '';
-}
+		if (!(array_key_exists($thisItemGroup, $htmlOutputToStore))) {
+			$htmlOutputToStore[$thisItemGroup] = '';
+		}
 
-		$htmlOutputToStore[$itemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
-		$htmlOutputToStore[$itemGroup] .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
+		$htmlOutputToStore[$thisItemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
+		$htmlOutputToStore[$thisItemGroup] .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
 	}
 }
 mysqli_free_result($result);
+
+krsort($htmlOutputToStore);
 
 $isTheFirstTimeClass = " active";
 
@@ -61,6 +96,7 @@ foreach ($htmlOutputToStore as $key => $value) {
 	$housingTabsHtml .= '<li><button data-group="'.$key.'">'.ucfirst(str_replace("housing-","",$key)).'</button></li>';
 	$isTheFirstTimeClass = "";
 }
+
 
 
 $htmlOutput .= '<ul id="housingGroupTabs">'.$housingTabsHtml.'</ul>';
