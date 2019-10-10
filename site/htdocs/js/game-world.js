@@ -12037,7 +12037,7 @@ function draw() {
         gameContext.fill();
     } else {
         // get all assets to be drawn in a list
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem, shouldFadeThisObject;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
@@ -12117,10 +12117,18 @@ function draw() {
                         }
                     }
                 }
+                // check inventory data first, and if not use housingData:
+if(typeof currentActiveInventoryItems[whichHousingItem] !== "undefined") {
+thisCentreX = currentActiveInventoryItems[whichHousingItem].centreX;
+thisCentreY = currentActiveInventoryItems[whichHousingItem].centreY;
+} else {
+thisCentreX = housingData[whichHousingItem].centreX;
+thisCentreY = housingData[whichHousingItem].centreY
+}
                 if (shouldFadeThisObject) {
-                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ), 0.3]);
+                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
                 } else {
-                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[whichHousingItem].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[whichHousingItem].centreY + (canvasHeight / 2) - thisItemZ)]);
+                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
                 }
             }
             //  }
@@ -12417,6 +12425,7 @@ function draw() {
                     drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)');
                     break;
                 case "ghostSelectedHousingTile":
+               
                     gameContext.globalAlpha = 0.5;
                     // draw ghost tile:
                     thisFileColourSuffix = "";
@@ -12428,7 +12437,21 @@ function draw() {
                     if (typeof itemImages[thisItemIdentifier] !== "undefined") {
                         thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
                         thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
-                        gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - housingData[housingNameSpace.whichTileActive].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - housingData[housingNameSpace.whichTileActive].centreY + (canvasHeight / 2)));
+
+
+// check inventory data first, and if not use housingData:
+if(typeof currentActiveInventoryItems[(housingNameSpace.whichTileActive)] !== "undefined") {
+thisCentreX = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreX;
+thisCentreY = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreY;
+} else {
+thisCentreX = housingData[housingNameSpace.whichTileActive].centreX;
+thisCentreY = housingData[housingNameSpace.whichTileActive].centreY
+}
+
+
+
+
+                        gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2)));
                     }
                     gameContext.globalAlpha = 1.0;
                     break;
