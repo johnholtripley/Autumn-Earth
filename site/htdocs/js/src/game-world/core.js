@@ -3832,7 +3832,7 @@ function draw() {
                             }
                             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
 
-                        } else if (thisItem.canBeRotated > 0) {
+                        } else if (thisItem.canBeRotated) {
                             // use facing - always in the format N, E, S, W vertically:
 
 

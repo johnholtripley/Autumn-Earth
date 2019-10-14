@@ -87,7 +87,7 @@ $shouldIncludeThisItem = true;
 			$htmlOutputToStore[$thisItemGroup] = '';
 		}
 if($shouldIncludeThisItem) {
-		$htmlOutputToStore[$thisItemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-canberotated="'.$canBeRotated.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
+		$htmlOutputToStore[$thisItemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-canberotated="'.(boolval($canBeRotated) ? 'true' : 'false').'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
 		$htmlOutputToStore[$thisItemGroup] .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
 	}
 	}
