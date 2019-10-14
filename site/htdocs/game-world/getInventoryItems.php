@@ -48,6 +48,7 @@ $outputJson .= '"width":"'.$width.'",';
 $outputJson .= '"length":"'.$length.'",';
 $outputJson .= '"spriteWidth":"'.$spriteWidth.'",';
 $outputJson .= '"spriteHeight":"'.$spriteHeight.'",';
+$outputJson .= '"canBeRotated":'.$canBeRotated.',';
 $outputJson .= '"worldSrc":"'.$cleanURL.'",';
 $outputJson .= '"action":"'.$action.'",';
 // actionValue might be a string or an object:

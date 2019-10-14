@@ -70,7 +70,7 @@ var housingNameSpace = {
                         // whichTile.getAttribute("data-cleanurl")
                         whichWorldTile = document.querySelector('#housingTileSelection li[data-id="' + hero.housing.draft[i][j].type + '"]').getAttribute('data-cleanurl');
                         //console.log(whichWorldTile);
-                       
+
                         //   housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
                         thisFileColourSuffix = '';
                         if (whichColour != 0) {
@@ -84,7 +84,7 @@ var housingNameSpace = {
                         if (housingNameSpace.whichItemIdsLoading.indexOf(itemID) === -1) {
                             housingNameSpace.draftHousingTilesToLoad.push({
                                 name: itemID,
-                                src: '/images/game-world/items/'+whichWorldTile+'.png'
+                                src: '/images/game-world/items/' + whichWorldTile + '.png'
                             });
                             housingNameSpace.whichItemIdsLoading.push(itemID);
                         }
@@ -287,8 +287,10 @@ var housingNameSpace = {
                 UI.hideYesNoDialogueBox();
                 hero.currency.money -= housingNameSpace.runningCostTotal;
                 UI.updateCurrencies();
-                audio.playSound(soundEffects['coins'], 0);
-                housingNameSpace.runningCostTotal = 0;
+                if (housingNameSpace.runningCostTotal != 0) {
+                    audio.playSound(soundEffects['coins'], 0);
+                    housingNameSpace.runningCostTotal = 0;
+                }
                 hero.housing.draftCost = 0;
                 housingNameSpace.updateRunningTotal();
 
@@ -401,12 +403,12 @@ var housingNameSpace = {
     },
 
     toggleTileGroup: function(e) {
-   
 
-for (i = 0; i < housingTileGroups.length; i++) {
-    housingTileGroups[i].classList.remove('active');
-    }
-    document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
+
+        for (i = 0; i < housingTileGroups.length; i++) {
+            housingTileGroups[i].classList.remove('active');
+        }
+        document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
 
     }
 }

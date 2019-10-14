@@ -120,6 +120,8 @@ const baseDowsingRange = 10;
 const baseSurveyingTime = 1000;
 const surveyingDepletionModifier = 500;
 
+const facingsPossible = ["n", "e", "s", "w"];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 

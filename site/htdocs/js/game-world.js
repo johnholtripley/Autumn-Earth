@@ -472,6 +472,8 @@ const baseDowsingRange = 10;
 const baseSurveyingTime = 1000;
 const surveyingDepletionModifier = 500;
 
+const facingsPossible = ["n", "e", "s", "w"];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -2383,7 +2385,7 @@ function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, ob
 }
 
 
-const facingsPossible = ["n", "e", "s", "w"];
+
 
 // useful for determining relative direction based on facing:
 var relativeFacing = {
@@ -3160,7 +3162,7 @@ var housingNameSpace = {
                         // whichTile.getAttribute("data-cleanurl")
                         whichWorldTile = document.querySelector('#housingTileSelection li[data-id="' + hero.housing.draft[i][j].type + '"]').getAttribute('data-cleanurl');
                         //console.log(whichWorldTile);
-                       
+
                         //   housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
                         thisFileColourSuffix = '';
                         if (whichColour != 0) {
@@ -3174,7 +3176,7 @@ var housingNameSpace = {
                         if (housingNameSpace.whichItemIdsLoading.indexOf(itemID) === -1) {
                             housingNameSpace.draftHousingTilesToLoad.push({
                                 name: itemID,
-                                src: '/images/game-world/items/'+whichWorldTile+'.png'
+                                src: '/images/game-world/items/' + whichWorldTile + '.png'
                             });
                             housingNameSpace.whichItemIdsLoading.push(itemID);
                         }
@@ -3377,8 +3379,10 @@ var housingNameSpace = {
                 UI.hideYesNoDialogueBox();
                 hero.currency.money -= housingNameSpace.runningCostTotal;
                 UI.updateCurrencies();
-                audio.playSound(soundEffects['coins'], 0);
-                housingNameSpace.runningCostTotal = 0;
+                if (housingNameSpace.runningCostTotal != 0) {
+                    audio.playSound(soundEffects['coins'], 0);
+                    housingNameSpace.runningCostTotal = 0;
+                }
                 hero.housing.draftCost = 0;
                 housingNameSpace.updateRunningTotal();
 
@@ -3491,12 +3495,12 @@ var housingNameSpace = {
     },
 
     toggleTileGroup: function(e) {
-   
 
-for (i = 0; i < housingTileGroups.length; i++) {
-    housingTileGroups[i].classList.remove('active');
-    }
-    document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
+
+        for (i = 0; i < housingTileGroups.length; i++) {
+            housingTileGroups[i].classList.remove('active');
+        }
+        document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
 
     }
 }
@@ -8682,7 +8686,7 @@ function prepareCoreAssets() {
         }
     }
 
-housingNameSpace.init();
+    housingNameSpace.init();
 
     loadMap();
 }
@@ -8942,7 +8946,7 @@ function processNewVisibleMapData(whichNewMap) {
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
-   //   console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
+    //   console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
     if (itemIdsToLoad.length > 0) {
         getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
             // currentActiveInventoryItems = data;
@@ -9377,6 +9381,7 @@ function initialiseItem(whichItem) {
     whichItem.centreY = currentActiveInventoryItems[whichItem.type].centreY;
     whichItem.spriteWidth = currentActiveInventoryItems[whichItem.type].spriteWidth;
     whichItem.spriteHeight = currentActiveInventoryItems[whichItem.type].spriteHeight;
+    whichItem.canBeRotated = currentActiveInventoryItems[whichItem.type].canBeRotated;
     whichItem.isCollidable = true;
     if (currentActiveInventoryItems[whichItem.type].action == "gate") {
         if (whichItem.state == "open") {
@@ -12118,13 +12123,13 @@ function draw() {
                     }
                 }
                 // check inventory data first, and if not use housingData:
-if(typeof currentActiveInventoryItems[whichHousingItem] !== "undefined") {
-thisCentreX = currentActiveInventoryItems[whichHousingItem].centreX;
-thisCentreY = currentActiveInventoryItems[whichHousingItem].centreY;
-} else {
-thisCentreX = housingData[whichHousingItem].centreX;
-thisCentreY = housingData[whichHousingItem].centreY
-}
+                if (typeof currentActiveInventoryItems[whichHousingItem] !== "undefined") {
+                    thisCentreX = currentActiveInventoryItems[whichHousingItem].centreX;
+                    thisCentreY = currentActiveInventoryItems[whichHousingItem].centreY;
+                } else {
+                    thisCentreX = housingData[whichHousingItem].centreX;
+                    thisCentreY = housingData[whichHousingItem].centreY
+                }
                 if (shouldFadeThisObject) {
                     assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
                 } else {
@@ -12308,16 +12313,25 @@ thisCentreY = housingData[whichHousingItem].centreY
                                 thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
                             }
                         }
+                     if(thisItem.type == "56") {
+                        console.log(thisItem);
+                    }
                         if (typeof thisItem.animation !== "undefined") {
                             if (typeof thisItem.state !== "undefined") {
                                 thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
                                 thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
-                            } else {
-                                // use facing:
-                                thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
-                                thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
                             }
                             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+
+                        } else if (thisItem.canBeRotated > 0) {
+                            // use facing - always in the format N, E, S, W vertically:
+
+
+                            thisItemOffsetCol = 0;
+                            thisItemOffsetRow = facingsPossible.indexOf(thisItem.facing);
+                        
+                            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+
                         } else {
                             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                         }
@@ -12425,7 +12439,7 @@ thisCentreY = housingData[whichHousingItem].centreY
                     drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)');
                     break;
                 case "ghostSelectedHousingTile":
-               
+
                     gameContext.globalAlpha = 0.5;
                     // draw ghost tile:
                     thisFileColourSuffix = "";
@@ -12439,14 +12453,14 @@ thisCentreY = housingData[whichHousingItem].centreY
                         thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
 
 
-// check inventory data first, and if not use housingData:
-if(typeof currentActiveInventoryItems[(housingNameSpace.whichTileActive)] !== "undefined") {
-thisCentreX = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreX;
-thisCentreY = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreY;
-} else {
-thisCentreX = housingData[housingNameSpace.whichTileActive].centreX;
-thisCentreY = housingData[housingNameSpace.whichTileActive].centreY
-}
+                        // check inventory data first, and if not use housingData:
+                        if (typeof currentActiveInventoryItems[(housingNameSpace.whichTileActive)] !== "undefined") {
+                            thisCentreX = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreX;
+                            thisCentreY = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreY;
+                        } else {
+                            thisCentreX = housingData[housingNameSpace.whichTileActive].centreX;
+                            thisCentreY = housingData[housingNameSpace.whichTileActive].centreY
+                        }
 
 
 

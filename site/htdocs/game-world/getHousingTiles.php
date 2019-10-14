@@ -70,19 +70,26 @@ if(mysqli_num_rows($result)>0) {
 
 		$thisItemGroup = $itemGroup;
 		//$isAnInventoryItem = false;
+
+$shouldIncludeThisItem = true;
+
 		if(stripos($thisItemGroup, "housing-") === false) {
 			$thisItemGroup = "housing-items";
 			//$isAnInventoryItem = true;
 			// hero already owns these items:
 			$priceCode = 0;
+			if (!(file_exists("../images/game-world/items/".$cleanURL.".png"))) {
+			$shouldIncludeThisItem = false;
+			}
 		}
 
 		if (!(array_key_exists($thisItemGroup, $htmlOutputToStore))) {
 			$htmlOutputToStore[$thisItemGroup] = '';
 		}
-
-		$htmlOutputToStore[$thisItemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
+if($shouldIncludeThisItem) {
+		$htmlOutputToStore[$thisItemGroup] .= '<li id="housingTile'.$itemID.'" data-price="'.$priceCode.'" data-canberotated="'.$canBeRotated.'" data-cleanurl="'.$cleanURL.'" data-id="'.$itemID.'"><img src="/images/game-world/items/'.$cleanURL.'.png" alt="'.$shortname.'">';
 		$htmlOutputToStore[$thisItemGroup] .= '<p>'.$shortname.' - '.parseMoney($priceCode).'</p></li>';
+	}
 	}
 }
 mysqli_free_result($result);

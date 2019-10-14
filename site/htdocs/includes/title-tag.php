@@ -39,7 +39,7 @@ break;
 
     case "forum":
     $sectionClass = "forum";
-	$pagetitle = 'Autumn Earth community forum thread';
+	$pagetitle = 'Autumn Earth ~ Community forum thread';
 	$longDescription = 'A discussion on the Autumn Earth community site';
 	// query database to find meta information
 		
@@ -62,7 +62,7 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 		if ($numberofrows > 0) {
 			$row = mysqli_fetch_array($result);
 			extract ($row);
-			$pagetitle = strip_tags($title).' - Autumn Earth community site';
+			$pagetitle = strip_tags($title).' ~ Autumn Earth community site';
 			$longDescription = strip_tags($postcontent);
 
 		}
@@ -76,7 +76,7 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 			$row = mysqli_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
-			$pagetitle = strip_tags($title).' - Autumn Earth community site';
+			$pagetitle = strip_tags($title).' ~ Autumn Earth community site';
 		}
 
 

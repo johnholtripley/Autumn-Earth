@@ -480,18 +480,8 @@
                 "type": 56,
                 "tileX": 20,
                 "tileY": 20,
-                "facing": "s",
-                "animation":
-                {
-                    "facing":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
+                "facing": "s"
+          
 
             },
          
