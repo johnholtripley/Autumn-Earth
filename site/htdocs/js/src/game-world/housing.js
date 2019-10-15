@@ -51,6 +51,8 @@ var housingNameSpace = {
     'mousePosition': [],
     'draftHousingTilesToLoad': [],
     'whichItemIdsLoading': [],
+    'whichFacingActive': 'n',
+    'activeTileCanBeRotated': document.querySelector('.housingTileGroup.active li').getAttribute("data-canberotated"),
 
     init: function() {
         // load in any graphics used in the draft but not already loaded into memory:
@@ -146,6 +148,9 @@ var housingNameSpace = {
                                     if (housingNameSpace.whichDyeColourActive != 0) {
                                         newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                                     }
+                                 if(housingNameSpace.activeTileCanBeRotated) {
+                                    newWallTile.facing = housingNameSpace.whichFacingActive;
+                                }
                                     // place tile:
                                     hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
                                     housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
@@ -215,6 +220,7 @@ var housingNameSpace = {
         if (housingNameSpace.activeTool == "remove") {
             housingNameSpace.activeTool = "paint";
         }
+        housingNameSpace.activeTileCanBeRotated = whichTile.getAttribute("data-canberotated");
         housingNameSpace.showActiveTool(document.getElementById('housingConstructToolPaint'));
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
         housingNameSpace.loadNewTile(housingNameSpace.whichTileActive, housingNameSpace.whichWorldTileActive, housingNameSpace.whichDyeColourActive);

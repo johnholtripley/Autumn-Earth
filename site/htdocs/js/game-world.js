@@ -3143,6 +3143,8 @@ var housingNameSpace = {
     'mousePosition': [],
     'draftHousingTilesToLoad': [],
     'whichItemIdsLoading': [],
+    'whichFacingActive': 'n',
+    'activeTileCanBeRotated': document.querySelector('.housingTileGroup.active li').getAttribute("data-canberotated"),
 
     init: function() {
         // load in any graphics used in the draft but not already loaded into memory:
@@ -3238,6 +3240,9 @@ var housingNameSpace = {
                                     if (housingNameSpace.whichDyeColourActive != 0) {
                                         newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                                     }
+                                 if(housingNameSpace.activeTileCanBeRotated) {
+                                    newWallTile.facing = housingNameSpace.whichFacingActive;
+                                }
                                     // place tile:
                                     hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
                                     housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
@@ -3307,6 +3312,7 @@ var housingNameSpace = {
         if (housingNameSpace.activeTool == "remove") {
             housingNameSpace.activeTool = "paint";
         }
+        housingNameSpace.activeTileCanBeRotated = whichTile.getAttribute("data-canberotated");
         housingNameSpace.showActiveTool(document.getElementById('housingConstructToolPaint'));
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
         housingNameSpace.loadNewTile(housingNameSpace.whichTileActive, housingNameSpace.whichWorldTileActive, housingNameSpace.whichDyeColourActive);
@@ -12093,7 +12099,7 @@ function draw() {
 
         if (gameMode == 'housing') {
             // draw any draft housing tiles:
-            var whichHousingItem;
+            var whichHousingItem, thisItemCanBeRotated, thisItemSpriteHeight, thisItemSpriteWidth;
             //    for (var i = 0; i < hero.housing.draft.length; i++) {
             var i = housingNameSpace.whichElevationActive;
             for (var j = 0; j < hero.housing.draft[i].length; j++) {
@@ -12126,14 +12132,47 @@ function draw() {
                 if (typeof currentActiveInventoryItems[whichHousingItem] !== "undefined") {
                     thisCentreX = currentActiveInventoryItems[whichHousingItem].centreX;
                     thisCentreY = currentActiveInventoryItems[whichHousingItem].centreY;
+                    thisItemCanBeRotated = currentActiveInventoryItems[whichHousingItem].canBeRotated;
+
+                    thisItemSpriteHeight = currentActiveInventoryItems[whichHousingItem].spriteHeight;
+                    thisItemSpriteWidth = currentActiveInventoryItems[whichHousingItem].spriteWidth;
                 } else {
                     thisCentreX = housingData[whichHousingItem].centreX;
-                    thisCentreY = housingData[whichHousingItem].centreY
+                    thisCentreY = housingData[whichHousingItem].centreY;
+                    thisItemCanBeRotated = housingData[whichHousingItem].canBeRotated;
+                      thisItemSpriteHeight = housingData[whichHousingItem].spriteHeight;
+                    thisItemSpriteWidth = housingData[whichHousingItem].spriteWidth;
                 }
                 if (shouldFadeThisObject) {
+
+
+if(thisItemCanBeRotated) {
+ 
+// the alpha paramter isn't picked up here ############
+assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight], 0.3);
+
+
+} else {
+
+
                     assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
+                }
                 } else {
-                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
+
+
+if(thisItemCanBeRotated) {
+ 
+
+assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight]);
+
+
+} else {
+    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
+}
+
+
+
+                    
                 }
             }
             //  }
