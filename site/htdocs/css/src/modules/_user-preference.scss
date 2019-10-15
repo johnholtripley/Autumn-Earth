@@ -2,6 +2,9 @@
 	// might be better to include these separately:
 	// <link rel="stylesheet" href="/dark.css" media="(prefers-color-scheme: dark)">
 	// so they're not loaded if not needed ####
+	img {
+    filter: brightness(.8) contrast(1.2);
+  }
 }
 
 @media (prefers-color-scheme: light) {

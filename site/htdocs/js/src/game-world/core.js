@@ -3643,39 +3643,21 @@ function draw() {
                     thisCentreX = housingData[whichHousingItem].centreX;
                     thisCentreY = housingData[whichHousingItem].centreY;
                     thisItemCanBeRotated = housingData[whichHousingItem].canBeRotated;
-                      thisItemSpriteHeight = housingData[whichHousingItem].spriteHeight;
+                    thisItemSpriteHeight = housingData[whichHousingItem].spriteHeight;
                     thisItemSpriteWidth = housingData[whichHousingItem].spriteWidth;
                 }
                 if (shouldFadeThisObject) {
-
-
-if(thisItemCanBeRotated) {
- 
-// the alpha paramter isn't picked up here ############
-assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight], 0.3);
-
-
-} else {
-
-
-                    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
-                }
+                    if (thisItemCanBeRotated) {
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight, 0.3]);
+                    } else {
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
+                    }
                 } else {
-
-
-if(thisItemCanBeRotated) {
- 
-
-assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight]);
-
-
-} else {
-    assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
-}
-
-
-
-                    
+                    if (thisItemCanBeRotated) {
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight]);
+                    } else {
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
+                    }
                 }
             }
             //  }
@@ -3855,9 +3837,7 @@ assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", item
                                 thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
                             }
                         }
-                     if(thisItem.type == "56") {
-                        console.log(thisItem);
-                    }
+
                         if (typeof thisItem.animation !== "undefined") {
                             if (typeof thisItem.state !== "undefined") {
                                 thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
@@ -3871,7 +3851,7 @@ assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", item
 
                             thisItemOffsetCol = 0;
                             thisItemOffsetRow = facingsPossible.indexOf(thisItem.facing);
-                        
+
                             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
 
                         } else {
@@ -3964,8 +3944,14 @@ assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", item
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
-
+                        console.log(assetsToDraw[i]);
+                        if (typeof assetsToDraw[i][11] !== "undefined") {
+                            gameContext.globalAlpha = assetsToDraw[i][11];
+                        }
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                        if (typeof assetsToDraw[i][11] !== "undefined") {
+                            gameContext.globalAlpha = 1;
+                        }
                     }
                     break;
                 case "dowsingRing":
