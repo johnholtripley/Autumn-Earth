@@ -420,15 +420,16 @@ var housingNameSpace = {
     },
 
     toggleTileGroup: function(e) {
-
-
         for (i = 0; i < housingTileGroups.length; i++) {
             housingTileGroups[i].classList.remove('active');
         }
         document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
-
+        for (i = 0; i < housingToggleButtons.length; i++) {
+            housingToggleButtons[i].classList.remove('active');
+        }
+        e.target.classList.add('active');
     },
-    
+
     adjustRotation: function(whichDirection) {
         var currentRotationIndex = facingsPossible.indexOf(housingNameSpace.whichFacingActive);
         currentRotationIndex += whichDirection;

@@ -100,7 +100,7 @@ $isTheFirstTimeClass = " active";
 
 foreach ($htmlOutputToStore as $key => $value) {
 	$housingTileHtml .= '<ul id="'.$key.'" class="housingTileGroup'.$isTheFirstTimeClass.'">'.$value.'</ul>';
-	$housingTabsHtml .= '<li><button data-group="'.$key.'">'.ucfirst(str_replace("housing-","",$key)).'</button></li>';
+	$housingTabsHtml .= '<li><button class="'.trim($isTheFirstTimeClass).'" data-group="'.$key.'">'.ucfirst(str_replace("housing-","",$key)).'</button></li>';
 	$isTheFirstTimeClass = "";
 }
 

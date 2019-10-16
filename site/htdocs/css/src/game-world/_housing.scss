@@ -1,6 +1,9 @@
 #housingTileSelection {
     margin: 0;
     padding: 0;
+    height: 190px;
+    width: 100%;
+    background: #fff;
 
     li {
         display: block;
@@ -9,6 +12,7 @@
         position: relative;
         height: 190px;
         overflow: hidden;
+
         p {
             position: absolute;
             pointer-events: none;
@@ -111,6 +115,28 @@
             button {
                 box-shadow: 0 0 5px 3px #eebb3f;
             }
+        }
+    }
+}
+
+#housingGroupTabs {
+    padding: 0;
+    margin: 0;
+
+    li {
+        display: inline-block;
+        margin: 0 1px 0 0;
+    }
+
+    button {
+        background: #fff;
+        border: 0;
+        outline: none;
+        padding: 4px 8px;
+        border-bottom: 1px solid #53160d;
+
+        &.active {
+            border-bottom-color: #fff;
         }
     }
 }

@@ -96,7 +96,7 @@ const yesNoDialogueHeading = document.getElementById('yesNoDialogueHeading');
 const yesNoDialogueButton1 = document.getElementById('yesNoDialogueButton1');
 const yesNoDialogueButton2 = document.getElementById('yesNoDialogueButton2');
 
-
+const housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -229,7 +229,7 @@ var UI = {
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
   
 
-var housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
+
 for (i = 0; i < housingToggleButtons.length; i++) {
     housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
 }
