@@ -3648,13 +3648,13 @@ function draw() {
                 }
                 if (shouldFadeThisObject) {
                     if (thisItemCanBeRotated) {
-                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight, 0.3]);
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(hero.housing.draft[i][j].facing)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight, 0.3]);
                     } else {
                         assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), 0.3]);
                     }
                 } else {
                     if (thisItemCanBeRotated) {
-                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(housingNameSpace.whichFacingActive)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight]);
+                        assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "sprite", itemImages[thisItemIdentifier], 0, (facingsPossible.indexOf(hero.housing.draft[i][j].facing)) * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ), thisItemSpriteWidth, thisItemSpriteHeight]);
                     } else {
                         assetsToDraw.push([findIsoDepth(thisItemX, thisItemY, thisItemZ), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisItemZ)]);
                     }
@@ -3944,7 +3944,6 @@ function draw() {
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
-                        console.log(assetsToDraw[i]);
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = assetsToDraw[i][11];
                         }
@@ -3985,15 +3984,29 @@ function draw() {
                         if (typeof currentActiveInventoryItems[(housingNameSpace.whichTileActive)] !== "undefined") {
                             thisCentreX = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreX;
                             thisCentreY = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].centreY;
+
+
+                            thisItemCanBeRotated = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].canBeRotated;
+
+                            thisItemSpriteHeight = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].spriteHeight;
+                            thisItemSpriteWidth = currentActiveInventoryItems[(housingNameSpace.whichTileActive)].spriteWidth;
                         } else {
                             thisCentreX = housingData[housingNameSpace.whichTileActive].centreX;
                             thisCentreY = housingData[housingNameSpace.whichTileActive].centreY
+                            thisItemCanBeRotated = housingData[housingNameSpace.whichTileActive].canBeRotated;
+                            thisItemSpriteHeight = housingData[housingNameSpace.whichTileActive].spriteHeight;
+                            thisItemSpriteWidth = housingData[housingNameSpace.whichTileActive].spriteWidth;
                         }
 
 
 
-
-                        gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2)));
+                        if (thisItemCanBeRotated) {
+                            thisItemOffsetRow = facingsPossible.indexOf(housingNameSpace.whichFacingActive);
+                            // not checking for elevation offset ###
+                            gameContext.drawImage(itemImages[thisItemIdentifier], 0, thisItemOffsetRow * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2)), thisItemSpriteWidth, thisItemSpriteHeight);
+                        } else {
+                            gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2)));
+                        }
                     }
                     gameContext.globalAlpha = 1.0;
                     break;

@@ -87,6 +87,18 @@ const Input = {
                 case KeyBindings.escape:
                     key[12] = to;
                     break;
+                    case KeyBindings.cursorUp:
+                      key[13] = to;
+                    break;
+                    case KeyBindings.cursorDown:
+                      key[14] = to;
+                    break;
+                    case KeyBindings.cursorLeft:
+                      key[15] = to;
+                    break;
+                    case KeyBindings.cursorRight:
+                      key[16] = to;
+                    break;
             }
         }
     },

@@ -121,6 +121,17 @@ var housingNameSpace = {
             UI.toggleUI();
             key[7] = false;
         }
+        if (key[15]) {
+            // cursor left:
+            key[15] = false;
+            housingNameSpace.adjustRotation(-1);
+
+        }
+        if (key[16]) {
+            // cursor right:
+            key[16] = false;
+            housingNameSpace.adjustRotation(1);
+        }
     },
 
     worldClickHandler: function(e) {
@@ -148,9 +159,9 @@ var housingNameSpace = {
                                     if (housingNameSpace.whichDyeColourActive != 0) {
                                         newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                                     }
-                                 if(housingNameSpace.activeTileCanBeRotated) {
-                                    newWallTile.facing = housingNameSpace.whichFacingActive;
-                                }
+                                    if (housingNameSpace.activeTileCanBeRotated) {
+                                        newWallTile.facing = housingNameSpace.whichFacingActive;
+                                    }
                                     // place tile:
                                     hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
                                     housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
@@ -416,5 +427,17 @@ var housingNameSpace = {
         }
         document.getElementById(e.target.getAttribute("data-group")).classList.add('active');
 
+    },
+    
+    adjustRotation: function(whichDirection) {
+        var currentRotationIndex = facingsPossible.indexOf(housingNameSpace.whichFacingActive);
+        currentRotationIndex += whichDirection;
+        if (currentRotationIndex < 0) {
+            currentRotationIndex = facingsPossible.length - 1;
+        }
+        if (currentRotationIndex >= facingsPossible.length) {
+            currentRotationIndex = 0;
+        }
+        housingNameSpace.whichFacingActive = facingsPossible[currentRotationIndex];
     }
 }

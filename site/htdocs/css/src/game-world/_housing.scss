@@ -7,7 +7,8 @@
         float: left;
         background: #fff;
         position: relative;
-
+        height: 190px;
+        overflow: hidden;
         p {
             position: absolute;
             pointer-events: none;
@@ -17,6 +18,11 @@
             width: 120px;
             background: #fff;
             font-size: 11px;
+            margin: 0;
+        }
+
+        img {
+            display: block;
         }
 
         &.active {
@@ -29,8 +35,16 @@
             opacity: 1;
             pointer-events: auto;
         }
+
         &[data-canberotated="true"] {
-clip-path: polygon(0% 0, 100% 0%, 100% 25%, 0 25%);
+            img {
+                // only show the first quarter of the sprite (the North view):
+                clip-path: polygon(0% 0, 100% 0%, 100% 25%, 0 25%);
+            }
+
+            p {
+                bottom: 75%;
+            }
         }
     }
 }
@@ -60,8 +74,10 @@ clip-path: polygon(0% 0, 100% 0%, 100% 25%, 0 25%);
             background: red;
         }
     }
+
     .housingTileGroup {
         display: none;
+
         &.active {
             display: block;
         }
@@ -98,5 +114,3 @@ clip-path: polygon(0% 0, 100% 0%, 100% 25%, 0 25%);
         }
     }
 }
-
-

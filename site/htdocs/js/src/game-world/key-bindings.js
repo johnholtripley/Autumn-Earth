@@ -12,5 +12,9 @@ var KeyBindings = {
     'toggleToolLeft': 219,
     'toggleToolRight': 221,
     'printScreen': 44,
-    'escape': 27
+    'escape': 27,
+    'cursorUp': 38,
+    'cursorDown': 40,
+    'cursorLeft': 37,
+    'cursorRight': 39
 }
