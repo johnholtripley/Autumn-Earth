@@ -44,6 +44,7 @@ var housingNameSpace = {
     'whichTileActive': '',
     'whichWorldTileActive': '',
     'whichElevationActive': 0,
+    'maxElevationsPossible': 3,
     'whichDyeColourActive': 0,
     'runningCostTotal': 0,
     'costForActiveTile': 0,
@@ -52,6 +53,8 @@ var housingNameSpace = {
     'draftHousingTilesToLoad': [],
     'whichItemIdsLoading': [],
     'whichFacingActive': 'n',
+    'whichZIndexActive': 0,
+    'zIndexesPerElevation': tileW * 3,
     'activeTileCanBeRotated': document.querySelector('.housingTileGroup.active li').getAttribute("data-canberotated"),
 
     init: function() {
@@ -123,14 +126,23 @@ var housingNameSpace = {
         }
         if (key[15]) {
             // cursor left:
-            key[15] = false;
             housingNameSpace.adjustRotation(-1);
-
+            key[15] = false;
         }
         if (key[16]) {
             // cursor right:
-            key[16] = false;
             housingNameSpace.adjustRotation(1);
+            key[16] = false;
+        }
+        if (key[13]) {
+            // cursor up:
+            housingNameSpace.adjustZIndex(1);
+            key[13] = false;
+        }
+        if (key[14]) {
+            // cursor down:
+            housingNameSpace.adjustZIndex(-1);
+            key[14] = false;
         }
     },
 
@@ -154,6 +166,7 @@ var housingNameSpace = {
                                         "type": parseInt(housingNameSpace.whichTileActive),
                                         "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
                                         "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
+                                        "tileZ": (housingNameSpace.whichZIndexActive/tileW),
                                         "lockedToPlayerId": characterId
                                     }
                                     if (housingNameSpace.whichDyeColourActive != 0) {
@@ -440,5 +453,28 @@ var housingNameSpace = {
             currentRotationIndex = 0;
         }
         housingNameSpace.whichFacingActive = facingsPossible[currentRotationIndex];
+    },
+    adjustZIndex: function(whichDirection) {
+        housingNameSpace.whichZIndexActive += whichDirection;
+        if (housingNameSpace.whichZIndexActive < 0) {
+            housingNameSpace.whichZIndexActive = 0;
+            if (housingNameSpace.whichElevationActive > 0) {
+                housingNameSpace.whichElevationActive--;
+                housingNameSpace.updateElevationDisplay();
+            }
+        }
+        if (housingNameSpace.whichZIndexActive >= housingNameSpace.zIndexesPerElevation) {
+            if (housingNameSpace.whichElevationActive < housingNameSpace.maxElevationsPossible) {
+                housingNameSpace.whichZIndexActive = 0;
+                housingNameSpace.whichElevationActive++;
+                housingNameSpace.updateElevationDisplay();
+            } else {
+                housingNameSpace.whichZIndexActive = housingNameSpace.zIndexesPerElevation;
+            }
+        }
+    },
+    updateElevationDisplay: function() {
+        // show which elevation
+        // ghost other levels
     }
 }
