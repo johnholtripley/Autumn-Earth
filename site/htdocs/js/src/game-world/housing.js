@@ -38,7 +38,7 @@ function placePlotPlacement() {
     }
 }
 
-
+const firstTileThatWouldBeActive = document.querySelector('.housingTileGroup.active li');
 
 var housingNameSpace = {
     'whichTileActive': '',
@@ -54,8 +54,9 @@ var housingNameSpace = {
     'whichItemIdsLoading': [],
     'whichFacingActive': 'n',
     'whichZIndexActive': 0,
+    'currentTileCanBeElevated': firstTileThatWouldBeActive.getAttribute("data-canbelevated"),
     'zIndexesPerElevation': tileW * 3,
-    'activeTileCanBeRotated': document.querySelector('.housingTileGroup.active li').getAttribute("data-canberotated"),
+    'activeTileCanBeRotated': firstTileThatWouldBeActive.getAttribute("data-canberotated"),
 
     init: function() {
         // load in any graphics used in the draft but not already loaded into memory:
@@ -166,9 +167,12 @@ var housingNameSpace = {
                                         "type": parseInt(housingNameSpace.whichTileActive),
                                         "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
                                         "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
-                                        "tileZ": (housingNameSpace.whichZIndexActive/tileW),
+                                   
                                         "lockedToPlayerId": characterId
                                     }
+                                     if (housingNameSpace.currentTileCanBeElevated) {
+                                             newWallTile.tileZ = (housingNameSpace.whichZIndexActive/tileW);
+                                     }
                                     if (housingNameSpace.whichDyeColourActive != 0) {
                                         newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
                                     }
@@ -225,7 +229,7 @@ var housingNameSpace = {
             // change colour of available tiles:
             var colourSuffix = "";
             if (housingTileColour.value != "0") {
-                colourSuffix = '-' + colourNames[housingNameSpace.whichDyeColourActive];
+                colourSuffix = '-' + colourNames[housingNameSpace.whichDyeColourActive].toLowerCase();
             }
             for (var i = 0; i < housingTileSelectionListItems.length; i++) {
                 housingTileSelectionListItems[i].firstElementChild.src = '/images/game-world/items/' + housingTileSelectionListItems[i].getAttribute('data-cleanurl') + colourSuffix + '.png';
@@ -245,6 +249,7 @@ var housingNameSpace = {
             housingNameSpace.activeTool = "paint";
         }
         housingNameSpace.activeTileCanBeRotated = whichTile.getAttribute("data-canberotated");
+        housingNameSpace.currentTileCanBeElevated = whichTile.getAttribute("data-canbelevated");
         housingNameSpace.showActiveTool(document.getElementById('housingConstructToolPaint'));
         housingNameSpace.whichTileActive = whichTile.getAttribute("data-id");
         housingNameSpace.loadNewTile(housingNameSpace.whichTileActive, housingNameSpace.whichWorldTileActive, housingNameSpace.whichDyeColourActive);
