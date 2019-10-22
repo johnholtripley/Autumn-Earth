@@ -3252,8 +3252,11 @@ var housingNameSpace = {
             if (clickWorldTileX < hero.housing.southEastCornerTileX) {
                 if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                     if (clickWorldTileY < hero.housing.southEastCornerTileY) {
+                        // make sure it's not a button or another UI element:
+                        if(e.target.nodeName == "CANVAS") {
                         switch (housingNameSpace.activeTool) {
                             case 'paint':
+
                                 if (housingNameSpace.whichTileActive != '') {
                                     var newWallTile = {
                                         "type": parseInt(housingNameSpace.whichTileActive),
@@ -3295,6 +3298,7 @@ var housingNameSpace = {
                                 });
                                 break
                         }
+                    }
                     }
                 }
             }
@@ -5936,7 +5940,7 @@ const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
 const housingTileColour = document.getElementById('housingTileColour');
-const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
+const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection ul:not(#housing-items) li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
 const housingTileGroups = document.querySelectorAll('.housingTileGroup');
@@ -8471,7 +8475,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
-
+     // disable weather effects while in building mode:
+        changeWeather("");
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {
@@ -9179,7 +9184,7 @@ function loadMapAssets() {
 
             imagesToLoad.push({
                 name: "backgroundImg" + currentMap,
-                src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
+                src: '/images/game-world/backgrounds/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
             });
         } else {
             imagesToLoad.push({

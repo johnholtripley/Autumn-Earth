@@ -85,7 +85,7 @@ const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
 const housingTileColour = document.getElementById('housingTileColour');
-const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection li');
+const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection ul:not(#housing-items) li');
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
 const housingTileGroups = document.querySelectorAll('.housingTileGroup');
@@ -2620,7 +2620,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
-
+     // disable weather effects while in building mode:
+        changeWeather("");
         gameMode = 'housing';
     },
     closeHousingConstructionPanel: function() {

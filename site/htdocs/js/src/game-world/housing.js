@@ -160,8 +160,11 @@ var housingNameSpace = {
             if (clickWorldTileX < hero.housing.southEastCornerTileX) {
                 if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                     if (clickWorldTileY < hero.housing.southEastCornerTileY) {
+                        // make sure it's not a button or another UI element:
+                        if(e.target.nodeName == "CANVAS") {
                         switch (housingNameSpace.activeTool) {
                             case 'paint':
+
                                 if (housingNameSpace.whichTileActive != '') {
                                     var newWallTile = {
                                         "type": parseInt(housingNameSpace.whichTileActive),
@@ -203,6 +206,7 @@ var housingNameSpace = {
                                 });
                                 break
                         }
+                    }
                     }
                 }
             }

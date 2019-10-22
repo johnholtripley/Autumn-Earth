@@ -601,7 +601,7 @@ function loadMapAssets() {
 
             imagesToLoad.push({
                 name: "backgroundImg" + currentMap,
-                src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
+                src: '/images/game-world/backgrounds/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
             });
         } else {
             imagesToLoad.push({
