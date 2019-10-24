@@ -161,52 +161,57 @@ var housingNameSpace = {
                 if (clickWorldTileY >= hero.housing.northWestCornerTileY) {
                     if (clickWorldTileY < hero.housing.southEastCornerTileY) {
                         // make sure it's not a button or another UI element:
-                        if(e.target.nodeName == "CANVAS") {
-                        switch (housingNameSpace.activeTool) {
-                            case 'paint':
+                        if (e.target.nodeName == "CANVAS") {
+                            switch (housingNameSpace.activeTool) {
+                                case 'paint':
 
-                                if (housingNameSpace.whichTileActive != '') {
-                                    var newWallTile = {
-                                        "type": parseInt(housingNameSpace.whichTileActive),
-                                        "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                                        "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
-                                   
-                                        "lockedToPlayerId": characterId
+                                    if (housingNameSpace.whichTileActive != '') {
+                                        var newWallTile = {
+                                            "type": parseInt(housingNameSpace.whichTileActive),
+                                            "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
+                                            "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
+
+                                            "lockedToPlayerId": characterId
+                                        }
+                                        if (housingNameSpace.currentTileCanBeElevated) {
+                                            newWallTile.tileZ = (housingNameSpace.whichZIndexActive / tileW);
+                                        }
+                                        if (housingNameSpace.whichDyeColourActive != 0) {
+                                            newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
+                                        }
+                                        if (housingNameSpace.activeTileCanBeRotated) {
+                                            newWallTile.facing = housingNameSpace.whichFacingActive;
+                                        }
+                                        // place tile:
+                                        hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+                                        housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
+                                        housingNameSpace.updateRunningTotal();
                                     }
-                                     if (housingNameSpace.currentTileCanBeElevated) {
-                                             newWallTile.tileZ = (housingNameSpace.whichZIndexActive/tileW);
-                                     }
-                                    if (housingNameSpace.whichDyeColourActive != 0) {
-                                        newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
+                                    break;
+                                case 'remove':
+                                    var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                        return ((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY)));
+                                    });
+                                    for (var i in tilesBeingRemoved) {
+
+                                        // refund cost:
+                                        housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
+
                                     }
-                                    if (housingNameSpace.activeTileCanBeRotated) {
-                                        newWallTile.facing = housingNameSpace.whichFacingActive;
-                                    }
-                                    // place tile:
-                                    hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-                                    housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
+
                                     housingNameSpace.updateRunningTotal();
-                                }
-                                break;
-                            case 'remove':
-                                var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
-                                    return ((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY)));
-                                });
-                                for (var i in tilesBeingRemoved) {
-
-                                    // refund cost:
-                                    housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
-
-                                }
-
-                                housingNameSpace.updateRunningTotal();
-                                // find items at this tile and remove them:
-                                hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
-                                    return (!((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY))));
-                                });
-                                break
+                                    // find items at this tile and remove them:
+                                    hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                        return (!((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY))));
+                                    });
+                                    break;
+                                case 'fill':
+                                    if (housingNameSpace.whichTileActive != '') {
+                                        housingNameSpace.floodFillFrom(clickWorldTileX, clickWorldTileY);
+                                    }
+                                    break;
+                            }
                         }
-                    }
                     }
                 }
             }
@@ -485,5 +490,30 @@ var housingNameSpace = {
     updateElevationDisplay: function() {
         // show which elevation
         // ghost other levels
+    },
+    floodFillFrom: function(startTileX, startTileY) {
+
+        // find the tile type on the start tile and change all adjoining tiles of that type
+        // #########
+        var foundIndex = null;
+        var thisTileZ;
+        var previousTileZ = 99999;
+        for (var i = 0; i < hero.housing.draft[housingNameSpace.whichElevationActive].length; i++) {
+            if (hero.housing.draft[housingNameSpace.whichElevationActive].tileX == startTileX) {
+                if (hero.housing.draft[housingNameSpace.whichElevationActive].tileY == startTileY) {
+                    if (typeof hero.housing.draft[housingNameSpace.whichElevationActive].tileZ === "undefined") {
+                        thisTileZ = 0;
+                    }
+                    if (thisTileZ < previousTileZ) {
+                        previousTileZ = thisTileZ;
+                        foundIndex = i;
+                    }
+                }
+            }
+        }
+        if(foundIndex != null) {
+               console.log("flood filling on type "+hero.housing.draft[foundIndex].type);
+        }
+     
     }
 }
