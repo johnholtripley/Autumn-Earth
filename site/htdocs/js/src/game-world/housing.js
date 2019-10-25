@@ -489,11 +489,10 @@ var housingNameSpace = {
 
     floodFillTile: function(tileX, tileY, typeToReplace) {
         // make sure it's valid:
-        var tileHasBeenAdded = false;
-        if (tileX >= hero.housing.northWestCornerTileX) {
-            if (tileX < hero.housing.southEastCornerTileX) {
-                if (tileY >= hero.housing.northWestCornerTileY) {
-                    if (tileY < hero.housing.southEastCornerTileY) {
+        if (tileX >= 0) {
+            if (tileX < (hero.housing.southEastCornerTileX - hero.housing.northWestCornerTileX)) {
+                if (tileY >= 0) {
+                    if (tileY < (hero.housing.southEastCornerTileY - hero.housing.northWestCornerTileY)) {
                         if (housingNameSpace.findTileAtLocation(tileX, tileY) == typeToReplace) {
                             if (typeToReplace != '') {
                                 // remove tile of this type:
@@ -512,10 +511,10 @@ var housingNameSpace = {
                             }
                             housingNameSpace.addTileToLocation(tileX, tileY);
                             // fill neighbours:
-                            housingNameSpace.floodFillTile(startTileX + 1, startTileY, typeToReplace);
-                            housingNameSpace.floodFillTile(startTileX - 1, startTileY, typeToReplace);
-                            housingNameSpace.floodFillTile(startTileX, startTileY + 1, typeToReplace);
-                            housingNameSpace.floodFillTile(startTileX, startTileY - 1, typeToReplace);
+                            housingNameSpace.floodFillTile(tileX + 1, tileY, typeToReplace);
+                            housingNameSpace.floodFillTile(tileX - 1, tileY, typeToReplace);
+                            housingNameSpace.floodFillTile(tileX, tileY + 1, typeToReplace);
+                            housingNameSpace.floodFillTile(tileX, tileY - 1, typeToReplace);
                         }
                     }
                 }
