@@ -207,7 +207,7 @@ var housingNameSpace = {
                                     break;
                                 case 'fill':
                                     if (housingNameSpace.whichTileActive != '') {
-                                        housingNameSpace.floodFillFrom(clickWorldTileX, clickWorldTileY);
+                                        housingNameSpace.floodFillFrom(clickWorldTileX - hero.housing.northWestCornerTileX, clickWorldTileY - hero.housing.northWestCornerTileY);
                                     }
                                     break;
                             }
@@ -506,6 +506,7 @@ var housingNameSpace = {
                 }
             }
         }
+       
         if (foundIndices.length > 1) {
             //find the lowest zdepth tile
             var thisZDepth;

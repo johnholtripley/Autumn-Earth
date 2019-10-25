@@ -3299,7 +3299,7 @@ var housingNameSpace = {
                                     break;
                                 case 'fill':
                                     if (housingNameSpace.whichTileActive != '') {
-                                        housingNameSpace.floodFillFrom(clickWorldTileX, clickWorldTileY);
+                                        housingNameSpace.floodFillFrom(clickWorldTileX - hero.housing.northWestCornerTileX, clickWorldTileY - hero.housing.northWestCornerTileY);
                                     }
                                     break;
                             }
@@ -3586,27 +3586,41 @@ var housingNameSpace = {
     floodFillFrom: function(startTileX, startTileY) {
 
         // find the tile type on the start tile and change all adjoining tiles of that type
-        // #########
-        var foundIndex = null;
-        var thisTileZ;
-        var previousTileZ = 99999;
+
+        var foundIndices = [];
+        var indexToFillOn = '';
         for (var i = 0; i < hero.housing.draft[housingNameSpace.whichElevationActive].length; i++) {
-            if (hero.housing.draft[housingNameSpace.whichElevationActive].tileX == startTileX) {
-                if (hero.housing.draft[housingNameSpace.whichElevationActive].tileY == startTileY) {
-                    if (typeof hero.housing.draft[housingNameSpace.whichElevationActive].tileZ === "undefined") {
-                        thisTileZ = 0;
-                    }
-                    if (thisTileZ < previousTileZ) {
-                        previousTileZ = thisTileZ;
-                        foundIndex = i;
-                    }
+            if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileX == startTileX) {
+                if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileY == startTileY) {
+                    foundIndices.push[i];
+                    // save this in case only a single item is on this tile:
+                    indexToFillOn = hero.housing.draft[housingNameSpace.whichElevationActive][i].type;
                 }
             }
         }
-        if(foundIndex != null) {
-               console.log("flood filling on type "+hero.housing.draft[foundIndex].type);
+       
+        if (foundIndices.length > 1) {
+            //find the lowest zdepth tile
+            var thisZDepth;
+            var lowestZDepthFound = 9999;
+            for (i = 0; i < foundIndices.length; i++) {
+                thisZDepth = 9999;
+                if (hero.housing.draft[housingNameSpace.whichElevationActive][(foundIndices[i])].tileZ) {
+                    thisZDepth = hero.housing.draft[housingNameSpace.whichElevationActive][(foundIndices[i])].tileZ;
+                }
+                if (thisZDepth < lowestZDepthFound) {
+                    lowestZDepthFound = thisZDepth;
+                    indexToFillOn = foundIndices[i];
+                }
+            }
         }
-     
+
+
+
+        console.log("flood filling on type " + indexToFillOn);
+
+
+
     }
 }
 var allCardPacks = [
