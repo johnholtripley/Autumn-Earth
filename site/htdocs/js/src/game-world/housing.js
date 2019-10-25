@@ -11,7 +11,6 @@ function placePlotPlacement() {
         getJSON('/game-world/addPlot.php?width=' + plotPlacement.width + '&height=' + plotPlacement.length + '&tileX=' + mouseTilePosition[0] + '&tileY=' + mouseTilePosition[1] + '&chr=' + characterId, function(data) {
 
             if (data.success) {
-
                 // remove plot item from inventory:
                 removeItemTypeFromInventory(plotPlacement.whichType, 1);
                 hero.housing.hasAPlayerHouse = true;
@@ -60,9 +59,6 @@ var housingNameSpace = {
 
     init: function() {
         // load in any graphics used in the draft but not already loaded into memory:
-        // ####### 
-
-
         if (hero.housing.hasAPlayerHouse) {
             if (hero.housing.draft) {
                 var whichColour, whichWorldTile, thisFileColourSuffix, thisColourName;
@@ -72,12 +68,7 @@ var housingNameSpace = {
                         if (typeof hero.housing.draft[i][j].colour !== "undefined") {
                             whichColour = hero.housing.draft[i][j].colour;
                         }
-                        //whichWorldTile = item src #################
-                        // whichTile.getAttribute("data-cleanurl")
                         whichWorldTile = document.querySelector('#housingTileSelection li[data-id="' + hero.housing.draft[i][j].type + '"]').getAttribute('data-cleanurl');
-                        //console.log(whichWorldTile);
-
-                        //   housingNameSpace.loadNewTile(hero.housing.draft[i][j].type, whichWorldTile, whichColour);
                         thisFileColourSuffix = '';
                         if (whichColour != 0) {
                             // bypass hasInherent colour checks as won't be in inventory items
@@ -99,7 +90,6 @@ var housingNameSpace = {
             }
             Loader.preload(housingNameSpace.draftHousingTilesToLoad, housingNameSpace.prepareDraftHousingAssets, loadingProgress);
         }
-
     },
 
     prepareDraftHousingAssets: function() {
@@ -148,7 +138,6 @@ var housingNameSpace = {
     },
 
     worldClickHandler: function(e) {
-
         // if in bounds of the plot footprint:
         var xDiff = e.pageX - (canvasWidth / 2);
         var yDiff = e.pageY - (canvasHeight / 2);
@@ -164,28 +153,8 @@ var housingNameSpace = {
                         if (e.target.nodeName == "CANVAS") {
                             switch (housingNameSpace.activeTool) {
                                 case 'paint':
-
                                     if (housingNameSpace.whichTileActive != '') {
-                                        var newWallTile = {
-                                            "type": parseInt(housingNameSpace.whichTileActive),
-                                            "tileX": (clickWorldTileX - hero.housing.northWestCornerTileX),
-                                            "tileY": (clickWorldTileY - hero.housing.northWestCornerTileY),
-
-                                            "lockedToPlayerId": characterId
-                                        }
-                                        if (housingNameSpace.currentTileCanBeElevated) {
-                                            newWallTile.tileZ = (housingNameSpace.whichZIndexActive / tileW);
-                                        }
-                                        if (housingNameSpace.whichDyeColourActive != 0) {
-                                            newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
-                                        }
-                                        if (housingNameSpace.activeTileCanBeRotated) {
-                                            newWallTile.facing = housingNameSpace.whichFacingActive;
-                                        }
-                                        // place tile:
-                                        hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
-                                        housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
-                                        housingNameSpace.updateRunningTotal();
+                                        housingNameSpace.addTileToLocation(clickWorldTileX - hero.housing.northWestCornerTileX, clickWorldTileY - hero.housing.northWestCornerTileY);
                                     }
                                     break;
                                 case 'remove':
@@ -193,12 +162,9 @@ var housingNameSpace = {
                                         return ((currentItemObject.tileX == (clickWorldTileX - hero.housing.northWestCornerTileX)) && (currentItemObject.tileY == (clickWorldTileY - hero.housing.northWestCornerTileY)));
                                     });
                                     for (var i in tilesBeingRemoved) {
-
                                         // refund cost:
                                         housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
-
                                     }
-
                                     housingNameSpace.updateRunningTotal();
                                     // find items at this tile and remove them:
                                     hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
@@ -218,6 +184,28 @@ var housingNameSpace = {
         }
     },
 
+    addTileToLocation: function(tileX, tileY) {
+        var newWallTile = {
+            "type": parseInt(housingNameSpace.whichTileActive),
+            "tileX": (tileX),
+            "tileY": (tileY),
+            "lockedToPlayerId": characterId
+        }
+        if (housingNameSpace.currentTileCanBeElevated) {
+            newWallTile.tileZ = (housingNameSpace.whichZIndexActive / tileW);
+        }
+        if (housingNameSpace.whichDyeColourActive != 0) {
+            newWallTile.colour = parseInt(housingNameSpace.whichDyeColourActive);
+        }
+        if (housingNameSpace.activeTileCanBeRotated) {
+            newWallTile.facing = housingNameSpace.whichFacingActive;
+        }
+        // place tile:
+        hero.housing.draft[housingNameSpace.whichElevationActive].push(newWallTile);
+        housingNameSpace.runningCostTotal += housingNameSpace.costForActiveTile;
+        housingNameSpace.updateRunningTotal();
+    },
+
     mouseMove: function(e) {
         housingNameSpace.mousePosition = getTileCoordsFromScreenPosition(e.pageX, e.pageY);
     },
@@ -228,7 +216,6 @@ var housingNameSpace = {
         } else {
             hero.settings.showFootprintInEditMode = false;
         }
-
     },
 
     housingTileColourChange: function(e) {
@@ -266,13 +253,11 @@ var housingNameSpace = {
     },
 
     loadNewTile: function(whichTile, whichWorldTile, whichColour) {
-
         // load world tile asset if it's not already loaded:
         // check if the wall is being dyed:
         var thisFileColourSuffix = '';
         if (whichColour != 0) {
             // bypass hasInherent colour checks as won't be in inventory items
-
             var thisColourName = colourNames[whichColour];
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
@@ -280,7 +265,6 @@ var housingNameSpace = {
         }
 
         var itemID = "item" + whichTile + thisFileColourSuffix;
-
         if (typeof itemImages[itemID] === "undefined") {
             //   console.log(itemImages,itemImages[itemID],(typeof itemImages[itemID]),itemID,whichTile, whichWorldTile, whichColour);
             Loader.preload([{ name: itemID, src: '/images/game-world/items/' + whichWorldTile + thisFileColourSuffix + '.png' }], function() {
@@ -291,16 +275,9 @@ var housingNameSpace = {
     },
 
     commitDesign: function() {
-
-        // check money and confirm #####
-        // john
-
+        // check money and confirm 
         if (housingNameSpace.runningCostTotal > hero.currency.money) {
-
-
-
             UI.showYesNoDialogueBox("Not enough money&hellip;", "Save design", "Cancel design", "housingNameSpace.saveDraftDesign", "housingNameSpace.abandonLatestChanges");
-
         } else {
             var titleText;
             if (housingNameSpace.runningCostTotal < 0) {
@@ -308,25 +285,15 @@ var housingNameSpace = {
             } else {
                 titleText = "Commit this design at a cost of " + parseMoney(housingNameSpace.runningCostTotal) + "?";
             }
-            //  housingHasEnoughMoney.firstElementChild.innerHTML = titleText;
-            //  housingHasEnoughMoney.classList.add('active');
-
             UI.showYesNoDialogueBox(titleText, "Commit design", "Save for later", "housingNameSpace.publishCommittedDesign", "housingNameSpace.saveDraftDesign");
-
         }
     },
 
     publishCommittedDesign: function() {
-
         // save json to file system:
         getJSONWithParams("/game-world/savePlot.php", 'chr=' + characterId + '&postData=' + JSON.stringify(hero.housing.draft) + '&northWestCornerTileX=' + hero.housing.northWestCornerTileX + '&northWestCornerTileY=' + hero.housing.northWestCornerTileY, function(data) {
-
             if (data.success) {
                 // check no pet, hero, NPC etc in the way - move if so ####
-
-
-
-
 
                 UI.hideYesNoDialogueBox();
                 hero.currency.money -= housingNameSpace.runningCostTotal;
@@ -337,10 +304,6 @@ var housingNameSpace = {
                 }
                 hero.housing.draftCost = 0;
                 housingNameSpace.updateRunningTotal();
-
-
-
-
                 // add data to local mapData - first, find which maps this plot is over:
                 var whichMapsToUpdate = uniqueValues([findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.southEastCornerTileY), findWhichWorldMap(hero.housing.southEastCornerTileX, hero.housing.northWestCornerTileY), findWhichWorldMap(hero.housing.northWestCornerTileX, hero.housing.southEastCornerTileY)]);
                 // remove existing housing data for this player from these maps:
@@ -350,7 +313,6 @@ var housingNameSpace = {
                         return currentItemObject.lockedToPlayerId !== characterId;
                     });
                 }
-
                 // loop through housing.draft[0] for the external tiles, and add those to the relevant map
                 var clonedHousingItem, whichMap;
                 for (var i = 0; i < hero.housing.draft[0].length; i++) {
@@ -363,9 +325,7 @@ var housingNameSpace = {
                     thisMapData[whichMap].items.push(clonedHousingItem);
                     initialiseItem(thisMapData[whichMap].items[thisMapData[whichMap].items.length - 1]);
                 }
-
                 UI.closeHousingConstructionPanel();
-
             } else {
                 // try again? ########
             }
@@ -487,26 +447,24 @@ var housingNameSpace = {
             }
         }
     },
+
     updateElevationDisplay: function() {
         // show which elevation
         // ghost other levels
     },
-    floodFillFrom: function(startTileX, startTileY) {
 
-        // find the tile type on the start tile and change all adjoining tiles of that type
-
+    findTileAtLocation: function(tileX, tileY) {
         var foundIndices = [];
         var indexToFillOn = '';
         for (var i = 0; i < hero.housing.draft[housingNameSpace.whichElevationActive].length; i++) {
-            if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileX == startTileX) {
-                if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileY == startTileY) {
+            if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileX == tileX) {
+                if (hero.housing.draft[housingNameSpace.whichElevationActive][i].tileY == tileY) {
                     foundIndices.push[i];
                     // save this in case only a single item is on this tile:
                     indexToFillOn = hero.housing.draft[housingNameSpace.whichElevationActive][i].type;
                 }
             }
         }
-       
         if (foundIndices.length > 1) {
             //find the lowest zdepth tile
             var thisZDepth;
@@ -522,12 +480,46 @@ var housingNameSpace = {
                 }
             }
         }
+        return indexToFillOn;
+    },
 
+    floodFillFrom: function(startTileX, startTileY) {
+        housingNameSpace.floodFillTile(startTileX, startTileY, housingNameSpace.findTileAtLocation(startTileX, startTileY));
+    },
 
-
-        console.log("flood filling on type " + indexToFillOn);
-
-
-
+    floodFillTile: function(tileX, tileY, typeToReplace) {
+        // make sure it's valid:
+        var tileHasBeenAdded = false;
+        if (tileX >= hero.housing.northWestCornerTileX) {
+            if (tileX < hero.housing.southEastCornerTileX) {
+                if (tileY >= hero.housing.northWestCornerTileY) {
+                    if (tileY < hero.housing.southEastCornerTileY) {
+                        if (housingNameSpace.findTileAtLocation(tileX, tileY) == typeToReplace) {
+                            if (typeToReplace != '') {
+                                // remove tile of this type:
+                                var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                    return ((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace));
+                                });
+                                for (var i in tilesBeingRemoved) {
+                                    // refund cost:
+                                    housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
+                                }
+                                housingNameSpace.updateRunningTotal();
+                                // find items at this tile and remove them:
+                                hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                    return (!((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace)));
+                                });
+                            }
+                            housingNameSpace.addTileToLocation(tileX, tileY);
+                            // fill neighbours:
+                            housingNameSpace.floodFillTile(startTileX + 1, startTileY, typeToReplace);
+                            housingNameSpace.floodFillTile(startTileX - 1, startTileY, typeToReplace);
+                            housingNameSpace.floodFillTile(startTileX, startTileY + 1, typeToReplace);
+                            housingNameSpace.floodFillTile(startTileX, startTileY - 1, typeToReplace);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
