@@ -56,6 +56,7 @@ var housingNameSpace = {
     'currentTileCanBeElevated': firstTileThatWouldBeActive.getAttribute("data-canbelevated"),
     'zIndexesPerElevation': tileW * 3,
     'activeTileCanBeRotated': firstTileThatWouldBeActive.getAttribute("data-canberotated"),
+    'floodFillTilesChecked': [],
 
     init: function() {
         // load in any graphics used in the draft but not already loaded into memory:
@@ -484,37 +485,42 @@ var housingNameSpace = {
     },
 
     floodFillFrom: function(startTileX, startTileY) {
+        housingNameSpace.floodFillTilesChecked = [];
         housingNameSpace.floodFillTile(startTileX, startTileY, housingNameSpace.findTileAtLocation(startTileX, startTileY));
     },
 
     floodFillTile: function(tileX, tileY, typeToReplace) {
-        // make sure it's valid:
-        if (tileX >= 0) {
-            if (tileX < (hero.housing.southEastCornerTileX - hero.housing.northWestCornerTileX)) {
-                if (tileY >= 0) {
-                    if (tileY < (hero.housing.southEastCornerTileY - hero.housing.northWestCornerTileY)) {
-                        if (housingNameSpace.findTileAtLocation(tileX, tileY) == typeToReplace) {
-                            if (typeToReplace != '') {
-                                // remove tile of this type:
-                                var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
-                                    return ((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace));
-                                });
-                                for (var i in tilesBeingRemoved) {
-                                    // refund cost:
-                                    housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
+        // make sure it's not been checked already:
+        if (housingNameSpace.floodFillTilesChecked.indexOf(tileX + "_" + tileY) == -1) {
+            housingNameSpace.floodFillTilesChecked.push(tileX + "_" + tileY);
+            // make sure it's valid:
+            if (tileX >= 0) {
+                if (tileX < (hero.housing.southEastCornerTileX - hero.housing.northWestCornerTileX)) {
+                    if (tileY >= 0) {
+                        if (tileY < (hero.housing.southEastCornerTileY - hero.housing.northWestCornerTileY)) {
+                            if (housingNameSpace.findTileAtLocation(tileX, tileY) == typeToReplace) {
+                                if (typeToReplace != '') {
+                                    // remove tile of this type:
+                                    var tilesBeingRemoved = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                        return ((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace));
+                                    });
+                                    for (var i in tilesBeingRemoved) {
+                                        // refund cost:
+                                        housingNameSpace.runningCostTotal -= parseInt(document.getElementById("housingTile" + tilesBeingRemoved[i].type).getAttribute('data-price'));
+                                    }
+                                    housingNameSpace.updateRunningTotal();
+                                    // find items at this tile and remove them:
+                                    hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
+                                        return (!((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace)));
+                                    });
                                 }
-                                housingNameSpace.updateRunningTotal();
-                                // find items at this tile and remove them:
-                                hero.housing.draft[housingNameSpace.whichElevationActive] = hero.housing.draft[housingNameSpace.whichElevationActive].filter(function(currentItemObject) {
-                                    return (!((currentItemObject.tileX == tileX) && (currentItemObject.tileY == tileY) && (currentItemObject.type == typeToReplace)));
-                                });
+                                housingNameSpace.addTileToLocation(tileX, tileY);
+                                // fill neighbours:
+                                housingNameSpace.floodFillTile(tileX + 1, tileY, typeToReplace);
+                                housingNameSpace.floodFillTile(tileX - 1, tileY, typeToReplace);
+                                housingNameSpace.floodFillTile(tileX, tileY + 1, typeToReplace);
+                                housingNameSpace.floodFillTile(tileX, tileY - 1, typeToReplace);
                             }
-                            housingNameSpace.addTileToLocation(tileX, tileY);
-                            // fill neighbours:
-                            housingNameSpace.floodFillTile(tileX + 1, tileY, typeToReplace);
-                            housingNameSpace.floodFillTile(tileX - 1, tileY, typeToReplace);
-                            housingNameSpace.floodFillTile(tileX, tileY + 1, typeToReplace);
-                            housingNameSpace.floodFillTile(tileX, tileY - 1, typeToReplace);
                         }
                     }
                 }
