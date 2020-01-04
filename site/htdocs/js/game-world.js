@@ -11407,9 +11407,9 @@ function moveNPCs() {
 
             thisNPC.hasJustGotNewPath = false;
 
-            if (thisNPC.name == "Warden") {
+          //  if (thisNPC.name == "Warden") {
                 // console.log(thisNPC.isMoving, thisNPC.forceNewMovementCheck, thisNPC.movement[thisNPC.movementIndex]);
-            }
+           // }
 
 
             // check if this NPC is playing cards with the hero:
@@ -11857,7 +11857,10 @@ function moveNPCs() {
                                 }
                             }
                             break;
+case 'sound':
+audio.playSound(soundEffects[thisNextMovement[1]], 0);
 
+break;
                         case 'animate':
                             if (typeof thisNPC.animationWaitingTimer === "undefined") {
                                 thisNPC.currentAnimation = thisNextMovement[1];

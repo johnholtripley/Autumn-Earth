@@ -23,7 +23,7 @@
     "background_color": "#212121",
     "display": "standalone",
     "start_url": "/",
-     "orientation": "portrait-primary",
+     "orientation": "natural",
   "lang": "en-GB",
   "gcm_sender_id": "103953800507"
 }

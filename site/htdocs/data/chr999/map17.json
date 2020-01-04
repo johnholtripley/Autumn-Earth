@@ -8,7 +8,8 @@
         {
             "birdSong": "../sounds/bird-song.mp3",
             "birdChirrup": "../sounds/chirrup.mp3",
-            "henCluck": "../sounds/hen-NOT_MINE.mp3"
+            "henCluck": "../sounds/hen-NOT_MINE.mp3",
+            "stag": "../sounds/stag-NOT_MINE.mp3"
         },
         "hourChime": "../sounds/church-bell-NOT_MINE.mp3",
         "collisions": [
