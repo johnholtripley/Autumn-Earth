@@ -11,6 +11,7 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
     'horse': '../sounds/horse-NOT_MINE.mp3',
+    'doe': '../sounds/doe-NOT_MINE.mp3',
     'lever': '../sounds/lever-NOT_MINE.mp3',
     'keys': '../sounds/keys-NOT_MINE-wow.mp3',
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
@@ -98,14 +99,23 @@ var audio = {
         }
     },
 
-    playSound: function(buffer, delay, numberToPlay) {
+    playSound: function(buffer, delay, numberToPlay, volumeAdjustment) {
         if (typeof numberToPlay === "undefined") {
             numberToPlay = 0;
         }
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.numberToPlay = numberToPlay;
-        source.connect(soundGainNode);
+        if (typeof volumeAdjustment !== "undefined") {
+            // don't use 100% of the main sound volume:
+            var variableVolumeSoundGainNode = audioContext.createGain();
+            variableVolumeSoundGainNode.gain.value = volumeAdjustment / gameSettings.soundVolume;
+            variableVolumeSoundGainNode.connect(audioContext.destination);
+            source.connect(variableVolumeSoundGainNode);
+        } else {
+            // use the main gain volume:
+            source.connect(soundGainNode);
+        }
         if (numberToPlay > 1) {
             source.addEventListener('ended', function soundEnded(e) {
                 if (this.numberToPlay > 1) {
@@ -120,6 +130,7 @@ var audio = {
         } else {
             source.start(delay);
         }
+
     },
 
 
@@ -160,7 +171,7 @@ var audio = {
 
         if (typeof audio[whichTrack] !== undefined) {
             //  audio[whichTrack].pause();
-            
+
             var currentTime = audioContext.currentTime;
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
@@ -11857,10 +11868,19 @@ function moveNPCs() {
                                 }
                             }
                             break;
-case 'sound':
-audio.playSound(soundEffects[thisNextMovement[1]], 0);
-
-break;
+                        case 'sound':
+                            var thisSoundsVolume = 1;
+                            if (thisNextMovement[2]) {
+                                // determine the distance between the hero and NPC and use that as the volume:
+                                // ###
+                                // john
+                                console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
+                                thisSoundsVolume = 200 - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y);
+                            }
+                            if (thisSoundsVolume > 0) {
+                                audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);
+                            }
+                            break;
                         case 'animate':
                             if (typeof thisNPC.animationWaitingTimer === "undefined") {
                                 thisNPC.currentAnimation = thisNextMovement[1];

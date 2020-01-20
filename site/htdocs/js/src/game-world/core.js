@@ -3233,10 +3233,19 @@ function moveNPCs() {
                                 }
                             }
                             break;
-case 'sound':
-audio.playSound(soundEffects[thisNextMovement[1]], 0);
-
-break;
+                        case 'sound':
+                            var thisSoundsVolume = 1;
+                            if (thisNextMovement[2]) {
+                                // determine the distance between the hero and NPC and use that as the volume:
+                                // ###
+                                // john
+                                console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
+                                thisSoundsVolume = 200 - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y);
+                            }
+                            if (thisSoundsVolume > 0) {
+                                audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);
+                            }
+                            break;
                         case 'animate':
                             if (typeof thisNPC.animationWaitingTimer === "undefined") {
                                 thisNPC.currentAnimation = thisNextMovement[1];

@@ -10,6 +10,7 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
     'horse': '../sounds/horse-NOT_MINE.mp3',
+    'doe': '../sounds/doe-NOT_MINE.mp3',
     'lever': '../sounds/lever-NOT_MINE.mp3',
     'keys': '../sounds/keys-NOT_MINE-wow.mp3',
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
@@ -97,14 +98,23 @@ var audio = {
         }
     },
 
-    playSound: function(buffer, delay, numberToPlay) {
+    playSound: function(buffer, delay, numberToPlay, volumeAdjustment) {
         if (typeof numberToPlay === "undefined") {
             numberToPlay = 0;
         }
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.numberToPlay = numberToPlay;
-        source.connect(soundGainNode);
+        if (typeof volumeAdjustment !== "undefined") {
+            // don't use 100% of the main sound volume:
+            var variableVolumeSoundGainNode = audioContext.createGain();
+            variableVolumeSoundGainNode.gain.value = volumeAdjustment / gameSettings.soundVolume;
+            variableVolumeSoundGainNode.connect(audioContext.destination);
+            source.connect(variableVolumeSoundGainNode);
+        } else {
+            // use the main gain volume:
+            source.connect(soundGainNode);
+        }
         if (numberToPlay > 1) {
             source.addEventListener('ended', function soundEnded(e) {
                 if (this.numberToPlay > 1) {
@@ -119,6 +129,7 @@ var audio = {
         } else {
             source.start(delay);
         }
+
     },
 
 
@@ -159,7 +170,7 @@ var audio = {
 
         if (typeof audio[whichTrack] !== undefined) {
             //  audio[whichTrack].pause();
-            
+
             var currentTime = audioContext.currentTime;
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);

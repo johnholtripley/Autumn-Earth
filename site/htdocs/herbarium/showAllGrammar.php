@@ -640,6 +640,9 @@ if(strpos($startingText, '++otherplants++') !== false) {
 p {
     padding: 0 0 6px 0;
 }
+p:first-letter {
+    text-transform: uppercase;
+}
 i {
     text-decoration: underline;
 }
