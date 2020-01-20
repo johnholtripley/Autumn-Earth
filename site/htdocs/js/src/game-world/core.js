@@ -3240,9 +3240,10 @@ function moveNPCs() {
                                 // ###
                                 // john
                                 console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
-                                thisSoundsVolume = 200 - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y);
+                                thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y))/worldMapWidthPx;
+                                    console.log(thisSoundsVolume);
                             }
-                            if (thisSoundsVolume > 0) {
+                            if (thisSoundsVolume > 0.05) {
                                 audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);
                             }
                             break;
