@@ -1,6 +1,6 @@
 #mastHead {
     img {
         max-width: 220px;
-        @include pxRem('margin', 12px);
+        @include pxRem('margin', 12px auto);
     }
 }

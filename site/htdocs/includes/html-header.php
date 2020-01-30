@@ -61,7 +61,8 @@ if($thisSection == "index.php") {
 include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 ?>
 
-
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
 <meta name="disabled-adaptations" content="watch">
 

@@ -11418,9 +11418,9 @@ function moveNPCs() {
 
             thisNPC.hasJustGotNewPath = false;
 
-          //  if (thisNPC.name == "Warden") {
-                // console.log(thisNPC.isMoving, thisNPC.forceNewMovementCheck, thisNPC.movement[thisNPC.movementIndex]);
-           // }
+            //  if (thisNPC.name == "Warden") {
+            // console.log(thisNPC.isMoving, thisNPC.forceNewMovementCheck, thisNPC.movement[thisNPC.movementIndex]);
+            // }
 
 
             // check if this NPC is playing cards with the hero:
@@ -11875,8 +11875,8 @@ function moveNPCs() {
                                 // ###
                                 // john
                                 console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
-                                thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y))/worldMapWidthPx;
-                                    console.log(thisSoundsVolume);
+                                thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y)) / worldMapWidthPx;
+                                console.log(thisSoundsVolume);
                             }
                             if (thisSoundsVolume > 0.05) {
                                 audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);
@@ -12232,11 +12232,11 @@ function draw() {
                                         if (housingNameSpace.whichTileActive != '') {
                                             // draw ghost of the selected tile graphic 
                                             thisZ = 0;
-                                            if(housingNameSpace.currentTileCanBeElevated) {
-thisZ = housingNameSpace.whichZIndexActive;
+                                            if (housingNameSpace.currentTileCanBeElevated) {
+                                                thisZ = housingNameSpace.whichZIndexActive;
                                             }
 
-                                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), thisZ + getElevation(housingNameSpace.mousePosition[0],housingNameSpace.mousePosition[1])), "ghostSelectedHousingTile"]);
+                                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(housingNameSpace.mousePosition[0]), getTileCentreCoordY(housingNameSpace.mousePosition[1]), thisZ + getElevation(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1])), "ghostSelectedHousingTile"]);
 
                                         }
                                         break;
@@ -12275,9 +12275,9 @@ thisZ = housingNameSpace.whichZIndexActive;
                 thisItemIdentifier = "item" + whichHousingItem + thisFileColourSuffix;
                 thisX = findIsoCoordsX(thisItemX, thisItemY);
                 thisY = findIsoCoordsY(thisItemX, thisItemY);
-   
-                if(hero.housing.draft[i][j].tileZ) {
-thisItemZ += (hero.housing.draft[i][j].tileZ * tileW);
+
+                if (hero.housing.draft[i][j].tileZ) {
+                    thisItemZ += (hero.housing.draft[i][j].tileZ * tileW);
 
                 }
 
@@ -12343,6 +12343,7 @@ thisItemZ += (hero.housing.draft[i][j].tileZ * tileW);
         var thisColourName, thisItemIdentifier, thisPlatform, thisNPCIdentifier, thisTerrainIdentifer;
         var thisItemOffsetCol = 0;
         var thisItemOffsetRow = 0;
+        var thisTerrainAnimation;
 
         for (var m = 0; m < visibleMaps.length; m++) {
 
@@ -12366,7 +12367,18 @@ thisItemZ += (hero.housing.draft[i][j].tileZ * tileW);
                             thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
                             thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
                             thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[(map[j][i])].src;
-                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                            if (thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation) {
+                                thisTerrainAnimation = thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation;
+                                thisItemOffsetCol = thisTerrainAnimation.currentFrame;
+                                thisItemOffsetRow = 0;
+                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight]);
+                                thisTerrainAnimation.currentFrame++;
+                                if (thisTerrainAnimation.currentFrame >= thisTerrainAnimation.length) {
+                                    thisTerrainAnimation.currentFrame = 0;
+                                }
+                            } else {
+                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                            }
                         }
                     }
                     // look for tilled tiles:
@@ -12638,9 +12650,9 @@ thisItemZ += (hero.housing.draft[i][j].tileZ * tileW);
                         thisX = getTileIsoCentreCoordX(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
                         thisY = getTileIsoCentreCoordY(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
                         thisZ = getElevation(housingNameSpace.mousePosition[0], housingNameSpace.mousePosition[1]);
-   if(housingNameSpace.currentTileCanBeElevated) {
-thisZ += housingNameSpace.whichZIndexActive;
-                                            }
+                        if (housingNameSpace.currentTileCanBeElevated) {
+                            thisZ += housingNameSpace.whichZIndexActive;
+                        }
 
                         // check inventory data first, and if not use housingData:
                         if (typeof currentActiveInventoryItems[(housingNameSpace.whichTileActive)] !== "undefined") {
@@ -12664,7 +12676,7 @@ thisZ += housingNameSpace.whichZIndexActive;
 
                         if (thisItemCanBeRotated) {
                             thisItemOffsetRow = facingsPossible.indexOf(housingNameSpace.whichFacingActive);
-                            
+
                             gameContext.drawImage(itemImages[thisItemIdentifier], 0, thisItemOffsetRow * thisItemSpriteHeight, thisItemSpriteWidth, thisItemSpriteHeight, Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisZ), thisItemSpriteWidth, thisItemSpriteHeight);
                         } else {
                             gameContext.drawImage(itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisCentreY + (canvasHeight / 2) - thisZ));

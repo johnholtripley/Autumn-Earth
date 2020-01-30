@@ -4,6 +4,7 @@
         "zoneName": "Ashenvale",
         "region": "Teldrassil",
         "isInside": false,
+                "musicOnEnter": "ambient-darnassus-WoW-NOT-MINE",
         "ambientSounds":
         {
             "birdSong": "../sounds/bird-song.mp3",
