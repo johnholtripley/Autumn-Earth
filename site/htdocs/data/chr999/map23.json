@@ -169,14 +169,14 @@
         "graphics": [
             {
                 "src": "simple-tree.png",
-                "centreX": 193,
-                "centreY": 260,
+                "centreX": 206,
+                "centreY": 315,
                 "animation":
                 {
                     "currentFrame": 0,
                     "length": 20,
-                    "spriteWidth": 276,
-                    "spriteHeight": 287
+                    "spriteWidth": 294,
+                    "spriteHeight": 346
                 }
             }
     ],

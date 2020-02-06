@@ -421,6 +421,7 @@ function loadNewVisibleMapAssets(whichMap) {
 
 
 function processNewVisibleMapData(whichNewMap) {
+    console.log("processNewVisibleMapData for "+whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
@@ -479,7 +480,7 @@ function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
-    //   console.log("loading JSON for " + whichNewMap);
+    //  console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
             thisMapData[whichNewMap] = data.mapData.map;
             //   thisMapShopItemIds = data.shops.allItemIds;
@@ -503,6 +504,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 }
 
 function loadNewVisibleMap(whichNewMap) {
+    console.log("loading map data for " + whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;

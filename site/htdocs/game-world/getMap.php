@@ -666,7 +666,18 @@ $graphicsBeingUsed[$mapData['map']['graphics'][$i]['src']] = $i;
   for ($i=0;$i<count($housingData['map']['items']);$i++) {
     $housingData['map']['items'][$i]['tileX'] += $northWestCornerTileX;
     $housingData['map']['items'][$i]['tileY'] += $northWestCornerTileY;
-    array_push($mapData['map']['items'], $housingData['map']['items'][$i]);
+    // check that this item is part of the reqyested map (in case the housing spans 2 or more maps):
+    // ##
+    if($housingData['map']['items'][$i]['tileY'] >= $NorthEdgeTile) {
+    if($housingData['map']['items'][$i]['tileY'] <= $SouthEdgeTile) {
+    if($housingData['map']['items'][$i]['tileX'] >= $westEdgeTile) {
+    if($housingData['map']['items'][$i]['tileX'] <= $eastEdgeTile) {
+          array_push($mapData['map']['items'], $housingData['map']['items'][$i]);
+    }
+}
+}
+}
+  
   }  
 
 
