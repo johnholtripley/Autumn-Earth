@@ -12378,10 +12378,10 @@ function draw() {
                             thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[(map[j][i])].src;
                             if (thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation) {
                                 thisTerrainAnimation = thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation;
-                                thisItemOffsetCol = thisTerrainAnimation.currentFrame;
+                                thisItemOffsetCol = Math.floor(thisTerrainAnimation.currentFrame);
                                 thisItemOffsetRow = 0;
                                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight]);
-                                thisTerrainAnimation.currentFrame++;
+                                thisTerrainAnimation.currentFrame+=0.2;
                                 if (thisTerrainAnimation.currentFrame >= thisTerrainAnimation.length) {
                                     thisTerrainAnimation.currentFrame = 0;
                                 }
