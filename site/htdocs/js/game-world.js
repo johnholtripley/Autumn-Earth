@@ -12615,7 +12615,7 @@ function draw() {
             switch (assetsToDraw[i][1]) {
                 case "faeCentre":
                     // draw fae:
-                    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
+                    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], getRandomIntegerInclusive(1,2));
                     drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
                     // draw fae's shadow - make it respond to the fae's height:
                     gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
