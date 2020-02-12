@@ -2179,7 +2179,11 @@ if($debug) {
 $debugQueryString = '&debug=true';
 }
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.$debugQueryString.'">Seed: '.$storedSeed.'</a></p>';
-echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'">New seed</a></p>';
+$debugQueryString = '';
+if($debug) {
+$debugQueryString = '?debug=true';
+}
+echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].$debugQueryString.'">New seed</a></p>';
 
 
 $lastError = error_get_last();

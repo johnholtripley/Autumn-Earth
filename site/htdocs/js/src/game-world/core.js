@@ -3739,10 +3739,6 @@ function draw() {
                                 thisItemOffsetCol = Math.floor(thisTerrainAnimation.currentFrame);
                                 thisItemOffsetRow = 0;
                                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight]);
-                                thisTerrainAnimation.currentFrame+=0.2;
-                                if (thisTerrainAnimation.currentFrame >= thisTerrainAnimation.length) {
-                                    thisTerrainAnimation.currentFrame = 0;
-                                }
                             } else {
                                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                             }
@@ -3775,6 +3771,17 @@ function draw() {
                     }
                 }
             }
+
+            // loop through all terrain and increment the current frame of with animations (don't do it in the above loop or it will increment for each iteration of that graphic):
+            for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
+                if (thisMapData[visibleMaps[m]].graphics[i].animation) {
+                    thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame+=0.2;
+                     if (thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame >= thisMapData[visibleMaps[m]].graphics[i].animation.length) {
+                                    thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame = 0;
+                                }
+                }
+            }
+
 
 
             if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
