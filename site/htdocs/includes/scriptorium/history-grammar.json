@@ -1,0 +1,10 @@
+{
+    "root": {
+        "person":
+        {
+            "sex": "##sex##"
+        }
+    },
+    "sex": ["male", "female"]
+
+}
