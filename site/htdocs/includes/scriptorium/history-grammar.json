@@ -1,10 +1,5 @@
 {
-    "root": {
-        "person":
-        {
-            "sex": "##sex##"
-        }
-    },
-    "sex": ["male", "female"]
+    "events": ["In the #|season# of ##year##, ##person## found ##object##. ##pronounUC## was ##age## years old."],
+    "season": ["Spring", "Summer", "Autumn", "Winter"]
 
 }

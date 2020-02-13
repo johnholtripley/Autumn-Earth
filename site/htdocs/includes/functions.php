@@ -1529,7 +1529,12 @@ $numberOfSyllablesAvailable = count($possibleSyllables);
 do {
     $syllableCount = 0;
     // pick a random start syllable:
-    $firstWord = array_rand($possibleSyllables);
+
+    $arrayKeys = array_keys($possibleSyllables);
+    $firstWord = $arrayKeys[mt_rand(0,count($arrayKeys)-1)];
+
+
+   
     $constructedWord = $firstWord;
     //echo $firstWord . " - ";
     do {
