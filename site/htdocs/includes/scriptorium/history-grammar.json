@@ -1,5 +1,5 @@
 {
-    "events": ["In the #|season# of ##year##, ##person## found ##object##. ##pronounUC## was ##age## years old."],
+    "events": ["In the #|season# of ##year##, ##firstname## found ##item##. ##pronounUC## was ##age## years old.", "##pronounUC## found the ##item## while out one #|season# evening in ##location##."],
     "season": ["Spring", "Summer", "Autumn", "Winter"]
 
 }
