@@ -78,7 +78,7 @@ class historyPerson extends historyEntity {
 class historyItem extends historyEntity {
      public function __construct() {
         parent::__construct();
-        $this->name = "the One Ring";
+        $this->name = "the Curmsun Disc";
      }
 }
 
@@ -140,41 +140,65 @@ $newPerson = generateBaseEntity("person");
 
 
 // loop through a number of events, changing the entity's state as a result:
+// each event should be a new object, with a year and a location
 // ###### 
 
-// get random event:
-$thisEvent = $jsonHistorySource['events'][mt_rand(0,count($jsonHistorySource['events'])-1)];
+// get random events:
+$usedEventKeys = array();
+$allEvents = "";
 
-$thisEventYear = mt_rand($newPerson->creationYear+10,$newPerson->creationYear+90);
-$thisEventItem = generateBaseEntity("item");
-$thisEventLocation = generateBaseEntity("location");
-
-$thisEvent = str_replace("##fullname##", $newPerson->name, $thisEvent);
-$thisEvent = str_replace("##firstname##", $newPerson->firstname, $thisEvent);
-$thisEvent = str_replace("##lastname##", $newPerson->lastname, $thisEvent);
-$thisEvent = str_replace("##year##", $thisEventYear, $thisEvent);
-$thisEvent = str_replace("##item##", $thisEventItem->name, $thisEvent);
-$thisEvent = str_replace("##location##", $thisEventLocation->name, $thisEvent);
-$thisEvent = str_replace("##age##", ($thisEventYear - ($newPerson->creationYear)), $thisEvent);
-if($newPerson->sex == "female") {
-$thisEvent = str_replace("##pronounUC##", "She", $thisEvent);
-$thisEvent = str_replace("##pronoun##", "she", $thisEvent);
-$thisEvent = str_replace("##possessiveUC#", "Her", $thisEvent);
-$thisEvent = str_replace("##possessive##", "her", $thisEvent);
-} else {
-$thisEvent = str_replace("##pronounUC##", "He", $thisEvent);
-$thisEvent = str_replace("##pronoun##", "he", $thisEvent);
-$thisEvent = str_replace("##possessiveUC#", "His", $thisEvent);
-$thisEvent = str_replace("##possessive##", "his", $thisEvent);
+for ($i=0; $i<mt_rand(2,3);$i++) {
+do {
+$eventKey = mt_rand(0,count($jsonHistorySource['events'])-1);
+} while ((in_array($eventKey, $usedEventKeys)));
+$thisEvent = $jsonHistorySource['events'][$eventKey];
+if($allEvents != '') {
+$allEvents .= '|||';
 }
+$allEvents .= $thisEvent;
+array_push($usedEventKeys, $eventKey);
+}
+
+
+$allEventsYear = mt_rand($newPerson->creationYear+10,$newPerson->creationYear+90);
+$allEventsItem = generateBaseEntity("item");
+$allEventsLocation = generateBaseEntity("location");
+
 // run grammar replacement:
-$thisEvent = findAndReplaceHashes($thisEvent, $jsonHistorySource);
+$allEvents = findAndReplaceHashes($allEvents, $jsonHistorySource);
+
+$allEvents = str_replace("**fullname**", $newPerson->name, $allEvents);
+$allEvents = str_replace("**firstname**", $newPerson->firstname, $allEvents);
+$allEvents = str_replace("**lastname**", $newPerson->lastname, $allEvents);
+$allEvents = str_replace("**year**", $allEventsYear, $allEvents);
+$allEvents = str_replace("**item**", $allEventsItem->name, $allEvents);
+$allEvents = str_replace("**location**", $allEventsLocation->name, $allEvents);
+$allEvents = str_replace("**age**", ($allEventsYear - ($newPerson->creationYear)), $allEvents);
+if($newPerson->sex == "female") {
+    $allEvents = str_replace("**pronounUC**", "She", $allEvents);
+    $allEvents = str_replace("**pronoun**", "she", $allEvents);
+    $allEvents = str_replace("**possessiveUC*", "Her", $allEvents);
+    $allEvents = str_replace("**possessive**", "her", $allEvents);
+} else {
+    $allEvents = str_replace("**pronounUC**", "He", $allEvents);
+    $allEvents = str_replace("**pronoun**", "he", $allEvents);
+    $allEvents = str_replace("**possessiveUC*", "His", $allEvents);
+    $allEvents = str_replace("**possessive**", "his", $allEvents);
+}
+
+
+$allEventsList = explode("|||", $allEvents);
 
 if($debug) {
-echo '<style>*{font-family:arial,helvetica,sans-serif;}</style>';
+echo '<link href="https://fonts.googleapis.com/css?family=IM+Fell+English&display=swap" rel="stylesheet">';
+echo '<style>*{font-family:arial,helvetica,sans-serif;color:#666;}li{font-family:"IM Fell English",arial,helvetica,sans-serif;font-size:1.4em;font-weight:normal;letter=spacing:0.08em;color:#111;}body { padding: 0;margin:0; background: #dbd7be url(/images/herbarium/catalogue-background-NOT_MINE.jpg) repeat-y 50% 0; -webkit-background-size: 100% auto; -moz-background-size: 100% auto; -o-background-size: 100% auto; background-size: 100% auto;}
+
+</style>';
 echo '<ol style="margin: 5%;">';
 echo '<li>'.$newPerson->name.' was born in '.$newPerson->creationYear.'</li>';
-echo '<li>'.$thisEvent.'</li>';
+for ($i=0;$i<count($allEventsList);$i++) {
+echo '<li>'.$allEventsList[$i].'</li>';
+}
 echo '</ol>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'&debug=true">Seed: '.$storedSeed.'</a></p>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?debug=true">New seed</a></p>';

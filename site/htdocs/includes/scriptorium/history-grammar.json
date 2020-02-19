@@ -1,5 +1,11 @@
 {
-    "events": ["In the #|season# of ##year##, ##firstname## found ##item##. ##pronounUC## was ##age## years old.", "##pronounUC## found the ##item## while out one #|season# evening in ##location##."],
-    "season": ["Spring", "Summer", "Autumn", "Winter"]
+    "events": [
+    "In the #|season# of **year**, **firstname** unearthed **item**. **pronounUC** was **age** years old.",
+    "**pronounUC** discovered the **item** while out one #|season# evening in **location**.",
+    "When **pronoun** was **age**, **firstname** founded the great #|structure# at **location**",
+    "In **year**, **pronoun** made peace with the #|faction#."],
+    "season": ["Spring", "Summer", "Autumn", "Winter"],
+    "structure": ["cathedral", "temple", "monastery", "henge", "toll bridge", "palace"],
+    "faction": ["the High Elves", "the people of **location**"]
 
 }
