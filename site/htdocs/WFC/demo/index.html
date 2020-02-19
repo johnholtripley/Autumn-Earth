@@ -10,35 +10,7 @@
                 padding: 10px 0 10px 20px;
             }
 
-            h1 {
-                font-size:1.7em;
-            }
 
-            h2 {
-                font-size:1.4em;
-            }
-
-            .field {
-                width: 250px;
-                display:inline-block;
-                margin-right:10px;
-            }
-
-            .field input {
-                width:100%;
-            }
-
-            .field label {
-                display:block;
-                width:100%;
-                text-align:left;
-            }
-
-            .field .value {
-                display:block;
-                width:100%;
-                text-align:right;
-            }
 
             canvas {
                 border: 2px solid black;
@@ -48,49 +20,14 @@
                 user-select: none;
                 -moz-user-select: none;
                 -webkit-user-select: none;
-                margin-right:10px;
+                margin:10px;
                 transition:opacity 0.2s linear;
-            }
-
-            .patterns {
-                display:inline-block;
-                max-width:700px;
-            }
-
-            .patterns span {
-                opacity:0.6;
-                display:inline-block;
-                padding:5px;
-                line-height:16px;
-                height:26px;
-                font-size:13px;
-                width:30%;
-                cursor:hand;
-            }
-
-            .patterns span:hover {
-                opacity:1;
-            }
-
-            .patterns img {
-                border:1px solid black;
-                margin-right:6px;
-                image-rendering: pixelated;
-            }
-
-            #generatedPattern {
-                display:inline-block;
+                display: block;
             }
 
 
 
-            #generate {
-                visibility:hidden;
-            }
 
-            .allow-generation #generate {
-                visibility: visible;
-            }
 
 
 
@@ -104,84 +41,14 @@
     </head>
 
     <body>
-        <h1>WaveFunctionCollapse - OverlappingModel example</h1>
-
-        <h2>Presets</h2>
-        <form>
-            <div class="field">
-                <select id="preset">
-                    <option value="">- - -</option>
-                    <option value="3Bricks" data-n="3" data-symmetry="1" data-periodic="1">3 Bricks</option>
-                    <option value="City" data-n="3" data-symmetry="2" data-ground="-1" data-periodic="1">City</option>
-                    <option value="Flowers" data-n="3" data-symmetry="2" data-ground="-4" data-periodic="1">Flowers</option>
-                    <option value="Hogs" data-n="2" data-periodic="1">Hogs (n=2)</option>
-                    <option value="Less Rooms" data-n="3" data-periodic="1">Less Rooms</option>
-                </select>
-            </div>
-        </form>
-
-        <div class="custom-feature">
-            <h2>Sample pattern options</h2>
-
-            <div class="field option">
-                <label for="sampleWidth">Sample width</label>
-                <input type="range" id="sampleWidth" min="4" max="50" step="1" value="10" />
-                <span class="value">10</span>
-            </div>
-
-            <div class="field option">
-                <label for="sampleHeight">Sample height</label>
-                <input type="range" id="sampleHeight" min="4" max="50" step="1" value="10" />
-                <span class="value">10</span>
-            </div>
 
 
-        </div>
 
-        <h2>Sample pattern</h2>
 
+ 
+input:
         <canvas id="samplePattern" width="20" height="20" style="width:140px; height:140px; image-rendering: pixelated;"></canvas>
-
-        <h2>Options</h2>
-        <form>
-            <div class="field option">
-                <label for="n">N</label>
-                <input type="range" id="n" min="2" max="4" step="1" value="2" />
-                <span class="value">2</span>
-            </div>
-            <div class="field option">
-                <label for="symmetry">Symmetry</label>
-                <input type="range" id="symmetry" min="1" max="8" value="2" step="1" />
-                <span class="value">2</span>
-            </div>
-            <div class="field option">
-                <label for="ground">Ground (<a target="_blank" href="https://github.com/mxgmn/WaveFunctionCollapse/issues/3#issuecomment-250995366">?</a>)</label>
-                <input type="range" id="ground" min="-16" max="102" step="1" value="-1" />
-                <span class="value">-1</span>
-            </div>
-            <div class="field option">
-                <label for="periodic">Periodic output</label>
-                <input type="range" id="periodic" min="0" max="1" step="1" value="1" />
-                <span class="value">1</span>
-            </div>
-            <div class="field option">
-                <label for="periodicInput">Periodic Input</label>
-                <input type="range" id="periodicInput" min="0" max="1" step="1" value="1" />
-                <span class="value">1</span>
-            </div>
-            <div class="field option">
-                <label for="width">Width</label>
-                <input type="range" id="width" min="8" max="96" step="1" value="48" />
-                <span class="value">48</span>
-            </div>
-            <div class="field option">
-                <label for="height">Height</label>
-                <input type="range" id="height" min="8" max="96" step="1" value="48" />
-                <span class="value">48</span>
-            </div>
-        </form>
-
-        <h2>Generated patterns <button id="generate">Generate</button></h2>
+output:
         <canvas id="generatedPattern" width="48" height="48" style="width:240px; height:240px; image-rendering: pixelated;"></canvas>
 
 
@@ -192,12 +59,14 @@
 
         <script type="text/javascript">
        
+// https://github.com/kchapelier/wavefunctioncollapse
 
-            var defaultOptions = {
-                n: 2,
+
+            var options = {
+                n: 3,
                 symmetry: 8,
                 ground: 0,
-                periodic: 0,
+                periodic: 1,
                 periodicInput: 1,
                 width: 48,
                 height: 48,
@@ -205,12 +74,6 @@
                 sampleHeight: 20
             };
 
- 
-
-            var options = Object.assign({}, defaultOptions),
-                optionsKeys = Object.keys(options),
-                optionsElements = {},
-                valueElement = {};
 
             var sampleCanvas = document.getElementById('samplePattern'),
                 sampleContext = sampleCanvas.getContext('2d'),
@@ -219,77 +82,6 @@
             var generateCanvas = document.getElementById('generatedPattern'),
                 generateContext = generateCanvas.getContext('2d'),
                 generateData = null;
-
-            var generateButton = document.getElementById('generate');
-
-            var colorButtons = document.querySelectorAll('button.color');
-            var currentColor = [255, 255, 255, 255];
-            var custom = false;
-
-            optionsKeys.forEach(function (key) {
-                optionsElements[key] = document.getElementById(key);
-                valueElement[key] = optionsElements[key].parentNode.querySelector('.value');
-
-                optionsElements[key].addEventListener('input', function () {
-                    var value = parseInt(this.value, 10);
-                    valueElement[key].innerHTML = value;
-                    options[key] = value;
-
-                    if (key === 'width' || key === 'height') {
-                        changeGenerateSize();
-                    } else if (custom && key === 'sampleWidth' || key === 'sampleHeight') {
-                        changeSampleSize();
-                    }
-                });
-
-                if (key !== 'width' && key !== 'height') {
-                    optionsElements[key].addEventListener('dblclick', function () {
-                        var value = Math.max(0, parseInt(optionsElements[key].min, 10));
-                        optionsElements[key].value = value;
-                        valueElement[key].innerHTML = value;
-                        options[key] = value;
-                    });
-                }
-            });
-
-           
-
-            var drawMode = false;
-
-          
-
-           
-
-            var select = document.getElementById('preset');
-
-
-            function changeSampleSize () {
-                var width = options.sampleWidth;
-                var height = options.sampleHeight;
-                sampleCanvas.width = width;
-                sampleCanvas.height = height;
-                sampleCanvas.style.width = (width * 7) + 'px';
-                sampleCanvas.style.height = (height * 7) + 'px';
-
-                if (sampleData !== null) {
-                    sampleContext.putImageData(sampleData, 0, 0);
-                    sampleData = sampleContext.getImageData(0, 0, width, height);
-                }
-            }
-
-            function changeGenerateSize () {
-                var width = options.width;
-                var height = options.height;
-                generateCanvas.width = width;
-                generateCanvas.height = height;
-                generateCanvas.style.width = (width * 5) + 'px';
-                generateCanvas.style.height = (height * 5) + 'px';
-
-                if (generateData !== null) {
-                    generateContext.putImageData(generateData, 0, 0);
-                    generateData = generateContext.getImageData(0, 0, width, height);
-                }
-            }
 
             function setSample (img) {
                 var width = Math.min(50, img.width);
@@ -302,16 +94,9 @@
 
                 sampleData = sampleContext.getImageData(0, 0, width, height);
 
-                document.body.classList.add('allow-generation');
+                //document.body.classList.add('allow-generation');
             }
 
-            function loadSample (name, callback) {
-                var img = new Image();
-                img.onload = function () {
-                    callback(name, img);
-                };
-                img.src = './samples/' + name + '.png';
-            }
 
             var updateGenerateData = function updateGenerateData () {
                 if (generateData === null || generateCanvas.width != options.width || generateCanvas.height != options.height) {
@@ -321,38 +106,25 @@
                     generateCanvas.style.height = (options.height * 5) + 'px';
                     generateData = generateContext.createImageData(options.width, options.height);
                 }
+             
             };
 
-            select.addEventListener('change', function () {
-                var presentOption = select.options[select.selectedIndex];
 
-                for (var i = 0; i < optionsKeys.length; i++) {
-                    var key = optionsKeys[i];
-                    var value = presentOption.getAttribute('data-' + key);
-                    options[key] = (value === null ? defaultOptions[key] : parseInt(value, 10));
-                    optionsElements[key].value = options[key];
-                    valueElement[key].innerHTML = options[key];
-                }
-
-                updateGenerateData();
+var whichSample = "Less Rooms";
+var img = new Image();
+img.onload = function () {
+     setSample(img);
+            updateGenerateData();
+            generateWFC();
+};
+img.src = './samples/' + whichSample + '.png';
 
 
-                    custom = false;
-                    document.body.classList.remove('custom');
-                    loadSample(select.value, function (name, img) {
-                        if (name === select.value) {
-                            setSample(img);
-                        }
-                    });
-                
-            });
+              
 
 
 
-            generateButton.addEventListener('click', function () {
-              //  workerMessagesElements.innerHTML = null;
-                document.body.classList.add('computing');
-
+            function generateWFC() {
                 var message = {
                     generateData: generateData.data.buffer,
                     sampleData: sampleData.data.buffer,
@@ -366,10 +138,9 @@
                     symmetry: options.symmetry,
                     ground: options.ground
                 };
-
-          
               
-              // start worker code
+                  
+            
               var tries = 0;
                   var instance = new wfc.OverlappingModel(new Uint8Array(message.sampleData), message.sampleWidth, message.sampleHeight, message.n, message.width, message.height, message.periodicInput, message.periodic, message.symmetry, message.ground);
                   
@@ -378,7 +149,7 @@
 
     do {
         tries++;
-        postMessage({type:'message', message: '> Generation attempt #' + tries + ' out of 5'});
+        console.log('> Generation attempt #' + tries + ' out of 5');
         time = Date.now();
         finished = instance.generate();
         console.log('> Generation completed ' + (finished ? 'successfully' : 'unsuccessfully') + ' in ' + ((Date.now() - time) / 1000).toFixed(3) + 's');
@@ -392,15 +163,9 @@
                         generateContext.putImageData(generateData, 0, 0);
                     }
     
+             
               
-              
-              // end worker code
-              
-              
-              
-              
-              
-            });
+            }
 
 
         </script>
