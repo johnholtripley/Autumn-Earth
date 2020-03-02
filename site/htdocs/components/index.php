@@ -227,6 +227,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
     <label for="passwordInput">Label for Password</label> <input type="password" id="passwordInput" placeholder="password">
     <label for="emailInput">Label for Email</label> <input type="email" id="emailInput" placeholder="email address">
     <label for="numericInput">Label for Number</label> <input type="number" id="numericInput" value="1">
+    <label for="numericInput">Label for Numeric keyboard, <a href="https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/">more accessible for actual numbers</a></label> <input type="text" inputmode="numeric" pattern="[0-9]*">
     <label for="textareaInput">Label for Textarea</label> <textarea id="textareaInput">Textarea content</textarea>
   <label for="selectInput">Label for Select</label><div class="selectWrapper"><select id="selectInput">
   <option value="1">1</option><option value="2">2</option><option value="3">3</option>

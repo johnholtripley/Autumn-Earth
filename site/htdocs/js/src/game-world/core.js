@@ -421,7 +421,7 @@ function loadNewVisibleMapAssets(whichMap) {
 
 
 function processNewVisibleMapData(whichNewMap) {
-    console.log("processNewVisibleMapData for "+whichNewMap);
+    //console.log("processNewVisibleMapData for "+whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
@@ -504,7 +504,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 }
 
 function loadNewVisibleMap(whichNewMap) {
-    console.log("loading map data for " + whichNewMap);
+    //console.log("loading map data for " + whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
@@ -3459,6 +3459,23 @@ function canLearnRecipe(recipeIndex) {
         wasSuccessful = true;
     }
     return wasSuccessful;
+}
+
+function addPetToWorld() {
+    UI.hideYesNoDialogueBox();
+    console.log("add pet");
+
+
+    // add to world:
+    // ########
+    console.log(hero.inventory[inventorySlotReference].contains);
+
+        // remove from inventory:
+    reducedHeldQuantity(inventorySlotReference);
+
+}
+function checkAddPetToWorld(petJson) {
+    UI.showYesNoDialogueBox("Hatch pet?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 
 function sendUserPost(postData) {

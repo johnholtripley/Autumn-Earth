@@ -367,9 +367,9 @@ var lastTime = 0;
 var elapsed = 0;
 var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
-var animationUpdateTime = (1000 / animationFramesPerSecond);
+const animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData, inventorySlotReference;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -4475,6 +4475,10 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "home":
                     var location = hero.inventory[whichSlotNumber].additional.split("|");
                     jumpToLocation(location[0], location[1], location[2]);
+                    break;
+                case "pet":
+                inventorySlotReference = whichSlotNumber;
+                    checkAddPetToWorld();
                     break;
                 case "inscribe":
                     UI.openInscriptionPanel();
@@ -9063,7 +9067,7 @@ function loadNewVisibleMapAssets(whichMap) {
 
 
 function processNewVisibleMapData(whichNewMap) {
-    console.log("processNewVisibleMapData for "+whichNewMap);
+    //console.log("processNewVisibleMapData for "+whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
@@ -9146,7 +9150,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 }
 
 function loadNewVisibleMap(whichNewMap) {
-    console.log("loading map data for " + whichNewMap);
+    //console.log("loading map data for " + whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
@@ -12101,6 +12105,23 @@ function canLearnRecipe(recipeIndex) {
         wasSuccessful = true;
     }
     return wasSuccessful;
+}
+
+function addPetToWorld() {
+    UI.hideYesNoDialogueBox();
+    console.log("add pet");
+
+
+    // add to world:
+    // ########
+    console.log(hero.inventory[inventorySlotReference].contains);
+
+        // remove from inventory:
+    reducedHeldQuantity(inventorySlotReference);
+
+}
+function checkAddPetToWorld(petJson) {
+    UI.showYesNoDialogueBox("Hatch pet?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 
 function sendUserPost(postData) {

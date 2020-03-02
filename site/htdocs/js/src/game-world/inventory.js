@@ -418,6 +418,10 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     var location = hero.inventory[whichSlotNumber].additional.split("|");
                     jumpToLocation(location[0], location[1], location[2]);
                     break;
+                case "pet":
+                inventorySlotReference = whichSlotNumber;
+                    checkAddPetToWorld();
+                    break;
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;
