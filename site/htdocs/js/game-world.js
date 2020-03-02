@@ -12109,17 +12109,24 @@ function canLearnRecipe(recipeIndex) {
 
 function addPetToWorld() {
     UI.hideYesNoDialogueBox();
-    console.log("add pet");
+    // add all pets in this array to world:
 
+    var activePetIndex = hero.allPets.length;
+    var thesePetsToAdd = hero.inventory[inventorySlotReference].contains;
+    for (var i = 0; i < thesePetsToAdd.length; i++) {
+        hero.allPets.push(thesePetsToAdd[i]);
+        hero.activePets.push(activePetIndex);
+        // set pet's coords:
+        // ##########
+        activePetIndex++;
+    }
 
-    // add to world:
-    // ########
-    console.log(hero.inventory[inventorySlotReference].contains);
-
-        // remove from inventory:
+    // remove from inventory:
     reducedHeldQuantity(inventorySlotReference);
+    hasActivePet = true;
 
 }
+
 function checkAddPetToWorld(petJson) {
     UI.showYesNoDialogueBox("Hatch pet?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
