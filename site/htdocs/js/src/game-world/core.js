@@ -200,6 +200,22 @@ function prepareCoreAssets() {
     loadMap();
 }
 
+function initialisePet(index, tileOffsetX, tileOffsetY) {
+hero.allPets[index].tileX = hero.tileX + (tileOffsetX * (index + 1));
+            hero.allPets[index].tileY = hero.tileY + (tileOffsetY * (index + 1));
+
+            if (!isOverWorldMap) {
+                // needed for Internal maps:
+                if (index == 0) {
+                    hero.allPets[index].state = "moving";
+                } else {
+                    // will be placed out of the normal map grid:
+                    hero.allPets[index].state = "queuing";
+                }
+            }
+            hero.allPets[index].state = "moving";
+            hero.allPets[index].facing = hero.facing;
+}
 
 function processInitialMap() {
     var startTileOffsetX, startTileOffsetY;
@@ -249,20 +265,7 @@ function processInitialMap() {
 
         for (var i = 0; i < hero.activePets.length; i++) {
 
-            hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
-            hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
-
-            if (!isOverWorldMap) {
-                // needed for Internal maps:
-                if (i == 0) {
-                    hero.allPets[hero.activePets[i]].state = "moving";
-                } else {
-                    // will be placed out of the normal map grid:
-                    hero.allPets[hero.activePets[i]].state = "queuing";
-                }
-            }
-            hero.allPets[hero.activePets[i]].state = "moving";
-            hero.allPets[hero.activePets[i]].facing = hero.facing;
+            initialisePet(hero.activePets[index], tileOffsetX, tileOffsetY);
 
         }
 
@@ -3465,13 +3468,32 @@ function addPetToWorld() {
     UI.hideYesNoDialogueBox();
     // add all pets in this array to world:
 
+    var tileOffsetX = 0;
+    var tileOffsetY = 0;
+    switch (hero.facing) {
+        case "n":
+            tileOffsetY = 1;
+            break
+        case "s":
+            tileOffsetY = -1;
+            break
+        case "e":
+            tileOffsetX = -1;
+            break
+        case "w":
+            tileOffsetX = 1;
+            break
+    }
+
+
     var activePetIndex = hero.allPets.length;
     var thesePetsToAdd = hero.inventory[inventorySlotReference].contains;
     for (var i = 0; i < thesePetsToAdd.length; i++) {
         hero.allPets.push(thesePetsToAdd[i]);
         hero.activePets.push(activePetIndex);
-        // set pet's coords:
-        // ##########
+        
+        
+        initialisePet(activePetIndex, tileOffsetX, tileOffsetY);
         activePetIndex++;
     }
 
