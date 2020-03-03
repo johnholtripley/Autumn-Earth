@@ -192,6 +192,7 @@ function prepareCoreAssets() {
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
+            console.log("activePet" + hero.activePets[i]);
         }
     }
 
@@ -201,20 +202,53 @@ function prepareCoreAssets() {
 }
 
 function initialisePet(index, tileOffsetX, tileOffsetY) {
-hero.allPets[index].tileX = hero.tileX + (tileOffsetX * (index + 1));
-            hero.allPets[index].tileY = hero.tileY + (tileOffsetY * (index + 1));
+    hero.allPets[hero.activePets[index]].tileX = hero.tileX + (tileOffsetX * (index + 1));
+    hero.allPets[hero.activePets[index]].tileY = hero.tileY + (tileOffsetY * (index + 1));
+    if (!isOverWorldMap) {
+        // needed for Internal maps:
+        if (index == 0) {
+            hero.allPets[hero.activePets[index]].state = "moving";
+        } else {
+            // will be placed out of the normal map grid:
+            hero.allPets[hero.activePets[index]].state = "queuing";
+        }
+    }
+    hero.allPets[hero.activePets[index]].state = "moving";
+    hero.allPets[hero.activePets[index]].facing = hero.facing;
+}
 
-            if (!isOverWorldMap) {
-                // needed for Internal maps:
-                if (index == 0) {
-                    hero.allPets[index].state = "moving";
-                } else {
-                    // will be placed out of the normal map grid:
-                    hero.allPets[index].state = "queuing";
-                }
-            }
-            hero.allPets[index].state = "moving";
-            hero.allPets[index].facing = hero.facing;
+function initialisePetObject(index) {
+    var thisPet = hero.allPets[hero.activePets[index]];
+    thisPet.x = getTileCentreCoordX(thisPet.tileX);
+    thisPet.y = getTileCentreCoordY(thisPet.tileY);
+    if (!isOverWorldMap) {
+        // check if it's not actually on the map:
+        if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
+            thisPet.z = defaultElevation;
+        } else {
+            thisPet.z = getElevation(thisPet.tileX, thisPet.tileY);
+        }
+    } else {
+        thisPet.z = getElevation(thisPet.tileX, thisPet.tileY);
+    }
+    thisPet.dx = 0;
+    thisPet.dy = 0;
+    thisPet.foundPath = '';
+    if (thisPet.state != "queuing") {
+        thisPet.state = "wait";
+    }
+    if (index == 0) {
+        // first pet follows the hero:
+        thisPet.following = hero;
+    } else {
+        // subsequent pets follow the one in front:
+        thisPet.following = hero.allPets[hero.activePets[i - 1]];
+    }
+    // even the last one should drop a breadcrumb in case an escort quest NPC needs it
+    thisPet.breadcrumb = [];
+    for (var j = 0; j < breadCrumbLength; j++) {
+        thisPet.breadcrumb[j] = [thisPet.tileX, thisPet.tileY];
+    }
 }
 
 function processInitialMap() {
@@ -265,7 +299,7 @@ function processInitialMap() {
 
         for (var i = 0; i < hero.activePets.length; i++) {
 
-            initialisePet(hero.activePets[index], tileOffsetX, tileOffsetY);
+            initialisePet(i, tileOffsetX, tileOffsetY);
 
         }
 
@@ -967,40 +1001,7 @@ function prepareGame() {
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
 
-            hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
-            hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
-
-            if (!isOverWorldMap) {
-                // check if it's not actual on the map:
-                if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
-                    hero.allPets[hero.activePets[i]].z = defaultElevation;
-                } else {
-                    hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-                }
-            } else {
-                hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-            }
-
-            hero.allPets[hero.activePets[i]].dx = 0;
-            hero.allPets[hero.activePets[i]].dy = 0;
-            hero.allPets[hero.activePets[i]].foundPath = '';
-            if (hero.allPets[hero.activePets[i]].state != "queuing") {
-                hero.allPets[hero.activePets[i]].state = "wait";
-            }
-            if (i == 0) {
-                // first pet follows the hero:
-                hero.allPets[hero.activePets[i]].following = hero;
-            } else {
-                // subsequent pets follow the one in front:
-                hero.allPets[hero.activePets[i]].following = hero.allPets[hero.activePets[i - 1]];
-            }
-            // if (i != (hero.activePets.length - 1)) {
-            // even the last one should drop a breadcrumb in case an escort quest NPC needs it
-            hero.allPets[hero.activePets[i]].breadcrumb = [];
-            for (var j = 0; j < breadCrumbLength; j++) {
-                hero.allPets[hero.activePets[i]].breadcrumb[j] = [hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY];
-            }
-            //  }
+            initialisePetObject(i);
         }
     }
 
@@ -3466,8 +3467,6 @@ function canLearnRecipe(recipeIndex) {
 
 function addPetToWorld() {
     UI.hideYesNoDialogueBox();
-    // add all pets in this array to world:
-
     var tileOffsetX = 0;
     var tileOffsetY = 0;
     switch (hero.facing) {
@@ -3484,22 +3483,32 @@ function addPetToWorld() {
             tileOffsetX = 1;
             break
     }
-
-
-    var activePetIndex = hero.allPets.length;
+    // add all pets in this array to world:
+    var allPetIndex = hero.allPets.length;
     var thesePetsToAdd = hero.inventory[inventorySlotReference].contains;
     for (var i = 0; i < thesePetsToAdd.length; i++) {
         hero.allPets.push(thesePetsToAdd[i]);
-        hero.activePets.push(activePetIndex);
-        
-        
-        initialisePet(activePetIndex, tileOffsetX, tileOffsetY);
-        activePetIndex++;
-    }
+        hero.activePets.push(allPetIndex);
+        initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
+        initialisePetObject(hero.activePets.length - 1);
 
+
+
+
+        Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + thesePetsToAdd[i].src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])) }, function() {});
+        // need to add this for next pet, but then image loader has the wrong index
+        // ### john
+        //  allPetIndex++;
+
+
+
+
+    }
     // remove from inventory:
     reducedHeldQuantity(inventorySlotReference);
     hasActivePet = true;
+
+
 
 }
 
