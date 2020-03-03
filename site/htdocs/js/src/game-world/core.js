@@ -3848,8 +3848,8 @@ function draw() {
         }
         if (hasActivePet) {
             for (var i = 0; i < hero.activePets.length; i++) {
-                thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
-                thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
+                thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"][hero.allPets[hero.activePets[i]].state]["length"];
+                thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"][hero.allPets[hero.activePets[i]].state][hero.allPets[hero.activePets[i]].facing];
                 thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 if (isVisibleOnScreen(thisX, thisY)) {
