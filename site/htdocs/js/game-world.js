@@ -12401,6 +12401,7 @@ function draw() {
         var thisItemOffsetCol = 0;
         var thisItemOffsetRow = 0;
         var thisTerrainAnimation;
+        var thisPetState;
 
         for (var m = 0; m < visibleMaps.length; m++) {
 
@@ -12494,8 +12495,13 @@ function draw() {
         }
         if (hasActivePet) {
             for (var i = 0; i < hero.activePets.length; i++) {
-                thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"][hero.allPets[hero.activePets[i]].state]["length"];
-                thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"][hero.allPets[hero.activePets[i]].state][hero.allPets[hero.activePets[i]].facing];
+                thisPetState = hero.allPets[hero.activePets[i]].state;
+                if(thisPetState != "moving") {
+                    // confirm any others to the available animation (eg. queuing or pathfinding):
+thisPetState = "wait";
+                }
+                thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"][thisPetState]["length"];
+                thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"][thisPetState][hero.allPets[hero.activePets[i]].facing];
                 thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 if (isVisibleOnScreen(thisX, thisY)) {
