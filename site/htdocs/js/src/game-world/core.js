@@ -3465,6 +3465,18 @@ function canLearnRecipe(recipeIndex) {
     return wasSuccessful;
 }
 
+
+function initialiseAndPlacePet(petObjectArray, tileOffsetX, tileOffsetY) {
+    var petObject = petObjectArray.shift();
+    var allPetIndex = hero.allPets.length;
+    hero.allPets.push(petObject);
+    hero.activePets.push(allPetIndex);
+    initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
+    initialisePetObject(hero.activePets.length - 1);
+    Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + petObject.src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])); if (petObjectArray.length > 0) { initialiseAndPlacePet(thesePetsToAdd.shift(), tileOffsetX, tileOffsetY); } }, function() {});
+}
+
+
 function addPetToWorld() {
     UI.hideYesNoDialogueBox();
     var tileOffsetX = 0;
@@ -3483,33 +3495,10 @@ function addPetToWorld() {
             tileOffsetX = 1;
             break
     }
-    // add all pets in this array to world:
-    var allPetIndex = hero.allPets.length;
-    var thesePetsToAdd = hero.inventory[inventorySlotReference].contains;
-    for (var i = 0; i < thesePetsToAdd.length; i++) {
-        hero.allPets.push(thesePetsToAdd[i]);
-        hero.activePets.push(allPetIndex);
-        initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
-        initialisePetObject(hero.activePets.length - 1);
-
-
-
-
-        Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + thesePetsToAdd[i].src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])) }, function() {});
-        // need to add this for next pet, but then image loader has the wrong index
-        // ### john
-        //  allPetIndex++;
-
-
-
-
-    }
-    // remove from inventory:
+    initialiseAndPlacePet(hero.inventory[inventorySlotReference].contains, tileOffsetX, tileOffsetY);
+    // remove egg from inventory:
     reducedHeldQuantity(inventorySlotReference);
     hasActivePet = true;
-
-
-
 }
 
 function checkAddPetToWorld(petJson) {
