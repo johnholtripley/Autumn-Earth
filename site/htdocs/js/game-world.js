@@ -2035,13 +2035,6 @@ function getElevation(tileX, tileY) {
         localTileX = tileX;
         localTileY = tileY;
     }
- //   console.log(localTileX,localTileY);
-  
-  if(thisMap == 17) { 
-    console.log(thisMap, thisMapData[thisMap]);
-    console.log(thisMap, thisMapData[thisMap].properties[localTileY][localTileX]);
-    console.log(thisMap, thisMapData[thisMap].properties[localTileY][localTileX].elevation);
- }
     var elevation = 0;
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
            elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
@@ -11889,11 +11882,11 @@ function moveNPCs() {
                             var thisSoundsVolume = 1;
                             if (thisNextMovement[2]) {
                                 // determine the distance between the hero and NPC and use that as the volume:
-                                // ###
-                                // john
-                                console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
+                                
+                            
+                             //   console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
                                 thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y)) / worldMapWidthPx;
-                                console.log(thisSoundsVolume);
+                              //  console.log(thisSoundsVolume);
                             }
                             if (thisSoundsVolume > 0.05) {
                                 audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);

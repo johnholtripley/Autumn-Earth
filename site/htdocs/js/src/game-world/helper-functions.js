@@ -135,13 +135,6 @@ function getElevation(tileX, tileY) {
         localTileX = tileX;
         localTileY = tileY;
     }
- //   console.log(localTileX,localTileY);
-  
-  if(thisMap == 17) { 
-    console.log(thisMap, thisMapData[thisMap]);
-    console.log(thisMap, thisMapData[thisMap].properties[localTileY][localTileX]);
-    console.log(thisMap, thisMapData[thisMap].properties[localTileY][localTileX].elevation);
- }
     var elevation = 0;
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
            elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
