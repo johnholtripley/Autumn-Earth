@@ -43,6 +43,23 @@
     top: 0;
 }
 
+#inscriptionTitle {
+    width: 100%;
+    background: none;
+    border: 0;
+    border-bottom: 1px dotted #222;
+}
+
 #inscriptionTextArea {
     min-height: 120px;
+    outline: none;
+    &:first-letter {
+        // drop cap:
+        font-family: 'UnifrakturMaguntia', cursive;
+        text-transform: uppercase;
+        float: left;
+        line-height: 1;
+        font-size: 2.6em;
+        padding-right: 5px;
+    }
 }

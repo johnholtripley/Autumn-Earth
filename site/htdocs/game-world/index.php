@@ -23,7 +23,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
   <link rel="canonical" href="https://www.autumnearth.com/" itemprop="url">
   <link href="https://plus.google.com/+Autumnearth" rel="publisher">
   <meta name="robots" content="noodp,noydir">
-  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English%7CPrincess+Sofia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English%7CPrincess+Sofia%7CUnifrakturMaguntia&display=swap" rel="stylesheet">
   <?php
     $thisBuiltURL = "https://www.autumnearth.com/game-world/";
     $longDescription = "The game world of Autumn Earth";
@@ -212,7 +212,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
         <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div>
       </div>
       <button class="closePanel">Cancel</button>
-      <button id="scribeStartInscription" disabled>Inscribe</button>
+      <button class="primaryButton" id="scribeStartInscription" disabled>Inscribe</button>
     </div>
 
     <div id="shopPanel"></div>
