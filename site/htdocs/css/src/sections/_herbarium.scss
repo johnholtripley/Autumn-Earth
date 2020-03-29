@@ -25,6 +25,13 @@
     .offset4 {
         @include transform(translateY(2.5%));
     }
+    .imageOffset {
+        img {
+            float: right;
+            margin-right: -20%;
+            margin-left: auto;
+        }
+    }
 
 img {
     float: left;

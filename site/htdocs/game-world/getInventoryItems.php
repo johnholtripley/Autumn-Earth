@@ -1,5 +1,12 @@
 <?php
 
+// hack for older version of PHP:
+if (!function_exists('boolval')) {
+        function boolval($val) {
+                return (bool) $val;
+        }
+}
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 

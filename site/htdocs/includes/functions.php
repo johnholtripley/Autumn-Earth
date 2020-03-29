@@ -1,5 +1,15 @@
 <?php
  
+
+// hack for older version of PHP:
+if (!function_exists('boolval')) {
+        function boolval($val) {
+                return (bool) $val;
+        }
+}
+
+
+
 function correctAttribute( $attr ) {
     // strip quotes out:
     $attr = str_ireplace( "'", "", $attr );

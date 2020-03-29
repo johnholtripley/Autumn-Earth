@@ -12120,18 +12120,19 @@ function addPetToWorld() {
     UI.hideYesNoDialogueBox();
     var tileOffsetX = 0;
     var tileOffsetY = 0;
+    // have it start 2 tiles away so it's not too close inititally
     switch (hero.facing) {
         case "n":
-            tileOffsetY = 1;
+            tileOffsetY = 2;
             break
         case "s":
-            tileOffsetY = -1;
+            tileOffsetY = -2;
             break
         case "e":
-            tileOffsetX = -1;
+            tileOffsetX = -2;
             break
         case "w":
-            tileOffsetX = 1;
+            tileOffsetX = 2;
             break
     }
     initialiseAndPlacePet(hero.inventory[inventorySlotReference].contains, tileOffsetX, tileOffsetY);
@@ -12662,8 +12663,8 @@ thisPetState = "wait";
             switch (assetsToDraw[i][1]) {
                 case "faeCentre":
                     // draw fae:
-                    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], getRandomIntegerInclusive(1,2));
                     drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
+                    drawCircle("#fec856", assetsToDraw[i][2], assetsToDraw[i][3], getRandomIntegerInclusive(1,2));
                     // draw fae's shadow - make it respond to the fae's height:
                     gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
                     gameContext.beginPath();

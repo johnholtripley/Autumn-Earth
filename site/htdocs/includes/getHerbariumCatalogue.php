@@ -73,7 +73,7 @@ if(($i%$resultsperpage == 1) || ($i%$resultsperpage == 8)) {
 $additionalClass=" spotlight";
 $pictureArray = array(300,604);
 }
-if(($i%$resultsperpage == 9) || ($i%$resultsperpage == 10) || ($i%$resultsperpage == 11) || ($i%$resultsperpage == 0)) {
+if(($i%$resultsperpage == 7) || ($i%$resultsperpage == 8) || ($i%$resultsperpage == 9) || ($i%$resultsperpage == 10)) {
 $additionalClass=" inbetweenRow";
 $pictureArray = array(150,310);
 }
@@ -89,6 +89,9 @@ $pictureArray = array(150,310);
 if(rand(1,8) == 1) {
 	shuffle($offsetClasses);
 	$additionalClass .= " offset".array_pop($offsetClasses);
+}
+if(rand(1,4) == 1) {
+$additionalClass .= " imageOffset";
 }
 
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'" data-night="'.$isNight.'"><div '.$innerClass.' itemscope itemtype="http://schema.org/Thing/Species">';

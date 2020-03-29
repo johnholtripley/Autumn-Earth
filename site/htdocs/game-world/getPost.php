@@ -103,7 +103,7 @@ $thisOpensQuest = $opensQuest;
 
       $postPanelMarkup .= '<li ';
       if($thisOpensQuest != '') {
-$postPanelMarkup .= 'data-quest="'.$thisOpensQuest.'"';
+$postPanelMarkup .= 'data-quest="'.$thisOpensQuest.'" ';
       }
       $postPanelMarkup .= 'id="post'.md5($mailID).'"'.$hasBeenReadClass.'>';
       $timeAgo = relativeGameTime(strtotime($sentTime));
