@@ -3617,14 +3617,16 @@ function draw() {
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
         var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
         // determine if any clipping needs to occur for being in a body of water:
-       
+       var needsAReflection = false;
 var heroClipping = 0;
 if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth !== "undefined") {
     heroClipping = thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth;
+    needsAReflection = true;
 }
 
         var assetsToDraw = [
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping)]
+        // don't want to pass in an opacity value, but do need a reflection boolean:
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping),,needsAReflection]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {
@@ -4047,6 +4049,17 @@ thisPetState = "wait";
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
+                        //
+                         if (assetsToDraw[i][12]) {
+                        // also draw a reflection:
+                        gameContext.scale(1, -1);
+                        gameContext.globalAlpha = 0.4;
+gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)), assetsToDraw[i][9], assetsToDraw[i][10]);
+                        // reset:
+                        gameContext.setTransform(1, 0, 0, 1, 0, 0);
+                        gameContext.globalAlpha = 1;
+                        }
+                        // check if it needs an opacity set:
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = assetsToDraw[i][11];
                         }
@@ -4054,6 +4067,7 @@ thisPetState = "wait";
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = 1;
                         }
+
                     }
                     break;
                 case "dowsingRing":
