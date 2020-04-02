@@ -3633,7 +3633,7 @@ if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][
 
         var assetsToDraw = [
        
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping)]
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping),,(hero.centreY - heroClipping/2)]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {
@@ -3800,7 +3800,7 @@ if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][
                                 thisTerrainAnimation = thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation;
                                 thisItemOffsetCol = Math.floor(thisTerrainAnimation.currentFrame);
                                 thisItemOffsetRow = 0;
-                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight]);
+                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight,,thisGraphicCentreY]);
                             } else {
                                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                             }
@@ -4036,6 +4036,7 @@ reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
 
 
         // draw the sorted assets:
+        var spriteCentre;
         for (var i = 0; i < assetsToDraw.length; i++) {
             switch (assetsToDraw[i][1]) {
                 case "faeCentre":
@@ -4061,7 +4062,11 @@ reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
                         // also draw a reflection:
                     //    gameContext.scale(1, -1);
                     //    gameContext.globalAlpha = 0.4;
-reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)), assetsToDraw[i][9], assetsToDraw[i][10]);
+
+// var spriteCentre =  spriteHeight - centreY:
+  spriteCentre = (assetsToDraw[i][10] - assetsToDraw[i][12])*2;
+
+reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)+spriteCentre), assetsToDraw[i][9], assetsToDraw[i][10]);
                         // reset:
                     //    gameContext.setTransform(1, 0, 0, 1, 0, 0);
                     //    gameContext.globalAlpha = 1;
