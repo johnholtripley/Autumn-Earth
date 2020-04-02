@@ -12633,7 +12633,7 @@ thisPetState = "wait";
 
 
 
-
+reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
 
 
 
