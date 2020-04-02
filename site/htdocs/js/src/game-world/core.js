@@ -18,6 +18,8 @@ function sizeCanvasSize() {
     }
     gameContext.canvas.width = availableScreenWidth;
     gameContext.canvas.height = availableScreenHeight;
+    reflectionContext.canvas.width = availableScreenWidth;
+    reflectionContext.canvas.height = availableScreenHeight;
     lightMapContext.canvas.width = availableScreenWidth / 4;
     lightMapContext.canvas.height = availableScreenHeight / 4;
     canvasWidth = availableScreenWidth;
@@ -25,13 +27,15 @@ function sizeCanvasSize() {
 }
 
 var debouncedResize = debounce(function() {
+    // the reflection flipping needs to be reset and then re-applied after the dimensions change:
+    reflectionContext.setTransform(1, 0, 0, 1, 0, 0);
     sizeCanvasSize();
+    reflectionContext.scale(1, -1);
 }, 250);
 window.addEventListener('resize', debouncedResize);
 
 
 function loadGlobalMapData() {
-
     getJSON("/data/world-map.json", function(data) {
 
         worldMap = data.worldMap;
@@ -49,7 +53,10 @@ function init() {
         gameContext = gameCanvas.getContext('2d');
         lightMapOverlay = document.getElementById("lightMapOverlay");
         lightMapContext = lightMapOverlay.getContext('2d');
+        reflectedCanvas = document.createElement('canvas');
+        reflectionContext = reflectedCanvas.getContext('2d');      
         sizeCanvasSize();
+        reflectionContext.scale(1, -1);
         whichTransitionEvent = determineWhichTransitionEvent();
         whichAnimationEvent = determineWhichAnimationEvent();
         gameMode = "mapLoading";
@@ -3617,16 +3624,16 @@ function draw() {
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
         var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
         // determine if any clipping needs to occur for being in a body of water:
-       var needsAReflection = false;
+    
 var heroClipping = 0;
 if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth !== "undefined") {
     heroClipping = thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth;
-    needsAReflection = true;
+    
 }
 
         var assetsToDraw = [
-        // don't want to pass in an opacity value, but do need a reflection boolean:
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping),,needsAReflection]
+       
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping)]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {
@@ -4050,15 +4057,15 @@ thisPetState = "wait";
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
                         //
-                         if (assetsToDraw[i][12]) {
+                    //     if (assetsToDraw[i][12]) {
                         // also draw a reflection:
-                        gameContext.scale(1, -1);
-                        gameContext.globalAlpha = 0.4;
-gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)), assetsToDraw[i][9], assetsToDraw[i][10]);
+                    //    gameContext.scale(1, -1);
+                    //    gameContext.globalAlpha = 0.4;
+reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)), assetsToDraw[i][9], assetsToDraw[i][10]);
                         // reset:
-                        gameContext.setTransform(1, 0, 0, 1, 0, 0);
-                        gameContext.globalAlpha = 1;
-                        }
+                    //    gameContext.setTransform(1, 0, 0, 1, 0, 0);
+                    //    gameContext.globalAlpha = 1;
+                     //   }
                         // check if it needs an opacity set:
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = assetsToDraw[i][11];
@@ -4170,6 +4177,13 @@ gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]
                     }
             }
         }
+
+
+// draw in the reflections:
+gameContext.globalAlpha = 0.3;
+gameContext.drawImage(reflectedCanvas, 0, 0);
+gameContext.globalAlpha = 1;
+
 
         if (activeObjectForDialogue != '') {
             UI.updateDialogue(activeObjectForDialogue);
