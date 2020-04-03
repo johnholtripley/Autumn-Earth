@@ -2814,11 +2814,11 @@ function drawEllipse(ctx, x, y, w, h, filled, colour) {
 
 
 
-function drawCircle(fillStyle, x, y, radius) {
-    gameContext.fillStyle = fillStyle;
-    gameContext.beginPath();
-    gameContext.arc(x, y, radius, 0, 2 * Math.PI);
-    gameContext.fill();
+function drawCircle(fillStyle, x, y, radius, whichContext) {
+    whichContext.fillStyle = fillStyle;
+    whichContext.beginPath();
+    whichContext.arc(x, y, radius, 0, 2 * Math.PI);
+    whichContext.fill();
 }
 
 
@@ -12722,8 +12722,11 @@ reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
             switch (assetsToDraw[i][1]) {
                 case "faeCentre":
                     // draw fae:
-                    drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
-                    drawCircle("#fec856", assetsToDraw[i][2], assetsToDraw[i][3], getRandomIntegerInclusive(1,2));
+                    var faeRadius = getRandomIntegerInclusive(1,2);
+                    drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4, gameContext);
+                    drawCircle("#fec856", assetsToDraw[i][2], assetsToDraw[i][3], faeRadius, gameContext);
+
+             
                     // draw fae's shadow - make it respond to the fae's height:
                     gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
                     gameContext.beginPath();

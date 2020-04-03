@@ -915,11 +915,11 @@ function drawEllipse(ctx, x, y, w, h, filled, colour) {
 
 
 
-function drawCircle(fillStyle, x, y, radius) {
-    gameContext.fillStyle = fillStyle;
-    gameContext.beginPath();
-    gameContext.arc(x, y, radius, 0, 2 * Math.PI);
-    gameContext.fill();
+function drawCircle(fillStyle, x, y, radius, whichContext) {
+    whichContext.fillStyle = fillStyle;
+    whichContext.beginPath();
+    whichContext.arc(x, y, radius, 0, 2 * Math.PI);
+    whichContext.fill();
 }
 
 
