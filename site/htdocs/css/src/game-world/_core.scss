@@ -38,6 +38,7 @@ body {
     display: block;
 }
 
+/*
 #lightMapOverlay {
     position: absolute;
     left: 0;
@@ -45,6 +46,7 @@ body {
     @include transform(scale(4,4));
     @include transform-origin(0 0);
 }
+*/
 
 #worldWrapper {
     position: relative;

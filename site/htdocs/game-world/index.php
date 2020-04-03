@@ -47,8 +47,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
   <div id="worldWrapper">
     <canvas id="gameWorld" width="800" height="600" moz-opaque>
       <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
-    </canvas>
-    <canvas id="lightMapOverlay" width="800" height="600"></canvas>  
+    </canvas>  
   </div>
 
   <div id="weather">

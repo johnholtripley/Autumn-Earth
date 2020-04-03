@@ -20,8 +20,10 @@ function sizeCanvasSize() {
     gameContext.canvas.height = availableScreenHeight;
     reflectionContext.canvas.width = availableScreenWidth;
     reflectionContext.canvas.height = availableScreenHeight;
-    lightMapContext.canvas.width = availableScreenWidth / 4;
-    lightMapContext.canvas.height = availableScreenHeight / 4;
+    waterContext.canvas.width = availableScreenWidth;
+    waterContext.canvas.height = availableScreenHeight;
+    lightMapContext.canvas.width = availableScreenWidth;
+    lightMapContext.canvas.height = availableScreenHeight;
     canvasWidth = availableScreenWidth;
     canvasHeight = availableScreenHeight;
 }
@@ -29,8 +31,10 @@ function sizeCanvasSize() {
 var debouncedResize = debounce(function() {
     // the reflection flipping needs to be reset and then re-applied after the dimensions change:
     reflectionContext.setTransform(1, 0, 0, 1, 0, 0);
+    waterContext.setTransform(1, 0, 0, 1, 0, 0);
     sizeCanvasSize();
     reflectionContext.scale(1, -1);
+    waterContext.scale(1, -1);
 }, 250);
 window.addEventListener('resize', debouncedResize);
 
@@ -51,12 +55,16 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        lightMapOverlay = document.getElementById("lightMapOverlay");
+        // lightMapOverlay = document.getElementById("lightMapOverlay");
+        lightMapOverlay = document.createElement('canvas');
         lightMapContext = lightMapOverlay.getContext('2d');
         reflectedCanvas = document.createElement('canvas');
-        reflectionContext = reflectedCanvas.getContext('2d');      
+        reflectionContext = reflectedCanvas.getContext('2d');   
+        waterCanvas =  document.createElement('canvas');  
+        waterContext = waterCanvas.getContext('2d'); 
         sizeCanvasSize();
         reflectionContext.scale(1, -1);
+        waterContext.scale(1, -1);
         whichTransitionEvent = determineWhichTransitionEvent();
         whichAnimationEvent = determineWhichAnimationEvent();
         gameMode = "mapLoading";
@@ -3831,6 +3839,12 @@ if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][
                             }
                         }
                     }
+                    // look for water tiles and draw those to the water canvas:
+                    
+                    
+                    if (typeof thisMapData[visibleMaps[m]].properties[j][i].waterDepth !== "undefined") {
+                        // john ####
+                    }
                 }
             }
 
@@ -4184,6 +4198,11 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
         }
 
 
+        // draw any water on to the reflected canvas to use as a mask:
+        reflectionContext.globalCompositeOperation = 'destination-in';
+reflectionContext.drawImage(waterCanvas, 0, -canvasHeight);
+ reflectionContext.globalCompositeOperation = 'source-over';
+
 // draw in the reflections:
 gameContext.globalAlpha = 0.3;
 gameContext.drawImage(reflectedCanvas, 0, 0);
@@ -4212,14 +4231,16 @@ gameContext.globalAlpha = 1;
                     if (thisLightMapValue > 0) {
                         lightMapContext.save();
                         lightMapContext.globalAlpha = thisLightMapValue;
-                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) , Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) );
                         lightMapContext.restore();
                     } else {
                         // no need to shade:
-                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) , Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) );
                     }
                 }
             }
+            // draw this to the main canvas:
+            gameContext.drawImage(lightMapOverlay, 0, 0);
         }
 
         // draw the map transition if it's needed:
