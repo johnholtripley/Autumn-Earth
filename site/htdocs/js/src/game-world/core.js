@@ -177,6 +177,11 @@ function loadCoreAssets() {
         name: "tilledEarth",
         src: '/images/game-world/core/tilled.png'
     });
+        coreImagesToLoad.push({
+        name: "tileMask",
+        src: '/images/game-world/core/tile-mask.png'
+    });
+    
     coreImagesToLoad.push({
         name: "addedWater",
         src: '/images/game-world/core/added-water.png'
@@ -201,6 +206,7 @@ function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
     shadowImg = Loader.getImage("shadowImg");
     tilledEarth = Loader.getImage("tilledEarth");
+    tileMask = Loader.getImage("tileMask");
     addedWater = Loader.getImage("addedWater");
     ocean = Loader.getImage("ocean");
     oceanPattern = gameContext.createPattern(ocean, "repeat");
@@ -3625,6 +3631,9 @@ function draw() {
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         gameContext.fill();
     } else {
+
+waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
+
         // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
@@ -3844,6 +3853,26 @@ if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][
                     
                     if (typeof thisMapData[visibleMaps[m]].properties[j][i].waterDepth !== "undefined") {
                         // john ####
+                      
+
+
+
+ thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                            thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                            if (isVisibleOnScreen(thisX, thisY)) {
+                                thisGraphicCentreX = tileW / 2;
+                                thisGraphicCentreY = tileH / 2;
+                                
+
+waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), (Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))) - canvasHeight);
+
+                                
+                                
+                            }
+
+
+
+
                     }
                 }
             }
