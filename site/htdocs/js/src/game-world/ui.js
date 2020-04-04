@@ -172,28 +172,8 @@ var UI = {
         }
         // add pet inventory panels:
         for (var i = 0; i < hero.allPets.length; i++) {
-            thisPet = hero.allPets[i];
-            if (thisPet.inventorySize > 0) {
-                activeClass = '';
-                if (hero.activePets.indexOf(i) != -1) {
-                    activeClass = ' active';
-                }
-                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="petInventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
-                // loop through slots for each bag:
-                for (var j = 0; j < thisPet.inventorySize; j++) {
-                    thisSlotsID = 'p' + i + '-' + j;
-                    inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
-                    // check if that key exists in inventory:
-                    if (thisSlotsID in hero.inventory) {
-                        inventoryMarkup += generateSlotMarkup(thisSlotsID);
-                        thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-                    } else {
-                        inventoryMarkup += '';
-                    }
-                    // add item there
-                    inventoryMarkup += '</li>';
-                }
-                inventoryMarkup += '</ol></div></div>';
+            if (hero.allPets[i].inventorySize > 0) {
+                inventoryMarkup += UI.generatePetInventorySlot(i);
             }
         }
 
@@ -227,12 +207,12 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
-  
 
 
-for (i = 0; i < housingToggleButtons.length; i++) {
-    housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
-}
+
+        for (i = 0; i < housingToggleButtons.length; i++) {
+            housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
+        }
 
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -2620,7 +2600,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
-     // disable weather effects while in building mode:
+        // disable weather effects while in building mode:
         changeWeather("");
         gameMode = 'housing';
     },
@@ -2651,5 +2631,34 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     hideYesNoDialogueBox: function() {
         yesNoDialoguePanel.classList.remove('active');
+    },
+
+    generatePetInventorySlot: function(petIndex) {
+        var petInventoryMarkup = '';
+        var thisSlotsID, thisAction;
+        var thisPet = hero.allPets[petIndex];
+        var activeClass = '';
+        if (hero.activePets.indexOf(petIndex) != -1) {
+            activeClass = ' active';
+        }
+        petInventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="petInventoryBag' + petIndex + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + petIndex + '">';
+        // loop through slots for each bag:
+        for (var j = 0; j < thisPet.inventorySize; j++) {
+            thisSlotsID = 'p' + petIndex + '-' + j;
+            petInventoryMarkup += '<li id="slot' + thisSlotsID + '">';
+            // check if that key exists in inventory:
+            if (thisSlotsID in hero.inventory) {
+                petInventoryMarkup += generateSlotMarkup(thisSlotsID);
+                thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+            } else {
+                petInventoryMarkup += '';
+            }
+            // add item there
+            petInventoryMarkup += '</li>';
+        }
+        petInventoryMarkup += '</ol></div></div>';
+        return petInventoryMarkup;
     }
+
+
 }

@@ -924,24 +924,24 @@ function drawCircle(fillStyle, x, y, radius, whichContext) {
 
 
 
-function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour) {
+function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour, whichContext) {
     var drawnOffsetX = (canvasWidth / 2) - hero.isox;
     var drawnOffsetY = (canvasHeight / 2) - hero.isoy;
-    gameContext.fillStyle = colour;
-    gameContext.beginPath();
+    whichContext.fillStyle = colour;
+    whichContext.beginPath();
     // find iso coordinates from non-iso values passed in:
-    gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY) + drawnOffsetX, findIsoCoordsY(bottomRightX, topLeftY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY) + drawnOffsetX, findIsoCoordsY(bottomRightX, bottomRightY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY) + drawnOffsetX, findIsoCoordsY(topLeftX, bottomRightY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
-    gameContext.closePath();
+    whichContext.moveTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY) + drawnOffsetX, findIsoCoordsY(bottomRightX, topLeftY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY) + drawnOffsetX, findIsoCoordsY(bottomRightX, bottomRightY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY) + drawnOffsetX, findIsoCoordsY(topLeftX, bottomRightY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
+    whichContext.closePath();
     if (filled) {
-        gameContext.fillStyle = colour;
-        gameContext.fill();
+        whichContext.fillStyle = colour;
+        whichContext.fill();
     } else {
-        gameContext.strokeStyle = colour;
-        gameContext.stroke();
+        whichContext.strokeStyle = colour;
+        whichContext.stroke();
     }
 }
 

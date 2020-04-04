@@ -299,7 +299,7 @@ function movePet() {
                     break;
                 default:
                     // not finding a path so check proximity to the hero (or pet that this pet is following) to see if pet should start moving:
-                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
+                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 4))) {
                         thisPet.state = "moving";
                     }
                     break;

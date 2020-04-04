@@ -3494,6 +3494,10 @@ function initialiseAndPlacePet(petObjectArray, tileOffsetX, tileOffsetY) {
     hero.activePets.push(allPetIndex);
     initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
     initialisePetObject(hero.activePets.length - 1);
+      if (petObject.inventorySize > 0) {
+        // add the inventory panel for it:
+inventoryPanels.insertAdjacentHTML('beforeend', UI.generatePetInventorySlot(allPetIndex));
+            }
     Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + petObject.src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])); if (petObjectArray.length > 0) { initialiseAndPlacePet(thesePetsToAdd.shift(), tileOffsetX, tileOffsetY); } }, function() {});
 }
 
@@ -4138,7 +4142,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "ghostRemoveHousingTile":
-                    drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)');
+                    drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)', gameContext);
                     break;
                 case "ghostSelectedHousingTile":
 
@@ -4190,7 +4194,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                     break;
                 case "houseGroundPlan":
                     // draw house foot print:
-                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
+                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)', gameContext);
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
@@ -4208,7 +4212,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                                     thisOverlayFill = 'rgba(255,0,0,0.8)';
                                     plotPlacement.numberOfBlockedTiles++;
                                 }
-                                drawIsoRectangle(thisOverlayX * tileW, thisOverlayY * tileW, (thisOverlayX + 1) * tileW, (thisOverlayY + 1) * tileW, true, thisOverlayFill);
+                                drawIsoRectangle(thisOverlayX * tileW, thisOverlayY * tileW, (thisOverlayX + 1) * tileW, (thisOverlayY + 1) * tileW, true, thisOverlayFill, gameContext);
                             }
                         }
                         //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);

@@ -2823,24 +2823,24 @@ function drawCircle(fillStyle, x, y, radius, whichContext) {
 
 
 
-function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour) {
+function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour, whichContext) {
     var drawnOffsetX = (canvasWidth / 2) - hero.isox;
     var drawnOffsetY = (canvasHeight / 2) - hero.isoy;
-    gameContext.fillStyle = colour;
-    gameContext.beginPath();
+    whichContext.fillStyle = colour;
+    whichContext.beginPath();
     // find iso coordinates from non-iso values passed in:
-    gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY) + drawnOffsetX, findIsoCoordsY(bottomRightX, topLeftY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY) + drawnOffsetX, findIsoCoordsY(bottomRightX, bottomRightY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY) + drawnOffsetX, findIsoCoordsY(topLeftX, bottomRightY) + drawnOffsetY);
-    gameContext.lineTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
-    gameContext.closePath();
+    whichContext.moveTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY) + drawnOffsetX, findIsoCoordsY(bottomRightX, topLeftY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY) + drawnOffsetX, findIsoCoordsY(bottomRightX, bottomRightY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY) + drawnOffsetX, findIsoCoordsY(topLeftX, bottomRightY) + drawnOffsetY);
+    whichContext.lineTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
+    whichContext.closePath();
     if (filled) {
-        gameContext.fillStyle = colour;
-        gameContext.fill();
+        whichContext.fillStyle = colour;
+        whichContext.fill();
     } else {
-        gameContext.strokeStyle = colour;
-        gameContext.stroke();
+        whichContext.strokeStyle = colour;
+        whichContext.stroke();
     }
 }
 
@@ -5332,7 +5332,7 @@ function movePet() {
                     break;
                 default:
                     // not finding a path so check proximity to the hero (or pet that this pet is following) to see if pet should start moving:
-                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
+                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 4))) {
                         thisPet.state = "moving";
                     }
                     break;
@@ -6082,28 +6082,8 @@ var UI = {
         }
         // add pet inventory panels:
         for (var i = 0; i < hero.allPets.length; i++) {
-            thisPet = hero.allPets[i];
-            if (thisPet.inventorySize > 0) {
-                activeClass = '';
-                if (hero.activePets.indexOf(i) != -1) {
-                    activeClass = ' active';
-                }
-                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="petInventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
-                // loop through slots for each bag:
-                for (var j = 0; j < thisPet.inventorySize; j++) {
-                    thisSlotsID = 'p' + i + '-' + j;
-                    inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
-                    // check if that key exists in inventory:
-                    if (thisSlotsID in hero.inventory) {
-                        inventoryMarkup += generateSlotMarkup(thisSlotsID);
-                        thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-                    } else {
-                        inventoryMarkup += '';
-                    }
-                    // add item there
-                    inventoryMarkup += '</li>';
-                }
-                inventoryMarkup += '</ol></div></div>';
+            if (hero.allPets[i].inventorySize > 0) {
+                inventoryMarkup += UI.generatePetInventorySlot(i);
             }
         }
 
@@ -6137,12 +6117,12 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
-  
 
 
-for (i = 0; i < housingToggleButtons.length; i++) {
-    housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
-}
+
+        for (i = 0; i < housingToggleButtons.length; i++) {
+            housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
+        }
 
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -8530,7 +8510,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         housingNameSpace.restoreDraft = JSON.parse(JSON.stringify(hero.housing.draft));
-     // disable weather effects while in building mode:
+        // disable weather effects while in building mode:
         changeWeather("");
         gameMode = 'housing';
     },
@@ -8561,7 +8541,36 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
     hideYesNoDialogueBox: function() {
         yesNoDialoguePanel.classList.remove('active');
+    },
+
+    generatePetInventorySlot: function(petIndex) {
+        var petInventoryMarkup = '';
+        var thisSlotsID, thisAction;
+        var thisPet = hero.allPets[petIndex];
+        var activeClass = '';
+        if (hero.activePets.indexOf(petIndex) != -1) {
+            activeClass = ' active';
+        }
+        petInventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="petInventoryBag' + petIndex + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + petIndex + '">';
+        // loop through slots for each bag:
+        for (var j = 0; j < thisPet.inventorySize; j++) {
+            thisSlotsID = 'p' + petIndex + '-' + j;
+            petInventoryMarkup += '<li id="slot' + thisSlotsID + '">';
+            // check if that key exists in inventory:
+            if (thisSlotsID in hero.inventory) {
+                petInventoryMarkup += generateSlotMarkup(thisSlotsID);
+                thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+            } else {
+                petInventoryMarkup += '';
+            }
+            // add item there
+            petInventoryMarkup += '</li>';
+        }
+        petInventoryMarkup += '</ol></div></div>';
+        return petInventoryMarkup;
     }
+
+
 }
 function setupWeather() {
 updatePossibleWeather();
@@ -12132,6 +12141,10 @@ function initialiseAndPlacePet(petObjectArray, tileOffsetX, tileOffsetY) {
     hero.activePets.push(allPetIndex);
     initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
     initialisePetObject(hero.activePets.length - 1);
+      if (petObject.inventorySize > 0) {
+        // add the inventory panel for it:
+inventoryPanels.insertAdjacentHTML('beforeend', UI.generatePetInventorySlot(allPetIndex));
+            }
     Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + petObject.src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])); if (petObjectArray.length > 0) { initialiseAndPlacePet(thesePetsToAdd.shift(), tileOffsetX, tileOffsetY); } }, function() {});
 }
 
@@ -12776,7 +12789,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "ghostRemoveHousingTile":
-                    drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)');
+                    drawIsoRectangle(housingNameSpace.mousePosition[0] * tileW, housingNameSpace.mousePosition[1] * tileW, ((housingNameSpace.mousePosition[0]) + 1) * tileW, ((housingNameSpace.mousePosition[1] + 1) * tileW), true, 'rgba(255,0,0,0.3)', gameContext);
                     break;
                 case "ghostSelectedHousingTile":
 
@@ -12828,7 +12841,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                     break;
                 case "houseGroundPlan":
                     // draw house foot print:
-                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)');
+                    drawIsoRectangle(hero.housing.northWestCornerTileX * tileW, hero.housing.northWestCornerTileY * tileW, (hero.housing.southEastCornerTileX) * tileW, (hero.housing.southEastCornerTileY) * tileW, true, 'rgba(255,255,0,0.2)', gameContext);
                     break;
                 case "plotPlacementOverlay":
                     gameContext.globalCompositeOperation = 'soft-light';
@@ -12846,7 +12859,7 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
                                     thisOverlayFill = 'rgba(255,0,0,0.8)';
                                     plotPlacement.numberOfBlockedTiles++;
                                 }
-                                drawIsoRectangle(thisOverlayX * tileW, thisOverlayY * tileW, (thisOverlayX + 1) * tileW, (thisOverlayY + 1) * tileW, true, thisOverlayFill);
+                                drawIsoRectangle(thisOverlayX * tileW, thisOverlayY * tileW, (thisOverlayX + 1) * tileW, (thisOverlayY + 1) * tileW, true, thisOverlayFill, gameContext);
                             }
                         }
                         //  console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
