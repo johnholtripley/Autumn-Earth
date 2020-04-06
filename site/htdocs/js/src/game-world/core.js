@@ -213,12 +213,9 @@ function prepareCoreAssets() {
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
-            console.log("activePet" + hero.activePets[i]);
         }
     }
-
     housingNameSpace.init();
-
     loadMap();
 }
 
