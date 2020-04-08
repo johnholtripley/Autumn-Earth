@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   install-node-example:
     docker:
-      - image: 'cimg/base:stable'
+      - image: 'cimg/node'
     steps:
       - checkout
       - node/install:
