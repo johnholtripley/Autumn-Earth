@@ -8,6 +8,7 @@
     "url": "https://github.com/johnholtripley/Autumn-Earth"
   },
   "devDependencies": {
+    "@percy/script": "^1.0.3",
     "adm-zip": "^0.4.11",
     "atob": "^2.1.0",
     "braces": "^2.3.1",
@@ -68,9 +69,11 @@
   "dependencies": {
     "del": "^2.2.0",
     "gulp-csslint": "^1.0.1",
+    "gulp-run-command": "0.0.10",
     "node-gyp": "^3.6.2",
     "node-sass": "^4.7.2",
     "npm": "^5.7.1",
-    "php2html": "0.0.7"
+    "php2html": "0.0.7",
+    "sharp": "^0.25.2"
   }
 }

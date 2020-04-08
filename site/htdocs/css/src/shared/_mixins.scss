@@ -248,7 +248,7 @@ transition-delay: $values;
   // usage:
   // @include border-radius(20px)
   // @include border-radius(5%)
-    @if unit($radius)==% {
+    @if unit($radius)=='%' {
         -webkit-border-radius: $radius;
         -moz-border-radius: $radius;
         border-radius: $radius;
