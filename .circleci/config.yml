@@ -10,6 +10,7 @@ jobs:
       - node/install:
           install-yarn: false
           node-version: latest
+      - run: npm install -D @percy/agent
       - run: export PERCY_TOKEN=32a9003f138aebf163fad750a749ba6584c09b7367cf909b917cf839f8925d1d
       - run: npx percy exec -- node snapshots.js
 orbs:
