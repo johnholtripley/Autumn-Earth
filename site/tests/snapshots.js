@@ -1,6 +1,5 @@
 // https://docs.percy.io/docs/percyscript
 const PercyScript = require('@percy/script');
-const browser = await puppeteer.launch({headless: false});
 
 PercyScript.run(async (page, percySnapshot) => {
   await page.goto('https://www.autumnearth.com/');
