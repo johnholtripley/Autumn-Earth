@@ -368,7 +368,7 @@ var elapsed = 0;
 var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 const animationUpdateTime = (1000 / animationFramesPerSecond);
-var gameCanvas, gameContext, reflectedCanvas, reflectionContext, waterCanvas, waterContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, tileMask, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData, inventorySlotReference;
+var gameCanvas, gameContext, reflectedCanvas, reflectionContext, waterCanvas, waterContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, tileMask, addedWater, ocean, oceanSpriteWidth, oceanSpriteHeight, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData, inventorySlotReference;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -380,7 +380,8 @@ var tileImages = [];
 var npcImages = [];
 var itemImages = [];
 var backgroundImgs = [];
-
+var oceanNumberOfFrames = 29;
+var oceanCurrentFrame = 0;
 
 
 var interfaceIsVisible = true;
@@ -8688,7 +8689,6 @@ window.addEventListener('resize', debouncedResize);
 
 function loadGlobalMapData() {
     getJSON("/data/world-map.json", function(data) {
-
         worldMap = data.worldMap;
         init();
     }, function(status) {
@@ -8835,7 +8835,7 @@ function loadCoreAssets() {
     });
     coreImagesToLoad.push({
         name: "ocean",
-        src: '/images/game-world/core/ocean.png'
+        src: '/images/game-world/core/animated-ocean.png'
     });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -8856,7 +8856,10 @@ function prepareCoreAssets() {
     tileMask = Loader.getImage("tileMask");
     addedWater = Loader.getImage("addedWater");
     ocean = Loader.getImage("ocean");
-    oceanPattern = gameContext.createPattern(ocean, "repeat");
+    oceanSpriteWidth = ocean.width/oceanNumberOfFrames;
+    oceanSpriteHeight = ocean.height;
+    console.log(oceanSpriteWidth,oceanSpriteHeight);
+    //oceanPattern = gameContext.createPattern(ocean, "repeat");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -12692,9 +12695,21 @@ reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
         if (isOverWorldMap) {
 
             // draw the sea:
+            /*
             gameContext.rect(0, 0, canvasWidth, canvasHeight);
             gameContext.fillStyle = oceanPattern;
             gameContext.fill();
+            */
+            gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
+            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanSpriteWidth/2, -oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
+            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, -oceanSpriteWidth/2, oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
+            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, -oceanSpriteWidth/2, -oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
+            oceanCurrentFrame += 0.25;
+            if (oceanCurrentFrame == oceanNumberOfFrames) {
+                oceanCurrentFrame = 0;
+            }
+
 
 
             var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;

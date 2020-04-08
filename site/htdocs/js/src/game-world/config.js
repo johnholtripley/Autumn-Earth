@@ -5,7 +5,7 @@ var elapsed = 0;
 var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 const animationUpdateTime = (1000 / animationFramesPerSecond);
-var gameCanvas, gameContext, reflectedCanvas, reflectionContext, waterCanvas, waterContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, tileMask, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData, inventorySlotReference;
+var gameCanvas, gameContext, reflectedCanvas, reflectionContext, waterCanvas, waterContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, tileMask, addedWater, ocean, oceanSpriteWidth, oceanSpriteHeight, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight, housingData, inventorySlotReference;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -17,7 +17,8 @@ var tileImages = [];
 var npcImages = [];
 var itemImages = [];
 var backgroundImgs = [];
-
+var oceanNumberOfFrames = 29;
+var oceanCurrentFrame = 0;
 
 
 var interfaceIsVisible = true;
