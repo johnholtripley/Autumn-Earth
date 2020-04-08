@@ -10,12 +10,14 @@ jobs:
       - node/install:
           install-yarn: false
           node-version: latest
-          - run:
-        name: Install puppeteer with chronium
-        command: |
-          npm i puppeteer
-- run:
-name: Install Headless Chrome dependencies
+
+
+commands:
+  install:
+    description: Install puppeteer and headless chrome
+    steps:
+    - run:
+        name: Install Headless Chrome dependencies
         command: |
           sudo apt-get install -yq \
           gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
@@ -23,6 +25,10 @@ name: Install Headless Chrome dependencies
           libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 \
           libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates \
           fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+    - run:
+        name: Install puppeteer with chronium
+        command: |
+          npm i puppeteer
       - run: npm install -D @percy/agent
       - run: export PERCY_TOKEN=32a9003f138aebf163fad750a749ba6584c09b7367cf909b917cf839f8925d1d
       - run: npx percy exec -- node tests/snapshots.js
