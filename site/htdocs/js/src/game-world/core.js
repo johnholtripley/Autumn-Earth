@@ -180,7 +180,6 @@ function loadCoreAssets() {
         name: "tileMask",
         src: '/images/game-world/core/tile-mask.png'
     });
-    
     coreImagesToLoad.push({
         name: "addedWater",
         src: '/images/game-world/core/added-water.png'
@@ -210,7 +209,6 @@ function prepareCoreAssets() {
     ocean = Loader.getImage("ocean");
     oceanSpriteWidth = ocean.width/oceanNumberOfFrames;
     oceanSpriteHeight = ocean.height;
-    console.log(oceanSpriteWidth,oceanSpriteHeight);
     //oceanPattern = gameContext.createPattern(ocean, "repeat");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -4038,31 +4036,25 @@ thisPetState = "wait";
 
         assetsToDraw.sort(sortByLowestValue);
 
-
-
-reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
-
-
+        reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
 
         if (isOverWorldMap) {
-
             // draw the sea:
-            /*
-            gameContext.rect(0, 0, canvasWidth, canvasHeight);
-            gameContext.fillStyle = oceanPattern;
-            gameContext.fill();
-            */
             gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
-            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanSpriteWidth/2, -oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
-            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, -oceanSpriteWidth/2, oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
-            gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, -oceanSpriteWidth/2, -oceanSpriteHeight/2, oceanSpriteWidth, oceanSpriteHeight);
+            // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
+            var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
+            var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
+            // oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight
+            for (var i = -(oceanSpriteWidth * 2); i <= (canvasWidth); i += (oceanSpriteWidth)) {
+                for (var j = -(oceanSpriteHeight * 2); j <= (canvasHeight); j += (oceanSpriteHeight)) {
+                    gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanCentreX + i, oceanCentreY + j, oceanSpriteWidth, oceanSpriteHeight);
+                    gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2), oceanSpriteWidth, oceanSpriteHeight);
+                }
+            }
             oceanCurrentFrame += 0.25;
             if (oceanCurrentFrame == oceanNumberOfFrames) {
                 oceanCurrentFrame = 0;
             }
-
-
 
             var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
             // find and draw any visible maps:
@@ -4070,8 +4062,8 @@ reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
 
                 thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
                 thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
-                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
+                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
                 // draw the current map background in place:
                 if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
                     gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
