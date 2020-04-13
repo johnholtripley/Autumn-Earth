@@ -50,6 +50,18 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
     </canvas>  
   </div>
 
+<!-- noise filter for reflection displacement: /-->
+<!--
+<svg viewBox="0 0 1900 800">
+  <filter id='noise' x='0%' y='0%' width='100%' height='100%'>
+    <feTurbulence baseFrequency="0.02" numOctaves="1" seed="1" type="turbulence" result="turbulence">
+      <animate attributeName="baseFrequency" values="0.02; 0.01; 0.02;" repeatCount="indefinite" dur="20s" begin="0"></animate>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" xChannelSelector="R" yChannelSelector="B" scale="20" result="displacement"></feDisplacementMap> 
+  </filter>
+ </svg>
+ /-->
+
   <div id="weather">
     <div id="rain"></div>
     <div id="snow"></div>

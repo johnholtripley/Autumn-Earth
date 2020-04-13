@@ -58,9 +58,11 @@ function init() {
         lightMapOverlay = document.createElement('canvas');
         lightMapContext = lightMapOverlay.getContext('2d');
         reflectedCanvas = document.createElement('canvas');
-        reflectionContext = reflectedCanvas.getContext('2d');   
-        waterCanvas =  document.createElement('canvas');  
-        waterContext = waterCanvas.getContext('2d'); 
+        reflectionContext = reflectedCanvas.getContext('2d');
+        oceanCanvas = document.createElement('canvas');
+        oceanContext = oceanCanvas.getContext('2d');
+        waterCanvas = document.createElement('canvas');
+        waterContext = waterCanvas.getContext('2d');
         sizeCanvasSize();
         reflectionContext.scale(1, -1);
         waterContext.scale(1, -1);
@@ -207,9 +209,10 @@ function prepareCoreAssets() {
     tileMask = Loader.getImage("tileMask");
     addedWater = Loader.getImage("addedWater");
     ocean = Loader.getImage("ocean");
-    oceanSpriteWidth = ocean.width/oceanNumberOfFrames;
+    oceanSpriteWidth = ocean.width / oceanNumberOfFrames;
     oceanSpriteHeight = ocean.height;
-    //oceanPattern = gameContext.createPattern(ocean, "repeat");
+    oceanContext.canvas.width = oceanSpriteWidth;
+    oceanContext.canvas.height = oceanSpriteHeight;
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -3642,15 +3645,19 @@ waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
         var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
         // determine if any clipping needs to occur for being in a body of water:
-    
-var heroClipping = 0;
-if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth !== "undefined") {
-    heroClipping = thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth;
-    
-}
+
+        var heroClipping = 0;
+        if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth !== "undefined") {
+            heroClipping = thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth;
+            if (hero.terrain != 'water') {
+                audio.playSound(soundEffects['splash'], 0);
+                hero.terrain = 'water';
+            }
+        } else {
+            hero.terrain = 'earth';
+        }
 
         var assetsToDraw = [
-       
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping),,(hero.centreY - heroClipping/2)]
         ];
         if (interfaceIsVisible) {
@@ -3853,27 +3860,13 @@ if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][
                     
                     
                     if (typeof thisMapData[visibleMaps[m]].properties[j][i].waterDepth !== "undefined") {
-                        // john ####
-                      
-
-
-
  thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
                             thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
                             if (isVisibleOnScreen(thisX, thisY)) {
                                 thisGraphicCentreX = tileW / 2;
                                 thisGraphicCentreY = tileH / 2;
-                                
-
-waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), (Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))) - canvasHeight);
-
-                                
-                                
+waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), (Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))) - canvasHeight);              
                             }
-
-
-
-
                     }
                 }
             }
@@ -3984,9 +3977,6 @@ thisPetState = "wait";
                         thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
 
 
-
-
-
                         // check for User Generated Content:
                         if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
                             if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
@@ -4037,18 +4027,23 @@ thisPetState = "wait";
         assetsToDraw.sort(sortByLowestValue);
 
         reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
-
+// move this to an offScreenCanvas and add the feTurbulence with a Worker: ####
+// reflectionContext.filter = 'url(#noise)';
         if (isOverWorldMap) {
             // draw the sea:
             gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
             // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
             var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
             var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
-            // oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight
+            // (oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight)
+
+            // for speed, draw the sprite to an off screen canvas, and then just copy that entirely to the game canvas where needed:
+            oceanContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
+
             for (var i = -(oceanSpriteWidth * 2); i <= (canvasWidth); i += (oceanSpriteWidth)) {
                 for (var j = -(oceanSpriteHeight * 2); j <= (canvasHeight); j += (oceanSpriteHeight)) {
-                    gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanCentreX + i, oceanCentreY + j, oceanSpriteWidth, oceanSpriteHeight);
-                    gameContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2), oceanSpriteWidth, oceanSpriteHeight);
+                    gameContext.drawImage(oceanCanvas, oceanCentreX + i, oceanCentreY + j);
+                    gameContext.drawImage(oceanCanvas, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2));
                 }
             }
             oceanCurrentFrame += 0.25;
@@ -4059,7 +4054,6 @@ thisPetState = "wait";
             var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
             // find and draw any visible maps:
             for (var i = 0; i < visibleMaps.length; i++) {
-
                 thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
                 thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
                 currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
@@ -4110,27 +4104,21 @@ thisPetState = "wait";
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
-                        //
-                    //     if (assetsToDraw[i][12]) {
-                        // also draw a reflection:
-                    //    gameContext.scale(1, -1);
-                    //    gameContext.globalAlpha = 0.4;
-
-// var spriteCentre =  spriteHeight - centreY:
+                   
   spriteCentre = (assetsToDraw[i][10] - assetsToDraw[i][12])*2;
-
-reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)+spriteCentre), assetsToDraw[i][9], assetsToDraw[i][10]);
-                        // reset:
-                    //    gameContext.setTransform(1, 0, 0, 1, 0, 0);
-                    //    gameContext.globalAlpha = 1;
-                     //   }
-                        // check if it needs an opacity set:
+    // check if it needs an opacity set:
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = assetsToDraw[i][11];
+                            reflectionContext.globalAlpha = assetsToDraw[i][11];
                         }
+// also draw a reflection:
+reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)+spriteCentre), assetsToDraw[i][9], assetsToDraw[i][10]);
+                       
+                      
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = 1;
+                            reflectionContext.globalAlpha = 1;
                         }
 
                     }

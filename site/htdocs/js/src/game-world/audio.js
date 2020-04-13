@@ -23,7 +23,8 @@ var soundsToLoad = {
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
     'digging': '../sounds/digging-NOT_MINE.mp3',
     'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3',
-    'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3'
+    'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3',
+    'splash': '../sounds/water-splash-NOT_MINE-fesliyanstudios.mp3'
 };
 
 
