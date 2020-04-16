@@ -3633,10 +3633,74 @@ function draw() {
     if (gameMode == "mapLoading") {
         gameContext.fillStyle = "#000000";
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        gameContext.fill();
+        // gameContext.fill();
     } else {
 
-waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
+//waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
+// fill it with solid, and then use destination-out to erase the background area:
+
+ waterContext.fillStyle = "#000000";
+        waterContext.fillRect(0, 0, canvasWidth, -canvasHeight);
+
+
+
+
+        reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
+        if (isOverWorldMap) {
+            // draw the sea:
+            gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
+            var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
+            var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
+            // (oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight)
+
+            // for speed, draw the sprite to an off screen canvas, and then just copy that entirely to the game canvas where needed:
+            oceanContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
+
+            for (var i = -(oceanSpriteWidth * 2); i <= (canvasWidth); i += (oceanSpriteWidth)) {
+                for (var j = -(oceanSpriteHeight * 2); j <= (canvasHeight); j += (oceanSpriteHeight)) {
+                    gameContext.drawImage(oceanCanvas, oceanCentreX + i, oceanCentreY + j);
+                    gameContext.drawImage(oceanCanvas, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2));
+                }
+            }
+            oceanCurrentFrame += 0.25;
+            if (oceanCurrentFrame == oceanNumberOfFrames) {
+                oceanCurrentFrame = 0;
+            }
+
+            var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
+            // find and draw any visible maps (and erase the ocean under these backgrounds too):
+            waterContext.globalCompositeOperation = 'destination-out';
+            for (var i = 0; i < visibleMaps.length; i++) {
+                thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
+                thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
+                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
+                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                // draw the current map background in place:
+                if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
+                    gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+                    // erase the reflected background:
+                    waterContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY-canvasHeight);
+                }
+            }
+            waterContext.globalCompositeOperation = 'source-over';
+        } else {
+            // draw a black background:
+            gameContext.fillStyle = "#000000";
+            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+           // gameContext.fill();
+
+
+            // need to determine the offset for the top left corner of the map from the top left corner of the image #######
+
+            if (typeof backgroundImgs[currentMap] !== "undefined") {
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - thisMapData[currentMap].backgroundOffsetX - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - thisMapData[currentMap].backgroundOffsetY - (tileH / 2) + canvasHeight / 2));
+            }
+        }
+
+
+
+
 
         // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY;
@@ -4026,56 +4090,7 @@ thisPetState = "wait";
 
         assetsToDraw.sort(sortByLowestValue);
 
-        reflectionContext.clearRect(0, 0, canvasWidth, -canvasHeight);
-// move this to an offScreenCanvas and add the feTurbulence with a Worker: ####
-// reflectionContext.filter = 'url(#noise)';
-        if (isOverWorldMap) {
-            // draw the sea:
-            gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-            // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
-            var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
-            var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
-            // (oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight)
 
-            // for speed, draw the sprite to an off screen canvas, and then just copy that entirely to the game canvas where needed:
-            oceanContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
-
-            for (var i = -(oceanSpriteWidth * 2); i <= (canvasWidth); i += (oceanSpriteWidth)) {
-                for (var j = -(oceanSpriteHeight * 2); j <= (canvasHeight); j += (oceanSpriteHeight)) {
-                    gameContext.drawImage(oceanCanvas, oceanCentreX + i, oceanCentreY + j);
-                    gameContext.drawImage(oceanCanvas, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2));
-                }
-            }
-            oceanCurrentFrame += 0.25;
-            if (oceanCurrentFrame == oceanNumberOfFrames) {
-                oceanCurrentFrame = 0;
-            }
-
-            var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
-            // find and draw any visible maps:
-            for (var i = 0; i < visibleMaps.length; i++) {
-                thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
-                thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
-                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-                // draw the current map background in place:
-                if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
-                    gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
-                }
-            }
-        } else {
-            // draw a black background:
-            gameContext.fillStyle = "#000000";
-            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-            gameContext.fill();
-
-
-            // need to determine the offset for the top left corner of the map from the top left corner of the image #######
-
-            if (typeof backgroundImgs[currentMap] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - thisMapData[currentMap].backgroundOffsetX - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - thisMapData[currentMap].backgroundOffsetY - (tileH / 2) + canvasHeight / 2));
-            }
-        }
 
 
 

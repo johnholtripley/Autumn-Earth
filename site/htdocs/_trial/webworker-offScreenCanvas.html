@@ -4,32 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offscreen Canvas</title>
+  <style>
+  canvas {
+    border: 1px solid #cecece;
+    display: block;
+    margin: 100px auto;
+  }
+  </style>
 </head>
 <body>
-  <div>
-    <h1>Canvas on worker thread</h1>
-    <canvas id="canvas-worker" width="400" height="400"></canvas>
-  </div>
-<script>
-if('OffscreenCanvas' in window) {
-  const worker = new Worker('worker.js');
-  const offscreen = document.querySelector('#canvas-worker').transferControlToOffscreen();
-  let workerStarted = false;
+ 
+<canvas id="canvas-worker" width="800" height="450"></canvas>
+<img id="img-map" src="clouds.jpg"/>
+<img id="img-source" src="13.jpg"/>
+<canvas id="source" class="hidden" width="800" height="450"></canvas>
+<canvas id="map" class="hidden" width="800" height="450"></canvas>
 
-  function playAnimation() {
-      if (workerStarted) {
-        worker.postMessage({ msg: 'start' });
-      } else {
-        const urlParts = location.href.split('/');
-        if (urlParts[urlParts.length - 1].indexOf('.') !== -1) {
-          urlParts.pop();
-        }
-        worker.postMessage({ msg: 'start', origin: urlParts.join('/'), canvas: offscreen }, [offscreen]);
-        workerStarted = true;
-      }
+
+<script>
+function start() {
+  if('OffscreenCanvas' in window) {
+    var imageMap = document.getElementById("img-map");
+    var imageSource = document.getElementById("img-source");
+    var source = document.getElementById("source");
+    var map = document.getElementById("map");
+    source.getContext("2d").drawImage(imageSource, 0, 0, 800, 450);
+    map.getContext("2d").drawImage(imageMap, 0, 0, 800, 450);
+    var mapData = map.getContext("2d").getImageData(0, 0, 800, 450);
+    var sourceData = source.getContext("2d").getImageData(0, 0, 800, 450);
+    const worker = new Worker('worker.js');
+    const offscreenRef = document.getElementById('canvas-worker').transferControlToOffscreen();
+    worker.postMessage({ canvas: offscreenRef, source: sourceData, map: mapData }, [offscreenRef]);
   }
-  playAnimation();
 }
+
+window.onload = start;
+
+
 </script>
 </body>
 </html>

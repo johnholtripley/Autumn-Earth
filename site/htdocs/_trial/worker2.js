@@ -14,6 +14,7 @@ var filters = {} || filters;
     };
 
     filters.DisplacementMap = function(source, map, target, point, scaleX, scaleY, channelX, channelY) {
+        
         this.source = source;
         this.map = map;
         this.target = target;
@@ -81,6 +82,7 @@ var filters = {} || filters;
             i++;
         }
         this.targetCtx.putImageData(targetDataY, 0, 0);
+      //  isAlreadyRunning = false;
     };
 
     p.setPixels = function(target, pos, source, i) {
@@ -96,10 +98,10 @@ var source;
 var map;
 var canvas;
 var filter;
-var distortX = 20;
-var distortY = 0;
+var isAlreadyRunning = false;
 
 
+/*
 function myCallback(timestamp) {
     distortX += 0.8;
     //distortY++;
@@ -107,11 +109,25 @@ function myCallback(timestamp) {
     filter.draw();
     requestAnimationFrame(myCallback);
 }
-
+*/
 
 self.onmessage = function(e) {
+  //  if(!isAlreadyRunning) {
+     //   isAlreadyRunning = true;
+ if(e.data.source) {
     source = e.data.source;
+}
+    if(e.data.map) {
     map = e.data.map;
+}
+    if(e.data.canvas) {
     canvas = e.data.canvas;
-    requestAnimationFrame(myCallback);
+}
+
+
+    filter = new filters.DisplacementMap(source, map, canvas, { x: e.data.x, y: e.data.y }, e.data.channelX, e.data.channelY);
+    filter.draw();
+ //   isAlreadyRunning = false;
+//}
+  //  requestAnimationFrame(myCallback);
 };

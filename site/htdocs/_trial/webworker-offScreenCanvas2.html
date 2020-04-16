@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offscreen Canvas</title>
+  <style>
+  canvas {
+    border: 1px solid #cecece;
+    display: block;
+    margin: 100px auto;
+  }
+  </style>
+</head>
+<body>
+ 
+<canvas id="canvas-worker" width="800" height="450"></canvas>
+<img id="img-map" src="clouds.jpg"/>
+<img id="img-source" src="13.jpg"/>
+<canvas id="source" class="hidden" width="800" height="450"></canvas>
+<canvas id="map" class="hidden" width="800" height="450"></canvas>
+
+
+<script>
+var imageMap, imageSource, source, map, mapData, sourceData, worker, offscreenRef;
+var distortX = 20;
+var distortY = 0;
+function start() {
+  if('OffscreenCanvas' in window) {
+     imageMap = document.getElementById("img-map");
+     imageSource = document.getElementById("img-source");
+     source = document.getElementById("source");
+     map = document.getElementById("map");
+    source.getContext("2d").drawImage(imageSource, 0, 0, 800, 450);
+    map.getContext("2d").drawImage(imageMap, 0, 0, 800, 450);
+     mapData = map.getContext("2d").getImageData(0, 0, 800, 450);
+     sourceData = source.getContext("2d").getImageData(0, 0, 800, 450);
+     worker = new Worker('worker2.js');
+    offscreenRef = document.getElementById('canvas-worker').transferControlToOffscreen();
+    worker.postMessage({ canvas: offscreenRef, source: sourceData, map: mapData, x: distortX, y: distortY, channelX: 8, channelY: 2 }, [offscreenRef]);
+    requestAnimationFrame(myCallback);
+  }
+}
+
+function myCallback(timestamp) {
+    distortX += 5;
+    //distortY++;
+   // filter = new filters.DisplacementMap(source, map, canvas, { x: distortX, y: distortY }, 8, 2);
+   // filter.draw();
+    worker.postMessage({ x: distortX, y: distortY, channelX: 8, channelY: 2 });
+
+// slow it down so the worker can complete
+setTimeout(function(){ requestAnimationFrame(myCallback); }, 100);
+// requestAnimationFrame(myCallback);
+}
+
+window.onload = start;
+
+
+</script>
+</body>
+</html>
