@@ -14,6 +14,7 @@ var filters = {} || filters;
     };
 
     filters.DisplacementMap = function(source, map, target, point, scaleX, scaleY, channelX, channelY) {
+        
         this.source = source;
         this.map = map;
         this.target = target;
@@ -40,7 +41,7 @@ var filters = {} || filters;
         // copy the data, don't reference:
         var copiedData = this.source.data.slice();
         var targetDataX = new ImageData(copiedData, this.source.width, this.source.height);
-        var targetDataY = new ImageData(copiedData, this.source.width, this.source.height);
+    //    var targetDataY = new ImageData(copiedData, this.source.width, this.source.height);
 
         var pixelsLength = mapData.data.length / 4;
         var colorValue,
@@ -66,6 +67,7 @@ var filters = {} || filters;
             this.setPixels(targetDataX, targetPosition, sourceData, sourcePosition);
             i++;
         }
+        /*
         i = 0;
         while (i < pixelsLength) {
             x = ((i % this.map.width) + this.point.x) | 0;
@@ -80,7 +82,10 @@ var filters = {} || filters;
             this.setPixels(targetDataY, targetPosition, targetDataX, sourcePosition);
             i++;
         }
-        this.targetCtx.putImageData(targetDataY, 0, 0);
+        */
+        this.targetCtx.putImageData(targetDataX, 0, 0);
+      //  isAlreadyRunning = false;
+      postMessage("done");
     };
 
     p.setPixels = function(target, pos, source, i) {
@@ -96,22 +101,36 @@ var source;
 var map;
 var canvas;
 var filter;
-var distortX = 20;
-var distortY = 0;
+var isAlreadyRunning = false;
 
 
+/*
 function myCallback(timestamp) {
-    distortX += 5;
+    distortX += 0.8;
     //distortY++;
     filter = new filters.DisplacementMap(source, map, canvas, { x: distortX, y: distortY }, 8, 2);
     filter.draw();
     requestAnimationFrame(myCallback);
 }
-
+*/
 
 self.onmessage = function(e) {
+  //  if(!isAlreadyRunning) {
+     //   isAlreadyRunning = true;
+ if(e.data.source) {
     source = e.data.source;
+}
+    if(e.data.map) {
     map = e.data.map;
+}
+    if(e.data.canvas) {
     canvas = e.data.canvas;
-    requestAnimationFrame(myCallback);
+}
+
+
+    filter = new filters.DisplacementMap(source, map, canvas, { x: e.data.x, y: e.data.y }, e.data.channelX, e.data.channelY);
+    filter.draw();
+ //   isAlreadyRunning = false;
+//}
+  //  requestAnimationFrame(myCallback);
 };

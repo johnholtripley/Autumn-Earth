@@ -8709,6 +8709,14 @@ function init() {
         lightMapContext = lightMapOverlay.getContext('2d');
         reflectedCanvas = document.createElement('canvas');
         reflectionContext = reflectedCanvas.getContext('2d');
+        if ('OffscreenCanvas' in window) {
+            // create offscreen canvas for a Worker to add the water distortion to:
+            const workerReflections = new Worker('/js/worker-canvas-reflections.min.js');
+            workerReflections.onmessage = function(e) {
+                // drawing complete - request another frame:
+                // ########
+            }
+        }
         oceanCanvas = document.createElement('canvas');
         oceanContext = oceanCanvas.getContext('2d');
         waterCanvas = document.createElement('canvas');
@@ -8828,7 +8836,7 @@ function loadCoreAssets() {
         name: "tilledEarth",
         src: '/images/game-world/core/tilled.png'
     });
-        coreImagesToLoad.push({
+    coreImagesToLoad.push({
         name: "tileMask",
         src: '/images/game-world/core/tile-mask.png'
     });
@@ -11914,11 +11922,11 @@ function moveNPCs() {
                             var thisSoundsVolume = 1;
                             if (thisNextMovement[2]) {
                                 // determine the distance between the hero and NPC and use that as the volume:
-                                
-                            
-                             //   console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
+
+
+                                //   console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
                                 thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y)) / worldMapWidthPx;
-                              //  console.log(thisSoundsVolume);
+                                //  console.log(thisSoundsVolume);
                             }
                             if (thisSoundsVolume > 0.05) {
                                 audio.playSound(soundEffects[thisNextMovement[1]], 0, 0, thisSoundsVolume);
@@ -12144,10 +12152,10 @@ function initialiseAndPlacePet(petObjectArray, tileOffsetX, tileOffsetY) {
     hero.activePets.push(allPetIndex);
     initialisePet(hero.activePets.length - 1, tileOffsetX, tileOffsetY);
     initialisePetObject(hero.activePets.length - 1);
-      if (petObject.inventorySize > 0) {
+    if (petObject.inventorySize > 0) {
         // add the inventory panel for it:
-inventoryPanels.insertAdjacentHTML('beforeend', UI.generatePetInventorySlot(allPetIndex));
-            }
+        inventoryPanels.insertAdjacentHTML('beforeend', UI.generatePetInventorySlot(allPetIndex));
+    }
     Loader.preload([{ name: "activePet" + hero.activePets[allPetIndex], src: '/images/game-world/npcs/' + petObject.src }], function() { activePetImages.push(Loader.getImage("activePet" + hero.activePets[allPetIndex])); if (petObjectArray.length > 0) { initialiseAndPlacePet(thesePetsToAdd.shift(), tileOffsetX, tileOffsetY); } }, function() {});
 }
 
@@ -12286,10 +12294,10 @@ function draw() {
         // gameContext.fill();
     } else {
 
-//waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
-// fill it with solid, and then use destination-out to erase the background area:
+        //waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
+        // fill it with solid, and then use destination-out to erase the background area:
 
- waterContext.fillStyle = "#000000";
+        waterContext.fillStyle = "#000000";
         waterContext.fillRect(0, 0, canvasWidth, -canvasHeight);
 
 
@@ -12330,7 +12338,7 @@ function draw() {
                 if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
                     gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
                     // erase the reflected background:
-                    waterContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY-canvasHeight);
+                    waterContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY - canvasHeight);
                 }
             }
             waterContext.globalCompositeOperation = 'source-over';
@@ -12338,7 +12346,7 @@ function draw() {
             // draw a black background:
             gameContext.fillStyle = "#000000";
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-           // gameContext.fill();
+            // gameContext.fill();
 
 
             // need to determine the offset for the top left corner of the map from the top left corner of the image #######
@@ -12372,7 +12380,7 @@ function draw() {
         }
 
         var assetsToDraw = [
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping),,(hero.centreY - heroClipping/2)]
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping), , (hero.centreY - heroClipping / 2)]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {
@@ -12539,7 +12547,7 @@ function draw() {
                                 thisTerrainAnimation = thisMapData[visibleMaps[m]].graphics[(map[j][i])].animation;
                                 thisItemOffsetCol = Math.floor(thisTerrainAnimation.currentFrame);
                                 thisItemOffsetRow = 0;
-                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight,,thisGraphicCentreY]);
+                                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "sprite", tileImages[thisTerrainIdentifer], thisItemOffsetCol * thisTerrainAnimation.spriteWidth, thisItemOffsetRow * thisTerrainAnimation.spriteHeight, thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisTerrainAnimation.spriteWidth, thisTerrainAnimation.spriteHeight, , thisGraphicCentreY]);
                             } else {
                                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                             }
@@ -12571,16 +12579,16 @@ function draw() {
                         }
                     }
                     // look for water tiles and draw those to the water canvas:
-                    
-                    
+
+
                     if (typeof thisMapData[visibleMaps[m]].properties[j][i].waterDepth !== "undefined") {
- thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
-                            thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
-                            if (isVisibleOnScreen(thisX, thisY)) {
-                                thisGraphicCentreX = tileW / 2;
-                                thisGraphicCentreY = tileH / 2;
-waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), (Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))) - canvasHeight);              
-                            }
+                        thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        if (isVisibleOnScreen(thisX, thisY)) {
+                            thisGraphicCentreX = tileW / 2;
+                            thisGraphicCentreY = tileH / 2;
+                            waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), (Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))) - canvasHeight);
+                        }
                     }
                 }
             }
@@ -12588,10 +12596,10 @@ waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentr
             // loop through all terrain and increment the current frame of with animations (don't do it in the above loop or it will increment for each iteration of that graphic):
             for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
                 if (thisMapData[visibleMaps[m]].graphics[i].animation) {
-                    thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame+=0.2;
-                     if (thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame >= thisMapData[visibleMaps[m]].graphics[i].animation.length) {
-                                    thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame = 0;
-                                }
+                    thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame += 0.2;
+                    if (thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame >= thisMapData[visibleMaps[m]].graphics[i].animation.length) {
+                        thisMapData[visibleMaps[m]].graphics[i].animation.currentFrame = 0;
+                    }
                 }
             }
 
@@ -12618,9 +12626,9 @@ waterContext.drawImage(tileMask, Math.floor(thisX - hero.isox - thisGraphicCentr
         if (hasActivePet) {
             for (var i = 0; i < hero.activePets.length; i++) {
                 thisPetState = hero.allPets[hero.activePets[i]].state;
-                if(thisPetState != "moving") {
+                if (thisPetState != "moving") {
                     // confirm any others to the available animation (eg. queuing or pathfinding):
-thisPetState = "wait";
+                    thisPetState = "wait";
                 }
                 thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"][thisPetState]["length"];
                 thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"][thisPetState][hero.allPets[hero.activePets[i]].facing];
@@ -12750,11 +12758,11 @@ thisPetState = "wait";
             switch (assetsToDraw[i][1]) {
                 case "faeCentre":
                     // draw fae:
-                    var faeRadius = getRandomIntegerInclusive(1,2);
+                    var faeRadius = getRandomIntegerInclusive(1, 2);
                     drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4, gameContext);
                     drawCircle("#fec856", assetsToDraw[i][2], assetsToDraw[i][3], faeRadius, gameContext);
 
-             
+
                     // draw fae's shadow - make it respond to the fae's height:
                     gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
                     gameContext.beginPath();
@@ -12769,17 +12777,17 @@ thisPetState = "wait";
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
                         // image has been loaded
-                   
-  spriteCentre = (assetsToDraw[i][10] - assetsToDraw[i][12])*2;
-    // check if it needs an opacity set:
+
+                        spriteCentre = (assetsToDraw[i][10] - assetsToDraw[i][12]) * 2;
+                        // check if it needs an opacity set:
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = assetsToDraw[i][11];
                             reflectionContext.globalAlpha = assetsToDraw[i][11];
                         }
-// also draw a reflection:
-reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0-(assetsToDraw[i][8])-(assetsToDraw[i][6]*2)+spriteCentre), assetsToDraw[i][9], assetsToDraw[i][10]);
-                       
-                      
+                        // also draw a reflection:
+                        reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], (0 - (assetsToDraw[i][8]) - (assetsToDraw[i][6] * 2) + spriteCentre), assetsToDraw[i][9], assetsToDraw[i][10]);
+
+
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                         if (typeof assetsToDraw[i][11] !== "undefined") {
                             gameContext.globalAlpha = 1;
@@ -12892,13 +12900,13 @@ reflectionContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw
 
         // draw any water on to the reflected canvas to use as a mask:
         reflectionContext.globalCompositeOperation = 'destination-in';
-reflectionContext.drawImage(waterCanvas, 0, -canvasHeight);
- reflectionContext.globalCompositeOperation = 'source-over';
+        reflectionContext.drawImage(waterCanvas, 0, -canvasHeight);
+        reflectionContext.globalCompositeOperation = 'source-over';
 
-// draw in the reflections:
-gameContext.globalAlpha = 0.3;
-gameContext.drawImage(reflectedCanvas, 0, 0);
-gameContext.globalAlpha = 1;
+        // draw in the reflections:
+        gameContext.globalAlpha = 0.3;
+        gameContext.drawImage(reflectedCanvas, 0, 0);
+        gameContext.globalAlpha = 1;
 
 
         if (activeObjectForDialogue != '') {
@@ -12923,11 +12931,11 @@ gameContext.globalAlpha = 1;
                     if (thisLightMapValue > 0) {
                         lightMapContext.save();
                         lightMapContext.globalAlpha = thisLightMapValue;
-                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) , Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) );
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
                         lightMapContext.restore();
                     } else {
                         // no need to shade:
-                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) , Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) );
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
                     }
                 }
             }

@@ -250,7 +250,9 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 
 <progress max="100" value="80" class="active"><img src="/images/uploading.gif" alt="Uploading..."></progress>
 
-<input type='submit' value='Submit button'>
+<button>Button</button>
+
+<input type="submit" value="Submit button">
 
   </fieldset>
 </form>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offscreen Canvas</title>
+  <style>
+  canvas {
+    border: 1px solid #cecece;
+    display: block;
+    margin: 0px auto;
+  }
+  </style>
+</head>
+<body>
+ 
+<canvas id="newcanvas" width="800" height="450"></canvas>
+<canvas id="canvas-worker" width="800" height="450"></canvas>
+
+
+<script>
+var imageMap, imageSource, source, map, mapData, sourceData, worker, offscreenRef, newcanvas, newcanvascontext;
+var r = 0; var x = 20;
+
+function start() {
+  if('OffscreenCanvas' in window) {
+
+     newcanvas = document.getElementById("newcanvas");
+     newcanvascontext = newcanvas.getContext("2d");
+  //  source.getContext("2d").drawImage(imageSource, 0, 0, 800, 450);
+
+newcanvascontext.fillStyle = "rgb("+r+",128,128)";
+newcanvascontext.fillRect(120+x, 0, 180,450);
+newcanvascontext.fillRect(120, 20, 230,180);
+
+
+     sourceData = newcanvascontext.getImageData(0, 0, 800, 450);
+     worker = new Worker('worker6.js');
+        worker.onmessage = function(e) {
+// complete - request another:
+ requestAnimationFrame(myCallback);
+        }
+    offscreenRef = document.getElementById('canvas-worker').transferControlToOffscreen();
+    worker.postMessage({ canvas: offscreenRef, source: sourceData }, [offscreenRef]);
+    requestAnimationFrame(myCallback);
+  }
+   requestAnimationFrame(draw);
+}
+
+
+function draw(timestamp) {
+  newcanvascontext.clearRect(0,0,800,450);
+
+
+newcanvascontext.fillStyle = "rgb("+r+",128,128)";
+newcanvascontext.fillRect(120+x, 0, 180,350);
+newcanvascontext.fillRect(120, 20, 230,180);newcanvascontext.fillRect(420, 220, 230,80);
+sourceData = newcanvascontext.getImageData(0, 0, 800, 450);
+
+r += 4;
+x += 2;
+if(r>255) {
+  r=0;
+} 
+if(x>755) {
+  x=20;
+} 
+  requestAnimationFrame(draw);
+}
+
+
+function myCallback(timestamp) {
+    worker.postMessage({ source: sourceData });
+}
+
+window.onload = start;
+
+
+</script>
+</body>
+</html>
