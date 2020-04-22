@@ -8709,14 +8709,7 @@ function init() {
         lightMapContext = lightMapOverlay.getContext('2d');
         reflectedCanvas = document.createElement('canvas');
         reflectionContext = reflectedCanvas.getContext('2d');
-        if ('OffscreenCanvas' in window) {
-            // create offscreen canvas for a Worker to add the water distortion to:
-            const workerReflections = new Worker('/js/worker-canvas-reflections.min.js');
-            workerReflections.onmessage = function(e) {
-                // drawing complete - request another frame:
-                // ########
-            }
-        }
+   
         oceanCanvas = document.createElement('canvas');
         oceanContext = oceanCanvas.getContext('2d');
         waterCanvas = document.createElement('canvas');
@@ -10596,14 +10589,11 @@ function checkForHotspots() {
 
 function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
-
-    //  updateCartographicMiniMap();
+    updateCartographicMiniMap();
     if (isOverWorldMap) {
         currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
-
         updateVisibleMaps();
     }
-
 
     checkForHotspots();
 

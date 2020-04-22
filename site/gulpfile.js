@@ -75,7 +75,7 @@ gulp.task('scripts', ['alternateScripts'],function() {
 
 gulp.task('alternateScripts', ['workerScripts'], function() {
     // minify predefined list of unique scripts:
-    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js|hnefatafl.js|hnefatafl-shared.js|worker-hnefatafl.js|worker-canvas-reflections.js)'])
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js|hnefatafl.js|hnefatafl-shared.js|worker-hnefatafl.js)'])
         .pipe(rename({
             suffix: '.min'
         }))

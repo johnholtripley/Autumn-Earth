@@ -1187,10 +1187,11 @@ $json = json_decode($str, true);
 
 
 
-//var_dump($json['map']['collisions']);
 
-for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
-  array_push($loadedMapData, str_ireplace(" ", "", $json['map']['collisions'][$i]));
+//var_dump($json['mapData']['map']['collisions']);
+
+for($i=0;$i<count($json['mapData']['map']['collisions'][0]);$i++) {
+  array_push($loadedMapData, str_ireplace(" ", "", $json['mapData']['map']['collisions'][$i]));
 }
 
 
@@ -1199,21 +1200,21 @@ for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
 
 
 
-foreach ($json['map']['doors'] as $key => $value) {
+foreach ($json['mapData']['map']['doors'] as $key => $value) {
 array_push($loadedDoorData, $key);
 }
 
 
- if(isset($json['map']['entrance'])) {
-$doorEntranceX = $json['map']['entrance'][1];
-$doorEntranceY = $json['map']['entrance'][0];
+ if(isset($json['mapData']['map']['entrance'])) {
+$doorEntranceX = $json['mapData']['map']['entrance'][1];
+$doorEntranceY = $json['mapData']['map']['entrance'][0];
 } else {
   // get first door:
-  if(count($json['map']['doors'])>0) {
-  reset($json['map']['doors']);
-$firstKey = key($json['map']['doors']);
-$doorEntranceX = $json['map']['doors'][$firstKey]['startX'];
-$doorEntranceY = $json['map']['doors'][$firstKey]['startY'];
+  if(count($json['mapData']['map']['doors'])>0) {
+  reset($json['mapData']['map']['doors']);
+$firstKey = key($json['mapData']['map']['doors']);
+$doorEntranceX = $json['mapData']['map']['doors'][$firstKey]['startX'];
+$doorEntranceY = $json['mapData']['map']['doors'][$firstKey]['startY'];
 }
 }
 
@@ -1223,8 +1224,8 @@ if($isADungeon) {
     $mapMaxWidth = 70;
     $mapMaxHeight = 70;
   } else {
-     $mapMaxWidth = count($json['map']['terrain'][0]);
-        $mapMaxHeight = count($json['map']['terrain']);
+     $mapMaxWidth = count($json['mapData']['map']['terrain'][0]);
+        $mapMaxHeight = count($json['mapData']['map']['terrain']);
   }
 
 
