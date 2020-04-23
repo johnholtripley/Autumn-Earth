@@ -242,8 +242,13 @@ function updateCartographicMiniMap() {
     // cartography canvas is 246px wide
     var cartographyUnits = 246 / (mapTilesX * tileW);
 
-    var x = hero.x * cartographyUnits;
-    var y = hero.y * cartographyUnits;
+    if (isOverWorldMap) {
+        var x = (hero.x % worldMapWidthPx) * cartographyUnits;
+        var y = (hero.y % worldMapWidthPx) * cartographyUnits;
+    } else {
+        var x = hero.x * cartographyUnits;
+        var y = hero.y * cartographyUnits;
+    }
     var innerRadius = 0;
     var outerRadius = 35;
 
@@ -268,7 +273,7 @@ function initCartographicMap() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);   
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
-        canvasMapMaskImage.onload = function() {        
+        canvasMapMaskImage.onload = function() {
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
             updateCartographicMiniMap();
@@ -280,7 +285,6 @@ function saveCartographyMask() {
     var dataURL = offScreenCartographyCanvas.toDataURL();
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
 }
-
 /*colourNames = ["",
     "Crimson",
     "Yellow",
