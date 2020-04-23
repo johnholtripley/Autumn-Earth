@@ -340,7 +340,8 @@ function processInitialMap() {
         cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
     }
 
-    initCartographicMap();
+cartography.init();
+    
 
     if (thisMapData[currentMap].showOnlyLineOfSight) {
         // initialise the lightmap with default values:
@@ -1280,7 +1281,7 @@ function startDoorTransition() {
         }
     }
     // if (currentMap < 0) {
-    saveCartographyMask();
+    cartography.saveCartographyMask();
     // }
     // delete shops so just the new ones can load in
     shopPanel.innerHTML = '';
@@ -1936,14 +1937,14 @@ function checkForHotspots() {
 
 
 function changeCurrentMap(toWhichMap) {
-    saveCartographyMask();
+    cartography.saveCartographyMask();
     currentMap = toWhichMap;
-    initCartographicMap();
+    cartography.newCartographicMap();
 }
 
 function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
-    updateCartographicMiniMap();
+    cartography.updateCartographicMiniMap();
     if (isOverWorldMap) {
         var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
         if (newMap != currentMap) {
