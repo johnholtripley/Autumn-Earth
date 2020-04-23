@@ -1935,13 +1935,20 @@ function checkForHotspots() {
 }
 
 
-
+function changeCurrentMap(toWhichMap) {
+    saveCartographyMask();
+    currentMap = toWhichMap;
+    initCartographicMap();
+}
 
 function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
     updateCartographicMiniMap();
     if (isOverWorldMap) {
-        currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+        var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+        if (newMap != currentMap) {
+            changeCurrentMap(newMap);
+        }
         updateVisibleMaps();
     }
 
@@ -1956,7 +1963,7 @@ function heroIsInNewTile() {
         }
     }
 
-    // update the hero's breadcrub trail:
+    // update the hero's breadcrumb trail:
     hero.breadcrumb.pop();
     hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
     if (thisMapData[currentMap].showOnlyLineOfSight) {
