@@ -124,7 +124,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <div class="draggableBar">
         <span id="cartographicTitle">Map</span>
       </div>
-      <canvas id="cartographyCanvas" width="246" height="246"></canvas>
+      <div id="cartographyCanvasWrapper">
+        <canvas id="cartographyCanvas" width="246" height="246"></canvas>
+      </div>
       <canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas>
     </div>
     <div id="horticulturePanel">
