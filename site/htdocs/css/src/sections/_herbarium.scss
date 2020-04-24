@@ -2,29 +2,37 @@
     list-style: none;
     background: #dbd7be url(/images/herbarium/catalogue-background-NOT_MINE.jpg) repeat-y 50% 0;
     @include background-size(100%);
+
     li div {
         @include pxRem('padding', 20px 0);
     }
+
     @include mq($widest) {
         .spotlight {
-          //  width: 40%;
+            //  width: 40%;
         }
+
         .inbetweenRow {
             width: 25%;
         }
     }
+
     .offset1 {
         @include transform(rotate(1deg) translateY(-2.5%));
     }
+
     .offset2 {
         @include transform(rotate(-1deg) scale(0.98, 0.98));
     }
+
     .offset3 {
         @include transform(rotate(-1deg) translate(6%, 1.5%));
     }
+
     .offset4 {
         @include transform(translateY(2.5%));
     }
+
     .imageOffset {
         img {
             float: right;
@@ -33,24 +41,29 @@
         }
     }
 
-img {
-    float: left;
-    //width: 754px;
-    //height: 754px;
-    display: block;
- margin-left: -20%;
-    -webkit-shape-image-threshold: 0.5;
-    shape-image-threshold: 0.5;
-    -webkit-shape-margin: 40px;
-    shape-margin: 40px;
-}
-p {
-    color: #000;
-    opacity: 0.85;
-     @include pxRem('font-size', 13px);
-     @include pxRem('line-height', 19px);
-     font-weight: bold;
-}
+    img {
+        float: left;
+        //width: 754px;
+        //height: 754px;
+        display: block;
+        margin-left: -20%;
+        -webkit-shape-image-threshold: 0.5;
+        shape-image-threshold: 0.5;
+        -webkit-shape-margin: 40px;
+        shape-margin: 40px;
+    }
+
+    p {
+        color: #000;
+        opacity: 0.85;
+        @include pxRem('font-size', 13px);
+        @include pxRem('line-height', 19px);
+        font-weight: bold;
+    }
+
+    h4 {
+        font-style: italic;
+    }
 
 }
 
