@@ -224,6 +224,10 @@ $walkable = 10;
 $stairTiles = 560;
 $edges = array();
 
+
+
+
+
 for ($i = 0;$i < ($mapMaxWidth);$i++) {
   for ($j = 0;$j < ($mapMaxHeight);$j++) {
     $thisTile = $dungeonArray[$i][$j]<=$walkable;
@@ -253,6 +257,8 @@ if($dungeonArray[$i-1][$j]>=$stairTiles) {
 $thisTileLeft = true;
 }
       
+
+
       
     }
     
@@ -1193,6 +1199,32 @@ $json = json_decode($str, true);
 for($i=0;$i<count($json['mapData']['map']['collisions'][0]);$i++) {
   array_push($loadedMapData, str_ireplace(" ", "", $json['mapData']['map']['collisions'][$i]));
 }
+
+
+
+// for the purposes of drawing the map, make all walkable water, non walkable, so an edge is drawn:
+for($i=0;$i<count($json['mapData']['map']['collisions'][0]);$i++) {
+for($j=0;$j<count($json['mapData']['map']['collisions']);$j++) {
+// if($json['mapData']['map']['properties']) {
+
+if(count($json['mapData']['map']['properties'][$j][$i]) > 0) {
+
+if(isset($json['mapData']['map']['properties'][$j][$i]["waterDepth"])) {
+if($json['mapData']['map']['properties'][$j][$i]["waterDepth"] > 0) {
+$loadedMapData[$j][$i] = '1';
+}
+}
+
+
+}
+
+
+ //}
+  }
+}
+
+
+
 
 
 // replace door's "d" with 0 for being walkable:

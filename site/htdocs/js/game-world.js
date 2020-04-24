@@ -8997,11 +8997,7 @@ function processInitialMap() {
 
     mapTilesY = thisMapData[currentMap].terrain.length;
     mapTilesX = thisMapData[currentMap].terrain[0].length;
-    if (previousZoneName != thisMapData[currentMap].zoneName) {
-        UI.showZoneName(thisMapData[currentMap].zoneName);
-        document.title = titleTagPrefix + ' - ' + thisMapData[currentMap].zoneName;
-        cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
-    }
+ updateZoneName();
 
 cartography.init();
     
@@ -9026,6 +9022,14 @@ cartography.init();
     }
     fae.recentHotspots = [];
     findInventoryItemData();
+}
+
+function updateZoneName() {
+       if (previousZoneName != thisMapData[currentMap].zoneName) {
+        UI.showZoneName(thisMapData[currentMap].zoneName);
+        document.title = titleTagPrefix + ' - ' + thisMapData[currentMap].zoneName;
+        cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
+    }
 }
 
 function loadNewVisibleMapAssets(whichMap) {
@@ -10603,6 +10607,7 @@ function changeCurrentMap(toWhichMap) {
     cartography.saveCartographyMask();
     currentMap = toWhichMap;
     cartography.newCartographicMap();
+    updateZoneName();
 }
 
 function heroIsInNewTile() {
@@ -12908,7 +12913,7 @@ function draw() {
             }
         }
 
-
+ if (isOverWorldMap) {
         // draw any water on to the reflected canvas to use as a mask:
         reflectionContext.globalCompositeOperation = 'destination-in';
         reflectionContext.drawImage(waterCanvas, 0, -canvasHeight);
@@ -12918,6 +12923,7 @@ function draw() {
         gameContext.globalAlpha = 0.3;
         gameContext.drawImage(reflectedCanvas, 0, 0);
         gameContext.globalAlpha = 1;
+    }
 
 
         if (activeObjectForDialogue != '') {
