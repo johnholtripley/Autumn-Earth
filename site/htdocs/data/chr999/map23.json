@@ -7,7 +7,8 @@
         "ambientSounds":
         {
             "birdSong": "../sounds/bird-song.mp3",
-            "birdChirrup": "../sounds/chirrup.mp3"
+            "birdChirrup": "../sounds/chirrup.mp3",
+            "doe": "../sounds/doe-NOT_MINE.mp3"
         },
         "collisions": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -182,7 +183,42 @@
         ],
         "weather": [""],
         "shops": [],
-        "npcs": [],
+        "npcs": [
+ {
+                "name": "deer",
+                "src": "deer.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 94,
+                "spriteHeight": 82,
+                "centreX": 69,
+                "centreY": 56,
+                "tileX": 23,
+                "tileY": 24,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                   
+
+                ],
+
+                "isCollidable": true,
+                "isMoving": false,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 25,
+                        "n": 0,
+                        "e": 0,
+                        "s": 0,
+                        "w": 0
+                    }
+                }
+            }
+        ],
         "doors": {},
         "items": [],
         "hotspots": [],
