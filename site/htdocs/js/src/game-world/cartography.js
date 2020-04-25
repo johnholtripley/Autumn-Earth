@@ -16,6 +16,8 @@ var cartography = {
             // load the mask (if any) so that previously uncovered areas are revealed:
             //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);   
             canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&cache=' + Date.now();
+            // live server needs this to avoid the "Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported" error:
+            canvasMapMaskImage.setAttribute('crossorigin', 'anonymous');
             canvasMapMaskImage.onload = function() {
                 offScreenCartographyContext.clearRect(0, 0, 246, 246);
                 offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);

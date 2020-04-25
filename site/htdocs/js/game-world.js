@@ -255,6 +255,8 @@ var cartography = {
             // load the mask (if any) so that previously uncovered areas are revealed:
             //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);   
             canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&cache=' + Date.now();
+            // live server needs this to avoid the "Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported" error:
+            canvasMapMaskImage.setAttribute('crossorigin', 'anonymous');
             canvasMapMaskImage.onload = function() {
                 offScreenCartographyContext.clearRect(0, 0, 246, 246);
                 offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
@@ -12201,8 +12203,8 @@ function addPetToWorld() {
     hasActivePet = true;
 }
 
-function checkAddPetToWorld(petJson) {
-    UI.showYesNoDialogueBox("Hatch pet?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
+function checkAddPetToWorld() {
+    UI.showYesNoDialogueBox("Hatch "+hero.inventory[inventorySlotReference].contains[0].name+"?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 
 function sendUserPost(postData) {
@@ -12569,8 +12571,8 @@ function draw() {
                             }
                         }
                     }
-                    // look for tilled tiles:
 
+                    // look for tilled tiles:
                     if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
                         thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
                         thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
@@ -12580,6 +12582,7 @@ function draw() {
                             assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                         }
                     }
+
                     // look for watered tiles:
                     if (typeof thisMapData[visibleMaps[m]].properties[j][i].water !== "undefined") {
                         if (thisMapData[visibleMaps[m]].properties[j][i].water.amount > 0) {
@@ -12594,9 +12597,8 @@ function draw() {
                             }
                         }
                     }
+
                     // look for water tiles and draw those to the water canvas:
-
-
                     if (typeof thisMapData[visibleMaps[m]].properties[j][i].waterDepth !== "undefined") {
                         thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
                         thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
@@ -12643,7 +12645,7 @@ function draw() {
             for (var i = 0; i < hero.activePets.length; i++) {
                 thisPetState = hero.allPets[hero.activePets[i]].state;
                 if (thisPetState != "moving") {
-                    // confirm any others to the available animation (eg. queuing or pathfinding):
+                    // conform any others to the available animation (eg. queuing or pathfinding):
                     thisPetState = "wait";
                 }
                 thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"][thisPetState]["length"];
@@ -12651,7 +12653,7 @@ function draw() {
                 thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 if (isVisibleOnScreen(thisX, thisY)) {
-                    assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+                    assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, ,hero.allPets[hero.activePets[i]].centreY]);
                 }
             }
         }
@@ -12678,7 +12680,7 @@ function draw() {
                 if (isVisibleOnScreen(thisX, thisY)) {
                     //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
                     thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].src;
-                    assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+                    assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight, ,thisNPC.centreY]);
                 }
             }
 

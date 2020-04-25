@@ -184,7 +184,7 @@
         "weather": [""],
         "shops": [],
         "npcs": [
- {
+            {
                 "name": "deer",
                 "src": "deer.png",
                 "width": 20,
