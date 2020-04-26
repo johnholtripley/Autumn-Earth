@@ -3668,10 +3668,10 @@ function draw() {
             // for speed, draw the sprite to an off screen canvas, and then just copy that entirely to the game canvas where needed:
             oceanContext.drawImage(ocean, (Math.floor(oceanCurrentFrame) * oceanSpriteWidth), 0, oceanSpriteWidth, oceanSpriteHeight, 0, 0, oceanSpriteWidth, oceanSpriteHeight);
 
-            for (var i = -(oceanSpriteWidth * 2); i <= (canvasWidth); i += (oceanSpriteWidth)) {
-                for (var j = -(oceanSpriteHeight * 2); j <= (canvasHeight); j += (oceanSpriteHeight)) {
+            for (var i = -(oceanSpriteWidth); i <= (canvasWidth); i += (oceanSpriteWidth)) {
+                for (var j = -(oceanSpriteHeight); j <= (canvasHeight); j += (oceanSpriteHeight)) {
                     gameContext.drawImage(oceanCanvas, oceanCentreX + i, oceanCentreY + j);
-                    gameContext.drawImage(oceanCanvas, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2));
+                 //   gameContext.drawImage(oceanCanvas, oceanCentreX + i + (oceanSpriteWidth / 2), oceanCentreY + j + (oceanSpriteHeight / 2));
                 }
             }
             oceanCurrentFrame += 0.25;
