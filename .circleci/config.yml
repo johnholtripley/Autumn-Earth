@@ -7,7 +7,7 @@ jobs:
       - image: circleci/node:14.0.0
     steps:
       - checkout
-      - tests
+      - cd tests
       - node/install:
           install-yarn: false
           node-version: latest
