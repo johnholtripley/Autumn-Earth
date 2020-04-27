@@ -1,58 +1,59 @@
-# # Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
-# version: 2.1
-# # Use a package of configuration called an orb.
-# jobs:
-#   install-node-example:
-#     docker:
-#       - image: circleci/node:12.6
-#     steps:
-#       - checkout
-#       - node/install:
-#           install-yarn: false
-#           node-version: latest
-#       - run: npm install -D @percy/agent
-#       - run: export PERCY_TOKEN=32a9003f138aebf163fad750a749ba6584c09b7367cf909b917cf839f8925d1d
-#       - run: npx percy exec -- node tests/snapshots.js
-# orbs:
-#   # Declare a dependency on the welcome-orb
-#   welcome: circleci/welcome-orb@0.4.1
-#   # add Percy orb
-#   agent: percy/agent@0.1.3
-#   # add Node orb
-#   node: circleci/node@2.0.1
-#   # https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-circleci
-#   puppeteer: threetreeslight/puppeteer@0.1.2
-# # Orchestrate or schedule a set of jobs
-# workflows:
-#   # Name the workflow "test"
-#   test:
-#     jobs:
-#        - install-node-example
-
-
-
-
-
-
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-orbs:
-  ruby: circleci/ruby@0.1.2
-  agent: percy/agent@0.1.3 
-
+# Use a package of configuration called an orb.
 jobs:
-  build:
+  install-node-example:
     docker:
-      - image: circleci/ruby:2.6.3-stretch-node
-    executor: ruby/default
+      - image: circleci/node:12.6
     steps:
       - checkout
-      - run:
-         name: install dependencies
-         command: 
-           npm install
-           npm install @percy/agent
-      - run:
-          name: run tests
-          command: 
-            npm run build
-            percy snapshot _site
+      - node/install:
+          install-yarn: false
+          node-version: latest
+      - run: npm install
+      - run: npm install -D @percy/agent
+      - run: export PERCY_TOKEN=32a9003f138aebf163fad750a749ba6584c09b7367cf909b917cf839f8925d1d
+      - run: npx percy exec -- node tests/snapshots.js
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+  # add Percy orb
+  agent: percy/agent@0.1.3
+  # add Node orb
+  node: circleci/node@2.0.1
+  # https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-circleci
+  # puppeteer: threetreeslight/puppeteer@0.1.2
+# Orchestrate or schedule a set of jobs
+workflows:
+  # Name the workflow "test"
+  test:
+    jobs:
+       - install-node-example
+
+
+
+
+
+
+# version: 2.1
+# orbs:
+#   ruby: circleci/ruby@0.1.2
+#   agent: percy/agent@0.1.3 
+
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/ruby:2.6.3-stretch-node
+#     executor: ruby/default
+#     steps:
+#       - checkout
+#       - run:
+#          name: install dependencies
+#          command: 
+#            npm install
+#            npm install @percy/agent
+#       - run:
+#           name: run tests
+#           command: 
+#             npm run build
+#             percy snapshot 
