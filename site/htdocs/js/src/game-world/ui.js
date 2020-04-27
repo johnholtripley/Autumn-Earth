@@ -141,9 +141,16 @@ var UI = {
         var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
 
         for (var i = 0; i < hero.bags.length; i++) {
-            thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
+            if(hero.bags[i].type == "bank") {
+thisPanelName = "Bank";
+            thisBagNumberOfSlots = hero.bags[i].bankSlots;
+            inventoryMarkup += '<div class="inventoryBag" id="inventoryBagBank"><div class="draggableBar">Bank</div><ol id="bag' + i + '">';
+            } else {
+                 thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             inventoryMarkup += '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol id="bag' + i + '">';
+            }
+           
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
