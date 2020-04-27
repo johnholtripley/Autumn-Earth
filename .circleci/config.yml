@@ -47,11 +47,11 @@ jobs:
       - checkout
       - run:
          name: install dependencies
-         command:
+         command: |
          npm install
          gem install percy-cli
       -run:
       name: run tests
-      command: 
+      command: |
       npm run build
       percy snapshot _site
