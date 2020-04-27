@@ -2224,6 +2224,9 @@ function checkForActions() {
                                 // open the Post panel:
                                 UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                                 break;
+                                case "bank":
+                                UI.openBank();
+                                break;
                             case "retinue":
                                 // open the Retinue panel:
                                 UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
@@ -2327,6 +2330,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "post":
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
+                case "bank":
+                                UI.openBank();
             case "retinue":
                 UI.openRetinuePanel(thisObjectSpeaking);
                 break;

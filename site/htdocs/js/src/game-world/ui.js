@@ -2665,6 +2665,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         petInventoryMarkup += '</ol></div></div>';
         return petInventoryMarkup;
+    },
+    openPost: function() {
+        document.getElementById('#inventoryBagBank').classList.add('active');
     }
 
 
