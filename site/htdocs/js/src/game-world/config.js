@@ -30,6 +30,9 @@ var plotPlacement = {};
 var postObject = {
     "active": false
 };
+var bankObject = {
+    "active": false
+};
 var retinueObject = {
     "active": false
 };

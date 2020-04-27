@@ -140,9 +140,12 @@ gulp.task('csslint', function lintCssTask() {
 
 // tests
 gulp.task('regressionTest', function() {
+    /*
     var child = exec('casperjs test tests/visual-regression.js', function(err, stdout, stderr) {
         console.log(stdout);
     });
+*/
+// use Percy instead
 })
 
 

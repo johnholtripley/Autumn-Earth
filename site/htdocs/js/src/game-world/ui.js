@@ -2666,9 +2666,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         petInventoryMarkup += '</ol></div></div>';
         return petInventoryMarkup;
     },
-    openPost: function() {
-        document.getElementById('#inventoryBagBank').classList.add('active');
-    }
+    openBank: function(bankObjectX,bankObjectY) {
+           UI.showUI();
+        // store the coordinates of the NPC or item that triggered this opening:
+        bankObject.x = bankObjectX;
+        bankObject.y = bankObjectY;
+        bankObject.active = true;
+        document.getElementById('inventoryBagBank').classList.add('active');
+        audio.playSound(soundEffects['bagOpen'], 0);
+    },
+        closeBank: function() {
+        bankObject.active = false;
+        document.getElementById('inventoryBagBank').classList.remove('active');
+    },
 
 
 }

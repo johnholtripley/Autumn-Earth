@@ -1730,6 +1730,12 @@ function update() {
                 UI.closePost();
             }
         }
+                if (bankObject.active) {
+            if (!(isInRange(hero.x, hero.y, bankObject.x, bankObject.y, closeDialogueDistance / 2))) {
+
+                UI.closeBank();
+            }
+        }
         if (retinueObject.active) {
             if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
 
@@ -2225,7 +2231,7 @@ function checkForActions() {
                                 UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                                 break;
                                 case "bank":
-                                UI.openBank();
+                                UI.openBank(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                                 break;
                             case "retinue":
                                 // open the Retinue panel:
@@ -2331,7 +2337,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
                 case "bank":
-                                UI.openBank();
+                                UI.openBank(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                                break;
             case "retinue":
                 UI.openRetinuePanel(thisObjectSpeaking);
                 break;

@@ -409,6 +409,9 @@ var plotPlacement = {};
 var postObject = {
     "active": false
 };
+var bankObject = {
+    "active": false
+};
 var retinueObject = {
     "active": false
 };
@@ -8594,9 +8597,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         petInventoryMarkup += '</ol></div></div>';
         return petInventoryMarkup;
     },
-    openPost: function() {
-        document.getElementById('#inventoryBagBank').classList.add('active');
-    }
+    openBank: function(bankObjectX,bankObjectY) {
+           UI.showUI();
+        // store the coordinates of the NPC or item that triggered this opening:
+        bankObject.x = bankObjectX;
+        bankObject.y = bankObjectY;
+        bankObject.active = true;
+        document.getElementById('inventoryBagBank').classList.add('active');
+        audio.playSound(soundEffects['bagOpen'], 0);
+    },
+        closeBank: function() {
+        bankObject.active = false;
+        document.getElementById('inventoryBagBank').classList.remove('active');
+    },
 
 
 }
@@ -10405,6 +10418,12 @@ function update() {
                 UI.closePost();
             }
         }
+                if (bankObject.active) {
+            if (!(isInRange(hero.x, hero.y, bankObject.x, bankObject.y, closeDialogueDistance / 2))) {
+
+                UI.closeBank();
+            }
+        }
         if (retinueObject.active) {
             if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
 
@@ -10900,7 +10919,7 @@ function checkForActions() {
                                 UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                                 break;
                                 case "bank":
-                                UI.openBank();
+                                UI.openBank(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                                 break;
                             case "retinue":
                                 // open the Retinue panel:
@@ -11006,7 +11025,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
                 case "bank":
-                                UI.openBank();
+                                UI.openBank(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                                break;
             case "retinue":
                 UI.openRetinuePanel(thisObjectSpeaking);
                 break;
