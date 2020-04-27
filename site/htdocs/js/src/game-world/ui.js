@@ -15,6 +15,9 @@ const displayItemBeingCreated = document.getElementById('displayItemBeingCreated
 const booksAndParchments = document.getElementById('booksAndParchments');
 const gameWrapper = document.getElementById('gameWrapper');
 const inventoryPanels = document.getElementById('inventoryPanels');
+const inventoryBank = document.getElementById('inventoryBank');
+const inventoryBankTitle = document.getElementById('inventoryBankTitle');
+const bankCurrency = document.getElementById('bankCurrency');
 const shopPanel = document.getElementById('shopPanel');
 const inscriptionPanel = document.getElementById('inscriptionPanel');
 const inscriptionTextArea = document.getElementById('inscriptionTextArea');
@@ -89,18 +92,14 @@ const housingTileSelectionListItems = document.querySelectorAll('#housingTileSel
 const housingConstructionToolButtons = document.querySelectorAll('#housingConstructionTools li');
 const housingRunningTotal = document.getElementById('housingRunningTotal');
 const housingTileGroups = document.querySelectorAll('.housingTileGroup');
-
-
 const yesNoDialoguePanel = document.getElementById('yesNoDialoguePanel');
 const yesNoDialogueHeading = document.getElementById('yesNoDialogueHeading');
 const yesNoDialogueButton1 = document.getElementById('yesNoDialogueButton1');
 const yesNoDialogueButton2 = document.getElementById('yesNoDialogueButton2');
-
 const housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
 
 var notificationQueue = [];
 var notificationIsShowing = false;
-
 var retinueQuestTimers = [];
 
 
@@ -138,27 +137,34 @@ var UI = {
         document.getElementById('characterName').innerHTML = characterNameAndTitle;
         characterPanel.classList.add('active');
         var inventoryMarkup = '';
+        var bankMarkup = '';
+        var thisBagsMarkup;
         var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
 
         for (var i = 0; i < hero.bags.length; i++) {
-            if(hero.bags[i].type == "bank") {
-thisPanelName = "Bank";
-            thisBagNumberOfSlots = hero.bags[i].bankSlots;
-            inventoryMarkup += '<div class="inventoryBag" id="inventoryBagBank"><div class="draggableBar">Bank</div><ol id="bag' + i + '">';
+            thisBagsMarkup = '';
+            if (hero.bags[i].type == "bank") {
+                thisBagNumberOfSlots = hero.bags[i].bankSlots;
+                UI.whichInvenotryPanelIsTheBank = i;
+                if (hero.bags[i].bankSlots == maximumBankSlotsPossible) {
+                    // hide the add more slots button:
+                    document.getElementById('bankBuyMoreSlots').style.display = 'none';
+                }
             } else {
-                 thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
-            thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-            inventoryMarkup += '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol id="bag' + i + '">';
+                thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
+                thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+                thisBagsMarkup += '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div>';
             }
-           
+            thisBagsMarkup += '<ol id="bag' + i + '">';
+
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
-                inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
+                thisBagsMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
 
-                    inventoryMarkup += generateSlotMarkup(thisSlotsID);
+                    thisBagsMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
                     // check for cooldown attribute, and add a timer if so:
                     if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
@@ -167,15 +173,20 @@ thisPanelName = "Bank";
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
-
                 } else {
-                    inventoryMarkup += '';
+                    thisBagsMarkup += '';
                 }
-                // add item there
-                inventoryMarkup += '</li>';
-
+                thisBagsMarkup += '</li>';
             }
-            inventoryMarkup += '</ol></div></div>';
+            thisBagsMarkup += '</ol>';
+
+            if (hero.bags[i].type == "bank") {
+                bankMarkup += thisBagsMarkup;
+            } else {
+                inventoryMarkup += thisBagsMarkup + '</div>';
+            }
+
+
         }
         // add pet inventory panels:
         for (var i = 0; i < hero.allPets.length; i++) {
@@ -184,7 +195,9 @@ thisPanelName = "Bank";
             }
         }
 
-        inventoryPanels.innerHTML = inventoryMarkup;
+        // inventoryPanels.innerHTML = inventoryMarkup;
+        inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
+        bankCurrency.insertAdjacentHTML('beforebegin', bankMarkup);
         gameWrapper.ondblclick = UI.doubleClick;
         gameWrapper.addEventListener("contextmenu", UI.handleRightClick, false);
         createRecipeList.onclick = UI.craftingPanelSingleClick;
@@ -207,6 +220,7 @@ thisPanelName = "Bank";
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
         document.getElementById('hireRetinueFollowerYes').onclick = hireNewFollower;
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
+        document.getElementById('bankBuyMoreSlots').onclick = UI.buyMoreBankSlots;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
@@ -1122,6 +1136,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p><p>' + hero.currency.keys.length + '<span class="keys"><span></p>';
+        bankCurrency.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p>';
 
     },
 
@@ -2666,19 +2681,61 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         petInventoryMarkup += '</ol></div></div>';
         return petInventoryMarkup;
     },
-    openBank: function(bankObjectX,bankObjectY) {
-           UI.showUI();
+    openBank: function(bankObjectX, bankObjectY, passedBankObject) {
+        UI.showUI();
         // store the coordinates of the NPC or item that triggered this opening:
         bankObject.x = bankObjectX;
         bankObject.y = bankObjectY;
         bankObject.active = true;
-        document.getElementById('inventoryBagBank').classList.add('active');
+        if (typeof passedBankObject !== "undefined") {
+            bankObject.passedObject = passedBankObject;
+        }
+        inventoryBankTitle.innerHTML = thisMapData[currentMap].zoneName + " bank";
+        inventoryBank.classList.add('active');
         audio.playSound(soundEffects['bagOpen'], 0);
     },
-        closeBank: function() {
+    closeBank: function() {
+        // if it's an NPC then keep them on this speech:
+        if (typeof bankObject.passedObject !== "undefined") {
+            if (typeof bankObject.passedObject.speechIndex !== "undefined") {
+                bankObject.passedObject.speechIndex--;
+            }
+        }
         bankObject.active = false;
-        document.getElementById('inventoryBagBank').classList.remove('active');
+        delete bankObject.passedObject;
+        inventoryBank.classList.remove('active');
     },
+    addBankSlots: function() {
+        UI.hideYesNoDialogueBox();
+        var howManyToAdd = 2;
+        var inventoryMarkup = '';
+        hero.currency.money -= amountForTheNextBankSlot;
+        amountForTheNextBankSlot *= 2.8;
+        UI.updateCurrencies();
+        var numberOfBankSlots = hero.bags[(UI.whichInvenotryPanelIsTheBank)].bankSlots;
+
+
+        for (var i = 1; i <= howManyToAdd; i++) {
+            inventoryMarkup += '<li id="slot' + UI.whichInvenotryPanelIsTheBank + '-' + (numberOfBankSlots + i) + '"></li>'
+        }
+        document.getElementById('bag' + UI.whichInvenotryPanelIsTheBank).insertAdjacentHTML('beforeend', inventoryMarkup);
+        hero.bags[(UI.whichInvenotryPanelIsTheBank)].bankSlots += howManyToAdd;
+        if (hero.bags[(UI.whichInvenotryPanelIsTheBank)].bankSlots == maximumBankSlotsPossible) {
+            document.getElementById('bankBuyMoreSlots').style.display = 'none';
+        }
+    },
+    buyMoreBankSlots: function() {
+        if (hero.bags[(UI.whichInvenotryPanelIsTheBank)].bankSlots < maximumBankSlotsPossible) {
+            if (hero.currency.money >= amountForTheNextBankSlot) {
+                UI.showYesNoDialogueBox("Purchase 3 more bank slots for " + parseMoney(amountForTheNextBankSlot) + "?", "Yes", "No", "UI.addBankSlots", "UI.hideYesNoDialogueBox");
+            } else {
+                UI.showNotification("<p>I don't have enough money&hellip;</p>");
+            }
+        } else {
+            UI.showNotification("<p>I've already got as many as I can have.</p>");
+        }
+
+    }
 
 
 }

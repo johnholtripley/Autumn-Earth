@@ -20,6 +20,8 @@ var backgroundImgs = [];
 var oceanNumberOfFrames = 29;
 var oceanCurrentFrame = 0;
 
+var amountForTheNextBankSlot = 500000;
+var maximumBankSlotsPossible = 28;
 
 var interfaceIsVisible = true;
 var activeAction = "";

@@ -2337,7 +2337,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
                 case "bank":
-                                UI.openBank(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                                UI.openBank(thisObjectSpeaking.x, thisObjectSpeaking.y, thisObjectSpeaking);
                                 break;
             case "retinue":
                 UI.openRetinuePanel(thisObjectSpeaking);

@@ -171,7 +171,7 @@ font-size: 0;
         top: 570px;
         background: #666;
         left: 1060px;
-        background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
+        background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) repeat-x 0 100%;
         z-index: 1;
 
         &:hover {
@@ -263,6 +263,9 @@ font-size: 0;
     .specialismPrice {
         display: none;
     }
+}
+#inventoryPanels #inventoryBank ol {
+ width: 276px;
 }
 
 
@@ -914,4 +917,17 @@ width: 120%;
             }
         }
     }
+}
+
+
+// bank panel:
+#inventoryBankTitle {
+    pointer-events: none;
+}
+#bankCurrency {
+    color: #fff;
+    clear: both;
+    font-size: 12px;
+    background: #000;
+    padding: 2px 4px;
 }

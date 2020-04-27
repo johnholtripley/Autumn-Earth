@@ -50,18 +50,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
     </canvas>  
   </div>
 
-<!-- noise filter for reflection displacement: /-->
-<!--
-<svg viewBox="0 0 1900 800">
-  <filter id='noise' x='0%' y='0%' width='100%' height='100%'>
-    <feTurbulence baseFrequency="0.02" numOctaves="1" seed="1" type="turbulence" result="turbulence">
-      <animate attributeName="baseFrequency" values="0.02; 0.01; 0.02;" repeatCount="indefinite" dur="20s" begin="0"></animate>
-    </feTurbulence>
-    <feDisplacementMap in="SourceGraphic" in2="turbulence" xChannelSelector="R" yChannelSelector="B" scale="20" result="displacement"></feDisplacementMap> 
-  </filter>
- </svg>
- /-->
-
   <div id="weather">
     <div id="rain"></div>
     <div id="snow"></div>
@@ -79,7 +67,13 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
     <p id="dialogue"></p>
     <div id="notification"><div id="notificationContent"></div><div id="notificationSpeechArrow"></div></div>
     <div id="displayZoneName"></div>
-    <div id="inventoryPanels"></div>
+    <div id="inventoryPanels">
+      <div class="inventoryBag" id="inventoryBank">
+        <div class="draggableBar"><span id="inventoryBankTitle">Bank</span></div><button class="closePanel">close</button>
+        <div id="bankCurrency"></div>
+        <button id="bankBuyMoreSlots">Buy more slots</button>
+      </div>
+    </div>
     <div id="draggableInventorySlot"></div>
     <form id="splitStackPanel" class="quantityInputPanel">
       <fieldset>
