@@ -23,7 +23,7 @@ jobs:
       - run: npm install -D @percy/agent
       - run: npm install -D @percy/script
       - run: export PERCY_TOKEN=32a9003f138aebf163fad750a749ba6584c09b7367cf909b917cf839f8925d1d
-      - run: npx percy exec -- node /tests/snapshots.js
+      - run: npx percy exec -- node snapshots.js
 orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
