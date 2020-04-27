@@ -11,7 +11,7 @@ jobs:
           install-yarn: false
           node-version: latest
       - run: npm install
-       - run:
+      - run:
           name: Install Headless Chrome dependencies
           command: |
             sudo apt-get install -yq \
