@@ -50,7 +50,7 @@ jobs:
          name: install dependencies
          command: 
            npm install
-           gem install percy-cli
+           npm install @percy/agent
       - run:
           name: run tests
           command: 
