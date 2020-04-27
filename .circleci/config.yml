@@ -8,9 +8,9 @@ jobs:
     steps:
       - checkout
         - run:
-          name: change folder
-          command: |
-            cd tests
+            name: change folder
+            command: |
+              cd tests
       - node/install:
           install-yarn: false
           node-version: latest
