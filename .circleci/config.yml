@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   install-node-example:
     docker:
-      - image: circleci/node:12.6
+      - image: circleci/node:14.0.0
     steps:
       - checkout
       - node/install:
