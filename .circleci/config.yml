@@ -2,11 +2,12 @@
 version: 2.1
 # Use a package of configuration called an orb.
 jobs:
-  install-node-example:
+  node-visual-regression-tests:
     docker:
       - image: circleci/node:14.0.0
     steps:
       - checkout
+      - tests
       - node/install:
           install-yarn: false
           node-version: latest
@@ -39,7 +40,7 @@ workflows:
   # Name the workflow "test"
   test:
     jobs:
-       - install-node-example
+       - node-visual-regression-tests
 
 
 
