@@ -106,7 +106,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       </ul>
     </div>
     <div id="cardAlbum" class="active">
-      <div class="draggableBar">Totem Card album</div>
+      <div class="draggableBar">Totem Card album</div><button class="closePanel">close</button>
       <div class="tabHeader">
         <button class="tabs active" id="tabShowAlbum">Album</button>
         <button class="tabs" id="tabShowBacks">Backs</button>

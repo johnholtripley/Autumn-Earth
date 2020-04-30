@@ -560,10 +560,13 @@ font-size: 0;
         padding: 0;
     }
 
+    // the transition stops Chrome from displaying the animation at all:
+    /*
     &.active .progressBar {
         // only show the transition when active - so initial values aren't animated to
         @include transition(width 0.1s ease);
     }
+    */
 }
 
 

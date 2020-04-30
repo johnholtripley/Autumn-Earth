@@ -70,30 +70,7 @@ function canAddItemToInventory(itemObj) {
                                 inventoryClone[thisSlotsID] = JSON.parse(JSON.stringify(itemObj[k]));
                                 inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
 
-                                /*
-                                inventoryClone[thisSlotsID] = new Object();
-                                inventoryClone[thisSlotsID].type = itemObj[k].type;
-                                inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
-                                inventoryClone[thisSlotsID].quality = itemObj[k].quality;
-                                inventoryClone[thisSlotsID].durability = itemObj[k].durability;
-                                inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
-                                inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
-                                inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
-                                inventoryClone[thisSlotsID].colour = itemObj[k].colour;
-                                inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
-                                inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
-                                inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
-                                inventoryClone[thisSlotsID].inscription = "";
-                                if (typeof itemObj[k].inscription !== "undefined") {
-                                    inventoryClone[thisSlotsID].inscription = {};
-                                    inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
-                                    inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
-                                    inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
-                                }
-                                if (typeof itemObj[k].contains !== "undefined") {
-                                    inventoryClone[thisSlotsID].contains = JSON.parse(JSON.stringify(itemObj[k].contains));
-                                }
-                                */
+              
                                 if (quantityAddedSoFar >= itemObj[k].quantity) {
                                     // stop both loops:
                                     break outerLoop;
@@ -178,7 +155,7 @@ function hasItemInInventory(itemType, amountNeeded) {
 
 function hasItemsInInventory(itemsToAdd) {
     // takes an array of objects and checks if all of them exist in the inventory:
-    // (if any value is undefined, it can be any value)
+    // (if any attribute is undefined, it can be any value)
     var allItemsFound = true;
     var quantityForThisItemFound, allOfTheseAttributesMatch;
     for (var i = 0; i < itemsToAdd.length; i++) {
@@ -287,9 +264,7 @@ function addToInventory(whichSlot, itemObject, forceNewHash = false) {
         // create one:
         hero.inventory[whichSlot].hash = createItemHash(itemObject.type, itemObject.quantity);
         //   console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
-    } else {
-        //  console.log("already", hero.inventory[whichSlot].hash);
-    }
+    } 
     document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
 

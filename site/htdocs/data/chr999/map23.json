@@ -221,7 +221,16 @@
      
         ],
         "doors": {},
-        "items": [],
+        "items": [
+        {
+            "type": 112,
+                 "tileX": 21,
+                "tileY": 24,
+                "contains": 
+                    {"North":"The Old Meadows",
+                    "South":"Ashenvale shore"}
+                
+            }],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

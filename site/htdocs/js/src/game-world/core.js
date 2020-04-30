@@ -2222,6 +2222,19 @@ function checkForActions() {
                                 hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
                                 console.log("switch to sit animation");
                                 break;
+                                case "signpost":
+for (var j in thisMapData[(visibleMaps[m])].items[i].contains) {
+    
+     UI.showNotification("<p>"+j+" to "+thisMapData[(visibleMaps[m])].items[i].contains[j]+"</p>");
+
+
+    
+
+}
+
+
+                               
+                                break;
                             case "chest":
                                 // open chest and show contents:
                                 UI.openChest(visibleMaps[m], i);

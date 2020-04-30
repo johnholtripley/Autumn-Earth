@@ -2712,9 +2712,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         hero.currency.money -= amountForTheNextBankSlot;
         amountForTheNextBankSlot *= 2.8;
         UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
         var numberOfBankSlots = hero.bags[(UI.whichInvenotryPanelIsTheBank)].bankSlots;
-
-
         for (var i = 1; i <= howManyToAdd; i++) {
             inventoryMarkup += '<li id="slot' + UI.whichInvenotryPanelIsTheBank + '-' + (numberOfBankSlots + i) + '"></li>'
         }
