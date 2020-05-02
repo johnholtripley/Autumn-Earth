@@ -397,6 +397,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 inventorySlotReference = whichSlotNumber;
                     checkAddPetToWorld();
                     break;
+                    case "music":
+                    enterMusicMode();
+                    break;
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;

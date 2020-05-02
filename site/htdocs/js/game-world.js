@@ -556,6 +556,14 @@ var hero = {
             "e": 1,
             "s": 2,
             "w": 3
+        },
+        "music": {
+            "length": 18,
+            "start-row": 12,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
         }
     }
 
@@ -4470,6 +4478,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 inventorySlotReference = whichSlotNumber;
                     checkAddPetToWorld();
                     break;
+                    case "music":
+                    enterMusicMode();
+                    break;
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;
@@ -4970,6 +4981,9 @@ if (window.Worker) {
 
 function updateLightMap() {
     lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange, lightMap]);
+}
+function enterMusicMode() {
+    activeAction = "music";
 }
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
@@ -10515,8 +10529,18 @@ function update() {
         } else {
             hero.currentAnimation = 'walk';
         }
+        if(activeAction == 'music') {
+// cancel music mode:
+activeAction = '';
+        }
     } else {
-        hero.currentAnimation = 'idle';
+        
+        if(activeAction == 'music') {
+hero.currentAnimation = 'music';
+        } else {
+            hero.currentAnimation = 'idle';
+        }
+         
     }
     moveFae();
     moveNPCs();

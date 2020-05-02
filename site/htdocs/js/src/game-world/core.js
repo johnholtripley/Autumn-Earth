@@ -1794,8 +1794,18 @@ function update() {
         } else {
             hero.currentAnimation = 'walk';
         }
+        if(activeAction == 'music') {
+// cancel music mode:
+activeAction = '';
+        }
     } else {
-        hero.currentAnimation = 'idle';
+        
+        if(activeAction == 'music') {
+hero.currentAnimation = 'music';
+        } else {
+            hero.currentAnimation = 'idle';
+        }
+         
     }
     moveFae();
     moveNPCs();
