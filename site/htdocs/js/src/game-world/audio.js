@@ -28,7 +28,7 @@ var soundsToLoad = {
 };
 
 
-var loadBuffer = function(url, name) {
+var loadAudioBuffer = function(url, name) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
@@ -65,7 +65,7 @@ var audio = {
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
             for (var name in soundsToLoad) {
-                loadBuffer(soundsToLoad[name], name);
+                loadAudioBuffer(soundsToLoad[name], name);
             }
         } catch (e) {
             // web audio API not supported
@@ -200,7 +200,7 @@ var audio = {
 
     loadAmbientSounds: function(soundsToLoad) {
         for (var soundName in soundsToLoad) {
-            loadBuffer(soundsToLoad[soundName], soundName);
+            loadAudioBuffer(soundsToLoad[soundName], soundName);
         }
     },
 

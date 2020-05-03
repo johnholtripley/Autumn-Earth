@@ -1,0 +1,39 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="lute_data" version="1.3.0" audacityversion="2.2.2" sel0="13.6962234859" sel1="13.6962234859" vpos="0" h="1.9861592971" zoom="120.8362291767" rate="48000.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="Software" value="Lavf58.42.100"/>
+	</tags>
+	<wavetrack name="lute at 30s - Instruments &amp; Scales In Lord Of The Rings Online" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="657419">
+				<waveblock start="0">
+					<simpleblockfile filename="e080822c.au" len="183199" min="-0.999962" max="0.834794" rms="0.169046"/>
+				</waveblock>
+				<waveblock start="183199">
+					<simpleblockfile filename="e0808233.au" len="262144" min="-0.863932" max="0.939849" rms="0.177392"/>
+				</waveblock>
+				<waveblock start="445343">
+					<simpleblockfile filename="e0808af6.au" len="212076" min="-0.832666" max="0.887647" rms="0.142721"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="lute at 30s - Instruments &amp; Scales In Lord Of The Rings Online" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="657419">
+				<waveblock start="0">
+					<simpleblockfile filename="e08088b7.au" len="183199" min="-1.0" max="0.834794" rms="0.169046"/>
+				</waveblock>
+				<waveblock start="183199">
+					<simpleblockfile filename="e0808106.au" len="262144" min="-0.863932" max="0.939849" rms="0.177392"/>
+				</waveblock>
+				<waveblock start="445343">
+					<simpleblockfile filename="e0808b68.au" len="212076" min="-0.832666" max="0.887647" rms="0.142721"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

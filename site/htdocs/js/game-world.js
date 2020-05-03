@@ -29,7 +29,7 @@ var soundsToLoad = {
 };
 
 
-var loadBuffer = function(url, name) {
+var loadAudioBuffer = function(url, name) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
@@ -66,7 +66,7 @@ var audio = {
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
             for (var name in soundsToLoad) {
-                loadBuffer(soundsToLoad[name], name);
+                loadAudioBuffer(soundsToLoad[name], name);
             }
         } catch (e) {
             // web audio API not supported
@@ -201,7 +201,7 @@ var audio = {
 
     loadAmbientSounds: function(soundsToLoad) {
         for (var soundName in soundsToLoad) {
-            loadBuffer(soundsToLoad[soundName], soundName);
+            loadAudioBuffer(soundsToLoad[soundName], soundName);
         }
     },
 
@@ -4479,7 +4479,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     checkAddPetToWorld();
                     break;
                     case "music":
-                    enterMusicMode();
+                    music.enterMusicMode(whichActionValue);
                     break;
                 case "inscribe":
                     UI.openInscriptionPanel();
@@ -4982,8 +4982,20 @@ if (window.Worker) {
 function updateLightMap() {
     lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange, lightMap]);
 }
-function enterMusicMode() {
-    activeAction = "music";
+const music = {
+    currentInstrument: '',
+    notesToLoad: ["c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
+    loadInstrumentSounds: function(whichInstrument) {
+        for (var i = 0; i < music.notesToLoad.length; i++) {
+            loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument+"-"+music.notesToLoad[i]);
+        }
+    },
+    enterMusicMode: function(whichInstrument) {
+        music.currentInstrument = whichInstrument;
+    },
+    exitMusicMode: function() {
+        music.currentInstrument = '';
+    }
 }
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
@@ -6025,7 +6037,7 @@ var notificationIsShowing = false;
 var retinueQuestTimers = [];
 
 
-var UI = {
+const UI = {
     init: function() {
         // cache all local references to UI elements:
         const displayZoneName = document.getElementById('displayZoneName');
@@ -6094,6 +6106,9 @@ var UI = {
                     }
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
+                    }
+                      if (thisAction == "music") {
+                        music.loadInstrumentSounds(currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue);
                     }
                 } else {
                     thisBagsMarkup += '';
@@ -8813,6 +8828,7 @@ function init() {
         canvasMapMaskImage = new Image();
         UI.init();
         audio.init();
+          
         // detect and set up input methods:
         Input.init();
         // show loading screen while getting assets:
@@ -10529,13 +10545,13 @@ function update() {
         } else {
             hero.currentAnimation = 'walk';
         }
-        if(activeAction == 'music') {
-// cancel music mode:
-activeAction = '';
+        if(music.currentInstrument != '') {
+
+music.exitMusicMode();
         }
     } else {
         
-        if(activeAction == 'music') {
+        if(music.currentInstrument != '') {
 hero.currentAnimation = 'music';
         } else {
             hero.currentAnimation = 'idle';

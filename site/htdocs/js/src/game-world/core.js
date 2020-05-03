@@ -78,6 +78,7 @@ function init() {
         canvasMapMaskImage = new Image();
         UI.init();
         audio.init();
+          
         // detect and set up input methods:
         Input.init();
         // show loading screen while getting assets:
@@ -1794,13 +1795,13 @@ function update() {
         } else {
             hero.currentAnimation = 'walk';
         }
-        if(activeAction == 'music') {
-// cancel music mode:
-activeAction = '';
+        if(music.currentInstrument != '') {
+
+music.exitMusicMode();
         }
     } else {
         
-        if(activeAction == 'music') {
+        if(music.currentInstrument != '') {
 hero.currentAnimation = 'music';
         } else {
             hero.currentAnimation = 'idle';

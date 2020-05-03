@@ -103,7 +103,7 @@ var notificationIsShowing = false;
 var retinueQuestTimers = [];
 
 
-var UI = {
+const UI = {
     init: function() {
         // cache all local references to UI elements:
         const displayZoneName = document.getElementById('displayZoneName');
@@ -172,6 +172,9 @@ var UI = {
                     }
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
+                    }
+                      if (thisAction == "music") {
+                        music.loadInstrumentSounds(currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue);
                     }
                 } else {
                     thisBagsMarkup += '';

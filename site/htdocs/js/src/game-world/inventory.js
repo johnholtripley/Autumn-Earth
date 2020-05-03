@@ -398,7 +398,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     checkAddPetToWorld();
                     break;
                     case "music":
-                    enterMusicMode();
+                    music.enterMusicMode(whichActionValue);
                     break;
                 case "inscribe":
                     UI.openInscriptionPanel();
