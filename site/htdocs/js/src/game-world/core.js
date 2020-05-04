@@ -1681,6 +1681,10 @@ function update() {
             key[12] = false;
         }
 
+if(music.currentInstrument != '') {
+music.checkKeyPresses();
+}
+
         //  checkForWorldWrap(hero);
         checkHeroCollisions();
 

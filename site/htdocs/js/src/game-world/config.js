@@ -128,7 +128,7 @@ const surveyingDepletionModifier = 500;
 const facingsPossible = ["n", "e", "s", "w"];
 
 // key bindings
-var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var hero = {
     x: 0,

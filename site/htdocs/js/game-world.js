@@ -507,7 +507,7 @@ const surveyingDepletionModifier = 500;
 const facingsPossible = ["n", "e", "s", "w"];
 
 // key bindings
-var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var hero = {
     x: 0,
@@ -4032,18 +4032,46 @@ const Input = {
                 case KeyBindings.escape:
                     key[12] = to;
                     break;
-                    case KeyBindings.cursorUp:
-                      key[13] = to;
+                case KeyBindings.cursorUp:
+                    key[13] = to;
                     break;
-                    case KeyBindings.cursorDown:
-                      key[14] = to;
+                case KeyBindings.cursorDown:
+                    key[14] = to;
                     break;
-                    case KeyBindings.cursorLeft:
-                      key[15] = to;
+                case KeyBindings.cursorLeft:
+                    key[15] = to;
                     break;
-                    case KeyBindings.cursorRight:
-                      key[16] = to;
+                case KeyBindings.cursorRight:
+                    key[16] = to;
                     break;
+
+                    // instrument notes:
+                case KeyBindings['c5-c']:
+                    key[17] = to;
+                    break;
+                case KeyBindings['c5-d']:
+                    key[18] = to;
+                    break;
+                case KeyBindings['c5-e']:
+                    key[19] = to;
+                    break;
+                case KeyBindings['c5-f']:
+                    key[20] = to;
+                    break;
+                case KeyBindings['c5-g']:
+                    key[21] = to;
+                    break;
+                case KeyBindings['c5-a']:
+                    key[22] = to;
+                    break;
+                case KeyBindings['c5-b']:
+                    key[23] = to;
+                    break;
+                case KeyBindings['c6-c']:
+                    key[24] = to;
+                    break;
+
+
             }
         }
     },
@@ -4969,7 +4997,15 @@ var KeyBindings = {
     'cursorUp': 38,
     'cursorDown': 40,
     'cursorLeft': 37,
-    'cursorRight': 39
+    'cursorRight': 39,
+    'c5-c': 49,
+    'c5-d': 50,
+    'c5-e': 51,
+    'c5-f': 52,
+    'c5-g': 53,
+    'c5-a': 54,
+    'c5-b': 55,
+    'c6-c': 56
 }
 
 if (window.Worker) {
@@ -4987,7 +5023,7 @@ const music = {
     notesToLoad: ["c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
     loadInstrumentSounds: function(whichInstrument) {
         for (var i = 0; i < music.notesToLoad.length; i++) {
-            loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument+"-"+music.notesToLoad[i]);
+            loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument + "-" + music.notesToLoad[i]);
         }
     },
     enterMusicMode: function(whichInstrument) {
@@ -4995,6 +5031,32 @@ const music = {
     },
     exitMusicMode: function() {
         music.currentInstrument = '';
+    },
+    checkKeyPresses: function() {
+        if (key[17]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-c'], 0);
+        }
+        if (key[18]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-d'], 0);
+        }
+        if (key[19]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-e'], 0);
+        }
+        if (key[20]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-f'], 0);
+        }
+        if (key[21]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-g'], 0);
+        }
+        if (key[22]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-a'], 0);
+        }
+        if (key[23]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c5-b'], 0);
+        }
+        if (key[24]) {
+            audio.playSound(soundEffects[music.currentInstrument + '-c6-c'], 0);
+        }
     }
 }
 if (window.Worker) {
@@ -10430,6 +10492,10 @@ function update() {
 
             key[12] = false;
         }
+
+if(music.currentInstrument != '') {
+music.checkKeyPresses();
+}
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();

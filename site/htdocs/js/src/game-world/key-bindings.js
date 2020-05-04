@@ -16,5 +16,13 @@ var KeyBindings = {
     'cursorUp': 38,
     'cursorDown': 40,
     'cursorLeft': 37,
-    'cursorRight': 39
+    'cursorRight': 39,
+    'c5-c': 49,
+    'c5-d': 50,
+    'c5-e': 51,
+    'c5-f': 52,
+    'c5-g': 53,
+    'c5-a': 54,
+    'c5-b': 55,
+    'c6-c': 56
 }

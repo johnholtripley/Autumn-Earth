@@ -87,18 +87,46 @@ const Input = {
                 case KeyBindings.escape:
                     key[12] = to;
                     break;
-                    case KeyBindings.cursorUp:
-                      key[13] = to;
+                case KeyBindings.cursorUp:
+                    key[13] = to;
                     break;
-                    case KeyBindings.cursorDown:
-                      key[14] = to;
+                case KeyBindings.cursorDown:
+                    key[14] = to;
                     break;
-                    case KeyBindings.cursorLeft:
-                      key[15] = to;
+                case KeyBindings.cursorLeft:
+                    key[15] = to;
                     break;
-                    case KeyBindings.cursorRight:
-                      key[16] = to;
+                case KeyBindings.cursorRight:
+                    key[16] = to;
                     break;
+
+                    // instrument notes:
+                case KeyBindings['c5-c']:
+                    key[17] = to;
+                    break;
+                case KeyBindings['c5-d']:
+                    key[18] = to;
+                    break;
+                case KeyBindings['c5-e']:
+                    key[19] = to;
+                    break;
+                case KeyBindings['c5-f']:
+                    key[20] = to;
+                    break;
+                case KeyBindings['c5-g']:
+                    key[21] = to;
+                    break;
+                case KeyBindings['c5-a']:
+                    key[22] = to;
+                    break;
+                case KeyBindings['c5-b']:
+                    key[23] = to;
+                    break;
+                case KeyBindings['c6-c']:
+                    key[24] = to;
+                    break;
+
+
             }
         }
     },
