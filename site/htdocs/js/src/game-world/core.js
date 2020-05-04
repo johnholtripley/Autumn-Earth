@@ -1684,6 +1684,9 @@ function update() {
 if(music.currentInstrument != '') {
 music.checkKeyPresses();
 }
+if(music.isPlayingBackTranscription) {
+music.playBackTranscription();
+}
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();

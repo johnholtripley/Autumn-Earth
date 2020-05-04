@@ -578,7 +578,7 @@ z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
 
 <input type="file" name="Filedata" id="Filedata" class="fileInput" data-multiple-caption="{count} files selected" multiple=""> 
-<label for="Filedata"><span>or by upload</span></label>
+<label for="Filedata" class="fileInputLabel"><span>or by upload</span></label>
 
 
 <input id="switchInput" name="switchInput" class="switch" value="1" checked="checked" type="checkbox">
