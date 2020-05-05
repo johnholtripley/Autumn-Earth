@@ -4729,14 +4729,20 @@ function generateGenericSlotMarkup(thisItemObject) {
     var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
     var isACard = false;
+    var showsInscriptionTitle = false;
     var rareCardSuffix = '';
     var rareCardText = '';
 
     if (thisAction) {
+        if (thisItemObject.inscription.content) {
         if (thisAction.indexOf("book") != -1) {
-            if (thisItemObject.inscription.content) {
+            
                 isABook = true;
+                showsInscriptionTitle = true;
 
+            }
+            if(thisAction == 'transcription') {
+showsInscriptionTitle = true;
             }
         }
     }
@@ -4803,7 +4809,7 @@ function generateGenericSlotMarkup(thisItemObject) {
             slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + rareCardSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         } else {
             slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-            if (isABook) {
+            if (showsInscriptionTitle) {
                 itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
             } else {
                 itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
