@@ -3996,7 +3996,6 @@ const Input = {
                     e.preventDefault();
                     key[3] = to;
                     break;
-
                 case KeyBindings.action:
                     // action should only be on key Up:
                     key[4] = 0;
@@ -4047,28 +4046,52 @@ const Input = {
 
                     // instrument notes:
                 case KeyBindings['c5-c']:
-                    key[17] = to;
+                    key[17] = 0;
+                    if (type === "up") {
+                        key[17] = 1;
+                    }
                     break;
                 case KeyBindings['c5-d']:
-                    key[18] = to;
+                    key[18] = 0;
+                    if (type === "up") {
+                        key[18] = 1;
+                    }
                     break;
                 case KeyBindings['c5-e']:
-                    key[19] = to;
+                    key[19] = 0;
+                    if (type === "up") {
+                        key[19] = 1;
+                    }
                     break;
                 case KeyBindings['c5-f']:
-                    key[20] = to;
+                    key[20] = 0;
+                    if (type === "up") {
+                        key[20] = 1;
+                    }
                     break;
                 case KeyBindings['c5-g']:
-                    key[21] = to;
+                    key[21] = 0;
+                    if (type === "up") {
+                        key[21] = 1;
+                    }
                     break;
                 case KeyBindings['c5-a']:
-                    key[22] = to;
+                    key[22] = 0;
+                    if (type === "up") {
+                        key[22] = 1;
+                    }
                     break;
                 case KeyBindings['c5-b']:
-                    key[23] = to;
+                    key[23] = 0;
+                    if (type === "up") {
+                        key[23] = 1;
+                    }
                     break;
                 case KeyBindings['c6-c']:
-                    key[24] = to;
+                    key[24] = 0;
+                    if (type === "up") {
+                        key[24] = 1;
+                    }
                     break;
 
 
@@ -5049,17 +5072,20 @@ const music = {
     },
     enterMusicMode: function(whichInstrument) {
         music.currentInstrument = whichInstrument;
-        if (music.isTranscribing) {
-            music.currentTranscriptionStartTime = performance.now();
-        }
     },
     exitMusicMode: function() {
         music.currentInstrument = '';
-        music.isTranscribing = false;
+        if (music.isTranscribing) {
+            music.stopTranscription();
+        }
         music.isPlayingBackTranscription = false;
     },
     playCurrentInstrumentNote: function(whichNote) {
         if (music.isTranscribing) {
+            if (music.currentTranscriptionStartTime == -1) {
+                // this is the first note:
+                music.currentTranscriptionStartTime = performance.now();
+            }
             music.currentTranscription.push([(performance.now() - music.currentTranscriptionStartTime), whichNote]);
         }
         audio.playSound(soundEffects[music.currentInstrument + '-' + whichNote], 0);
@@ -5067,44 +5093,66 @@ const music = {
     checkKeyPresses: function() {
         if (key[17]) {
             music.playCurrentInstrumentNote('c5-c');
+            key[17] = 0;
         }
         if (key[18]) {
             music.playCurrentInstrumentNote('c5-d');
+            key[18] = 0;
         }
         if (key[19]) {
             music.playCurrentInstrumentNote('c5-e');
+            key[19] = 0;
         }
         if (key[20]) {
             music.playCurrentInstrumentNote('c5-f');
+            key[20] = 0;
         }
         if (key[21]) {
             music.playCurrentInstrumentNote('c5-g');
+            key[21] = 0;
         }
         if (key[22]) {
             music.playCurrentInstrumentNote('c5-a');
+            key[22] = 0;
         }
         if (key[23]) {
             music.playCurrentInstrumentNote('c5-b');
+            key[23] = 0;
         }
         if (key[24]) {
             music.playCurrentInstrumentNote('c6-c');
+            key[24] = 0;
         }
     },
+
+    startTranscription: function() {
+        music.currentTranscription = [];
+        music.isTranscribing = true;
+        music.currentTranscriptionStartTime = -1;
+    },
+
+    stopTranscription: function() {
+        music.isTranscribing = false;
+        // create item:
+        console.log(music.currentTranscription);
+    },
+
     startplayBackTranscription: function(transcription) {
         music.playbackTranscriptionStartTime = performance.now();
         music.activePlayBackTranscription = transcription;
         music.isPlayingBackTranscription = true;
         music.isTranscribing = false;
-
     },
+
     playBackTranscription: function() {
         if (music.activePlayBackTranscription.length > 0) {
+            // [timestamp, note]
             if ((performance.now() - music.playbackTranscriptionStartTime) >= music.activePlayBackTranscription[0][0]) {
                 music.playCurrentInstrumentNote(music.activePlayBackTranscription[0][1]);
                 music.activePlayBackTranscription.shift();
             }
         } else {
-            
+
             music.isPlayingBackTranscription = false;
         }
     }
@@ -6132,6 +6180,7 @@ const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPan
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
+const transcriptionPanel = document.getElementById('transcriptionPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
 const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection ul:not(#housing-items) li');
@@ -6277,8 +6326,7 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
-
-
+        document.getElementById('buttonStopTranscription').onclick = music.stopTranscription;
 
         for (i = 0; i < housingToggleButtons.length; i++) {
             housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
@@ -7895,7 +7943,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         }
                     }
                     break;
-
+case "transcribe":
+       if(music.currentInstrument == '') {
+ UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
+} else {
+   transcriptionPanel.classList.add('active');
+music.startTranscription();
+}
+break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();

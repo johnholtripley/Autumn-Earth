@@ -86,6 +86,7 @@ const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPan
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 const catalogueQuestPanels = document.getElementById('catalogueQuestPanels');
 const housingPanel = document.getElementById('housingPanel');
+const transcriptionPanel = document.getElementById('transcriptionPanel');
 const housingConstructionPanel = document.getElementById('housingConstructionPanel');
 const housingTileColour = document.getElementById('housingTileColour');
 const housingTileSelectionListItems = document.querySelectorAll('#housingTileSelection ul:not(#housing-items) li');
@@ -231,8 +232,7 @@ var UI = {
         //document.getElementById('hasEnoughConfirm').onclick = housingNameSpace.publishCommittedDesign;
         document.getElementById('housingConstructionCancelButton').onclick = housingNameSpace.checkAbandonDesign;
         document.querySelector('#housingConstructionPanel .closePanel').onclick = housingNameSpace.checkSaveDraftDesign;
-
-
+        document.getElementById('buttonStopTranscription').onclick = music.stopTranscription;
 
         for (i = 0; i < housingToggleButtons.length; i++) {
             housingToggleButtons[i].onclick = housingNameSpace.toggleTileGroup;
@@ -1849,7 +1849,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         }
                     }
                     break;
-
+case "transcribe":
+       if(music.currentInstrument == '') {
+ UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
+} else {
+   transcriptionPanel.classList.add('active');
+music.startTranscription();
+}
+break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();

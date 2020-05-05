@@ -51,7 +51,6 @@ const Input = {
                     e.preventDefault();
                     key[3] = to;
                     break;
-
                 case KeyBindings.action:
                     // action should only be on key Up:
                     key[4] = 0;
@@ -102,28 +101,52 @@ const Input = {
 
                     // instrument notes:
                 case KeyBindings['c5-c']:
-                    key[17] = to;
+                    key[17] = 0;
+                    if (type === "up") {
+                        key[17] = 1;
+                    }
                     break;
                 case KeyBindings['c5-d']:
-                    key[18] = to;
+                    key[18] = 0;
+                    if (type === "up") {
+                        key[18] = 1;
+                    }
                     break;
                 case KeyBindings['c5-e']:
-                    key[19] = to;
+                    key[19] = 0;
+                    if (type === "up") {
+                        key[19] = 1;
+                    }
                     break;
                 case KeyBindings['c5-f']:
-                    key[20] = to;
+                    key[20] = 0;
+                    if (type === "up") {
+                        key[20] = 1;
+                    }
                     break;
                 case KeyBindings['c5-g']:
-                    key[21] = to;
+                    key[21] = 0;
+                    if (type === "up") {
+                        key[21] = 1;
+                    }
                     break;
                 case KeyBindings['c5-a']:
-                    key[22] = to;
+                    key[22] = 0;
+                    if (type === "up") {
+                        key[22] = 1;
+                    }
                     break;
                 case KeyBindings['c5-b']:
-                    key[23] = to;
+                    key[23] = 0;
+                    if (type === "up") {
+                        key[23] = 1;
+                    }
                     break;
                 case KeyBindings['c6-c']:
-                    key[24] = to;
+                    key[24] = 0;
+                    if (type === "up") {
+                        key[24] = 1;
+                    }
                     break;
 
 

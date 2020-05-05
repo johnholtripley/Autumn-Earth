@@ -233,6 +233,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       </fieldset>
     </form>
 
+    <div id="transcriptionPanel">
+      <div class="draggableBar">Transcribe music</div><button class="closePanel">close</button>
+      <div class="panelInner">
+        <label for="transcriptionTitle">Song name:</label>
+        <input id="transcriptionTitle" type="text">
+        <button id="buttonStopTranscription">Stop transcription</button>
+      </div>
+    </div>
+
     <?php // defined in getPost.php: ?>
     <?php echo $postPanelMarkup; ?>
     <?php echo $allMessagePanels; ?>
