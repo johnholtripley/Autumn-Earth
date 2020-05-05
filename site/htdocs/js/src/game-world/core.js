@@ -3582,6 +3582,9 @@ function addPetToWorld() {
 }
 
 function checkAddPetToWorld() {
+    console.log("called"+inventorySlotReference);
+    console.log(hero.inventory[inventorySlotReference].contains);
+    console.log(hero.inventory[inventorySlotReference].contains[0].name);
     UI.showYesNoDialogueBox("Hatch "+hero.inventory[inventorySlotReference].contains[0].name+"?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 

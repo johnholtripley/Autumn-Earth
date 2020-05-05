@@ -103,7 +103,7 @@ var notificationIsShowing = false;
 var retinueQuestTimers = [];
 
 
-const UI = {
+var UI = {
     init: function() {
         // cache all local references to UI elements:
         const displayZoneName = document.getElementById('displayZoneName');

@@ -55,13 +55,12 @@ const music = {
             music.playCurrentInstrumentNote('c6-c');
         }
     },
-    startplayBackTranscription: function(transcription, whichInstrument) {
+    startplayBackTranscription: function(transcription) {
         music.playbackTranscriptionStartTime = performance.now();
         music.activePlayBackTranscription = transcription;
         music.isPlayingBackTranscription = true;
         music.isTranscribing = false;
-        // 'lute-lotro':
-        music.currentInstrument = whichInstrument;
+
     },
     playBackTranscription: function() {
         if (music.activePlayBackTranscription.length > 0) {
@@ -70,7 +69,7 @@ const music = {
                 music.activePlayBackTranscription.shift();
             }
         } else {
-            music.currentInstrument = '';
+            
             music.isPlayingBackTranscription = false;
         }
     }

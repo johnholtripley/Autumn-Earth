@@ -352,6 +352,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
 
             whichActionValue = allActionValuesSplit[i];
 
+
             switch (whichActionSplit[i]) {
                 case "container":
                     // check it has contents:
@@ -397,8 +398,16 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 inventorySlotReference = whichSlotNumber;
                     checkAddPetToWorld();
                     break;
-                    case "music":
+                case "music":
                     music.enterMusicMode(whichActionValue);
+                    break;
+                    case "transcription":
+                    if(music.currentInstrument == '') {
+ UI.showNotification("<p>I haven't got an instrument equipped to play that</p>");
+} else {
+    // use slice to make a copy of the array as elements will be removed from it as it's played:
+music.startplayBackTranscription(hero.inventory[whichSlotNumber].inscription.content.slice(0));
+}
                     break;
                 case "inscribe":
                     UI.openInscriptionPanel();

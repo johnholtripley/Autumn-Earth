@@ -4461,6 +4461,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
 
             whichActionValue = allActionValuesSplit[i];
 
+
             switch (whichActionSplit[i]) {
                 case "container":
                     // check it has contents:
@@ -4506,8 +4507,16 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 inventorySlotReference = whichSlotNumber;
                     checkAddPetToWorld();
                     break;
-                    case "music":
+                case "music":
                     music.enterMusicMode(whichActionValue);
+                    break;
+                    case "transcription":
+                    if(music.currentInstrument == '') {
+ UI.showNotification("<p>I haven't got an instrument equipped to play that</p>");
+} else {
+    // use slice to make a copy of the array as elements will be removed from it as it's played:
+music.startplayBackTranscription(hero.inventory[whichSlotNumber].inscription.content.slice(0));
+}
                     break;
                 case "inscribe":
                     UI.openInscriptionPanel();
@@ -5075,13 +5084,12 @@ const music = {
             music.playCurrentInstrumentNote('c6-c');
         }
     },
-    startplayBackTranscription: function(transcription, whichInstrument) {
+    startplayBackTranscription: function(transcription) {
         music.playbackTranscriptionStartTime = performance.now();
         music.activePlayBackTranscription = transcription;
         music.isPlayingBackTranscription = true;
         music.isTranscribing = false;
-        // 'lute-lotro':
-        music.currentInstrument = whichInstrument;
+
     },
     playBackTranscription: function() {
         if (music.activePlayBackTranscription.length > 0) {
@@ -5090,7 +5098,7 @@ const music = {
                 music.activePlayBackTranscription.shift();
             }
         } else {
-            music.currentInstrument = '';
+            
             music.isPlayingBackTranscription = false;
         }
     }
@@ -6135,7 +6143,7 @@ var notificationIsShowing = false;
 var retinueQuestTimers = [];
 
 
-const UI = {
+var UI = {
     init: function() {
         // cache all local references to UI elements:
         const displayZoneName = document.getElementById('displayZoneName');
@@ -12430,6 +12438,9 @@ function addPetToWorld() {
 }
 
 function checkAddPetToWorld() {
+    console.log("called"+inventorySlotReference);
+    console.log(hero.inventory[inventorySlotReference].contains);
+    console.log(hero.inventory[inventorySlotReference].contains[0].name);
     UI.showYesNoDialogueBox("Hatch "+hero.inventory[inventorySlotReference].contains[0].name+"?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 
