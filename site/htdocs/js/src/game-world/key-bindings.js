@@ -6,6 +6,7 @@ var KeyBindings = {
     'pause': 80,
     'action': 17,
     'shift': 16,
+    'ctrl': 17,
     'challenge': 67,
     'toggleUI': 9,
     'toggleJournal': 81,
@@ -17,12 +18,12 @@ var KeyBindings = {
     'cursorDown': 40,
     'cursorLeft': 37,
     'cursorRight': 39,
-    'c5-c': 49,
-    'c5-d': 50,
-    'c5-e': 51,
-    'c5-f': 52,
-    'c5-g': 53,
-    'c5-a': 54,
-    'c5-b': 55,
-    'c6-c': 56
+    'c4-c': 49,
+    'c4-d': 50,
+    'c4-e': 51,
+    'c4-f': 52,
+    'c4-g': 53,
+    'c4-a': 54,
+    'c4-b': 55,
+    'c5-c': 56
 }

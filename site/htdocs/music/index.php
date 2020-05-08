@@ -55,7 +55,8 @@ function determineNoteLength($thisTempo, $thisDefaultNoteLength) {
     $thisNoteLengthMS = 60/$thisTempo*1000;
   } else {
     $defaultNoteLengthFraction = substr($thisDefaultNoteLength, strpos($thisDefaultNoteLength, "/")+1);
-    $splitTemp = split("[/=]",$thisTempo);
+    // $splitTemp = split("[/=]",$thisTempo);
+    $splitTemp = preg_split('/[\/=]/',$thisTempo);
     $thisNoteLengthMS = (60/$splitTemp[2]*1000)*($splitTemp[1]/$defaultNoteLengthFraction);
   }
   return $thisNoteLengthMS;
@@ -223,7 +224,7 @@ if ($uploadedfilesize > 102400) {
   }
   for ($eachSong = 1; $eachSong<$numberOfSongs; $eachSong++) {
     // restore the X header and split on line breaks:
-    $abcFileContents = split("[\n\r]+", "X:".$individualSongs[$eachSong]);
+    $abcFileContents = explode("\n", "X:".$individualSongs[$eachSong]);
     // set up defaults
     $tuneIndex = "1";
     $tempo = "120";
@@ -501,18 +502,25 @@ $jsonOutput .= '"title": "'.$songTitle.'",';
 $jsonOutput .= '"private": '.$songIsPrivate.'}';
 
 $fp = fopen($songPath.$filename, 'w');
-
-
-
-
 fwrite($fp, $jsonOutput);
 fclose($fp);
+
+
+
+
+// create in game object for this as well:
+var_dump($songListing);
+
+
+
+
+
 
 if($isAnAJAXRequest) {
 echo "Song #".$thisNewSongId." successfully created";
   } else {
 echo "<p>Song #".$thisNewSongId." successfully created</p>";
-echo '<p><a href="http://ae.dev/music/playsong.php?instrId=1&songId='.$thisNewSongId.'&chr=999">TEST ##### Create this sound file with a psalter</a>';
+echo '<p><a href="/music/playsong.php?instrId=1&songId='.$thisNewSongId.'&chr=999">TEST ##### Create this sound file with a psalter</a>';
 }
 
     } else {
@@ -555,17 +563,18 @@ if(!$isAnAJAXRequest) {
 <li>double sharps or double flats</li>
 </ul>
 
-<pre><code>X:1
-T:Brandywine Bridge
-C:Composer:
-N:Remarks:
-Q:1/4=120
-V:1
-M:4/4
-L:1/8
-K:F
-e3 f ed 
-c2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2
+<pre><code>
+X:1<br>
+T:Brandywine Bridge<br>
+C:Composer:<br>
+N:Remarks:<br>
+Q:1/4=120<br>
+V:1<br>
+M:4/4<br>
+L:1/8<br>
+K:F<br>
+e3 f ed <br>
+c2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2<br>
 z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="abcForm" id="dragAndDropUpload" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">

@@ -6,7 +6,7 @@ const music = {
     isPlayingBackTranscription: false,
     activePlayBackTranscription: [],
     playbackTranscriptionStartTime: '',
-    notesToLoad: ["c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
+    notesToLoad: ["c3-c", "c3-d", "c3-e", "c3-f", "c3-g", "c3-a", "c3-b", "c4-c", "c4-d", "c4-e", "c4-f", "c4-g", "c4-a", "c4-b", "c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
     loadInstrumentSounds: function(whichInstrument) {
         for (var i = 0; i < music.notesToLoad.length; i++) {
             loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument + "-" + music.notesToLoad[i]);
@@ -33,36 +33,48 @@ const music = {
         audio.playSound(soundEffects[music.currentInstrument + '-' + whichNote], 0);
     },
     checkKeyPresses: function() {
+
+var whichOctave = 4;
+if(key[5]) {
+    // shift:
+    whichOctave = 3;
+}
+if(key[25]) {
+    // ctrl:
+    whichOctave = 5;
+}
+
+
         if (key[17]) {
-            music.playCurrentInstrumentNote('c5-c');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-c');
             key[17] = 0;
         }
         if (key[18]) {
-            music.playCurrentInstrumentNote('c5-d');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-d');
             key[18] = 0;
         }
         if (key[19]) {
-            music.playCurrentInstrumentNote('c5-e');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-e');
             key[19] = 0;
         }
         if (key[20]) {
-            music.playCurrentInstrumentNote('c5-f');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-f');
             key[20] = 0;
         }
         if (key[21]) {
-            music.playCurrentInstrumentNote('c5-g');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-g');
             key[21] = 0;
         }
         if (key[22]) {
-            music.playCurrentInstrumentNote('c5-a');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-a');
             key[22] = 0;
         }
         if (key[23]) {
-            music.playCurrentInstrumentNote('c5-b');
+            music.playCurrentInstrumentNote('c'+whichOctave+'-b');
             key[23] = 0;
         }
         if (key[24]) {
-            music.playCurrentInstrumentNote('c6-c');
+            music.playCurrentInstrumentNote('c'+(whichOctave+1)+'-c');
             key[24] = 0;
         }
     },
@@ -75,8 +87,29 @@ const music = {
 
     stopTranscription: function() {
         music.isTranscribing = false;
-        // create item:
-        console.log(music.currentTranscription);
+        if (music.currentTranscription.length > 0) {
+            // create item:
+            var transcriptionObject = {
+                "type": 114,
+                "inscription": {
+                    "title": transcriptionTitle.value,
+                    "timeCreated": Date.now(),
+                    "content": music.currentTranscription
+                }
+            }
+            transcriptionObject = prepareInventoryObject(transcriptionObject);
+            inventoryCheck = canAddItemToInventory([transcriptionObject]);
+            if (inventoryCheck[0]) {
+                UI.showChangeInInventory(inventoryCheck[1]);
+            } else {
+                // post it:
+                 var subjectLine = "Your transcription of '" + transcriptionTitle.value + "'";
+        var message = "Beautifully composed";
+        var whichNPC = "Taliesin the bard";
+        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [transcriptionObject]);
+        UI.showNotification("<p>My transcription is in the post</p>");
+            }
+        }
     },
 
     startplayBackTranscription: function(transcription) {

@@ -98,6 +98,8 @@ const yesNoDialogueHeading = document.getElementById('yesNoDialogueHeading');
 const yesNoDialogueButton1 = document.getElementById('yesNoDialogueButton1');
 const yesNoDialogueButton2 = document.getElementById('yesNoDialogueButton2');
 const housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
+const transcriptionTitle = document.getElementById('transcriptionTitle');
+
 
 var notificationQueue = [];
 var notificationIsShowing = false;

@@ -57,7 +57,10 @@ const Input = {
                     if (type === "up") {
                         key[4] = 1;
                     }
+                    // used to see if the ctrl key is being held down:
+                    key[25] = to;
                     break;
+                   
                 case KeyBindings.shift:
                     key[5] = to;
                     break;
@@ -100,50 +103,52 @@ const Input = {
                     break;
 
                     // instrument notes:
-                case KeyBindings['c5-c']:
+                case KeyBindings['c4-c']:
                     key[17] = 0;
+                    // stop browser switching tabs if ctrl is held down:
+                    e.preventDefault();
                     if (type === "up") {
                         key[17] = 1;
                     }
                     break;
-                case KeyBindings['c5-d']:
-                    key[18] = 0;
+                case KeyBindings['c4-d']:
+                    key[18] = 0;e.preventDefault();
                     if (type === "up") {
                         key[18] = 1;
                     }
                     break;
-                case KeyBindings['c5-e']:
-                    key[19] = 0;
+                case KeyBindings['c4-e']:
+                    key[19] = 0;e.preventDefault();
                     if (type === "up") {
                         key[19] = 1;
                     }
                     break;
-                case KeyBindings['c5-f']:
-                    key[20] = 0;
+                case KeyBindings['c4-f']:
+                    key[20] = 0;e.preventDefault();
                     if (type === "up") {
                         key[20] = 1;
                     }
                     break;
-                case KeyBindings['c5-g']:
-                    key[21] = 0;
+                case KeyBindings['c4-g']:
+                    key[21] = 0;e.preventDefault();
                     if (type === "up") {
                         key[21] = 1;
                     }
                     break;
-                case KeyBindings['c5-a']:
-                    key[22] = 0;
+                case KeyBindings['c4-a']:
+                    key[22] = 0;e.preventDefault();
                     if (type === "up") {
                         key[22] = 1;
                     }
                     break;
-                case KeyBindings['c5-b']:
-                    key[23] = 0;
+                case KeyBindings['c4-b']:
+                    key[23] = 0;e.preventDefault();
                     if (type === "up") {
                         key[23] = 1;
                     }
                     break;
-                case KeyBindings['c6-c']:
-                    key[24] = 0;
+                case KeyBindings['c5-c']:
+                    key[24] = 0;e.preventDefault();
                     if (type === "up") {
                         key[24] = 1;
                     }

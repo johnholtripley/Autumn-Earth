@@ -97,9 +97,9 @@ $songListing = $songData["score"];
 	
 	if (stripos($songListing[$i][0], "z") !== false) {
 		// is a rest - use the instrument independant file:
-		$wav = "instruments/z.wav";
+		$wav = "./instruments/z.wav";
 	} else {
-		$wav = "instruments/psaltery/".$songListing[$i][0].".wav";
+		$wav = "./instruments/psaltery/".$songListing[$i][0].".wav";
 	}
 	
 		
