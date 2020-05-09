@@ -103,7 +103,7 @@ const Input = {
                     break;
 
                     // instrument notes:
-                case KeyBindings['c4-c']:
+                case KeyBindings['c']:
                     key[17] = 0;
                     // stop browser switching tabs if ctrl is held down:
                     e.preventDefault();
@@ -111,43 +111,43 @@ const Input = {
                         key[17] = 1;
                     }
                     break;
-                case KeyBindings['c4-d']:
+                case KeyBindings['d']:
                     key[18] = 0;e.preventDefault();
                     if (type === "up") {
                         key[18] = 1;
                     }
                     break;
-                case KeyBindings['c4-e']:
+                case KeyBindings['e']:
                     key[19] = 0;e.preventDefault();
                     if (type === "up") {
                         key[19] = 1;
                     }
                     break;
-                case KeyBindings['c4-f']:
+                case KeyBindings['f']:
                     key[20] = 0;e.preventDefault();
                     if (type === "up") {
                         key[20] = 1;
                     }
                     break;
-                case KeyBindings['c4-g']:
+                case KeyBindings['g']:
                     key[21] = 0;e.preventDefault();
                     if (type === "up") {
                         key[21] = 1;
                     }
                     break;
-                case KeyBindings['c4-a']:
+                case KeyBindings['a']:
                     key[22] = 0;e.preventDefault();
                     if (type === "up") {
                         key[22] = 1;
                     }
                     break;
-                case KeyBindings['c4-b']:
+                case KeyBindings['b']:
                     key[23] = 0;e.preventDefault();
                     if (type === "up") {
                         key[23] = 1;
                     }
                     break;
-                case KeyBindings['c5-c']:
+                case KeyBindings['c^']:
                     key[24] = 0;e.preventDefault();
                     if (type === "up") {
                         key[24] = 1;
