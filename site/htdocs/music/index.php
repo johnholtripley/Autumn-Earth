@@ -23,36 +23,40 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 	upload abc file<br>
 	copy and paste text<br>
 	drag abc file<br>
-	pass json output to php script to create object<br>
+	pass json output to php script to create object and save to available transcriptions<br>
 	preview abc with chosen instrument<br>
 	tidy up code
 
 </p>
 
 
+
+
+<fieldset>
+<textarea id="abcTextInput" style="width: 400px;height: 360px;"></textarea>
+<button id="startTranscription">Transcribe</button>
+</fieldset>
+
+
+
+
+
+
 <div id="transcriptionOutput"></div>
+
+<p>thanks to <a href="https://paulrosen.github.io/abcjs">
+https://paulrosen.github.io/abcjs</a>
+</p>
+
+
+
+
+
+
 
 <script>
 var transcriptionOutput = [];
-var abcfile = 'X:1\nT:Brandywine Bridge\nC:Composer:\nN:Remarks:\nQ:1/4=120\nV:1\nM:4/4\nL:1/8\nK:F\ne3 f ed \nc2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2\nz2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]';
-
-var abcfile = "X:1 %Music\nT:Concerning Hobbits \nC:Composer: \nN:Remarks:\nQ:1/4=104 \nM:4/4 %Meter\nL:1/8 %\nK: D\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |\nd/e/f z f z2 z a/ z/ |fe z d ec z d/c/ |B8 |d3 c c3 B |F3 G/F/ E3 D/F/ |z F/G/ | E4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |\nd/e/f z f z2 z a/ z/ |fe z d ec z d/c/ |B8 |d3 c c3 B |F3 G/F/ E3 D/F/ |z F/G/ | E4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |";
-
-
-var visualObj = ABCJS.renderAbc("*", abcfile)[0];
-var synthControl = new ABCJS.synth.SynthController();
-/*synthControl.load("#audio", null, {displayRestart: false, displayPlay: false, displayProgress: false});*/
-synthControl.setTune(visualObj, true);
-
-
-
-
-
-var jsonOutput = '[';
-
-var midiMap = ["c3-c","c3-cs","c3-d","c3-ds","c3-e","c3-f","c3-fs","c3-g","c3-gs","c3-a","c3-as","c3-b","c4-c","c4-cs","c4-d","c4-ds","c4-e","c4-f","c4-fs","c4-g","c4-gs","c4-a","c4-as","c4-b","c5-c","c5-cs","c5-d","c5-ds","c5-e","c5-f","c5-fs","c5-g","c5-gs","c5-a","c5-as","c5-b","c6-c"];
-
-
+var transcriptionTitle = '';
 
 function convertMidiNumber(midiNumber) {
 /* midi note 60 = middle c (C4) */
@@ -62,6 +66,25 @@ return midiMap[(midiNumber-48)];
 }
 
 
+
+var abcfile = 'X:1\nT:Brandywine Bridge\nC:Composer:\nN:Remarks:\nQ:1/4=120\nV:1\nM:4/4\nL:1/8\nK:F\ne3 f ed \nc2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2\nz2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]';
+var abcfile = "X:1 %Music\nT:Concerning Hobbits \nC:Composer: \nN:Remarks:\nQ:1/4=104 \nM:4/4 %Meter\nL:1/8 %\nK: D\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |\nd/e/f z f z2 z a/ z/ |fe z d ec z d/c/ |B8 |d3 c c3 B |F3 G/F/ E3 D/F/ |z F/G/ | E4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |\nd/e/f z f z2 z a/ z/ |fe z d ec z d/c/ |B8 |d3 c c3 B |F3 G/F/ E3 D/F/ |z F/G/ | E4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nc/d/e z2 z e z e |gd cd z4 |G/A/B z B Bc z A |E2 z G D2 z2 |\nz4 G2B2 |c/d/e z e z2 z g/ z/ |ed z c dB z c/B/ |A8 |\nc3 B B3 A |E3 F/E/ D3 C/E/ | z E/F/ | D4 |\nd/e/f z2 z f z f |ae de z4 |A/B/c z c cd z B |F2 z A E2 z2 |z4 A2c2 |";
+
+var midiMap = ["c3-c","c3-cs","c3-d","c3-ds","c3-e","c3-f","c3-fs","c3-g","c3-gs","c3-a","c3-as","c3-b","c4-c","c4-cs","c4-d","c4-ds","c4-e","c4-f","c4-fs","c4-g","c4-gs","c4-a","c4-as","c4-b","c5-c","c5-cs","c5-d","c5-ds","c5-e","c5-f","c5-fs","c5-g","c5-gs","c5-a","c5-as","c5-b","c6-c"];
+
+function startTranscription() {
+transcribeABC(document.getElementById('abcTextInput').value);
+/*console.log(document.getElementById('abcTextInput').value);*/
+/*transcribeABC(abcfile);*/
+}
+
+function transcribeABC(abcfile) {
+var visualObj = ABCJS.renderAbc("*", abcfile)[0];
+var synthControl = new ABCJS.synth.SynthController();
+/*synthControl.load("#audio", null, {displayRestart: false, displayPlay: false, displayProgress: false});*/
+synthControl.setTune(visualObj, true);
+
+var jsonOutput = '{"title":"'+transcriptionTitle+'","timeCreated":"'+Date.now()+'","content":[';
 for (var i=0;i<transcriptionOutput.length;i++) {
 	var thisNoteMapping = convertMidiNumber(transcriptionOutput[i][1]);
 	/* convert 60 to c4-c etc ###### */
@@ -70,22 +93,15 @@ for (var i=0;i<transcriptionOutput.length;i++) {
 jsonOutput += ',';
 	} 
 }
-
-/*
-output example format:
-[
-		[187.3799999913899, "c5-c"],
-		[420.6149999983609, "c5-d"],
-		[687.5749999919208, "c5-e"],
-		[1237.8649999911431, "c5-g"],
-		[1805.0799999939045, "c5-e"],
-		[2705.909999992582, "c5-d"],
-		[2939.4899999926565, "c5-c"]
-	]
-*/
-jsonOutput += ']';
+jsonOutput += ']}';
 
 document.getElementById('transcriptionOutput').innerHTML = jsonOutput;
+}
+ 
+document.getElementById('startTranscription').onclick = startTranscription;
+
+
+ /* transcribeABC(abcfile); */
 </script>
 
 

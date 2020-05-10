@@ -651,6 +651,8 @@ var tunebook = {};
         if (currentTune >= 0 && currentTune < book.tunes.length) {
           abcParser.parse(book.tunes[currentTune].abc, params, book.tunes[currentTune].startPos - book.header.length);
           var tune = abcParser.getTune();
+          // john: ####
+         transcriptionTitle = tune.metaText.title;
           var override = callback(div, tune, i, book.tunes[currentTune].abc);
           ret.push(override ? override : tune);
         } else {
