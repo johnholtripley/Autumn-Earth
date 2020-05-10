@@ -4048,7 +4048,7 @@ const Input = {
                     break;
 
                     // instrument notes:
-                case KeyBindings['c4-c']:
+                case KeyBindings['c']:
                     key[17] = 0;
                     // stop browser switching tabs if ctrl is held down:
                     e.preventDefault();
@@ -4056,43 +4056,43 @@ const Input = {
                         key[17] = 1;
                     }
                     break;
-                case KeyBindings['c4-d']:
+                case KeyBindings['d']:
                     key[18] = 0;e.preventDefault();
                     if (type === "up") {
                         key[18] = 1;
                     }
                     break;
-                case KeyBindings['c4-e']:
+                case KeyBindings['e']:
                     key[19] = 0;e.preventDefault();
                     if (type === "up") {
                         key[19] = 1;
                     }
                     break;
-                case KeyBindings['c4-f']:
+                case KeyBindings['f']:
                     key[20] = 0;e.preventDefault();
                     if (type === "up") {
                         key[20] = 1;
                     }
                     break;
-                case KeyBindings['c4-g']:
+                case KeyBindings['g']:
                     key[21] = 0;e.preventDefault();
                     if (type === "up") {
                         key[21] = 1;
                     }
                     break;
-                case KeyBindings['c4-a']:
+                case KeyBindings['a']:
                     key[22] = 0;e.preventDefault();
                     if (type === "up") {
                         key[22] = 1;
                     }
                     break;
-                case KeyBindings['c4-b']:
+                case KeyBindings['b']:
                     key[23] = 0;e.preventDefault();
                     if (type === "up") {
                         key[23] = 1;
                     }
                     break;
-                case KeyBindings['c5-c']:
+                case KeyBindings['c^']:
                     key[24] = 0;e.preventDefault();
                     if (type === "up") {
                         key[24] = 1;
@@ -5042,14 +5042,14 @@ var KeyBindings = {
     'cursorDown': 40,
     'cursorLeft': 37,
     'cursorRight': 39,
-    'c4-c': 49,
-    'c4-d': 50,
-    'c4-e': 51,
-    'c4-f': 52,
-    'c4-g': 53,
-    'c4-a': 54,
-    'c4-b': 55,
-    'c5-c': 56
+    'c': 49,
+    'd': 50,
+    'e': 51,
+    'f': 52,
+    'g': 53,
+    'a': 54,
+    'b': 55,
+    'c^': 56
 }
 
 if (window.Worker) {
@@ -5070,7 +5070,7 @@ const music = {
     isPlayingBackTranscription: false,
     activePlayBackTranscription: [],
     playbackTranscriptionStartTime: '',
-    notesToLoad: ["c3-c", "c3-d", "c3-e", "c3-f", "c3-g", "c3-a", "c3-b", "c4-c", "c4-d", "c4-e", "c4-f", "c4-g", "c4-a", "c4-b", "c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
+    notesToLoad: ["c3-a", "c3-as", "c3-b", "c3-c", "c3-cs", "c3-d", "c3-ds", "c3-e", "c3-f", "c3-fs", "c3-g", "c3-gs", "c4-a", "c4-as", "c4-b", "c4-c", "c4-cs", "c4-d", "c4-ds", "c4-e", "c4-f", "c4-fs", "c4-g", "c4-gs", "c5-a", "c5-as", "c5-b", "c5-c", "c5-cs", "c5-d", "c5-ds", "c5-e", "c5-f", "c5-fs", "c5-g", "c5-gs", "c6-c"],
     loadInstrumentSounds: function(whichInstrument) {
         for (var i = 0; i < music.notesToLoad.length; i++) {
             loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument + "-" + music.notesToLoad[i]);

@@ -6,7 +6,7 @@ const music = {
     isPlayingBackTranscription: false,
     activePlayBackTranscription: [],
     playbackTranscriptionStartTime: '',
-    notesToLoad: ["c3-c", "c3-d", "c3-e", "c3-f", "c3-g", "c3-a", "c3-b", "c4-c", "c4-d", "c4-e", "c4-f", "c4-g", "c4-a", "c4-b", "c5-c", "c5-d", "c5-e", "c5-f", "c5-g", "c5-a", "c5-b", "c6-c"],
+    notesToLoad: ["c3-a", "c3-as", "c3-b", "c3-c", "c3-cs", "c3-d", "c3-ds", "c3-e", "c3-f", "c3-fs", "c3-g", "c3-gs", "c4-a", "c4-as", "c4-b", "c4-c", "c4-cs", "c4-d", "c4-ds", "c4-e", "c4-f", "c4-fs", "c4-g", "c4-gs", "c5-a", "c5-as", "c5-b", "c5-c", "c5-cs", "c5-d", "c5-ds", "c5-e", "c5-f", "c5-fs", "c5-g", "c5-gs", "c6-c"],
     loadInstrumentSounds: function(whichInstrument) {
         for (var i = 0; i < music.notesToLoad.length; i++) {
             loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument + "-" + music.notesToLoad[i]);
