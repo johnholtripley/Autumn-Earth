@@ -14,8 +14,15 @@ $thisCharId = $_POST['chr'];
 
 $transcriptionDataJson = json_decode($transcriptionData, true);
 
+
+if((!isset($transcriptionDataJson['title'])) || ($transcriptionDataJson['title'] == '')) {
+$songTitle = 'untitled';
+} else {
+  $songTitle = $transcriptionDataJson['title'];
+}
+
     // save the song data:
-$songPath = "../data/chr".$thisCharId."/music/".cleanURL($transcriptionDataJson['title']);
+$songPath = "../data/chr".$thisCharId."/music/".cleanURL($songTitle);
 $version = 1;
 
 do {
@@ -31,8 +38,18 @@ $filename = $songPath.".json";
 
 
 $fp = fopen($filename, 'w');
-fwrite($fp, $transcriptionData);
+$writing = fwrite($fp, $transcriptionData);
 fclose($fp);
 
 
+
+header('Content-Type: application/json');
+// return success or fail:
+
+if($writing === false) {
+// failed
+  echo '{"success":false}';
+} else {
+echo '{"success":true,"filename":"'.$filename.'"}';
+}
 ?>

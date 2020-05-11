@@ -1028,7 +1028,6 @@ function sendGetData(url) {
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
         if (xhr.readyState == 4) { // `DONE`
             status = xhr.status;
-            var wasParsedOk = true;
             if (status == 200) {
                     data = xhr.responseText;
                     successHandler && successHandler(data);

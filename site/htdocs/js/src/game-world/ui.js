@@ -1194,7 +1194,16 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 "inscription": ""
             }
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
-                thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+
+  try {
+              
+                     thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
+                } catch (e) {
+                    // it's not Json:
+                   thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+                }
+
+                
             }
 
             // check for User Generated Content attributes and build the contains object from those if they exist:

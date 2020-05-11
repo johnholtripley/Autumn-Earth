@@ -109,6 +109,8 @@ if(key[25]) {
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [transcriptionObject]);
         UI.showNotification("<p>My transcription is in the post</p>");
             }
+            // create a copy in the hero's transcribed folder so it can be copied later:
+            postData('/game-world/generateTranscriptionObject.php', 'chr=' + characterId + '&transcription=' + JSON.stringify(transcriptionObject['inscription']));
         }
     },
 

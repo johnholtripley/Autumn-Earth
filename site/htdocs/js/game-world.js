@@ -2958,7 +2958,6 @@ function sendGetData(url) {
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
         if (xhr.readyState == 4) { // `DONE`
             status = xhr.status;
-            var wasParsedOk = true;
             if (status == 200) {
                     data = xhr.responseText;
                     successHandler && successHandler(data);
@@ -5173,6 +5172,8 @@ if(key[25]) {
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [transcriptionObject]);
         UI.showNotification("<p>My transcription is in the post</p>");
             }
+            // create a copy in the hero's transcribed folder so it can be copied later:
+            postData('/game-world/generateTranscriptionObject.php', 'chr=' + characterId + '&transcription=' + JSON.stringify(transcriptionObject['inscription']));
         }
     },
 
@@ -7327,7 +7328,16 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 "inscription": ""
             }
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
-                thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+
+  try {
+              
+                     thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
+                } catch (e) {
+                    // it's not Json:
+                   thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+                }
+
+                
             }
 
             // check for User Generated Content attributes and build the contains object from those if they exist:

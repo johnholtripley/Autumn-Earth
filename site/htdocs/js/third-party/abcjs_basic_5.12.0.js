@@ -652,7 +652,12 @@ var tunebook = {};
           abcParser.parse(book.tunes[currentTune].abc, params, book.tunes[currentTune].startPos - book.header.length);
           var tune = abcParser.getTune();
           // john: ####
-         transcriptionTitle = tune.metaText.title;
+          if(typeof tune.metaText.title !== "undefined") {
+transcriptionTitle = tune.metaText.title;
+          } else {
+            transcriptionTitle = '';
+          }
+         
           var override = callback(div, tune, i, book.tunes[currentTune].abc);
           ret.push(override ? override : tune);
         } else {

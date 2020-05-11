@@ -182,7 +182,14 @@
             }
         ],
         "weather": [""],
-        "shops": [],
+        "shops": [  {
+                "name": "Song transcriptions",
+                "uniqueItems": "##transcriptions##",
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
+            }],
         "npcs": [
             {
                 "name": "deer",
@@ -215,6 +222,50 @@
                         "e": 0,
                         "s": 0,
                         "w": 0
+                    }
+                }
+            },
+             {
+                "name": "Hand crafted items shopkeeper",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 24,
+                "tileY": 24,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterName##, let's have a look at your transcriptions, eh?", "shop", "Song transcriptions"]
+                ],
+                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
                     }
                 }
             }

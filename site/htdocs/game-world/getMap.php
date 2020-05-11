@@ -1262,10 +1262,39 @@ mysqli_free_result($result2);
 
 
 
+if($mapData['map']['shops'][$i]["uniqueItems"] == '##transcriptions##') {
+
+// get the transcription files from this user's /data/music/ folder:
+
+
+$transcriptionFolder = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$chr.'/music';
+$transcribedSongs = scandir($transcriptionFolder);
+// remove . and .. :
+$transcribedSongs = array_diff(scandir($transcriptionFolder), array('.', '..'));
+
+
+$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.action = 'transcription' order by tblinventoryitems.shortname ASC limit 1";
+$result3 = mysqli_query($connection, $query3) or die ("tblinventoryitems transcription failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+$transcriptionBaseObject = $row;
+}
+mysqli_free_result($result3);
 
 
 
-if($mapData['map']['shops'][$i]["uniqueItems"] == '##usergenerated##') {
+
+// generate objects:
+ 
+    foreach ($transcribedSongs as $thisSong) {
+    $thisTranscriptionObject = $transcriptionBaseObject;
+
+$thisSongContents = file_get_contents($transcriptionFolder."/".$thisSong);
+
+  //  $thisTranscriptionObject['inscription'] = "{&quot;title&quot;:&quot;".$thisSong."&quot;,&quot;timeCreated&quot;:&quot;148905266553&quot;,&quot;content&quot;:[[0, &quot;c5-d&quot;],[807.69230769228, &quot;c5-cs&quot;]]}";
+    $thisTranscriptionObject['inscription'] = htmlentities($thisSongContents);
+    array_push($inventoryData, $thisTranscriptionObject);
+ }
+} else if($mapData['map']['shops'][$i]["uniqueItems"] == '##usergenerated##') {
    
    /*
 $UGCQuery = "select * from tblplayergeneratedcontent where characterID='".$chr."' and isActive='1'";
@@ -1479,13 +1508,21 @@ if (in_array($inventoryDataToSort[$j]['contains'], $recipesKnown)) {
 
 }
 
-
-
+// show inscription information here as well
 $shopMarkupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$thisShortName.'</em>';
 if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
 $shopMarkupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
 } else {
+
+if($inventoryDataToSort[$j]['action'] == "transcription") {
+    $thisInscriptionObject = json_decode(html_entity_decode($inventoryDataToSort[$j]['inscription']), true);
+    
+ $shopMarkupToOutput .= "&quot;" . $thisInscriptionObject['title'] . "&quot;";
+} else {
     $shopMarkupToOutput .= $thisDescription;
+}
+
+    
 }
 $shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $shopMarkupToOutput .= '</li>';

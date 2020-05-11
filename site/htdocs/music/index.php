@@ -19,15 +19,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <p><a href="/music/archive/">ABC format archive</a></p>
 
 <p>
-	To do:<br>
-	upload abc file<br>
-	copy and paste text<br>
-	drag abc file<br>
-	pass json output to php script to create object and save to available transcriptions<br>
-	preview abc with chosen instrument<br>
-	tidy up code
+	To do:</p>
+	<ul>
+	<li>upload abc file</li>
+	<li>drag abc file</li>
+	<li>return success (or error?) from posting transcription</li>
+	<li>preview abc with chosen instrument</li>
+	<li>tidy up code</li>
+	<li>Allow player to delete their transcribed files</li>
+</ul>
 
-</p>
 
 
 
@@ -35,6 +36,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <fieldset>
 <textarea id="abcTextInput" style="width: 400px;height: 360px;"></textarea>
 <button id="startTranscription">Transcribe</button>
+<div id="transcriptionResponse"></div>
 </fieldset>
 
 
@@ -43,6 +45,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 <div id="transcriptionOutput"></div>
+
 
 <p>thanks to <a href="https://paulrosen.github.io/abcjs">
 https://paulrosen.github.io/abcjs</a>
@@ -55,8 +58,47 @@ https://paulrosen.github.io/abcjs</a>
 
 
 <script>
+
+
+
+function postData(url, data, successHandler, errorHandler) {
+  
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+    xhr.open('post', url, true);
+       xhr.onreadystatechange = function() {
+        var status;
+        var data;
+
+        if (xhr.readyState == 4) { 
+              status = xhr.status;
+            var wasParsedOk = true;
+            if (status == 200) {
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (e) {
+             
+                    wasParsedOk = false;
+                    errorHandler && errorHandler(status);
+                }
+                if (wasParsedOk) {
+                    successHandler && successHandler(data);
+                }
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+    xhr.send(data);
+}
+
+
+
 var transcriptionOutput = [];
 var transcriptionTitle = '';
+var characterId = 999;
+var jsonOutput;
 
 function convertMidiNumber(midiNumber) {
 /* midi note 60 = middle c (C4) */
@@ -76,6 +118,24 @@ function startTranscription() {
 transcribeABC(document.getElementById('abcTextInput').value);
 /*console.log(document.getElementById('abcTextInput').value);*/
 /*transcribeABC(abcfile);*/
+
+
+ postData('/game-world/generateTranscriptionObject.php', 'chr=' + characterId + '&transcription=' + jsonOutput, function(data) {
+ 	
+        if (data.success) {
+            
+            document.getElementById('transcriptionResponse').innerHTML = "File successfully converted and saved - "+data.filename;
+        } else {
+           
+             document.getElementById('transcriptionResponse').innerHTML = "failed, please try again";
+            /* let user try again ######## */
+        }
+    }, function(status) {
+       
+        document.getElementById('transcriptionResponse').innerHTML = "failed, please try again";
+       
+    });
+
 }
 
 function transcribeABC(abcfile) {
@@ -84,7 +144,7 @@ var synthControl = new ABCJS.synth.SynthController();
 /*synthControl.load("#audio", null, {displayRestart: false, displayPlay: false, displayProgress: false});*/
 synthControl.setTune(visualObj, true);
 
-var jsonOutput = '{"title":"'+transcriptionTitle+'","timeCreated":"'+Date.now()+'","content":[';
+ jsonOutput = '{"title":"'+transcriptionTitle+'","timeCreated":"'+Date.now()+'","content":[';
 for (var i=0;i<transcriptionOutput.length;i++) {
 	var thisNoteMapping = convertMidiNumber(transcriptionOutput[i][1]);
 	/* convert 60 to c4-c etc ###### */
@@ -95,7 +155,7 @@ jsonOutput += ',';
 }
 jsonOutput += ']}';
 
-document.getElementById('transcriptionOutput').innerHTML = jsonOutput;
+/*document.getElementById('transcriptionOutput').innerHTML = jsonOutput;*/
 }
  
 document.getElementById('startTranscription').onclick = startTranscription;
