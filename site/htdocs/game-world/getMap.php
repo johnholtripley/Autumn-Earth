@@ -1286,6 +1286,8 @@ mysqli_free_result($result3);
 // generate objects:
  
     foreach ($transcribedSongs as $thisSong) {
+        // exclude any mp3s:
+ if(strpos($thisSong, ".json")) {
     $thisTranscriptionObject = $transcriptionBaseObject;
 
 $thisSongContents = file_get_contents($transcriptionFolder."/".$thisSong);
@@ -1293,6 +1295,7 @@ $thisSongContents = file_get_contents($transcriptionFolder."/".$thisSong);
   //  $thisTranscriptionObject['inscription'] = "{&quot;title&quot;:&quot;".$thisSong."&quot;,&quot;timeCreated&quot;:&quot;148905266553&quot;,&quot;content&quot;:[[0, &quot;c5-d&quot;],[807.69230769228, &quot;c5-cs&quot;]]}";
     $thisTranscriptionObject['inscription'] = htmlentities($thisSongContents);
     array_push($inventoryData, $thisTranscriptionObject);
+}
  }
 } else if($mapData['map']['shops'][$i]["uniqueItems"] == '##usergenerated##') {
    
