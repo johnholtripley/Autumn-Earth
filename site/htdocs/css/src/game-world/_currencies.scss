@@ -26,7 +26,8 @@
 
 .gold,
 .silver,
-.copper {
+.copper,
+.carddust {
     width: 11px;
     height: 11px;
     display: inline-block;
@@ -42,4 +43,9 @@
 
 .copper {
     background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 50%;
+}
+
+.carddust {
+    background: url(/images/game-world/interface/currency/card.png) no-repeat 50% 50%;
+    background-size: auto 100%;
 }

@@ -50,6 +50,6 @@ if($writing === false) {
 // failed
   echo '{"success":false}';
 } else {
-echo '{"success":true,"filename":"'.$filename.'"}';
+echo '{"success":true,"filename":"'.$filename.'","songname":"'.cleanURL($songTitle).'"}';
 }
 ?>

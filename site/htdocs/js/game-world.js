@@ -5096,48 +5096,45 @@ const music = {
         audio.playSound(soundEffects[music.currentInstrument + '-' + whichNote], 0);
     },
     checkKeyPresses: function() {
-
-var whichOctave = 4;
-if(key[5]) {
-    // shift:
-    whichOctave = 3;
-}
-if(key[25]) {
-    // ctrl:
-    whichOctave = 5;
-}
-
-
+        var whichOctave = 4;
+        if (key[5]) {
+            // shift:
+            whichOctave = 3;
+        }
+        if (key[25]) {
+            // ctrl:
+            whichOctave = 5;
+        }
         if (key[17]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-c');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-c');
             key[17] = 0;
         }
         if (key[18]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-d');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-d');
             key[18] = 0;
         }
         if (key[19]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-e');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-e');
             key[19] = 0;
         }
         if (key[20]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-f');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-f');
             key[20] = 0;
         }
         if (key[21]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-g');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-g');
             key[21] = 0;
         }
         if (key[22]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-a');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-a');
             key[22] = 0;
         }
         if (key[23]) {
-            music.playCurrentInstrumentNote('c'+whichOctave+'-b');
+            music.playCurrentInstrumentNote('c' + whichOctave + '-b');
             key[23] = 0;
         }
         if (key[24]) {
-            music.playCurrentInstrumentNote('c'+(whichOctave+1)+'-c');
+            music.playCurrentInstrumentNote('c' + (whichOctave + 1) + '-c');
             key[24] = 0;
         }
     },
@@ -5166,11 +5163,11 @@ if(key[25]) {
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 // post it:
-                 var subjectLine = "Your transcription of '" + transcriptionTitle.value + "'";
-        var message = "Beautifully composed";
-        var whichNPC = "Taliesin the bard";
-        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [transcriptionObject]);
-        UI.showNotification("<p>My transcription is in the post</p>");
+                var subjectLine = "Your transcription of '" + transcriptionTitle.value + "'";
+                var message = "Beautifully composed";
+                var whichNPC = "Taliesin the bard";
+                sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [transcriptionObject]);
+                UI.showNotification("<p>My transcription is in the post</p>");
             }
             // create a copy in the hero's transcribed folder so it can be copied later:
             postData('/game-world/generateTranscriptionObject.php', 'chr=' + characterId + '&transcription=' + JSON.stringify(transcriptionObject['inscription']));
@@ -7051,13 +7048,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
         var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
         var sellPrice;
-        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+        //var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
         if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         } else {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         }
-        hero.currency[thisCurrency] += sellPrice;
+       // hero.currency[thisCurrency] += sellPrice;
+        // selling is always in default 'money' currency:
+        hero.currency['money'] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
         document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
@@ -7362,9 +7361,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>I don't have room in my bags for that</p>");
+                // post it? ##
             }
         } else {
-            UI.showNotification("<p>Oops - sorry, not enough money</p>");
+            UI.showNotification("<p>I don't have enough money</p>");
         }
         // remove the drag slot that was created by the single click:
         UI.activeDragObject.innerHTML = '';
@@ -7672,7 +7672,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     // original:
                     newInscribedObject.inscription = {
                         'title': inscriptionTitle.value,
-                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>',
+                        'content': '<div class="inscribeContent">' + inscriptionTextArea.innerHTML + '</div>',
                         'timeCreated': Date.now()
                     }
                 }

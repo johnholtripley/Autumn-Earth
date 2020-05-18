@@ -1655,8 +1655,11 @@ if($needsToBeUnique) {
  
  
  
-function parseMoney($amount) {
+function parseMoney($amount, $currency = null) {
      $moneyOutput = "";
+
+
+if(($currency == null) || ($currency == "money")) {
      $copper = $amount % 100;
      $gold = floor($amount / 10000);
      $silver = floor(($amount - $gold * 10000) / 100);
@@ -1668,6 +1671,10 @@ function parseMoney($amount) {
     }
      
         $moneyOutput .= $copper . '<span class="copper"></span>';
+    } else {
+// alternative currency:
+      $moneyOutput .= $amount . '<span class="'.cleanURL($currency).'"></span>';  
+    }
      
     return $moneyOutput;
 }

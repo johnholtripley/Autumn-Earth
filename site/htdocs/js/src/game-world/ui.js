@@ -917,13 +917,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
         var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
         var sellPrice;
-        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+        //var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
         if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         } else {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         }
-        hero.currency[thisCurrency] += sellPrice;
+       // hero.currency[thisCurrency] += sellPrice;
+        // selling is always in default 'money' currency:
+        hero.currency['money'] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
         document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
@@ -1228,9 +1230,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>I don't have room in my bags for that</p>");
+                // post it? ##
             }
         } else {
-            UI.showNotification("<p>Oops - sorry, not enough money</p>");
+            UI.showNotification("<p>I don't have enough money</p>");
         }
         // remove the drag slot that was created by the single click:
         UI.activeDragObject.innerHTML = '';
@@ -1538,7 +1541,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     // original:
                     newInscribedObject.inscription = {
                         'title': inscriptionTitle.value,
-                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>',
+                        'content': '<div class="inscribeContent">' + inscriptionTextArea.innerHTML + '</div>',
                         'timeCreated': Date.now()
                     }
                 }

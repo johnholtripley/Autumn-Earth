@@ -1239,7 +1239,7 @@ if(count($activeEvents)>0) {
 }
 
 
-
+// generate shops:
 
 for ($i=0;$i<count($mapData['map']['shops']);$i++) {
 
@@ -1271,7 +1271,7 @@ $transcriptionFolder = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$chr.'/music';
 $transcribedSongs = scandir($transcriptionFolder);
 // remove . and .. :
 $transcribedSongs = array_diff(scandir($transcriptionFolder), array('.', '..'));
-
+arsort($transcribedSongs);
 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.action = 'transcription' order by tblinventoryitems.shortname ASC limit 1";
 $result3 = mysqli_query($connection, $query3) or die ("tblinventoryitems transcription failed:".$query3);
@@ -1527,7 +1527,7 @@ if($inventoryDataToSort[$j]['action'] == "transcription") {
 
     
 }
-$shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
+$shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice, $mapData['map']['shops'][$i]["currency"]).'</span></p>';
 $shopMarkupToOutput .= '</li>';
  
 }
