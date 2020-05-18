@@ -1654,8 +1654,14 @@ if($needsToBeUnique) {
  
  
  
+$exchangeRates = array(
+'cardDust' => 20
+    );
+
+
  
 function parseMoney($amount, $currency = null) {
+    global $exchangeRates;
      $moneyOutput = "";
 
 
@@ -1673,7 +1679,7 @@ if(($currency == null) || ($currency == "money")) {
         $moneyOutput .= $copper . '<span class="copper"></span>';
     } else {
 // alternative currency:
-      $moneyOutput .= $amount . '<span class="'.cleanURL($currency).'"></span>';  
+      $moneyOutput .= floor($amount/$exchangeRates[$currency]) . '<span class="'.cleanURL($currency).'"></span>';  
     }
      
     return $moneyOutput;

@@ -1467,8 +1467,18 @@ if(isset($categoryModifier[($inventoryDataToSort[$j]['itemCategories'])])) {
 
  
 $thisItemsPrice = ceil($thisItemsPrice * $inflationModifier);
- 
-$imgDataAttributes = 'data-price="'.$thisItemsPrice.'"';
+// do currency exchange:
+if($mapData['map']['shops'][$i]["currency"] != "money") {
+$thisAltCurrencyPrice = floor($thisItemsPrice/$exchangeRates[$mapData['map']['shops'][$i]["currency"]]);
+$imgDataAttributes = 'data-price="'.$thisAltCurrencyPrice.'"';
+} else {
+    $imgDataAttributes = 'data-price="'.$thisItemsPrice.'"';
+}
+
+
+
+
+
 $imgDataAttributes .= ' data-colour="'.$inventoryDataToSort[$j]['colour'].'"';
 $imgDataAttributes .= ' data-type="'.$inventoryDataToSort[$j]['itemID'].'"';
  

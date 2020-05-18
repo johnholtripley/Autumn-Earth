@@ -2573,6 +2573,8 @@ function generateHash(sourceString) {
 
 
 
+
+
 function parseMoney(amount) {
     var isNegative = false;
     if (amount < 0) {
