@@ -1975,6 +1975,7 @@ function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
     cartography.updateCartographicMiniMap();
     if (isOverWorldMap) {
+        cartography.updateCoordinates();
         var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
         if (newMap != currentMap) {
             changeCurrentMap(newMap);
@@ -4375,4 +4376,29 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
     loadGlobalMapData();
 } else {
     // sorry message / fallback? #####
+}
+
+
+
+
+
+
+
+
+// check for memory leaks:
+// https://web.dev/monitor-total-page-memory-usage/
+function scheduleMeasurement() {
+  if (!performance.measureMemory) {
+    console.log("performance.measureMemory() is not available.");
+    return;
+  }
+  const interval = measurementInterval();
+  console.log("Scheduling memory measurement in " +
+      Math.round(interval / 1000) + " seconds.");
+  setTimeout(performMeasurement, interval);
+}
+
+// Start measurements after page load on the main window.
+window.onload = function () {
+  scheduleMeasurement();
 }

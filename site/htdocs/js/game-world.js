@@ -246,6 +246,9 @@ var cartography = {
         // cartography canvas is 246px wide:
         cartography.cartographyUnits = 246 / (mapTilesX * tileW);
         cartography.newCartographicMap();
+         if (isOverWorldMap) {
+        cartography.updateCoordinates();
+    }
     },
 
     newCartographicMap: function() {
@@ -294,6 +297,10 @@ var cartography = {
     saveCartographyMask: function() {
         var dataURL = offScreenCartographyCanvas.toDataURL();
         postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
+    },
+
+    updateCoordinates: function() {
+        cartographyCoordinates.innerHTML = (hero.tileX/worldMapTileLength).toFixed(2)+"E, "+(hero.tileY/worldMapTileLength).toFixed(2)+"S";
     }
 }
 /*colourNames = ["",
@@ -6232,7 +6239,7 @@ const yesNoDialogueButton1 = document.getElementById('yesNoDialogueButton1');
 const yesNoDialogueButton2 = document.getElementById('yesNoDialogueButton2');
 const housingToggleButtons = document.querySelectorAll("#housingGroupTabs button");
 const transcriptionTitle = document.getElementById('transcriptionTitle');
-
+const cartographyCoordinates = document.getElementById('cartographyCoordinates');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -10945,6 +10952,7 @@ function heroIsInNewTile() {
     //  hero.z = getElevation(hero.tileX, hero.tileY);
     cartography.updateCartographicMiniMap();
     if (isOverWorldMap) {
+        cartography.updateCoordinates();
         var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
         if (newMap != currentMap) {
             changeCurrentMap(newMap);
@@ -13345,4 +13353,29 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
     loadGlobalMapData();
 } else {
     // sorry message / fallback? #####
+}
+
+
+
+
+
+
+
+
+// check for memory leaks:
+// https://web.dev/monitor-total-page-memory-usage/
+function scheduleMeasurement() {
+  if (!performance.measureMemory) {
+    console.log("performance.measureMemory() is not available.");
+    return;
+  }
+  const interval = measurementInterval();
+  console.log("Scheduling memory measurement in " +
+      Math.round(interval / 1000) + " seconds.");
+  setTimeout(performMeasurement, interval);
+}
+
+// Start measurements after page load on the main window.
+window.onload = function () {
+  scheduleMeasurement();
 }

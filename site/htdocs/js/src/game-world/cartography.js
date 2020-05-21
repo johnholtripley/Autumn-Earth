@@ -7,6 +7,9 @@ var cartography = {
         // cartography canvas is 246px wide:
         cartography.cartographyUnits = 246 / (mapTilesX * tileW);
         cartography.newCartographicMap();
+         if (isOverWorldMap) {
+        cartography.updateCoordinates();
+    }
     },
 
     newCartographicMap: function() {
@@ -55,5 +58,9 @@ var cartography = {
     saveCartographyMask: function() {
         var dataURL = offScreenCartographyCanvas.toDataURL();
         postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
+    },
+
+    updateCoordinates: function() {
+        cartographyCoordinates.innerHTML = (hero.tileX/worldMapTileLength).toFixed(2)+"E, "+(hero.tileY/worldMapTileLength).toFixed(2)+"S";
     }
 }
