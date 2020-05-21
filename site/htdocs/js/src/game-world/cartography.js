@@ -2,14 +2,17 @@ var cartography = {
     innerRadius: 0,
     outerRadius: 35,
     isLoading: false,
+    coordinateCentreTileE: 50,
+    coordinateCentreTileN: 50,
 
     init: function() {
         // cartography canvas is 246px wide:
         cartography.cartographyUnits = 246 / (mapTilesX * tileW);
         cartography.newCartographicMap();
-         if (isOverWorldMap) {
-        cartography.updateCoordinates();
-    }
+        cartography.worldHeightInTiles = worldMapTileLength * worldMap.length;
+        if (isOverWorldMap) {
+            cartography.updateCoordinates();
+        }
     },
 
     newCartographicMap: function() {
@@ -61,6 +64,6 @@ var cartography = {
     },
 
     updateCoordinates: function() {
-        cartographyCoordinates.innerHTML = (hero.tileX/worldMapTileLength).toFixed(2)+"E, "+(hero.tileY/worldMapTileLength).toFixed(2)+"S";
+        cartographyCoordinates.innerHTML = ((hero.tileX-cartography.coordinateCentreTileE)/worldMapTileLength).toFixed(2) + "E, " + ((cartography.worldHeightInTiles - hero.tileY - cartography.coordinateCentreTileN)/worldMapTileLength).toFixed(2) + "N";
     }
 }
