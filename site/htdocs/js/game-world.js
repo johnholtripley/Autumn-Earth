@@ -303,7 +303,9 @@ var cartography = {
     },
 
     updateCoordinates: function() {
-        cartographyCoordinates.innerHTML = ((hero.tileX-cartography.coordinateCentreTileE)/worldMapTileLength).toFixed(2) + "E, " + ((cartography.worldHeightInTiles - hero.tileY - cartography.coordinateCentreTileN)/worldMapTileLength).toFixed(2) + "N";
+        var eastings = ((hero.tileX - cartography.coordinateCentreTileE) / worldMapTileLength).toFixed(2).toString().split(".");
+        var northings = ((cartography.worldHeightInTiles - hero.tileY - cartography.coordinateCentreTileN) / worldMapTileLength).toFixed(2).toString().split(".");
+        cartographyCoordinates.innerHTML = eastings[0]+"&deg; "+ eastings[1] + "&rsquo; E, " + northings[0]+"&deg; "+ northings[1]+ "&rsquo;  N";
     }
 }
 /*colourNames = ["",
