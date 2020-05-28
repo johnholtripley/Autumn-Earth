@@ -268,6 +268,117 @@
                         "w": 1
                     }
                 }
+            },
+
+
+
+
+           {
+                "name": "Prequisite quest NPC",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 28,
+                "tileY": 24,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                     ["Do my quest, please?|Keep looking|You completed it - good job", "quest", "14"],
+                        ["other conversation, not quest related...", ""]
+                ],
+                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+
+                  {
+            "name": "brown hen",
+                "src": "brown-hen.png",
+               "width": 20,
+                "length": 20,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
+                "centreX": 22,
+                "centreY": 32,
+                "tileX": 24,
+                "tileY": 21,
+                "movement": [["proximity", 4], "remove", ["speech", "bwok, bwok"], "remove", ["animate","peck",1], "s", "-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterName##, let's have a look at your transcriptions, eh?"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+              {
+                    "wait":
+                    {
+                        "length": 1,
+                          "n": 0,
+                        "e": 1,                     
+                        "s": 2,
+                         "w": 3
+                    },
+                    "walk":
+                    {
+                        "length": 23,
+                          "n": 4,
+                        "e": 5,                     
+                        "s": 6,
+                         "w": 7
+                    },
+                    "peck":
+                    {
+                         "length": 51,
+                        "n": 8,
+                        "e": 9,
+                        "s": 10,
+                        "w": 11
+                    }
+                }
             }
      
         ],

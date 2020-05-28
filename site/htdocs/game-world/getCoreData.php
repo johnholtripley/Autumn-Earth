@@ -382,6 +382,16 @@ $outputJSON .= '"startItemsReceived": '.$startItemsReceived.',';
 		$outputJSON .= '"startItemsReceived": "",';
 	}
 	
+
+
+if($prerequisite != null) {
+$outputJSON .= '"prerequisite": "'.$prerequisite.'",';
+    } else {
+        $outputJSON .= '"prerequisite": "",';
+    }
+
+
+
 	if($itemsReceivedOnCompletion != null) {
 
 $itemReceivedJSON = json_decode($itemsReceivedOnCompletion, true);

@@ -11501,6 +11501,30 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
 
 
+
+
+var allPrerequisitesComplete = true;
+if (questData[questId].prerequisite != "") {
+    // check if previous required quests are complete, if not, skip this dialogue
+    var allPrerequisites = questData[questId].prerequisite.split(",");
+    for (var j in allPrerequisites) {
+        if (questData[(allPrerequisites[j])].hasBeenCompleted == 0) {
+            allPrerequisitesComplete = false;
+        }
+    }
+    if (!allPrerequisitesComplete) {
+        // skip this quest dialogue:
+        thisObjectSpeaking.speechIndex++;
+        if (thisObjectSpeaking.speechIndex >= thisObjectSpeaking.speech.length) {
+            thisObjectSpeaking.speechIndex = 0;
+        }
+        processSpeech(thisObjectSpeaking, thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][0], thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][1], true);
+    }
+}
+
+
+
+if(allPrerequisitesComplete) {
                 //   console.log(questData[questId].isUnderway);
 
                 if (questData[questId].isUnderway) {
@@ -11726,6 +11750,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     }
 
                 }
+            }
                 break;
             case "play":
 
@@ -12031,6 +12056,9 @@ function moveNPCs() {
                     } else {
                         thisNextMovementCode = thisNextMovement;
                     }
+
+
+
                     switch (thisNextMovementCode) {
 
                         case '-':
@@ -12149,9 +12177,14 @@ function moveNPCs() {
                             }
                             break;
 
+                            case 'speech':
+                             processSpeech(thisNPC, thisNextMovement[1], "", false);
+                            break;
+
                         case 'remove':
                             // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
                             thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
+                            thisNPC.movementIndex-= 2;
                             break;
 
                         case 'pathEnd':
