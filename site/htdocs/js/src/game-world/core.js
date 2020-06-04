@@ -2522,14 +2522,43 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
 
 
 var allPrerequisitesComplete = true;
+var questPrequisiteAttributes;
 if (questData[questId].prerequisite != "") {
     // check if previous required quests are complete, if not, skip this dialogue
-    var allPrerequisites = questData[questId].prerequisite.split(",");
+
+// check for attribute value prerequisites (eg. something like "hero.currency.cardDust > 48")
+if(questData[questId].prerequisite.indexOf(">") !== -1) {
+questPrequisiteAttributes = questData[questId].prerequisite.split(">");
+if(accessDynamicVariable(questPrequisiteAttributes[0].trim()) <= questPrequisiteAttributes[1].trim()) {
+allPrerequisitesComplete = false;
+}
+} else if(questData[questId].prerequisite.indexOf("<") !== -1) {
+questPrequisiteAttributes = questData[questId].prerequisite.split("<");
+if(accessDynamicVariable(questPrequisiteAttributes[0].trim()) >= questPrequisiteAttributes[1].trim()) {
+allPrerequisitesComplete = false;
+}
+} else if(questData[questId].prerequisite.indexOf("=") !== -1) {
+questPrequisiteAttributes = questData[questId].prerequisite.split("=");
+if(accessDynamicVariable(questPrequisiteAttributes[0].trim()) != questPrequisiteAttributes[1].trim()) {
+allPrerequisitesComplete = false;
+}
+
+
+} else {
+    // not an attribute check, but see if other quest indices are complete:
+     var allPrerequisites = questData[questId].prerequisite.split(",");
     for (var j in allPrerequisites) {
         if (questData[(allPrerequisites[j])].hasBeenCompleted == 0) {
             allPrerequisitesComplete = false;
         }
     }
+}
+
+
+
+
+
+   
     if (!allPrerequisitesComplete) {
         // skip this quest dialogue:
         thisObjectSpeaking.speechIndex++;

@@ -1916,6 +1916,7 @@ break;
                     break;
                 case "mount":
                     // ###
+                    audio.playSound(soundEffects['whistle'], 0);
                     break;
                 case "identify":
                     if (activeAction == "survey") {
