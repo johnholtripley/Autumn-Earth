@@ -392,7 +392,12 @@
                     {"North":"The Old Meadows",
                     "South":"Ashenvale shore"}
                 
-            }],
+            },{
+                "type": 19,
+                "tileX": 17,
+                "tileY": 28,
+                "activeForQuest": 14
+                }],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

@@ -152,7 +152,7 @@ function closeQuest(whichNPC, whichQuestId) {
     giveQuestRewards(whichNPC, whichQuestId);
     if (questData[whichQuestId].isRepeatable > 0) {
         questData[whichQuestId].hasBeenCompleted = false;
-        questData[whichQuestId].isUnderway = false;
+        
     } else {
         questData[whichQuestId].hasBeenCompleted = true;
         // remove quest text now:
@@ -160,6 +160,7 @@ function closeQuest(whichNPC, whichQuestId) {
         // knock this back one so to keep it in step with the removed item:
         whichNPC.speechIndex--;
     }
+    questData[whichQuestId].isUnderway = false;
     checkForTitlesAwarded(whichQuestId);
     /* } else {
          // keep the NPC on the quest dialogue:

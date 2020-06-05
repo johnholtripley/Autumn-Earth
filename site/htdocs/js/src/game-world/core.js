@@ -2182,119 +2182,114 @@ function checkForActions() {
         var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
         for (var m = 0; m < visibleMaps.length; m++) {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-                if (isInRange(hero.x, hero.y, thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y, (thisMapData[(visibleMaps[m])].items[i].width / 2 + hero.width / 2 + 6))) {
-                    if (isFacing(hero, thisMapData[(visibleMaps[m])].items[i])) {
-                        var actionValue = currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].actionValue;
+                // only allow this action if this item doesn't have an activeForQuest attribute, or that defined quest is underway:
+                if ((!(thisMapData[(visibleMaps[m])].items[i].activeForQuest)) || (questData[(thisMapData[(visibleMaps[m])].items[i].activeForQuest)].isUnderway)) {
+                    if (isInRange(hero.x, hero.y, thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y, (thisMapData[(visibleMaps[m])].items[i].width / 2 + hero.width / 2 + 6))) {
+                        if (isFacing(hero, thisMapData[(visibleMaps[m])].items[i])) {
+                            var actionValue = currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].actionValue;
 
-                        switch (currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].action) {
-                            case "static":
-                                // can't interact with it - do nothing
-                                break;
-                            case "nest":
-                                // can't interact with it - do nothing
-                                break;
-                            case "sound":
-                                audio.playSound(soundEffects[actionValue], 0);
-                                break;
-                            case "questToggle":
-                                // toggle value: (1 or 0)
-                                questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
-                                break;
-                            case "questSet":
-                                questData[actionValue].hasBeenActivated = 1;
-                                break;
-                            case "questUnset":
-                                questData[actionValue].hasBeenActivated = 0;
-                                break;
-                            case "node":
-                                // handled by Action Bar - no effect here
-                                break;
-                            case "toggleInnerDoor":
-                                toggleInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                                audio.playSound(soundEffects['lever'], 0);
-                                // toggle the visual state:
-                                thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "on" ? 'off' : 'on';
-                                break;
-                            case "openInnerDoor":
-                                openInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                                break;
-                            case "closeInnerDoor":
-                                closeInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                                break;
-                            case "key":
-                                hero.currency.keys.push(thisMapData[(visibleMaps[m])].items[i].additional);
-                                UI.updateCurrencies();
-                                audio.playSound(soundEffects['keys'], 0);
-                                // remove from map:
-                                thisMapData[(visibleMaps[m])].items.splice(i, 1);
-                                break;
-                            case "gate":
-                                // toggle the visual state:
-                                thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "open" ? 'closed' : 'open';
-                                // toggle whether it will have collision done against it:
-                                thisMapData[(visibleMaps[m])].items[i].isCollidable = thisMapData[(visibleMaps[m])].items[i].isCollidable == true ? false : true;
-                                break;
-                            case "notice":
-                                processSpeech(thisMapData[(visibleMaps[m])].items[i], thisMapData[(visibleMaps[m])].items[i].contains[0][0], thisMapData[(visibleMaps[m])].items[i].contains[0][1], false, thisMapData[(visibleMaps[m])].items[i].contains[0][2]);
-                                break;
-                            case "sit":
-                                hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
-                                console.log("switch to sit animation");
-                                break;
+                            switch (currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].action) {
+                                case "static":
+                                    // can't interact with it - do nothing
+                                    break;
+                                case "nest":
+                                    // can't interact with it - do nothing
+                                    break;
+                                case "sound":
+                                    audio.playSound(soundEffects[actionValue], 0);
+                                    break;
+                                case "questToggle":
+                                    // toggle value: (1 or 0)
+                                    questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
+                                    break;
+                                case "questSet":
+                                    questData[actionValue].hasBeenActivated = 1;
+                                    break;
+                                case "questUnset":
+                                    questData[actionValue].hasBeenActivated = 0;
+                                    break;
+                                case "node":
+                                    // handled by Action Bar - no effect here
+                                    break;
+                                case "toggleInnerDoor":
+                                    toggleInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                    audio.playSound(soundEffects['lever'], 0);
+                                    // toggle the visual state:
+                                    thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "on" ? 'off' : 'on';
+                                    break;
+                                case "openInnerDoor":
+                                    openInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                    break;
+                                case "closeInnerDoor":
+                                    closeInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                    break;
+                                case "key":
+                                    hero.currency.keys.push(thisMapData[(visibleMaps[m])].items[i].additional);
+                                    UI.updateCurrencies();
+                                    audio.playSound(soundEffects['keys'], 0);
+                                    // remove from map:
+                                    thisMapData[(visibleMaps[m])].items.splice(i, 1);
+                                    break;
+                                case "gate":
+                                    // toggle the visual state:
+                                    thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "open" ? 'closed' : 'open';
+                                    // toggle whether it will have collision done against it:
+                                    thisMapData[(visibleMaps[m])].items[i].isCollidable = thisMapData[(visibleMaps[m])].items[i].isCollidable == true ? false : true;
+                                    break;
+                                case "notice":
+                                    processSpeech(thisMapData[(visibleMaps[m])].items[i], thisMapData[(visibleMaps[m])].items[i].contains[0][0], thisMapData[(visibleMaps[m])].items[i].contains[0][1], false, thisMapData[(visibleMaps[m])].items[i].contains[0][2]);
+                                    break;
+                                case "sit":
+                                    hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
+                                    console.log("switch to sit animation");
+                                    break;
                                 case "signpost":
-for (var j in thisMapData[(visibleMaps[m])].items[i].contains) {
-    
-     UI.showNotification("<p>"+j+" to "+thisMapData[(visibleMaps[m])].items[i].contains[j]+"</p>");
-
-
-    
-
-}
-
-
-                               
-                                break;
-                            case "chest":
-                                // open chest and show contents:
-                                UI.openChest(visibleMaps[m], i);
-                                break;
-                            case "post":
-                                // open the Post panel:
-                                UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
-                                break;
+                                    for (var j in thisMapData[(visibleMaps[m])].items[i].contains) {
+                                        UI.showNotification("<p>" + j + " to " + thisMapData[(visibleMaps[m])].items[i].contains[j] + "</p>");
+                                    }
+                                    break;
+                                case "chest":
+                                    // open chest and show contents:
+                                    UI.openChest(visibleMaps[m], i);
+                                    break;
+                                case "post":
+                                    // open the Post panel:
+                                    UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
+                                    break;
                                 case "bank":
-                                UI.openBank(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
-                                break;
-                            case "retinue":
-                                // open the Retinue panel:
-                                UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
-                                break;
-                            case "source":
-                                // don't do anything - the equipped item will check for this item
-                                break;
-                            case "crop":
-                                checkCrop(thisMapData[(visibleMaps[m])].items[i]);
-                                break;
-                            default:
-                                // try and pick it up:
-                                var canBePickedUp = true;
-                                if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
-                                    if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
-                                        canBePickedUp = false;
+                                    UI.openBank(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
+                                    break;
+                                case "retinue":
+                                    // open the Retinue panel:
+                                    UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
+                                    break;
+                                case "source":
+                                    // don't do anything - the equipped item will check for this item
+                                    break;
+                                case "crop":
+                                    checkCrop(thisMapData[(visibleMaps[m])].items[i]);
+                                    break;
+                                default:
+                                    // try and pick it up:
+                                    var canBePickedUp = true;
+                                    if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId) {
+                                        if (thisMapData[(visibleMaps[m])].items[i].lockedToPlayerId != characterId) {
+                                            canBePickedUp = false;
+                                        }
                                     }
-                                }
-                                if (canBePickedUp) {
-                                    inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
-                                    if (inventoryCheck[0]) {
-                                        // remove from map:
-                                        thisMapData[(visibleMaps[m])].items.splice(i, 1);
-                                        UI.showChangeInInventory(inventoryCheck[1]);
+                                    if (canBePickedUp) {
+                                        inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
+                                        if (inventoryCheck[0]) {
+                                            // remove from map:
+                                            thisMapData[(visibleMaps[m])].items.splice(i, 1);
+                                            UI.showChangeInInventory(inventoryCheck[1]);
+                                        } else {
+                                            UI.showNotification("<p>I don't have room in my bags for that</p>");
+                                        }
                                     } else {
-                                        UI.showNotification("<p>I don't have room in my bags for that</p>");
+                                        UI.showNotification("<p>I can't pick that up</p>");
                                     }
-                                } else {
-                                    UI.showNotification("<p>I can't pick that up</p>");
-                                }
+                            }
                         }
                     }
                 }
