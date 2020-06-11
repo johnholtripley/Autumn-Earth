@@ -3633,16 +3633,19 @@ function addPetToWorld() {
             tileOffsetX = 2;
             break
     }
+    
+ if (soundEffects.hasOwnProperty((hero.inventory[inventorySlotReference].contains[0].name))) {
+    // play sound effect for this creature:
+    audio.playSound(soundEffects[(hero.inventory[inventorySlotReference].contains[0].name)], 0);
+}
     initialiseAndPlacePet(hero.inventory[inventorySlotReference].contains, tileOffsetX, tileOffsetY);
+
     // remove egg from inventory:
     reducedHeldQuantity(inventorySlotReference);
     hasActivePet = true;
 }
 
 function checkAddPetToWorld() {
-    console.log("called"+inventorySlotReference);
-    console.log(hero.inventory[inventorySlotReference].contains);
-    console.log(hero.inventory[inventorySlotReference].contains[0].name);
     UI.showYesNoDialogueBox("Hatch "+hero.inventory[inventorySlotReference].contains[0].name+"?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 

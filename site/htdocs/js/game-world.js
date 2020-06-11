@@ -26,7 +26,8 @@ var soundsToLoad = {
     'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3',
     'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3',
     'splash': '../sounds/water-splash-NOT_MINE-fesliyanstudios.mp3',
-    'whistle': '../sounds/whistle-NOT_MINE-wow.mp3'
+    'whistle': '../sounds/whistle-NOT_MINE-wow.mp3',
+    'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3'
 };
 
 
@@ -12618,16 +12619,19 @@ function addPetToWorld() {
             tileOffsetX = 2;
             break
     }
+    
+ if (soundEffects.hasOwnProperty((hero.inventory[inventorySlotReference].contains[0].name))) {
+    // play sound effect for this creature:
+    audio.playSound(soundEffects[(hero.inventory[inventorySlotReference].contains[0].name)], 0);
+}
     initialiseAndPlacePet(hero.inventory[inventorySlotReference].contains, tileOffsetX, tileOffsetY);
+
     // remove egg from inventory:
     reducedHeldQuantity(inventorySlotReference);
     hasActivePet = true;
 }
 
 function checkAddPetToWorld() {
-    console.log("called"+inventorySlotReference);
-    console.log(hero.inventory[inventorySlotReference].contains);
-    console.log(hero.inventory[inventorySlotReference].contains[0].name);
     UI.showYesNoDialogueBox("Hatch "+hero.inventory[inventorySlotReference].contains[0].name+"?", "Yes", "No, keep it as an egg", "addPetToWorld", "UI.hideYesNoDialogueBox");
 }
 

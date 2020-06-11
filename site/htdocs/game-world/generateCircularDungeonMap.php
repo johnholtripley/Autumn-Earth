@@ -4,6 +4,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap
 include_once($_SERVER['DOCUMENT_ROOT'] . "/includes/dungeonMapConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateBook.php");
 
+
+
+
 if (isset($_GET["debug"])) {
     $proceduralDebug = true;
 } else {
@@ -481,6 +484,26 @@ if($proceduralDebug) {
     echo "</div>";
 }
 }
+
+
+function chooseRandomElements($inputString) {
+    $processedString = $inputString;
+    while (strpos($processedString, '{% random %}') !== false) {
+        $thisStep = $processedString;
+        $randomStartPos = strpos($processedString, '{% random %}');
+        $randomEndPos = strpos($processedString, '{% end-random %}');
+        $theseChoices = substr($processedString, $randomStartPos+12, $randomEndPos-$randomStartPos-12);
+        $theseChoicesArray = explode('{% or %}', $theseChoices);
+        $thisChoiceMade = $theseChoicesArray[mt_rand(0, count($theseChoicesArray) - 1)];
+        $thisStep = substr($processedString, 0, $randomStartPos);
+        $thisStep .= $thisChoiceMade;
+        $thisStep .= substr($processedString, $randomEndPos+16, (strlen($processedString) - $randomEndPos));
+        $processedString = $thisStep;
+    }
+    
+    return $processedString;
+}
+
 
 function init()
 {
@@ -2517,6 +2540,7 @@ $storePositionZero = $position[0];
             usort($randomDrawnTileRooms, 'randomArraySorting');
             $fileToUse = $dir.$templatesToUse[$i].'.json';
             $templateJSONFile = file_get_contents($fileToUse);
+            $templateJSONFile = chooseRandomElements($templateJSONFile);
             $templateJSON = json_decode($templateJSONFile, true);
             $rotation = 1;
             $flip = 1;

@@ -332,7 +332,7 @@
                 "centreY": 32,
                 "tileX": 24,
                 "tileY": 21,
-                "movement": [["proximity", 4], "remove", ["speech", "bwok, bwok"], "remove", ["animate","peck",1], "s", "-"],
+                "movement": [["proximity", 4], "remove", ["sound", "hen", true], ["speech", "bwok, bwok"], "remove", ["animate","peck",1], "s", "-"],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,

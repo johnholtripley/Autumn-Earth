@@ -1,5 +1,6 @@
 {
-    "template": {
+    "template":
+    {
         "entranceX": 1,
         "entranceY": 1,
         "rotatable": true,
@@ -8,29 +9,24 @@
         "type": "inner",
         "collisions": [
             [0]
-      
-
         ],
         "terrain": [
             ["*"]
         ],
         "elevation": [
-                  [0]],
-        "graphics": [
-           
-
+            [0]
         ],
-        "npcs": [
-
-    
-        ],
-        "items": [{
-
-            
-                "type": 48, "tileX": 0, "tileY": 0, "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]
-
+        "graphics": [],
+        "npcs": [],
+        "items": [
+        {
+            {% random %}
+            "type": 48, "tileX": 0, "tileY": 0, "contains": [{ "type": 1 }, { "type": 3 }, { "type": "$", "quantity": 2500 }]
+            {% or %}
+            "type": 56, "tileX": 20, "tileY": 20, "facing": "s"
+            {% end-random %}
         }
-      ],
-      "hotspots": []
+        ],
+        "hotspots": []
     }
 }
