@@ -41,7 +41,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
  
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/Game">
+   <meta itemprop="name" content="Autumn Earth">
  
 <div id="gameWrapper">
   <div id="worldWrapper">
@@ -344,6 +345,21 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 <script src="/js/hnefatafl-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
  
+
+<div itemscope="" itemtype="http://schema.org/Organization">
+  <meta itemprop="url" content="https://www.autumnearth.com">
+  <meta itemprop="logo" content="https://www.autumnearth.com/images/icons/android-chrome-192x192.png">
+  <span itemprop="contactPoint" itemscope="" itemtype="http://schema.org/ContactPoint">
+  <meta itemprop="url" content="https://www.autumnearth.com/support" />
+  <meta itemprop="contactType" content="customer service" />
+</div>
+<meta content="https://twitter.com/autumnearth/" itemprop="sameAs">
+<meta content="https://www.youtube.com/c/autumnearth/" itemprop="sameAs">
+<meta content="https://autumnearth.tumblr.com/" itemprop="sameAs">
+<meta content="https://discord.gg/YtKYbAD" itemprop="sameAs">
+
+
+
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php"); ?>
 </body>
 </html>

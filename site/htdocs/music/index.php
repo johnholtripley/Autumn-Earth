@@ -98,7 +98,7 @@ var midiMap = ["c3-c","c3-cs","c3-d","c3-ds","c3-e","c3-f","c3-fs","c3-g","c3-gs
 
 function startTranscription() {
     /* remove any blank lines - https://stackoverflow.com/questions/16369642/javascript-how-to-use-a-regular-expression-to-remove-blank-lines-from-a-string */
-    // replace double quotes with single as well:
+    /* replace double quotes with single as well: */
 transcribeABC(document.getElementById('abcTextInput').value.replace(/"/g, "'").replace(/^\s*[\r\n]/gm, ""));
 /*console.log(document.getElementById('abcTextInput').value);*/
 /*transcribeABC(abcfile);*/
