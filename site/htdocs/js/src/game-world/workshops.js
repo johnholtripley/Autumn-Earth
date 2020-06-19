@@ -56,7 +56,7 @@ function hireApprentice(e) {
             newApprenticeMapObject[workshopSelects[i].getAttribute('data-key')] = workshopSelects[i].value;
         }
 
-        var newApprenticeMarkup = '<li><img src="/images/retinue/source/' + sexAndRaceImgSource + '.png" alt=""><h6>' + apprenticeName + '<h6></li>';
+        var newApprenticeMarkup = '<li><img src="/images/retinue/source/' + sexAndRaceImgSource + '.png" alt=""><h6>' + apprenticeName + '</h6></li>';
         parentPanel.querySelector('.activeApprentices ol').insertAdjacentHTML('beforeend', newApprenticeMarkup);
         
         // add the apprentice to the map json:

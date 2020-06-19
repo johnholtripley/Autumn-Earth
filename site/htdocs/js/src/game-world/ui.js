@@ -1177,7 +1177,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
 
  if (thisDevicesScrollBarWidth > 0) {
-        // create a reference to the element using its id:
+        // might need a reference here so it's no applied to already existing scroll lists:
         new customScrollBar(workshopPanel.querySelector('.customScrollBar'));
     } else {
         // remove styling:

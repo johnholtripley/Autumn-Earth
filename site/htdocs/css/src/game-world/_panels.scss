@@ -500,13 +500,22 @@ font-size: 0;
     h5 {
         clear: both;
     }
+    h6 {
+        margin: 0;
+        vertical-align: top;
+        display: inline-block;
+    }
 
     .activeApprentices {
-
+li {
+    border-bottom: 1px solid #555;
+    &:last-child {
+        border-bottom: 0;
+    }
+}
         img {
-            float: left;
-            clear: both;
-            padding: 0 8px 8px 0;
+            display: inline-block;
+            margin: 0 6px;
         }
     }
 
