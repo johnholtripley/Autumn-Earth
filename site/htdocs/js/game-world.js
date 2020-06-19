@@ -7321,6 +7321,18 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
+
+
+
+
+ if (thisDevicesScrollBarWidth > 0) {
+        // create a reference to the element using its id:
+        new customScrollBar(workshopPanel.querySelector('.customScrollBar'));
+    } else {
+        // remove styling:
+        workshopPanel.querySelector('.customScrollBar').classList.add("inActive");
+    }
+
     },
 
     openedShopSuccessfully: function(shopHash) {

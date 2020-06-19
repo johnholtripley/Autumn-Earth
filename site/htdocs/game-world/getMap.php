@@ -1613,7 +1613,7 @@ if(isset($mapData['map']['workshops'])) {
 
     $result = mysqli_query($connection, $query) or die ("recipes failed");
 
-    $workshopMarkupToOutput .= '<div class="availableRecipes"><ol>';
+    $workshopMarkupToOutput .= '<div class="availableRecipes"><div class="customScrollBar"><div class="customScrollContent"><ol>';
 
     while ($row = mysqli_fetch_array($result)) {
         extract($row);
@@ -1635,7 +1635,7 @@ $workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
     }
         mysqli_free_result($result);
 
-    $workshopMarkupToOutput .= '</ol></div>';
+    $workshopMarkupToOutput .= '</ol><div class="trackBar"><div class="dragger"></div></div></div></div>';
 
 
 
