@@ -65,17 +65,30 @@ function hireApprentice(e) {
         for (var i = 0; i < thisMapData[currentMap].workshops.length; i++) {
             if (thisMapData[currentMap].workshops[i].name == workshopsName) {
                 thisMapData[currentMap].workshops[i].apprentices.push(newApprenticeMapObject);
+                 var newNumberOfApprentices = thisMapData[currentMap].workshops[i].apprentices.length;
                 break;
             }
         }
 
       
 
+ if(newNumberOfApprentices >= parentPanel.getAttribute('data-maxapprentices')) {
+parentPanel.querySelector('.hireApprentice').style.display = 'none';
+ } else {
+     // increase cost on button
+     var nextHireCost = ((newNumberOfApprentices+1) * (newNumberOfApprentices+1)) * 10000;
+     var newLabel = 'Hire this apprentice ('+parseMoney(nextHireCost)+')';
+     parentPanel.querySelector('.primaryButton').setAttribute('data-cost', nextHireCost);
+     parentPanel.querySelector('.primaryButton').innerHTML = newLabel;
+ }
+
+
+
+
         // generate a new name for the next apprentice of this sex and race
         // ####
         
-           // increase cost on button
-        // #####
+          
 
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
