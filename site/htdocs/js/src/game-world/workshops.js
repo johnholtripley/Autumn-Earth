@@ -1,0 +1,86 @@
+function workshopSelectHireApprentice(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".hireApprentice");
+    var sexAndRaceKey = '';
+    var sexAndRaceImgSource = '';
+    var workshopSelects = parentPanel.querySelectorAll('select');
+    for (i = 0; i < workshopSelects.length; ++i) {
+        sexAndRaceKey += workshopSelects[i].value;
+        if (sexAndRaceImgSource != '') {
+            sexAndRaceImgSource += '-';
+        }
+        sexAndRaceImgSource += workshopSelects[i].value;
+    }
+    // change the name - but only if the player hasn't entered one:
+    var currentName = parentPanel.querySelector('input[name=hireApprenticeName]').value;
+    if (parentPanel.getAttribute('data-allapprenticenames').indexOf(currentName) !== -1) {
+        parentPanel.querySelector('input[name=hireApprenticeName]').value = parentPanel.getAttribute('data-' + sexAndRaceKey);
+    }
+    // change portait:
+    parentPanel.querySelector('.apprenticePortrait').src = '/images/retinue/source/' + sexAndRaceImgSource + '.png';
+
+}
+
+function workshopApprenticeNameChange(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".hireApprentice");
+    var currentName = e.target.value;
+    if (parentPanel.getAttribute('data-allapprenticenames').indexOf(currentName) !== -1) {
+        // highlight the current name to make it easier to over type:
+        e.target.setSelectionRange(0, e.target.value.length);
+    }
+}
+
+function hireApprentice(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".workshop");
+    var cost = e.target.getAttribute('data-cost');
+
+    if (hero.currency['money'] >= cost) {
+        hero.currency['money'] -= cost;
+        UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
+        var apprenticeName = parentPanel.querySelector('input[name=hireApprenticeName]').value;
+        var newApprenticeMapObject = {
+            "name": apprenticeName
+        };
+     
+        // add the new apprentice to the panel:
+        var workshopSelects = parentPanel.querySelectorAll('.hireApprentice select');
+        var sexAndRaceImgSource = '';
+        for (i = 0; i < workshopSelects.length; ++i) {
+            if (sexAndRaceImgSource != '') {
+                sexAndRaceImgSource += '-';
+            }
+            sexAndRaceImgSource += workshopSelects[i].value;
+            newApprenticeMapObject[workshopSelects[i].getAttribute('data-key')] = workshopSelects[i].value;
+        }
+
+        var newApprenticeMarkup = '<li><img src="/images/retinue/source/' + sexAndRaceImgSource + '.png" alt=""><h6>' + apprenticeName + '<h6></li>';
+        parentPanel.querySelector('.activeApprentices ol').insertAdjacentHTML('beforeend', newApprenticeMarkup);
+        
+        // add the apprentice to the map json:
+        var workshopsName = parentPanel.getAttribute('data-workshopname');
+        // loop through to find the workshop name:
+        for (var i = 0; i < thisMapData[currentMap].workshops.length; i++) {
+            if (thisMapData[currentMap].workshops[i].name == workshopsName) {
+                thisMapData[currentMap].workshops[i].apprentices.push(newApprenticeMapObject);
+                break;
+            }
+        }
+
+      
+
+        // generate a new name for the next apprentice of this sex and race
+        // ####
+        
+           // increase cost on button
+        // #####
+
+    } else {
+        UI.showNotification("<p>I don't have enough money</p>");
+    }
+
+
+
+}

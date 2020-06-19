@@ -503,6 +503,7 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
+var workshopCurrentlyOpen = -1;
 const inflationModifier = 10;
 const sellPriceModifier = 0.7;
 const sellPriceSpecialismModifier = 0.8;
@@ -6167,6 +6168,7 @@ const inventoryBank = document.getElementById('inventoryBank');
 const inventoryBankTitle = document.getElementById('inventoryBankTitle');
 const bankCurrency = document.getElementById('bankCurrency');
 const shopPanel = document.getElementById('shopPanel');
+const workshopPanel = document.getElementById('workshopPanel');
 const inscriptionPanel = document.getElementById('inscriptionPanel');
 const inscriptionTextArea = document.getElementById('inscriptionTextArea');
 const sourceSelection = document.getElementById('sourceSelection');
@@ -6324,7 +6326,7 @@ var UI = {
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
-                      if (thisAction == "music") {
+                    if (thisAction == "music") {
                         music.loadInstrumentSounds(currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue);
                     }
                 } else {
@@ -7071,7 +7073,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         } else {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         }
-       // hero.currency[thisCurrency] += sellPrice;
+        // hero.currency[thisCurrency] += sellPrice;
         // selling is always in default 'money' currency:
         hero.currency['money'] += sellPrice;
         UI.updateCurrencies();
@@ -7239,7 +7241,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (e.target.className == "closePanel") {
                 e.target.parentNode.classList.remove("active");
                 // check if it's a shop panel:
-                if (e.target.parentNode.classList.contains("shop")) {
+                if (e.target.parentNode.classList.contains("workshop")) {
+                    workshopCurrentlyOpen = -1;
+
+                    // close shop dialogue as well:
+                    if (activeObjectForDialogue != '') {
+                        //  dialogue.classList.add("slowerFade");
+                        dialogue.classList.remove("active");
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.removeActiveDialogue();
+
+                    }
+
+                } else if (e.target.parentNode.classList.contains("shop")) {
                     shopCurrentlyOpen = -1;
                     inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
@@ -7296,8 +7310,17 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     buildShop: function(markup) {
-        //   shopPanel.innerHTML = markup;
         shopPanel.insertAdjacentHTML('beforeend', markup);
+    },
+
+    buildWorkshop: function(markup) {
+        workshopPanel.insertAdjacentHTML('beforeend', markup);
+        var workshopSelects = workshopPanel.querySelectorAll('select');
+        for (i = 0; i < workshopSelects.length; ++i) {
+            workshopSelects[i].onchange = workshopSelectHireApprentice;
+        }
+        workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
+        workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
     },
 
     openedShopSuccessfully: function(shopHash) {
@@ -7317,6 +7340,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         shopCurrentlyOpen = -1;
         inventoryPanels.removeAttribute('class');
 
+    },
+
+    closeWorkshop: function() {
+        document.getElementById("workshop" + workshopCurrentlyOpen).classList.remove("active");
+        workshopCurrentlyOpen = -1;
     },
 
     shopSplitStackCancel: function() {
@@ -7345,15 +7373,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
 
-  try {
-              
-                     thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
+                try {
+
+                    thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
                 } catch (e) {
                     // it's not Json:
-                   thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+                    thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
                 }
 
-                
+
             }
 
             // check for User Generated Content attributes and build the contains object from those if they exist:
@@ -8011,14 +8039,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         }
                     }
                     break;
-case "transcribe":
-       if(music.currentInstrument == '') {
- UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
-} else {
-   transcriptionPanel.classList.add('active');
-music.startTranscription();
-}
-break;
+                case "transcribe":
+                    if (music.currentInstrument == '') {
+                        UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
+                    } else {
+                        transcriptionPanel.classList.add('active');
+                        music.startTranscription();
+                    }
+                    break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();
@@ -8984,6 +9012,92 @@ function changeWeather(newWeather) {
         }
     }
 }
+function workshopSelectHireApprentice(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".hireApprentice");
+    var sexAndRaceKey = '';
+    var sexAndRaceImgSource = '';
+    var workshopSelects = parentPanel.querySelectorAll('select');
+    for (i = 0; i < workshopSelects.length; ++i) {
+        sexAndRaceKey += workshopSelects[i].value;
+        if (sexAndRaceImgSource != '') {
+            sexAndRaceImgSource += '-';
+        }
+        sexAndRaceImgSource += workshopSelects[i].value;
+    }
+    // change the name - but only if the player hasn't entered one:
+    var currentName = parentPanel.querySelector('input[name=hireApprenticeName]').value;
+    if (parentPanel.getAttribute('data-allapprenticenames').indexOf(currentName) !== -1) {
+        parentPanel.querySelector('input[name=hireApprenticeName]').value = parentPanel.getAttribute('data-' + sexAndRaceKey);
+    }
+    // change portait:
+    parentPanel.querySelector('.apprenticePortrait').src = '/images/retinue/source/' + sexAndRaceImgSource + '.png';
+
+}
+
+function workshopApprenticeNameChange(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".hireApprentice");
+    var currentName = e.target.value;
+    if (parentPanel.getAttribute('data-allapprenticenames').indexOf(currentName) !== -1) {
+        // highlight the current name to make it easier to over type:
+        e.target.setSelectionRange(0, e.target.value.length);
+    }
+}
+
+function hireApprentice(e) {
+    //.closest not supported in IE11 ###
+    var parentPanel = e.target.closest(".workshop");
+    var cost = e.target.getAttribute('data-cost');
+
+    if (hero.currency['money'] >= cost) {
+        hero.currency['money'] -= cost;
+        UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
+        var apprenticeName = parentPanel.querySelector('input[name=hireApprenticeName]').value;
+        var newApprenticeMapObject = {
+            "name": apprenticeName
+        };
+     
+        // add the new apprentice to the panel:
+        var workshopSelects = parentPanel.querySelectorAll('.hireApprentice select');
+        var sexAndRaceImgSource = '';
+        for (i = 0; i < workshopSelects.length; ++i) {
+            if (sexAndRaceImgSource != '') {
+                sexAndRaceImgSource += '-';
+            }
+            sexAndRaceImgSource += workshopSelects[i].value;
+            newApprenticeMapObject[workshopSelects[i].getAttribute('data-key')] = workshopSelects[i].value;
+        }
+
+        var newApprenticeMarkup = '<li><img src="/images/retinue/source/' + sexAndRaceImgSource + '.png" alt=""><h6>' + apprenticeName + '<h6></li>';
+        parentPanel.querySelector('.activeApprentices ol').insertAdjacentHTML('beforeend', newApprenticeMarkup);
+        
+        // add the apprentice to the map json:
+        var workshopsName = parentPanel.getAttribute('data-workshopname');
+        // loop through to find the workshop name:
+        for (var i = 0; i < thisMapData[currentMap].workshops.length; i++) {
+            if (thisMapData[currentMap].workshops[i].name == workshopsName) {
+                thisMapData[currentMap].workshops[i].apprentices.push(newApprenticeMapObject);
+                break;
+            }
+        }
+
+      
+
+        // generate a new name for the next apprentice of this sex and race
+        // ####
+        
+           // increase cost on button
+        // #####
+
+    } else {
+        UI.showNotification("<p>I don't have enough money</p>");
+    }
+
+
+
+}
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
@@ -9536,6 +9650,10 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
             thisMapData[whichNewMap] = data.mapData.map;
             //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
+
+         if(data.workshops) {
+            UI.buildWorkshop(data.workshops.markup);
+        }
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -9579,6 +9697,9 @@ function loadMapJSON(mapFilePath) {
             visibleMaps.push(thisCurrentMap);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
+              if(data.workshops) {
+            UI.buildWorkshop(data.workshops.markup);
+        }
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
             if (isOverWorldMap) {
@@ -10697,6 +10818,11 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
+                                        // close the shop
+                    if (workshopCurrentlyOpen != -1) {
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.closeWorkshop();
+                    }
                     // close the accept/decline buttons as well in case they're open:
                     acceptQuestChoice.classList.remove('active');
                     // only remove this after dialogue has faded out completely:
@@ -11346,6 +11472,13 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 //thisObjectSpeaking.speechIndex--;
                 break;
+            case "workshop":
+              UI.showUI();
+              var workshopHash = generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])
+            workshopCurrentlyOpen = workshopHash;
+            document.getElementById("workshop" + workshopHash).classList.add("active");
+            
+            break;
             case "post":
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
@@ -12202,18 +12335,14 @@ function moveNPCs() {
                                 thisNPC.movementIndex--;
                             } else {
                                 thisNPC.waitingTimer++;
-                                console.log(thisNPC.waitingTimer, thisNextMovement[1]);
                                 if (thisNPC.waitingTimer > thisNextMovement[1]) {
                                     // check if this NPC had a speech bubble shown, and remove it if so
-
                                     if (activeObjectForDialogue == thisNPC) {
-                                      //  dialogue.classList.add("slowerFade");
+                                        //  dialogue.classList.add("slowerFade");
                                         dialogue.classList.remove("active");
                                         dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                                     }
                                     thisNPC.isMoving = true;
-                                    // set this so it doesn't do the check for a tile being blocked before it's turned to its new facing:
-
                                     thisNPC.currentAnimation = 'walk';
                                     delete thisNPC.waitingTimer;
                                 } else {

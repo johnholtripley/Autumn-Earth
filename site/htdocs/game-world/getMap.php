@@ -108,6 +108,8 @@ while ($row = mysqli_fetch_array($result4)) {
 
 // get from logged in account ###
 $characterClass = "Druid";
+$characterRace = "Huldra";
+$characterSex = "Female";
 $primaryProfession = "Herbalist";
 
 if(!$debug){
@@ -1153,11 +1155,20 @@ unset($mapData['map']['eventSpecificContent']);
 }
 
 
+/*
+$mainMapData = $mapData;
+// remove the shop and workshop original code from the JSON as this will all be re-worked:
+// THIS NEEDS TO STAY SO IT CAN BE MODIFIED BY THE GAME:
+if(isset($mainMapData['map']['workshops'])) {
+    unset($mainMapData['map']['workshops']);
+}
+if(isset($mainMapData['map']['shops'])) {
+    unset($mainMapData['map']['shops']);
+}
+$jsonOutput = '{"mapData":'.json_encode($mainMapData);
 
+*/
 $jsonOutput = '{"mapData":'.json_encode($mapData);
-
-
-
 
 
 
@@ -1562,6 +1573,170 @@ $jsonOutput .= ',"shops":{"markup": ["'.addcslashes($shopMarkupToOutput, '"\\/')
 }
 
 // end shops
+
+
+
+// start workshops:
+
+
+if(isset($mapData['map']['workshops'])) {
+
+
+
+    // generate possible apprentice names procedurally: ####
+    // /game-world/generateretinuefollower.php?debug=true
+    $possibleWorkshopApprenticeNames = array("huldra"=>array("female"=>array("Eila Goldéirin", "Ithania Dewstem", "Narianna Auriesin", "Starsong Elmlldan"), "male"=>array("Eranril Leafglade", "Corithras Feymote", "Galar'thus Aurborn")), "dwarrow"=>array("female"=>array("Liri Rustbraid", "Linai Stonebear", "Ingrys Irontale"), "male"=>array("Duri Steelforge", "Frimil Farmantle", "Furi Bronzeward")), "human"=>array("female"=>array("Seyna Teague", "Amberta Farthing", "Annora Alverold"), "male"=>array("George Cadon", "Garrett Mortmaine", "Argyle Croft")));
+    $possibleApprenticeSexes = ["female", "male"];
+
+
+    // add workshops:
+    foreach ($mapData['map']['workshops'] as &$thisWorkshop) {
+        $thisWorkshop['hash'] = generateHash($thisWorkshop['name']);
+    }
+    $workshopMarkupToOutput = '';
+
+    for ($i=0;$i<count($mapData['map']['workshops']);$i++) {
+        $thisWorkshopsMaxApprenctices = 4;
+    $workshopMarkupToOutput .= '<div class="workshop" id="workshop'.$mapData['map']['workshops'][$i]['hash'].'" data-workshopname="'.$thisWorkshop['name'].'" data-profession="'.$mapData['map']['workshops'][$i]["profession"].'" data-maxapprentices="'.$thisWorkshopsMaxApprenctices.'">';
+    $workshopMarkupToOutput .= '<div class="draggableBar">'.$mapData['map']['workshops'][$i]["name"].'</div><button class="closePanel">close</button>';
+
+
+    // get recipe data:
+    $itemIdString = implode(", ", $mapData['map']['workshops'][$i]['recipesKnown']);
+    $query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
+    CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+    WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+    WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+    END as 'finalRecipeName',
+    tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid where tblrecipes.recipeid in (".$itemIdString.")
+    order by tblprofessions.professionid, finalRecipeName ASC";
+
+    $result = mysqli_query($connection, $query) or die ("recipes failed");
+
+    $workshopMarkupToOutput .= '<div class="availableRecipes"><ol>';
+
+    while ($row = mysqli_fetch_array($result)) {
+        extract($row);
+        
+        $thisColour = '';
+        if($hasInherentColour<1) {
+        if($defaultResultingColour>0) {
+            $thisColour = "-".strtolower($allColours[$defaultResultingColour]);
+        }
+        }
+
+$workshopMarkupToOutput .= '<li><img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="">';
+$workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
+        if($recipeDescription == "") {
+        $workshopMarkupToOutput .= '<p>'.$recipeDescriptionFallback.'</p>';
+        } else {
+            $workshopMarkupToOutput .= '<p>'.$recipeDescription.'</p>';
+        }    
+    }
+        mysqli_free_result($result);
+
+    $workshopMarkupToOutput .= '</ol></div>';
+
+
+
+
+    // show any active apprentices:
+    $workshopMarkupToOutput .= '<div class="activeApprentices">';
+    if(count($mapData['map']['workshops'][$i]['apprentices'])>0) {
+        $workshopMarkupToOutput .= '<h5>Apprentices</h5><ol>';
+    }
+    for ($j=0;$j<count($mapData['map']['workshops'][$i]['apprentices']);$j++) {
+        $thisApprentice = $mapData['map']['workshops'][$i]['apprentices'][$j];
+        $workshopMarkupToOutput .= '<li><img src="/images/retinue/source/'.$thisApprentice['race'].'-'.$thisApprentice['sex'].'.png" alt="">';
+        $workshopMarkupToOutput .= '<h6>'.$thisApprentice['name'].'</h6></li>';
+    }
+        if(count($mapData['map']['workshops'][$i]['apprentices'])>0) {
+        $workshopMarkupToOutput .= '</ol>';
+    }
+    $workshopMarkupToOutput .= '</div>';
+
+
+
+
+
+    // add more apprentices:
+    $possibleApprenticesForThisWorkshop = array();
+    foreach ($possibleWorkshopApprenticeNames as $key => $value) {
+        if (in_array($key, $mapData['map']['workshops'][$i]['possibleApprenticeRaces'])) {
+            array_push($possibleApprenticesForThisWorkshop, array($key => $value));
+        }
+    }
+    
+
+$pickedNamesForRaceAndSex = array();
+foreach ($possibleWorkshopApprenticeNames as $key => $value) {
+    for ($j=0;$j<count($possibleApprenticeSexes);$j++) {
+        $pickedNamesForRaceAndSex[($key.$possibleApprenticeSexes[$j])] = $value[($possibleApprenticeSexes[$j])][mt_rand(0, count($value[($possibleApprenticeSexes[$j])]) - 1)];
+    }
+}
+
+
+
+    $numberOfApprenticesAlready = count($mapData['map']['workshops'][$i]['apprentices']);
+    if($numberOfApprenticesAlready < $thisWorkshopsMaxApprenctices) {
+
+    $dataAttributeForSuggestedNames = '';
+    foreach ($pickedNamesForRaceAndSex as $key => $value) {
+    $dataAttributeForSuggestedNames .= ' data-'.$key.'="'.$value.'"';
+    }
+
+
+
+        $workshopMarkupToOutput .= '<div class="hireApprentice"'.$dataAttributeForSuggestedNames.' data-allapprenticenames="'.implode(",", $pickedNamesForRaceAndSex).'"><h5>Hire more</h5>';
+
+// race:
+        $workshopMarkupToOutput .= '<div class="selectWrapper"><select name="hireApprenticeRace" data-key="race">';
+        for ($j=0;$j<count($mapData['map']['workshops'][$i]['possibleApprenticeRaces']);$j++) {
+            $workshopMarkupToOutput .= '<option value="'.$mapData['map']['workshops'][$i]['possibleApprenticeRaces'][$j].'"';
+            // prioritise the character's own sex and race in the suggestions:
+            if(ucfirst($mapData['map']['workshops'][$i]['possibleApprenticeRaces'][$j]) == $characterRace) {
+                $workshopMarkupToOutput .= ' selected';
+            }
+            $workshopMarkupToOutput .= '>'.ucfirst($mapData['map']['workshops'][$i]['possibleApprenticeRaces'][$j]).'</option>';
+        }
+        $workshopMarkupToOutput .= '</select></div>';
+
+// sex:
+        $workshopMarkupToOutput .= '<div class="selectWrapper"><select name="hireApprenticeSex" data-key="sex">';
+        for ($j=0;$j<count($possibleApprenticeSexes);$j++) {
+            $workshopMarkupToOutput .= '<option value="'.$possibleApprenticeSexes[$j].'"';
+            // prioritise the character's own sex and race in the suggestions:
+            if($possibleApprenticeSexes[$j] == strtolower($characterSex)) {
+                $workshopMarkupToOutput .= ' selected';
+            }
+            $workshopMarkupToOutput .= '>'.ucfirst($possibleApprenticeSexes[$j]).'</option>';
+        }
+        $workshopMarkupToOutput .= '</select></div>';
+
+// portrait and name:
+
+        $workshopMarkupToOutput .= '<img class="apprenticePortrait" src="/images/retinue/source/'.strtolower($characterRace).'-'.strtolower($characterSex).'.png" alt="">';
+
+        $sexAndRaceKey = strtolower($characterRace).strtolower($characterSex);
+        $workshopMarkupToOutput .= '<input name="hireApprenticeName" placeholder="Appentice\'s name" type="text" value="'.$pickedNamesForRaceAndSex[$sexAndRaceKey].'">';
+
+        // hire cost should exponentially increase:
+        $hireCost = (($numberOfApprenticesAlready+1) * ($numberOfApprenticesAlready+1)) * 10000;
+        $workshopMarkupToOutput .= '<button class="primaryButton" data-cost="'.$hireCost.'">Hire this apprentice ('.parseMoney($hireCost).')</button>';
+        $workshopMarkupToOutput .= '</div>';
+    }
+
+
+
+
+
+    $workshopMarkupToOutput .= '</div></div>';
+    }
+    $jsonOutput .= ',"workshops":{"markup": ["'.addcslashes($workshopMarkupToOutput, '"\\/').'"]}';
+
+}
+
+
 
 
 

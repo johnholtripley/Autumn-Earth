@@ -190,6 +190,19 @@
                 "size": "small",
                 "currency": "cardDust"
             }],
+                  "workshops": [  {
+                "name": "Dye workshop",
+                "profession": 0,
+                "recipesKnown": [0, 1, 2],
+                "itemsQueued": [],
+                "apprentices":  [{
+                    "name": "Magnus Strongarm",
+                    "sex": "male",
+                    "race": "dwarrow"
+                    }],
+                "possibleApprenticeRaces": ["dwarrow", "huldra", "human"]
+             
+            }],
         "npcs": [
             {
                 "name": "deer",
@@ -270,7 +283,50 @@
                 }
             },
 
-
+{
+                "name": "Dye workshop owner",
+                "src": "retinue.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 62,
+                "spriteHeight": 79,
+                "centreX": 40,
+                "centreY": 69,
+                "tileX": 20,
+                "tileY": 29,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterClass##, would you like some dyes preparing?", "workshop", "Dye workshop"]
+                ],
+                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+                          {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
 
 
            {

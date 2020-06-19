@@ -550,6 +550,10 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
             thisMapData[whichNewMap] = data.mapData.map;
             //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
+
+         if(data.workshops) {
+            UI.buildWorkshop(data.workshops.markup);
+        }
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -593,6 +597,9 @@ function loadMapJSON(mapFilePath) {
             visibleMaps.push(thisCurrentMap);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
+              if(data.workshops) {
+            UI.buildWorkshop(data.workshops.markup);
+        }
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
             if (isOverWorldMap) {
@@ -1711,6 +1718,11 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
+                                        // close the shop
+                    if (workshopCurrentlyOpen != -1) {
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.closeWorkshop();
+                    }
                     // close the accept/decline buttons as well in case they're open:
                     acceptQuestChoice.classList.remove('active');
                     // only remove this after dialogue has faded out completely:
@@ -2360,6 +2372,13 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 //thisObjectSpeaking.speechIndex--;
                 break;
+            case "workshop":
+              UI.showUI();
+              var workshopHash = generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])
+            workshopCurrentlyOpen = workshopHash;
+            document.getElementById("workshop" + workshopHash).classList.add("active");
+            
+            break;
             case "post":
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
@@ -3216,18 +3235,14 @@ function moveNPCs() {
                                 thisNPC.movementIndex--;
                             } else {
                                 thisNPC.waitingTimer++;
-                                console.log(thisNPC.waitingTimer, thisNextMovement[1]);
                                 if (thisNPC.waitingTimer > thisNextMovement[1]) {
                                     // check if this NPC had a speech bubble shown, and remove it if so
-
                                     if (activeObjectForDialogue == thisNPC) {
-                                      //  dialogue.classList.add("slowerFade");
+                                        //  dialogue.classList.add("slowerFade");
                                         dialogue.classList.remove("active");
                                         dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                                     }
                                     thisNPC.isMoving = true;
-                                    // set this so it doesn't do the check for a tile being blocked before it's turned to its new facing:
-
                                     thisNPC.currentAnimation = 'walk';
                                     delete thisNPC.waitingTimer;
                                 } else {

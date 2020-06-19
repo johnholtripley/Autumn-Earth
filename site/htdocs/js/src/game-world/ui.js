@@ -19,6 +19,7 @@ const inventoryBank = document.getElementById('inventoryBank');
 const inventoryBankTitle = document.getElementById('inventoryBankTitle');
 const bankCurrency = document.getElementById('bankCurrency');
 const shopPanel = document.getElementById('shopPanel');
+const workshopPanel = document.getElementById('workshopPanel');
 const inscriptionPanel = document.getElementById('inscriptionPanel');
 const inscriptionTextArea = document.getElementById('inscriptionTextArea');
 const sourceSelection = document.getElementById('sourceSelection');
@@ -176,7 +177,7 @@ var UI = {
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
-                      if (thisAction == "music") {
+                    if (thisAction == "music") {
                         music.loadInstrumentSounds(currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue);
                     }
                 } else {
@@ -923,7 +924,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         } else {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         }
-       // hero.currency[thisCurrency] += sellPrice;
+        // hero.currency[thisCurrency] += sellPrice;
         // selling is always in default 'money' currency:
         hero.currency['money'] += sellPrice;
         UI.updateCurrencies();
@@ -1091,7 +1092,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (e.target.className == "closePanel") {
                 e.target.parentNode.classList.remove("active");
                 // check if it's a shop panel:
-                if (e.target.parentNode.classList.contains("shop")) {
+                if (e.target.parentNode.classList.contains("workshop")) {
+                    workshopCurrentlyOpen = -1;
+
+                    // close shop dialogue as well:
+                    if (activeObjectForDialogue != '') {
+                        //  dialogue.classList.add("slowerFade");
+                        dialogue.classList.remove("active");
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.removeActiveDialogue();
+
+                    }
+
+                } else if (e.target.parentNode.classList.contains("shop")) {
                     shopCurrentlyOpen = -1;
                     inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
@@ -1148,8 +1161,17 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     buildShop: function(markup) {
-        //   shopPanel.innerHTML = markup;
         shopPanel.insertAdjacentHTML('beforeend', markup);
+    },
+
+    buildWorkshop: function(markup) {
+        workshopPanel.insertAdjacentHTML('beforeend', markup);
+        var workshopSelects = workshopPanel.querySelectorAll('select');
+        for (i = 0; i < workshopSelects.length; ++i) {
+            workshopSelects[i].onchange = workshopSelectHireApprentice;
+        }
+        workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
+        workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
     },
 
     openedShopSuccessfully: function(shopHash) {
@@ -1169,6 +1191,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         shopCurrentlyOpen = -1;
         inventoryPanels.removeAttribute('class');
 
+    },
+
+    closeWorkshop: function() {
+        document.getElementById("workshop" + workshopCurrentlyOpen).classList.remove("active");
+        workshopCurrentlyOpen = -1;
     },
 
     shopSplitStackCancel: function() {
@@ -1197,15 +1224,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
 
-  try {
-              
-                     thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
+                try {
+
+                    thisBoughtObject.inscription = JSON.parse(thisSlotImageElement.getAttribute('data-inscription'));
                 } catch (e) {
                     // it's not Json:
-                   thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+                    thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
                 }
 
-                
+
             }
 
             // check for User Generated Content attributes and build the contains object from those if they exist:
@@ -1863,14 +1890,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         }
                     }
                     break;
-case "transcribe":
-       if(music.currentInstrument == '') {
- UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
-} else {
-   transcriptionPanel.classList.add('active');
-music.startTranscription();
-}
-break;
+                case "transcribe":
+                    if (music.currentInstrument == '') {
+                        UI.showNotification("<p>I haven't got an instrument equipped to do that</p>");
+                    } else {
+                        transcriptionPanel.classList.add('active');
+                        music.startTranscription();
+                    }
+                    break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();

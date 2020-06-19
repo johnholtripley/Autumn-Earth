@@ -477,6 +477,72 @@ font-size: 0;
     }
 }
 
+#workshopPanel {
+    .workshop {
+        width: 322px;
+        left: 55%;
+        top: 335px;
+        background: #000 url('../images/game-world/interface/inventory-panel-bg.jpg') 100% 100%;
+        @include togglePanel(0.4s);
+        color: #fff;
+    }
+
+    ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    h5 {
+        clear: both;
+    }
+
+    .activeApprentices {
+
+        img {
+            float: left;
+            clear: both;
+            padding: 0 8px 8px 0;
+        }
+    }
+
+    .availableRecipes {
+
+        li {
+            background: #666;
+            padding: 6px 0;
+
+            &.active {
+                display: block;
+            }
+
+            img {
+                display: inline-block; // define widths so the scrollbar knows the size while the images are loading:
+                width: 40px;
+                height: 40px;
+            }
+
+            &.highlighted {
+                background: #b4a435;
+            }
+        }
+
+        h3,
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+.hireApprentice {
+    .selectWrapper {
+        width: 50%;
+        float:left;
+    }
+}
+
+}
+
 #collectionQuestPanels {
     @include togglePanel(0.4s);
     width: 322px;

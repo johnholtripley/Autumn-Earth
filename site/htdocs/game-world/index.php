@@ -17,6 +17,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
   <meta name="language" content="english">
   <link rel="preconnect" href="//www.google-analytics.com">
   <link rel="preconnect" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <?php
   // link rel="preload" fonts
   ?>
@@ -234,6 +235,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
         <input type="submit" value="Ok">
       </fieldset>
     </form>
+
+    <div id="workshopPanel"></div>
 
     <div id="transcriptionPanel">
       <div class="draggableBar">Transcribe music</div><button class="closePanel">close</button>
