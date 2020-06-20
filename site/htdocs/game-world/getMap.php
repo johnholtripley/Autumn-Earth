@@ -1589,11 +1589,15 @@ if(isset($mapData['map']['workshops'])) {
     $possibleApprenticeSexes = ["female", "male"];
 
 
+    $workshopMarkupToOutput = '';
+    $allWorkshopIdsForThisMap = array();
     // add workshops:
     foreach ($mapData['map']['workshops'] as &$thisWorkshop) {
         $thisWorkshop['hash'] = generateHash($thisWorkshop['name']);
+        array_push($allWorkshopIdsForThisMap, 'workshop'.$thisWorkshop['hash']);
     }
-    $workshopMarkupToOutput = '';
+    
+
 
     for ($i=0;$i<count($mapData['map']['workshops']);$i++) {
         $thisWorkshopsMaxApprenctices = 4;
@@ -1732,7 +1736,7 @@ foreach ($possibleWorkshopApprenticeNames as $key => $value) {
 
     $workshopMarkupToOutput .= '</div></div>';
     }
-    $jsonOutput .= ',"workshops":{"markup": ["'.addcslashes($workshopMarkupToOutput, '"\\/').'"]}';
+    $jsonOutput .= ',"workshops":{"markup": ["'.addcslashes($workshopMarkupToOutput, '"\\/').'"],"allWorkshopIds":"'.implode(",", $allWorkshopIdsForThisMap).'"}';
 
 }
 

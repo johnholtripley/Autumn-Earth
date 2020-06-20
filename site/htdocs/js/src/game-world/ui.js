@@ -1172,18 +1172,22 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
+    },
 
-
-
-
- if (thisDevicesScrollBarWidth > 0) {
-        // might need a reference here so it's no applied to already existing scroll lists:
-        new customScrollBar(workshopPanel.querySelector('.customScrollBar'));
-    } else {
-        // remove styling:
-        workshopPanel.querySelector('.customScrollBar').classList.add("inActive");
-    }
-
+    initWorkshopScrollBars: function(workshopHashes) {
+        // initialise these by workshop hash so they can be recalculated when recipes are added:
+        var allWorkshopsForThisMap = workshopHashes.split(",");
+        var thisScrollPanel;
+        for (var i = 0; i < allWorkshopsForThisMap.length; i++) {
+            thisScrollPanel = document.getElementById(allWorkshopsForThisMap[i]);
+            if (thisDevicesScrollBarWidth > 0) {
+                // might need a reference here so it's no applied to already existing scroll lists:
+                window[allWorkshopsForThisMap[i]] = new customScrollBar(thisScrollPanel.querySelector('.customScrollBar'));
+            } else {
+                // remove styling:
+                thisScrollPanel.querySelector('.customScrollBar').classList.add("inActive");
+            }
+        }
     },
 
     openedShopSuccessfully: function(shopHash) {
