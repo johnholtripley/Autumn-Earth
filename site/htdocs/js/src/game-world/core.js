@@ -2378,6 +2378,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
               UI.showUI();
               var workshopHash = generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])
             workshopCurrentlyOpen = workshopHash;
+            audio.playSound(soundEffects['buttonClick'], 0);
             document.getElementById("workshop" + workshopHash).classList.add("active");
             
             break;

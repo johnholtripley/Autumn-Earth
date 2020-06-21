@@ -62,18 +62,48 @@ function recipeSearchClear() {
     recipeSearchAndFilter();
 }
 
-function recipeSelectComponents(whichRecipe) {
+function recipeSelectComponents(whichRecipe, isInAWorkshop) {
+
+    // if isInAWorkshop is true, then it's a recipe being created at a workshop, otherwise, the player is crafting directly themselves
     releaseLockedSlots();
     craftingTimeBarOuter.style.display = 'none';
     startCrafting.style.display = 'block';
     startCrafting.disabled = true;
     craftingSelectComponentsPanel.classList.add("active");
-    var recipeId = whichRecipe.substring(6);
+    var recipeId;
+
+    if (isInAWorkshop) {
+        // these recipes have a hyphen and the workshop hash to make them unique, so that needs removing:
+        recipeId = whichRecipe.split("-")[0].substring(6);
+
+    } else {
+        recipeId = whichRecipe.substring(6);
+    }
+
     var recipeRequiresADye = false;
     var previousRecipeType = "-";
     var foundItemGroups;
-    // make a copy so that influences don't get stored for next time:
-    var thisRecipe = JSON.parse(JSON.stringify(hero.crafting[currentRecipePanelProfession].recipes[recipeId]));
+    
+    if (isInAWorkshop) {
+        // need to get recipe components ####
+        // john
+        /*​
+            components: Array(3) [ {…}, {…}, {…} ]  ​
+            creates: "12"
+            defaultColour: "4"
+            hiddenCreates: ""
+            imageId: "12-blue"
+            prerequisite: "0"
+            recipeDescription: "A standard pigment dye."
+            recipeName: "Blue Dye"
+            tier: "10"
+        */
+    } else {
+        // make a copy so that influences don't get stored for next time:
+        var thisRecipe = JSON.parse(JSON.stringify(hero.crafting[currentRecipePanelProfession].recipes[recipeId]));
+    }
+
+
     craftingObject = {
         'componentsAdded': [],
         'whichRecipe': whichRecipe,
@@ -519,7 +549,7 @@ function startCraftingProcess() {
         removeFromInventory(craftingObject.componentsAdded[i].fromSlot, craftingObject.componentsAdded[i].quantity);
     }
     // update the available items:
-    recipeSelectComponents(craftingObject.whichRecipe);
+    recipeSelectComponents(craftingObject.whichRecipe, false);
     // restore Create button:
     startCrafting.style.display = 'block';
     craftingTimeBarOuter.style.display = 'none';

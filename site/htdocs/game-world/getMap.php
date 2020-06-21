@@ -1594,6 +1594,7 @@ if(isset($mapData['map']['workshops'])) {
     // add workshops:
     foreach ($mapData['map']['workshops'] as &$thisWorkshop) {
         $thisWorkshop['hash'] = generateHash($thisWorkshop['name']);
+        // send the wrokshop hashes separately, so the scrollbars can be initialised specifically:
         array_push($allWorkshopIdsForThisMap, 'workshop'.$thisWorkshop['hash']);
     }
     
@@ -1629,7 +1630,7 @@ if(isset($mapData['map']['workshops'])) {
         }
         }
 
-$workshopMarkupToOutput .= '<li><img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="">';
+$workshopMarkupToOutput .= '<li id="recipe'.$recipeID.'-'.$mapData['map']['workshops'][$i]['hash'].'"><img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="">';
 $workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
         if($recipeDescription == "") {
         $workshopMarkupToOutput .= '<p>'.$recipeDescriptionFallback.'</p>';
@@ -1639,7 +1640,7 @@ $workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
     }
         mysqli_free_result($result);
 
-    $workshopMarkupToOutput .= '</ol><div class="trackBar"><div class="dragger"></div></div></div></div>';
+    $workshopMarkupToOutput .= '</ol><div class="trackBar"><div class="dragger"></div></div></div></div><button class="workshopRecipeCreateButton" disabled="disabled">Add components</button></div>';
 
 
 

@@ -7,8 +7,7 @@
         "ambientSounds":
         {
             "birdSong": "../sounds/bird-song.mp3",
-            "birdChirrup": "../sounds/chirrup.mp3",
-            "doe": "../sounds/doe-NOT_MINE.mp3"
+            "birdChirrup": "../sounds/chirrup.mp3"
         },
         "collisions": [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

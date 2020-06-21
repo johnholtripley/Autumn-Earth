@@ -72,8 +72,9 @@ $numberOfItemCategories: 20;
 
     img {
         display: block; // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
-// prevent alt text flashing up:
-font-size: 0;
+        // prevent alt text flashing up:
+        font-size: 0;
+
         // @include attention() {
         &:hover,
         &:focus {
@@ -268,8 +269,9 @@ font-size: 0;
         display: none;
     }
 }
+
 #inventoryPanels #inventoryBank ol {
- width: 276px;
+    width: 276px;
 }
 
 
@@ -289,6 +291,7 @@ font-size: 0;
     canvas {
         background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
     }
+
     p {
         // co-ordinates:
         text-align: right;
@@ -360,7 +363,8 @@ font-size: 0;
     color: #fff;
 }
 
-#craftingRecipeCreateButton {
+#craftingRecipeCreateButton,
+.workshopRecipeCreateButton {
     @include transition(background 0.4s ease);
     color: #fff;
     border: 0;
@@ -500,6 +504,7 @@ font-size: 0;
     h5 {
         clear: both;
     }
+
     h6 {
         margin: 0;
         vertical-align: top;
@@ -507,12 +512,14 @@ font-size: 0;
     }
 
     .activeApprentices {
-li {
-    border-bottom: 1px solid #555;
-    &:last-child {
-        border-bottom: 0;
-    }
-}
+        li {
+            border-bottom: 1px solid #555;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+
         img {
             display: inline-block;
             margin: 0 6px;
@@ -524,6 +531,7 @@ li {
         li {
             background: #666;
             padding: 6px 0;
+            @include transition(background 0.4s ease);
 
             &.active {
                 display: block;
@@ -547,12 +555,12 @@ li {
         }
     }
 
-.hireApprentice {
-    .selectWrapper {
-        width: 50%;
-        float:left;
+    .hireApprentice {
+        .selectWrapper {
+            width: 50%;
+            float: left;
+        }
     }
-}
 
 }
 
@@ -872,16 +880,19 @@ li {
 
     #holdingGauge {
         opacity: 0;
-        @include transition(opacity 0.4s ease);  border: 2px solid #c9a55a;
-            background: #111;
+        @include transition(opacity 0.4s ease);
+        border: 2px solid #c9a55a;
+        background: #111;
+
         &.active {
             opacity: 1;
         }
+
         span {
             height: 6px;
             display: block;
             @include transition(width 0.4s ease);
-          
+
         }
 
         &.gaugeWater span {
@@ -907,9 +918,11 @@ li {
     background: #53160d;
     color: #fff;
     z-index: 4;
+
     p {
-         padding: 3px 8px 3px 8px;
+        padding: 3px 8px 3px 8px;
     }
+
     button {
         margin: 0 0 8px 8px;
         cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
@@ -923,7 +936,7 @@ li {
         padding: 6px 16px;
         border: 2px solid #967834;
         outline: none;
-    
+
     }
 }
 
@@ -932,22 +945,24 @@ li {
 }
 
 #housingPanel {
-      @include togglePanel(0.4s);
-        left: 200px;
-        top: 200px;
-        background: #53160d;
+    @include togglePanel(0.4s);
+    left: 200px;
+    top: 200px;
+    background: #53160d;
     color: #fff;
+
     ul {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 }
+
 #housingConstructionPanel {
-          @include togglePanel(0.4s);
-        left: 80px;
-        bottom: 80px;
-        background: #53160d;
+    @include togglePanel(0.4s);
+    left: 80px;
+    bottom: 80px;
+    background: #53160d;
 }
 
 #catalogueQuestPanels {
@@ -955,7 +970,7 @@ li {
         @include togglePanel(0.4s);
         left: 200px;
         top: 200px;
-        
+
 
         ul {
             padding: 16px;
@@ -982,31 +997,31 @@ li {
                 @include transform(rotate(-1deg));
             }
 
-  &:after {
-                    content: "";
-                    display: block;
-                    width: 0%;
-                    position: absolute;
-                    right: -10%;
-                    @include transition(width 0.4s ease);
-                    top: 50%;
-                    border-bottom: 1px solid #000;
-                    @include transform(rotate(-1.5deg));
-                    @include transform-origin(100% 0);
-                }
+            &:after {
+                content: "";
+                display: block;
+                width: 0%;
+                position: absolute;
+                right: -10%;
+                @include transition(width 0.4s ease);
+                top: 50%;
+                border-bottom: 1px solid #000;
+                @include transform(rotate(-1.5deg));
+                @include transform-origin(100% 0);
+            }
 
-                &:nth-of-type(2n):after {
-                    transform: rotate(1deg);
-                }
+            &:nth-of-type(2n):after {
+                transform: rotate(1deg);
+            }
 
-                &:nth-of-type(4n+1):after {
-                    transform: rotate(3deg);
-                }
+            &:nth-of-type(4n+1):after {
+                transform: rotate(3deg);
+            }
 
 
             &.complete:after {
-              
-width: 120%;
+
+                width: 120%;
 
             }
         }
@@ -1018,6 +1033,7 @@ width: 120%;
 #inventoryBankTitle {
     pointer-events: none;
 }
+
 #bankCurrency {
     color: #fff;
     clear: both;
@@ -1027,17 +1043,19 @@ width: 120%;
 }
 
 #transcriptionPanel {
-     @include togglePanel(0.4s);
-        left: 1480px;
-        top: 200px;
-        background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) repeat-x 0 100%;
-        label {
-            color: #fff;
-            font-size: 13px;
-        }
-        input {
-            display: block;
-            margin: 8px 0;
-            padding: 4px;
-        }
+    @include togglePanel(0.4s);
+    left: 1480px;
+    top: 200px;
+    background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) repeat-x 0 100%;
+
+    label {
+        color: #fff;
+        font-size: 13px;
+    }
+
+    input {
+        display: block;
+        margin: 8px 0;
+        padding: 4px;
+    }
 }

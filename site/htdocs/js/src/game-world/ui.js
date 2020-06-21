@@ -415,7 +415,14 @@ var UI = {
         var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
-            recipeSelectComponents(thisNode.id);
+            if(thisNode.id.indexOf("-") == -1) {
+recipeSelectComponents(thisNode.id, false);
+            } else {
+                // it's a workshop recipe - they have a hyphen and then the workshop's hash:
+               recipeSelectComponents(thisNode.id, true); 
+            }
+            
+           
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {
@@ -1054,7 +1061,27 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     craftingRecipeCreate: function() {
         if (UI.highlightedRecipe != "") {
-            recipeSelectComponents(UI.highlightedRecipe);
+            recipeSelectComponents(UI.highlightedRecipe, false);
+        }
+    },
+
+        workshopPanelSingleClick: function(e) {
+        var thisNode = getNearestParentId(e.target);
+        if (thisNode.id.substring(0, 6) == "recipe") {
+             
+            if (UI.highlightedWorkshopRecipe != "") {
+                document.getElementById(UI.highlightedWorkshopRecipe).classList.remove('highlighted');
+            }
+            UI.highlightedWorkshopRecipe = thisNode.id;
+            document.getElementById(UI.highlightedWorkshopRecipe).classList.add('highlighted');
+            //.closest not supported in IE11 ###
+            e.target.closest(".workshop").querySelector('.workshopRecipeCreateButton').disabled = false;
+        }
+    },
+
+    workshopRecipeCreate: function() {
+        if (UI.highlightedWorkshopRecipe != "") {
+            recipeSelectComponents(UI.highlightedWorkshopRecipe, true);
         }
     },
 
@@ -1172,6 +1199,11 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
+UI.highlightedWorkshopRecipe = "";
+workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
+  
+        workshopPanel.querySelector('.workshopRecipeCreateButton').onclick = UI.workshopRecipeCreate;
+
     },
 
     initWorkshopScrollBars: function(workshopHashes) {
