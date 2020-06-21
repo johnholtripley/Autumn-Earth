@@ -75,9 +75,13 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
     if (isInAWorkshop) {
         // these recipes have a hyphen and the workshop hash to make them unique, so that needs removing:
         recipeId = whichRecipe.split("-")[0].substring(6);
+        startWorkshopCrafting.style.display = 'block';
+        startCrafting.style.display = 'none';
 
     } else {
         recipeId = whichRecipe.substring(6);
+         startWorkshopCrafting.style.display = 'none';
+        startCrafting.style.display = 'block';
     }
 
     var recipeRequiresADye = false;
@@ -85,19 +89,8 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
     var foundItemGroups;
     
     if (isInAWorkshop) {
-        // need to get recipe components ####
-        // john
-        /*​
-            components: Array(3) [ {…}, {…}, {…} ]  ​
-            creates: "12"
-            defaultColour: "4"
-            hiddenCreates: ""
-            imageId: "12-blue"
-            prerequisite: "0"
-            recipeDescription: "A standard pigment dye."
-            recipeName: "Blue Dye"
-            tier: "10"
-        */
+        // make a copy so that influences don't get stored for next time:
+        var thisRecipe = JSON.parse(JSON.stringify(detailedRecipeData[recipeId]));
     } else {
         // make a copy so that influences don't get stored for next time:
         var thisRecipe = JSON.parse(JSON.stringify(hero.crafting[currentRecipePanelProfession].recipes[recipeId]));
@@ -428,8 +421,10 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.thisRecipe.imageId + '.png';
         }
         startCrafting.disabled = false;
+        startWorkshopCrafting.disabled = false;
     } else {
         startCrafting.disabled = true;
+        startWorkshopCrafting.disabled = true;
         // restore defaults:
         document.getElementById('craftingOutputAttributes').innerHTML = '';
         document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.thisRecipe.recipeName;
@@ -459,24 +454,9 @@ function processCrafting() {
     UI.updateCraftingPanel();
 }
 
-function startCraftingProcess() {
-    hero.stats.itemsCrafted++;
-    // unlock slots so new items can be stacked:
-    releaseLockedSlots();
-    // add to inventory (or post if full):
-    inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
-    if (inventoryCheck[0]) {
-        UI.showChangeInInventory(inventoryCheck[1]);
-    } else {
-        // send the item by post:
-        var subjectLine = "Your crafted " + craftingObject.finalItemName;
-        var message = "This is fine work";
-        var whichNPC = "Artisan crafter";
-        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
-        UI.showNotification("<p>My crafted item is in the post</p>");
-    }
 
-    // check for hiddenResults to see if any empty containers (for example) need giving back to the player:
+function updateInventoryAfterCrafting() {
+        // check for hiddenResults to see if any empty containers (for example) need giving back to the player:
     if (craftingObject.thisRecipe.hiddenCreates) {
         var thisReturnedObject;
         var returnedItems = craftingObject.thisRecipe.hiddenCreates.split(",");
@@ -548,6 +528,29 @@ function startCraftingProcess() {
     for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
         removeFromInventory(craftingObject.componentsAdded[i].fromSlot, craftingObject.componentsAdded[i].quantity);
     }
+}
+
+
+function startCraftingProcess() {
+    hero.stats.itemsCrafted++;
+    // unlock slots so new items can be stacked:
+    releaseLockedSlots();
+    // add to inventory (or post if full):
+    inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
+    if (inventoryCheck[0]) {
+        UI.showChangeInInventory(inventoryCheck[1]);
+    } else {
+        // send the item by post:
+        var subjectLine = "Your crafted " + craftingObject.finalItemName;
+        var message = "This is fine work";
+        var whichNPC = "Artisan crafter";
+        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
+        UI.showNotification("<p>My crafted item is in the post</p>");
+    }
+
+updateInventoryAfterCrafting();
+
+
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, false);
     // restore Create button:

@@ -484,8 +484,13 @@ $numberOfItemCategories: 20;
 #workshopPanel {
     .workshop {
         width: 322px;
-        left: 55%;
-        top: 335px;
+        left: 40%;
+        top: 130px;
+            @include transform(translateX(-322px));
+
+    @include mq($wide, 'max') {
+        @include transform(translateX(0px));
+    }
         background: #000 url('../images/game-world/interface/inventory-panel-bg.jpg') 100% 100%;
         @include togglePanel(0.4s);
         color: #fff;

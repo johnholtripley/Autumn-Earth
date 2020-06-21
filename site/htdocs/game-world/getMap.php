@@ -1591,6 +1591,7 @@ if(isset($mapData['map']['workshops'])) {
 
     $workshopMarkupToOutput = '';
     $allWorkshopIdsForThisMap = array();
+    $allWorkshopRecipeData = array();
     // add workshops:
     foreach ($mapData['map']['workshops'] as &$thisWorkshop) {
         $thisWorkshop['hash'] = generateHash($thisWorkshop['name']);
@@ -1637,10 +1638,17 @@ $workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
         } else {
             $workshopMarkupToOutput .= '<p>'.$recipeDescription.'</p>';
         }    
+
+if (!(array_key_exists($recipeID, $allWorkshopRecipeData))) {
+// generate recipe data to know the components etc:
+        $allWorkshopRecipeData[$recipeID] = array("components" => json_decode($components),"creates" => $creates,"defaultColour"=>$defaultResultingColour,"hiddenCreates"=>$hiddenCreates, "imageId"=>$productId.$thisColour, "prerequisite"=>$prerequisite, "recipeDescription"=>$recipeDescription, "recipeName"=>$finalRecipeName, "tier"=>$recipeTier);
+       }
+
     }
         mysqli_free_result($result);
 
     $workshopMarkupToOutput .= '</ol><div class="trackBar"><div class="dragger"></div></div></div></div><button class="workshopRecipeCreateButton" disabled="disabled">Add components</button></div>';
+
 
 
 
@@ -1737,7 +1745,7 @@ foreach ($possibleWorkshopApprenticeNames as $key => $value) {
 
     $workshopMarkupToOutput .= '</div></div>';
     }
-    $jsonOutput .= ',"workshops":{"markup": ["'.addcslashes($workshopMarkupToOutput, '"\\/').'"],"allWorkshopIds":"'.implode(",", $allWorkshopIdsForThisMap).'"}';
+    $jsonOutput .= ',"workshops":{"markup": ["'.addcslashes($workshopMarkupToOutput, '"\\/').'"],"allWorkshopIds":"'.implode(",", $allWorkshopIdsForThisMap).'","recipeData":'.json_encode($allWorkshopRecipeData).'}';
 
 }
 

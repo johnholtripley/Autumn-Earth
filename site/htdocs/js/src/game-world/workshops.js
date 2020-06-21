@@ -44,7 +44,7 @@ function hireApprentice(e) {
         var newApprenticeMapObject = {
             "name": apprenticeName
         };
-     
+
         // add the new apprentice to the panel:
         var workshopSelects = parentPanel.querySelectorAll('.hireApprentice select');
         var sexAndRaceImgSource = '';
@@ -58,42 +58,60 @@ function hireApprentice(e) {
 
         var newApprenticeMarkup = '<li><img src="/images/retinue/source/' + sexAndRaceImgSource + '.png" alt=""><h6>' + apprenticeName + '</h6></li>';
         parentPanel.querySelector('.activeApprentices ol').insertAdjacentHTML('beforeend', newApprenticeMarkup);
-        
+
         // add the apprentice to the map json:
         var workshopsName = parentPanel.getAttribute('data-workshopname');
         // loop through to find the workshop name:
         for (var i = 0; i < thisMapData[currentMap].workshops.length; i++) {
             if (thisMapData[currentMap].workshops[i].name == workshopsName) {
                 thisMapData[currentMap].workshops[i].apprentices.push(newApprenticeMapObject);
-                 var newNumberOfApprentices = thisMapData[currentMap].workshops[i].apprentices.length;
+                var newNumberOfApprentices = thisMapData[currentMap].workshops[i].apprentices.length;
                 break;
             }
         }
 
-      
 
- if(newNumberOfApprentices >= parentPanel.getAttribute('data-maxapprentices')) {
-parentPanel.querySelector('.hireApprentice').style.display = 'none';
- } else {
-     // increase cost on button
-     var nextHireCost = ((newNumberOfApprentices+1) * (newNumberOfApprentices+1)) * 10000;
-     var newLabel = 'Hire this apprentice ('+parseMoney(nextHireCost)+')';
-     parentPanel.querySelector('.primaryButton').setAttribute('data-cost', nextHireCost);
-     parentPanel.querySelector('.primaryButton').innerHTML = newLabel;
- }
+
+        if (newNumberOfApprentices >= parentPanel.getAttribute('data-maxapprentices')) {
+            parentPanel.querySelector('.hireApprentice').style.display = 'none';
+        } else {
+            // increase cost on button
+            var nextHireCost = ((newNumberOfApprentices + 1) * (newNumberOfApprentices + 1)) * 10000;
+            var newLabel = 'Hire this apprentice (' + parseMoney(nextHireCost) + ')';
+            parentPanel.querySelector('.primaryButton').setAttribute('data-cost', nextHireCost);
+            parentPanel.querySelector('.primaryButton').innerHTML = newLabel;
+        }
 
 
 
 
         // generate a new name for the next apprentice of this sex and race
         // ####
-        
-          
+
+
 
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
     }
 
 
+
+}
+
+function appendRecipeData(thisNewRecipeData) {
+    for (var i in thisNewRecipeData) {
+        if (!(detailedRecipeData.hasOwnProperty(i))) {
+            detailedRecipeData[i] = thisNewRecipeData[i];
+        }
+    }
+
+}
+
+function addItemToWorkshopQueue() {
+    console.log(craftingObject.craftedItem);
+    releaseLockedSlots();
+    updateInventoryAfterCrafting();
+    // update the available items:
+    recipeSelectComponents(craftingObject.whichRecipe, true);
 
 }

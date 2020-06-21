@@ -156,7 +156,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <button class="closePanel">close</button>
       <div class="craftingColumn"><div id="componentsAvailableForThisRecipe"></div></div>
       <div class="craftingColumn"><div id="selectComponentsItemBeingCreated"></div></div>
-      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><div id="craftingTimeBar" class="hourGlass"></div><button class="primaryButton" id="startCrafting" disabled="disabled">Create</button></div>   
+      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><div id="craftingTimeBar" class="hourGlass"></div><button class="primaryButton" id="startCrafting" disabled="disabled">Create</button><button class="primaryButton" id="startWorkshopCrafting" disabled="disabled">Add to workshop queue</button></div>   
     </div>
 
     <div id="booksAndParchments"></div>

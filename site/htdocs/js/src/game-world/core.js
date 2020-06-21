@@ -554,6 +554,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
          if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
             UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            appendRecipeData(data.workshops.recipeData);
         }
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
@@ -601,6 +602,7 @@ function loadMapJSON(mapFilePath) {
               if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
             UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            appendRecipeData(data.workshops.recipeData);
         }
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;

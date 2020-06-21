@@ -75,6 +75,7 @@ const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequir
 const retinueList = document.getElementById('retinueList');
 const retinueExplorePanel = document.getElementById('retinueExplorePanel');
 const startCrafting = document.getElementById('startCrafting');
+const startWorkshopCrafting = document.getElementById('startWorkshopCrafting');
 const horticulturePanel = document.getElementById('horticulturePanel');
 const characterPanel = document.getElementById('characterPanel');
 const holdingIcon = document.getElementById('holdingIcon');
@@ -218,6 +219,7 @@ var UI = {
         //  toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
+        startWorkshopCrafting.onclick = addItemToWorkshopQueue;
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         hnefataflConcede.onclick = hnefataflPlayer2Concedes;
         document.getElementById('showHousingFootprintCheckbox').onchange = housingNameSpace.toggleShowPlotFootprint;
@@ -1243,6 +1245,8 @@ workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSi
 
     closeWorkshop: function() {
         document.getElementById("workshop" + workshopCurrentlyOpen).classList.remove("active");
+        craftingSelectComponentsPanel.classList.remove("active");
+        releaseLockedSlots();
         workshopCurrentlyOpen = -1;
     },
 

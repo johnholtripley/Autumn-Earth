@@ -105,6 +105,8 @@ const minTimeBetweenAmbientSounds = 1200;
 
 var colourNames = [];
 
+var detailedRecipeData = [];
+
 var currentRecipePanelProfession = -1;
 var currentItemGroupFilters = "";
 
