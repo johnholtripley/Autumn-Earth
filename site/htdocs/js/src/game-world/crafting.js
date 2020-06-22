@@ -121,6 +121,10 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         'optionalDyeAdded': 0
     }
 
+    if (isInAWorkshop) {
+        craftingObject.craftedItem.hallmark = 0;
+    }
+
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
@@ -485,10 +489,6 @@ function updateInventoryAfterCrafting() {
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
             UI.showNotification("<p>My crafted item is in the post</p>");
         }
-
-
-
-
     }
 
     // also check for any optional dyes and return the glass bottles for those:
@@ -516,13 +516,7 @@ function updateInventoryAfterCrafting() {
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
             UI.showNotification("<p>My crafted item is in the post</p>");
         }
-
-
-
-
     }
-
-
 
     // remove used components:
     for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
@@ -548,8 +542,7 @@ function startCraftingProcess() {
         UI.showNotification("<p>My crafted item is in the post</p>");
     }
 
-updateInventoryAfterCrafting();
-
+    updateInventoryAfterCrafting();
 
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, false);

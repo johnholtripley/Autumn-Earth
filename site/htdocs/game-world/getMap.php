@@ -4,6 +4,8 @@
 //include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+
+
 $chr = $_GET["chr"];
 $map = $_GET["map"];
 $debug = false;
@@ -1650,15 +1652,56 @@ if (!(array_key_exists($recipeID, $allWorkshopRecipeData))) {
     $workshopMarkupToOutput .= '</ol><div class="trackBar"><div class="dragger"></div></div></div></div><button class="workshopRecipeCreateButton" disabled="disabled">Add components</button></div>';
 
 
+$numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
+
+// loop through any queued items and determine if they're ready, being produced or queued:
+    if(count($mapData['map']['workshops'][$i]['itemsQueued'])>0) {
+        $workshopMarkupToOutput .= '<h5>Items</h5>';
+        $thereIsAlreadyAnItemBeingCrafted = false;
+        $timeAlreadyUsed = 0;
+        $itemsCompletedMarkup = '';
+        $itemsInProgressMarkup = '';
+        $itemsQueuedMarkup = '';
+        for ($j=0;$j<count($mapData['map']['workshops'][$i]['itemsQueued']);$j++) {
+            $thisItem = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['item'];
+            $thisStartTime = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['startTime'];
+            $timeNowInMilliseconds = time()*1000;
+            $elapsedTime = $timeNowInMilliseconds - $thisStartTime;
+            $thisRecipe = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['fromWhichRecipe'];
+            $thisRecipesTier = $allWorkshopRecipeData[$thisRecipe]['tier'];
+            $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000;
+            if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
+                $itemsCompletedMarkup .= $thisItem['type'];
+                $timeAlreadyUsed += $timeRequiredToCraft;
+            } else if (!$thereIsAlreadyAnItemBeingCrafted) {
+                $itemsInProgressMarkup .= $thisItem['type'];
+            } else {
+                $itemsQueuedMarkup .= $thisItem['type'];
+            }
+        }
+        if($itemsQueuedMarkup != '') {
+            $workshopMarkupToOutput .= '<h6>Items queued</h6>';
+            $workshopMarkupToOutput .= $itemsQueuedMarkup;
+        }
+        if($itemsInProgressMarkup != '') {
+            $workshopMarkupToOutput .= '<h6>Items in progress</h6>';
+            $workshopMarkupToOutput .= $itemsInProgressMarkup;
+        }
+        if($itemsCompletedMarkup != '') {
+            $workshopMarkupToOutput .= '<h6>Items completed</h6>';
+            $workshopMarkupToOutput .= $itemsCompletedMarkup;
+        }
+    }
+
 
 
 
     // show any active apprentices:
     $workshopMarkupToOutput .= '<div class="activeApprentices">';
-    if(count($mapData['map']['workshops'][$i]['apprentices'])>0) {
+    if($numberOfApprentices>0) {
         $workshopMarkupToOutput .= '<h5>Apprentices</h5><ol>';
     }
-    for ($j=0;$j<count($mapData['map']['workshops'][$i]['apprentices']);$j++) {
+    for ($j=0;$j<$numberOfApprentices;$j++) {
         $thisApprentice = $mapData['map']['workshops'][$i]['apprentices'][$j];
         $workshopMarkupToOutput .= '<li><img src="/images/retinue/source/'.$thisApprentice['race'].'-'.$thisApprentice['sex'].'.png" alt="">';
         $workshopMarkupToOutput .= '<h6>'.$thisApprentice['name'].'</h6></li>';

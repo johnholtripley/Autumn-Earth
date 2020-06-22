@@ -189,21 +189,41 @@
                 "size": "small",
                 "currency": "cardDust"
             }],
-                  "workshops": [  {
+            "workshops": [
+            {
                 "name": "Dye workshop",
                 "profession": 0,
                 "recipesKnown": [0, 1, 2],
-                "itemsQueued": [],
-                "apprentices":  [{
+                "itemsQueued": [
+                {
+                    "item":
+                    {
+                        "colour": 20,
+                        "currentWear": 0,
+                        "durability": 100,
+                        "effectiveness": 100,
+                        "enchanted": 0,
+                        "hallmark": 0,
+                        "inscription": "",
+                        "quality": 100,
+                        "quantity": 1,
+                        "type": 12,
+                        "wrapped": 0
+                    },
+                    "fromWhichRecipe": 2,
+                    "startTime": "1592851865474"
+                }],
+                "apprentices": [
+                {
                     "name": "Magnus Strongarm",
                     "sex": "male",
                     "race": "dwarrow"
-                    }],
+                }],
                 "possibleApprenticeRaces": ["dwarrow", "huldra", "human"]
-             
+
             }],
-        "npcs": [
-            {
+                    "npcs": [
+                        {
                 "name": "deer",
                 "src": "deer.png",
                 "width": 20,

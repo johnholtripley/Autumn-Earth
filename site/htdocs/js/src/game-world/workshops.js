@@ -1,5 +1,6 @@
 function workshopSelectHireApprentice(e) {
     //.closest not supported in IE11 ###
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
     var parentPanel = e.target.closest(".hireApprentice");
     var sexAndRaceKey = '';
     var sexAndRaceImgSource = '';
@@ -70,8 +71,6 @@ function hireApprentice(e) {
             }
         }
 
-
-
         if (newNumberOfApprentices >= parentPanel.getAttribute('data-maxapprentices')) {
             parentPanel.querySelector('.hireApprentice').style.display = 'none';
         } else {
@@ -82,20 +81,12 @@ function hireApprentice(e) {
             parentPanel.querySelector('.primaryButton').innerHTML = newLabel;
         }
 
-
-
-
         // generate a new name for the next apprentice of this sex and race
         // ####
-
-
 
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
     }
-
-
-
 }
 
 function appendRecipeData(thisNewRecipeData) {
@@ -104,14 +95,13 @@ function appendRecipeData(thisNewRecipeData) {
             detailedRecipeData[i] = thisNewRecipeData[i];
         }
     }
-
 }
 
 function addItemToWorkshopQueue() {
+    hero.stats.itemsCraftedAtWorkshop++;
     console.log(craftingObject.craftedItem);
     releaseLockedSlots();
     updateInventoryAfterCrafting();
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, true);
-
 }
