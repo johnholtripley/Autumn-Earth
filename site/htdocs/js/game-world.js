@@ -7096,7 +7096,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (UI.draggedInventoryObject.type == 29) {
                 // is a recipe - check it's relevant to this workshop's profession:
                 var relevantRecipes = thisNode.getAttribute('data-possiblerecipes').split(",");
-                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains) != -1) {
+                // make sure the contains is treated as a string to match the string numbers from the data attribute:
+                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains+'') != -1) {
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     UI.droppedSuccessfully();
@@ -9235,9 +9236,31 @@ function addItemToWorkshopQueue() {
 }
 
 function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
- // does this need a showYesNoDialogueBox? ###
- console.log(whichRecipe.contains);
- console.log(whichWorkshop);
+    // does this need a showYesNoDialogueBox? ###
+    var thisWorkshopName = whichWorkshop.getAttribute('data-workshopname');
+    var thisMarkup;
+    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+        if (thisMapData[currentMap]['workshops'][i]['name'] == thisWorkshopName) {
+            thisMarkup = '<li id="recipe' + whichRecipe.contains + '-' + whichWorkshop.id.substring(8) + '">';
+
+
+
+            // add correct markup: #########
+            thisMarkup += '<img src="/images/game-world/inventory-items/12-yellow.png" alt=""><h3>Yellow Dye</h3><p>A standard pigment dye.</p></li>';
+
+
+
+
+            whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
+            // resize the scroll bar (if it's used):
+            if (thisDevicesScrollBarWidth > 0) {
+                window[whichWorkshop.id].init();
+            }
+            // add to map json:
+            thisMapData[currentMap]['workshops'][i]['recipesKnown'].push(whichRecipe.contains);
+            break;
+        }
+    }
 }
 // service worker:
 if ('serviceWorker' in navigator) {

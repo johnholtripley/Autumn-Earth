@@ -122,7 +122,29 @@ function addItemToWorkshopQueue() {
 }
 
 function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
- // does this need a showYesNoDialogueBox? ###
- console.log(whichRecipe.contains);
- console.log(whichWorkshop);
+    // does this need a showYesNoDialogueBox? ###
+    var thisWorkshopName = whichWorkshop.getAttribute('data-workshopname');
+    var thisMarkup;
+    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+        if (thisMapData[currentMap]['workshops'][i]['name'] == thisWorkshopName) {
+            thisMarkup = '<li id="recipe' + whichRecipe.contains + '-' + whichWorkshop.id.substring(8) + '">';
+
+
+
+            // add correct markup: #########
+            thisMarkup += '<img src="/images/game-world/inventory-items/12-yellow.png" alt=""><h3>Yellow Dye</h3><p>A standard pigment dye.</p></li>';
+
+
+
+
+            whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
+            // resize the scroll bar (if it's used):
+            if (thisDevicesScrollBarWidth > 0) {
+                window[whichWorkshop.id].init();
+            }
+            // add to map json:
+            thisMapData[currentMap]['workshops'][i]['recipesKnown'].push(whichRecipe.contains);
+            break;
+        }
+    }
 }

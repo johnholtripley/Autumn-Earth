@@ -915,7 +915,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (UI.draggedInventoryObject.type == 29) {
                 // is a recipe - check it's relevant to this workshop's profession:
                 var relevantRecipes = thisNode.getAttribute('data-possiblerecipes').split(",");
-                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains) != -1) {
+                // make sure the contains is treated as a string to match the string numbers from the data attribute:
+                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains+'') != -1) {
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     UI.droppedSuccessfully();

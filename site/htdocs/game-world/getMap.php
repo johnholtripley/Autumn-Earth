@@ -1603,9 +1603,18 @@ if(isset($mapData['map']['workshops'])) {
     
 
 
+
     for ($i=0;$i<count($mapData['map']['workshops']);$i++) {
+
+    // find all relevant recipes for this profession:
+    $query2 = "SELECT tblrecipes.recipeID FROM tblrecipes where tblrecipes.profession='".$mapData['map']['workshops'][$i]['profession']."'";
+    $result2 = mysqli_query($connection, $query2) or die ("recipes for profession failed");
+    $output = mysqli_fetch_all($result2,MYSQLI_ASSOC);
+    $allRecipeIds = array_column($output, 'recipeID');
+    mysqli_free_result($result2);
+
         $thisWorkshopsMaxApprenctices = 4;
-    $workshopMarkupToOutput .= '<div class="workshop" id="workshop'.$mapData['map']['workshops'][$i]['hash'].'" data-workshopname="'.$thisWorkshop['name'].'" data-profession="'.$mapData['map']['workshops'][$i]["profession"].'" data-maxapprentices="'.$thisWorkshopsMaxApprenctices.'" data-possiblerecipes="1,9">';
+    $workshopMarkupToOutput .= '<div class="workshop" id="workshop'.$mapData['map']['workshops'][$i]['hash'].'" data-workshopname="'.$thisWorkshop['name'].'" data-profession="'.$mapData['map']['workshops'][$i]["profession"].'" data-maxapprentices="'.$thisWorkshopsMaxApprenctices.'" data-possiblerecipes="'.implode(",",$allRecipeIds).'">';
     $workshopMarkupToOutput .= '<div class="draggableBar">'.$mapData['map']['workshops'][$i]["name"].'</div><button class="closePanel">close</button>';
 
 
