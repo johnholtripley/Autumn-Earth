@@ -417,14 +417,12 @@ var UI = {
         var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
-            if(thisNode.id.indexOf("-") == -1) {
-recipeSelectComponents(thisNode.id, false);
+            if (thisNode.id.indexOf("-") == -1) {
+                recipeSelectComponents(thisNode.id, false);
             } else {
                 // it's a workshop recipe - they have a hyphen and then the workshop's hash:
-               recipeSelectComponents(thisNode.id, true); 
+                recipeSelectComponents(thisNode.id, true);
             }
-            
-           
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {
@@ -912,6 +910,24 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             } else {
                 UI.sellToShop(thisNode);
             }
+        } else if (thisNode.classList.contains('workshop')) {
+            // workshop panel:
+            if (UI.draggedInventoryObject.type == 29) {
+                // is a recipe - check it's relevant to this workshop's profession:
+                var relevantRecipes = thisNode.getAttribute('data-possiblerecipes').split(",");
+                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains) != -1) {
+                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                    document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                    UI.droppedSuccessfully();
+                    addRecipeToWorkshop(UI.draggedInventoryObject, thisNode);
+                } else {
+                    UI.showNotification("<p>That workshop can't use that recipe</p>");
+                    UI.slideDraggedSlotBack();
+                }
+
+            } else {
+                UI.slideDraggedSlotBack();
+            }
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -1067,10 +1083,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
     },
 
-        workshopPanelSingleClick: function(e) {
+    workshopPanelSingleClick: function(e) {
         var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "recipe") {
-             
             if (UI.highlightedWorkshopRecipe != "") {
                 document.getElementById(UI.highlightedWorkshopRecipe).classList.remove('highlighted');
             }
@@ -1201,9 +1216,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
-UI.highlightedWorkshopRecipe = "";
-workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
-  
+        UI.highlightedWorkshopRecipe = "";
+        workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
+
         workshopPanel.querySelector('.workshopRecipeCreateButton').onclick = UI.workshopRecipeCreate;
 
     },

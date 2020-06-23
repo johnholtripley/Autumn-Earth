@@ -1605,7 +1605,7 @@ if(isset($mapData['map']['workshops'])) {
 
     for ($i=0;$i<count($mapData['map']['workshops']);$i++) {
         $thisWorkshopsMaxApprenctices = 4;
-    $workshopMarkupToOutput .= '<div class="workshop" id="workshop'.$mapData['map']['workshops'][$i]['hash'].'" data-workshopname="'.$thisWorkshop['name'].'" data-profession="'.$mapData['map']['workshops'][$i]["profession"].'" data-maxapprentices="'.$thisWorkshopsMaxApprenctices.'">';
+    $workshopMarkupToOutput .= '<div class="workshop" id="workshop'.$mapData['map']['workshops'][$i]['hash'].'" data-workshopname="'.$thisWorkshop['name'].'" data-profession="'.$mapData['map']['workshops'][$i]["profession"].'" data-maxapprentices="'.$thisWorkshopsMaxApprenctices.'" data-possiblerecipes="1,9">';
     $workshopMarkupToOutput .= '<div class="draggableBar">'.$mapData['map']['workshops'][$i]["name"].'</div><button class="closePanel">close</button>';
 
 
@@ -1656,7 +1656,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
 // loop through any queued items and determine if they're ready, being produced or queued:
     if(count($mapData['map']['workshops'][$i]['itemsQueued'])>0) {
-        $workshopMarkupToOutput .= '<h5>Items</h5>';
+        $workshopMarkupToOutput .= '<div class="itemsQueued"><h5>Items</h5>';
         $thereIsAlreadyAnItemBeingCrafted = false;
         $timeAlreadyUsed = 0;
         $itemsCompletedMarkup = '';
@@ -1669,14 +1669,17 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
             $elapsedTime = $timeNowInMilliseconds - $thisStartTime;
             $thisRecipe = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['fromWhichRecipe'];
             $thisRecipesTier = $allWorkshopRecipeData[$thisRecipe]['tier'];
-            $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000;
+            $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000/$numberOfApprentices;
+            $thisItemsMarkup = '<div class="itemSlot"><img src="/images/game-world/inventory-items/'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalImageSrc'].'.png">';
+            $thisItemsMarkup .= '<p>'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalItemName'].'</p>';
+            $thisItemsMarkup .= '<span class="qty">1</span></div>';
             if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
-                $itemsCompletedMarkup .= $thisItem['type'];
+                $itemsCompletedMarkup .= $thisItemsMarkup;
                 $timeAlreadyUsed += $timeRequiredToCraft;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
-                $itemsInProgressMarkup .= $thisItem['type'];
+                $itemsInProgressMarkup .= $thisItemsMarkup;
             } else {
-                $itemsQueuedMarkup .= $thisItem['type'];
+                $itemsQueuedMarkup .= $thisItemsMarkup;
             }
         }
         if($itemsQueuedMarkup != '') {
@@ -1691,6 +1694,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
             $workshopMarkupToOutput .= '<h6>Items completed</h6>';
             $workshopMarkupToOutput .= $itemsCompletedMarkup;
         }
+        $workshopMarkupToOutput .= '</div>';
     }
 
 

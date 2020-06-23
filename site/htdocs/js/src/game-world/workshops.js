@@ -99,9 +99,30 @@ function appendRecipeData(thisNewRecipeData) {
 
 function addItemToWorkshopQueue() {
     hero.stats.itemsCraftedAtWorkshop++;
-    console.log(craftingObject.craftedItem);
+    // prepare map object:
+    var newWorkshopItem = {
+        "item": craftingObject.craftedItem,
+        "fromWhichRecipe": craftingObject.recipeId,
+        "finalImageSrc": craftingObject.finalImageSrc,
+        "finalItemName": craftingObject.finalItemName,
+        "startTime": Date.now()
+    }
+    // find the workshop with that name in thisMapData[currentMap]['workshops']:
+    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+        if (thisMapData[currentMap]['workshops'][i]['name'] == craftingObject.whichWorkshop) {
+            thisMapData[currentMap]['workshops'][i]['itemsQueued'].push(newWorkshopItem);
+            break;
+        }
+    }
+    // console.log(thisMapData[currentMap]);
     releaseLockedSlots();
     updateInventoryAfterCrafting();
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, true);
+}
+
+function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
+ // does this need a showYesNoDialogueBox? ###
+ console.log(whichRecipe.contains);
+ console.log(whichWorkshop);
 }

@@ -486,11 +486,12 @@ $numberOfItemCategories: 20;
         width: 322px;
         left: 40%;
         top: 130px;
-            @include transform(translateX(-322px));
+        @include transform(translateX(-322px));
 
-    @include mq($wide, 'max') {
-        @include transform(translateX(0px));
-    }
+        @include mq($wide, 'max') {
+            @include transform(translateX(0px));
+        }
+
         background: #000 url('../images/game-world/interface/inventory-panel-bg.jpg') 100% 100%;
         @include togglePanel(0.4s);
         color: #fff;
@@ -510,11 +511,7 @@ $numberOfItemCategories: 20;
         clear: both;
     }
 
-    h6 {
-        margin: 0;
-        vertical-align: top;
-        display: inline-block;
-    }
+
 
     .activeApprentices {
         li {
@@ -528,6 +525,12 @@ $numberOfItemCategories: 20;
         img {
             display: inline-block;
             margin: 0 6px;
+        }
+
+        h6 {
+            margin: 0;
+            vertical-align: top;
+            display: inline-block;
         }
     }
 
@@ -557,6 +560,13 @@ $numberOfItemCategories: 20;
         p {
             margin: 0;
             padding: 0;
+        }
+    }
+
+    .itemsQueued {
+        .itemSlot {
+            @include inventorySlot();
+            margin: 5px 6px;
         }
     }
 

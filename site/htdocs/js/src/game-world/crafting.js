@@ -101,6 +101,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         'componentsAdded': [],
         'whichRecipe': whichRecipe,
         'thisRecipe': thisRecipe,
+        'recipeId': recipeId,
         'required': [],
         'componentInfluences': [],
         'craftedItem': {
@@ -123,6 +124,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
 
     if (isInAWorkshop) {
         craftingObject.craftedItem.hallmark = 0;
+        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopCurrentlyOpen).getAttribute('data-workshopname');
     }
 
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
@@ -420,9 +422,11 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.craftedItem.type + '-' + newColourImageSuffix.toLowerCase() + '.png';
             craftingObject.finalItemName = newColourImageSuffix + ' ' + currentActiveInventoryItems[craftingObject.craftedItem.type].shortname;
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.finalItemName;
+            craftingObject.finalImageSrc = craftingObject.craftedItem.type + '-' + newColourImageSuffix.toLowerCase();
         } else {
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.thisRecipe.recipeName;
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.thisRecipe.imageId + '.png';
+            craftingObject.finalImageSrc = craftingObject.thisRecipe.imageId;
         }
         startCrafting.disabled = false;
         startWorkshopCrafting.disabled = false;

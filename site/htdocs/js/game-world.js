@@ -711,6 +711,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         'componentsAdded': [],
         'whichRecipe': whichRecipe,
         'thisRecipe': thisRecipe,
+        'recipeId': recipeId,
         'required': [],
         'componentInfluences': [],
         'craftedItem': {
@@ -729,6 +730,11 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         'finalItemName': thisRecipe.recipeName,
         'isCreating': false,
         'optionalDyeAdded': 0
+    }
+
+    if (isInAWorkshop) {
+        craftingObject.craftedItem.hallmark = 0;
+        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopCurrentlyOpen).getAttribute('data-workshopname');
     }
 
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
@@ -1026,9 +1032,11 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.craftedItem.type + '-' + newColourImageSuffix.toLowerCase() + '.png';
             craftingObject.finalItemName = newColourImageSuffix + ' ' + currentActiveInventoryItems[craftingObject.craftedItem.type].shortname;
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.finalItemName;
+            craftingObject.finalImageSrc = craftingObject.craftedItem.type + '-' + newColourImageSuffix.toLowerCase();
         } else {
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.thisRecipe.recipeName;
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.thisRecipe.imageId + '.png';
+            craftingObject.finalImageSrc = craftingObject.thisRecipe.imageId;
         }
         startCrafting.disabled = false;
         startWorkshopCrafting.disabled = false;
@@ -1095,10 +1103,6 @@ function updateInventoryAfterCrafting() {
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
             UI.showNotification("<p>My crafted item is in the post</p>");
         }
-
-
-
-
     }
 
     // also check for any optional dyes and return the glass bottles for those:
@@ -1126,13 +1130,7 @@ function updateInventoryAfterCrafting() {
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
             UI.showNotification("<p>My crafted item is in the post</p>");
         }
-
-
-
-
     }
-
-
 
     // remove used components:
     for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
@@ -1158,8 +1156,7 @@ function startCraftingProcess() {
         UI.showNotification("<p>My crafted item is in the post</p>");
     }
 
-updateInventoryAfterCrafting();
-
+    updateInventoryAfterCrafting();
 
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, false);
@@ -6601,14 +6598,12 @@ var UI = {
         var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
-            if(thisNode.id.indexOf("-") == -1) {
-recipeSelectComponents(thisNode.id, false);
+            if (thisNode.id.indexOf("-") == -1) {
+                recipeSelectComponents(thisNode.id, false);
             } else {
                 // it's a workshop recipe - they have a hyphen and then the workshop's hash:
-               recipeSelectComponents(thisNode.id, true); 
+                recipeSelectComponents(thisNode.id, true);
             }
-            
-           
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {
@@ -7096,6 +7091,24 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             } else {
                 UI.sellToShop(thisNode);
             }
+        } else if (thisNode.classList.contains('workshop')) {
+            // workshop panel:
+            if (UI.draggedInventoryObject.type == 29) {
+                // is a recipe - check it's relevant to this workshop's profession:
+                var relevantRecipes = thisNode.getAttribute('data-possiblerecipes').split(",");
+                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains) != -1) {
+                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                    document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                    UI.droppedSuccessfully();
+                    addRecipeToWorkshop(UI.draggedInventoryObject, thisNode);
+                } else {
+                    UI.showNotification("<p>That workshop can't use that recipe</p>");
+                    UI.slideDraggedSlotBack();
+                }
+
+            } else {
+                UI.slideDraggedSlotBack();
+            }
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -7251,10 +7264,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
     },
 
-        workshopPanelSingleClick: function(e) {
+    workshopPanelSingleClick: function(e) {
         var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "recipe") {
-             
             if (UI.highlightedWorkshopRecipe != "") {
                 document.getElementById(UI.highlightedWorkshopRecipe).classList.remove('highlighted');
             }
@@ -7385,9 +7397,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         workshopPanel.querySelector('input[name=hireApprenticeName]').onfocus = workshopApprenticeNameChange;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
-UI.highlightedWorkshopRecipe = "";
-workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
-  
+        UI.highlightedWorkshopRecipe = "";
+        workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
+
         workshopPanel.querySelector('.workshopRecipeCreateButton').onclick = UI.workshopRecipeCreate;
 
     },
@@ -9101,6 +9113,7 @@ function changeWeather(newWeather) {
 }
 function workshopSelectHireApprentice(e) {
     //.closest not supported in IE11 ###
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
     var parentPanel = e.target.closest(".hireApprentice");
     var sexAndRaceKey = '';
     var sexAndRaceImgSource = '';
@@ -9171,8 +9184,6 @@ function hireApprentice(e) {
             }
         }
 
-
-
         if (newNumberOfApprentices >= parentPanel.getAttribute('data-maxapprentices')) {
             parentPanel.querySelector('.hireApprentice').style.display = 'none';
         } else {
@@ -9183,20 +9194,12 @@ function hireApprentice(e) {
             parentPanel.querySelector('.primaryButton').innerHTML = newLabel;
         }
 
-
-
-
         // generate a new name for the next apprentice of this sex and race
         // ####
-
-
 
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
     }
-
-
-
 }
 
 function appendRecipeData(thisNewRecipeData) {
@@ -9205,16 +9208,36 @@ function appendRecipeData(thisNewRecipeData) {
             detailedRecipeData[i] = thisNewRecipeData[i];
         }
     }
-
 }
 
 function addItemToWorkshopQueue() {
-    console.log(craftingObject.craftedItem);
+    hero.stats.itemsCraftedAtWorkshop++;
+    // prepare map object:
+    var newWorkshopItem = {
+        "item": craftingObject.craftedItem,
+        "fromWhichRecipe": craftingObject.recipeId,
+        "finalImageSrc": craftingObject.finalImageSrc,
+        "finalItemName": craftingObject.finalItemName,
+        "startTime": Date.now()
+    }
+    // find the workshop with that name in thisMapData[currentMap]['workshops']:
+    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+        if (thisMapData[currentMap]['workshops'][i]['name'] == craftingObject.whichWorkshop) {
+            thisMapData[currentMap]['workshops'][i]['itemsQueued'].push(newWorkshopItem);
+            break;
+        }
+    }
+    // console.log(thisMapData[currentMap]);
     releaseLockedSlots();
     updateInventoryAfterCrafting();
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, true);
+}
 
+function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
+ // does this need a showYesNoDialogueBox? ###
+ console.log(whichRecipe.contains);
+ console.log(whichWorkshop);
 }
 // service worker:
 if ('serviceWorker' in navigator) {
