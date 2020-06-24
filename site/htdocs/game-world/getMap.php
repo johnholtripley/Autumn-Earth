@@ -1642,7 +1642,7 @@ if(isset($mapData['map']['workshops'])) {
         }
         }
 
-$workshopMarkupToOutput .= '<li id="recipe'.$recipeID.'-'.$mapData['map']['workshops'][$i]['hash'].'"><img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="">';
+$workshopMarkupToOutput .= '<li data-recipe="'.$recipeID.'"><img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="">';
 $workshopMarkupToOutput .= '<h3>'.$finalRecipeName.'</h3>';
         if($recipeDescription == "") {
         $workshopMarkupToOutput .= '<p>'.$recipeDescriptionFallback.'</p>';

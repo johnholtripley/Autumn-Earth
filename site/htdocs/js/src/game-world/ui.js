@@ -417,12 +417,13 @@ var UI = {
         var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
-            if (thisNode.id.indexOf("-") == -1) {
+        
                 recipeSelectComponents(thisNode.id, false);
-            } else {
-                // it's a workshop recipe - they have a hyphen and then the workshop's hash:
-                recipeSelectComponents(thisNode.id, true);
-            }
+            
+        } else if (thisNode.id.substring(0, 8) == "workshop") {
+         if(e.target.closest('li').hasAttribute('data-recipe')) {
+            recipeSelectComponents(e.target.closest('li').getAttribute('data-recipe'), true);
+        }
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {

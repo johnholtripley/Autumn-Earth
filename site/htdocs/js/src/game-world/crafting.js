@@ -74,7 +74,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
 
     if (isInAWorkshop) {
         // these recipes have a hyphen and the workshop hash to make them unique, so that needs removing:
-        recipeId = whichRecipe.split("-")[0].substring(6);
+        recipeId = whichRecipe;
         startWorkshopCrafting.style.display = 'block';
         startCrafting.style.display = 'none';
 
