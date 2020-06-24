@@ -63,7 +63,6 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe, isInAWorkshop) {
-
     // if isInAWorkshop is true, then it's a recipe being created at a workshop, otherwise, the player is crafting directly themselves
     releaseLockedSlots();
     craftingTimeBarOuter.style.display = 'none';
@@ -77,7 +76,6 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         recipeId = whichRecipe;
         startWorkshopCrafting.style.display = 'block';
         startCrafting.style.display = 'none';
-
     } else {
         recipeId = whichRecipe.substring(6);
          startWorkshopCrafting.style.display = 'none';

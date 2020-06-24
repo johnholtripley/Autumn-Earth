@@ -673,7 +673,6 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe, isInAWorkshop) {
-
     // if isInAWorkshop is true, then it's a recipe being created at a workshop, otherwise, the player is crafting directly themselves
     releaseLockedSlots();
     craftingTimeBarOuter.style.display = 'none';
@@ -687,7 +686,6 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
         recipeId = whichRecipe;
         startWorkshopCrafting.style.display = 'block';
         startCrafting.style.display = 'none';
-
     } else {
         recipeId = whichRecipe.substring(6);
          startWorkshopCrafting.style.display = 'none';
@@ -6600,9 +6598,7 @@ var UI = {
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id, false);
         } else if (thisNode.id.substring(0, 8) == "workshop") {
-            //     if(e.target.closest('li').hasAttribute('data-recipe')) {
             recipeSelectComponents(e.target.closest('li').getAttribute('data-recipe'), true);
-            //  }
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {
@@ -9234,32 +9230,39 @@ function addItemToWorkshopQueue() {
     recipeSelectComponents(craftingObject.whichRecipe, true);
 }
 
-function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
-    // does this need a showYesNoDialogueBox? ###
-    var thisWorkshopName = whichWorkshop.getAttribute('data-workshopname');
-    var thisMarkup;
-    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
-        if (thisMapData[currentMap]['workshops'][i]['name'] == thisWorkshopName) {
-            thisMarkup = '<li id="recipe' + whichRecipe.contains + '-' + whichWorkshop.id.substring(8) + '">';
+function loadNewWorkshopRecipeData(whichRecipe, whichWorkshop) {
+       getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
+          
+           appendRecipeData(data.recipe);
 
+   var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
+            thisMarkup += '<img src="/images/game-world/inventory-items/'+data.recipe[whichRecipe].imageId+'.png" alt=""><h3>'+data.recipe[whichRecipe].recipeName+'</h3><p>'+data.recipe[whichRecipe].recipeDescription+'</p></li>';
 
-
-            // add correct markup: #########
-            thisMarkup += '<img src="/images/game-world/inventory-items/12-yellow.png" alt=""><h3>Yellow Dye</h3><p>A standard pigment dye.</p></li>';
-
-
-
-
-            whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
+             whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
             // resize the scroll bar (if it's used):
             if (thisDevicesScrollBarWidth > 0) {
                 window[whichWorkshop.id].init();
             }
+
+
+        
+        }, function(status) {
+            // try again:
+            loadNewWorkshopRecipeData(whichRecipe);
+        });
+}
+
+function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
+    // does this need a showYesNoDialogueBox? ###
+    var thisWorkshopName = whichWorkshop.getAttribute('data-workshopname');
+    for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+        if (thisMapData[currentMap]['workshops'][i]['name'] == thisWorkshopName) {
             // add to map json:
             thisMapData[currentMap]['workshops'][i]['recipesKnown'].push(whichRecipe.contains);
             break;
         }
     }
+    loadNewWorkshopRecipeData(whichRecipe.contains, whichWorkshop);
 }
 // service worker:
 if ('serviceWorker' in navigator) {
