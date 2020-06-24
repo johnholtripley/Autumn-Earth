@@ -417,13 +417,11 @@ var UI = {
         var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
-        
-                recipeSelectComponents(thisNode.id, false);
-            
+            recipeSelectComponents(thisNode.id, false);
         } else if (thisNode.id.substring(0, 8) == "workshop") {
-         if(e.target.closest('li').hasAttribute('data-recipe')) {
+            //     if(e.target.closest('li').hasAttribute('data-recipe')) {
             recipeSelectComponents(e.target.closest('li').getAttribute('data-recipe'), true);
-        }
+            //  }
         } else if (thisNode.id.substring(0, 4) == "shop") {
             UI.buyFromShopSlot(thisNode.id);
         } else if (thisNode.id.substring(0, 5) == "chest") {
