@@ -1682,14 +1682,14 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
             if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
                 // completed
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup.'<div class="status">Complete</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup.'<div class="status">Complete</div>';
                 $timeAlreadyUsed += $timeRequiredToCraft;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
                 // in progress
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"></div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"></div>';
             } else {
                 // queued
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
             }
             $workshopMarkupToOutput .= '</div>';
         }

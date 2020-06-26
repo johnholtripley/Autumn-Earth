@@ -116,7 +116,8 @@ function addItemToWorkshopQueue() {
         "fromWhichRecipe": craftingObject.recipeId,
         "finalImageSrc": craftingObject.finalImageSrc,
         "finalItemName": craftingObject.finalItemName,
-        "startTime": Date.now()
+        "startTime": Date.now(),
+        "hash": generateHash(craftingObject.finalItemName + startTime)
     }
     // find the workshop with that name in thisMapData[currentMap]['workshops']:
     for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
@@ -183,10 +184,16 @@ function checkIfWorkshopItemIsComplete(whichItemNode) {
         }
         // remove it from the map JSON as well:
         var workshopsName = whichItemNode.closest('.workshop').getAttribute('data-workshopname');
+        var requiredHash = whichItemNode.getAttribute('data-hash');
         for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
             if (thisMapData[currentMap]['workshops'][i]['name'] == workshopsName) {
-                delete thisMapData[currentMap]['workshops'][i]['itemsQueued'];
-                break;
+                // find the item with this hash
+                for (var j = 0; j < thisMapData[currentMap]['workshops'][i]['itemsQueued'].length; j++) {
+                    if (thisMapData[currentMap]['workshops'][i]['itemsQueued'][j]['hash'] == requiredHash) {
+                        delete thisMapData[currentMap]['workshops'][i]['itemsQueued'][j];
+                        break;
+                    }
+                }
             }
         }
         whichItemNode.remove();

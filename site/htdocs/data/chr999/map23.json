@@ -213,7 +213,8 @@
                     "fromWhichRecipe": 2,
                     "finalImageSrc": "12-indigo",
                     "finalItemName": "Indigo dye",
-                    "startTime": "1592851865474"
+                    "startTime": "1592851865474",
+                    "hash": "123456789"
                 }],
                 "apprentices": [
                 {
