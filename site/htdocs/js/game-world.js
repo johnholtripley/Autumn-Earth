@@ -2995,7 +2995,7 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
 
 
 
-function sendGetData(url) {
+function sendGetData(url, successHandler, errorHandler) {
         // send data to the server, and get a response:
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
@@ -9195,6 +9195,24 @@ function hireApprentice(e) {
 
         // generate a new name for the next apprentice of this sex and race
         // ####
+        console.log("old name"+apprenticeName);
+
+var sexAndRace = sexAndRaceImgSource.split("-");
+var sexAndRaceData = "data-"+sexAndRace[0]+sexAndRace[1];
+    sendGetData("/game-world/generateProceduralName.php?sex="+sexAndRace[1]+"&race="+sexAndRace[0], function(data) {
+       
+       parentPanel.querySelector('input[name=hireApprenticeName]').value = data;
+       parentPanel.querySelector('.hireApprentice').setAttribute(sexAndRaceData, data);
+       var allPreviousNames = parentPanel.querySelector('.hireApprentice').getAttribute('data-allapprenticenames');
+       console.log("was: "+allPreviousNames);
+       allPreviousNames = allPreviousNames.replace(apprenticeName, data);
+       console.log("now: "+allPreviousNames);
+       parentPanel.querySelector('.hireApprentice').setAttribute('data-allapprenticenames', allPreviousNames);
+    }, function(status) {
+        
+        // let user try again ########
+    });
+
 
     } else {
         UI.showNotification("<p>I don't have enough money</p>");

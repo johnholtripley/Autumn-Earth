@@ -1020,7 +1020,7 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
 
 
 
-function sendGetData(url) {
+function sendGetData(url, successHandler, errorHandler) {
         // send data to the server, and get a response:
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);

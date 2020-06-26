@@ -82,8 +82,19 @@ function hireApprentice(e) {
         }
 
         // generate a new name for the next apprentice of this sex and race
-        // ####
-
+        var sexAndRace = sexAndRaceImgSource.split("-");
+        var sexAndRaceData = "data-" + sexAndRace[0] + sexAndRace[1];
+        sendGetData("/game-world/generateProceduralName.php?sex=" + sexAndRace[1] + "&race=" + sexAndRace[0], function(data) {
+            parentPanel.querySelector('input[name=hireApprenticeName]').value = data;
+            parentPanel.querySelector('.hireApprentice').setAttribute(sexAndRaceData, data);
+            var allPreviousNames = parentPanel.querySelector('.hireApprentice').getAttribute('data-allapprenticenames');
+            console.log("was: " + allPreviousNames);
+            allPreviousNames = allPreviousNames.replace(apprenticeName, data);
+            console.log("now: " + allPreviousNames);
+            parentPanel.querySelector('.hireApprentice').setAttribute('data-allapprenticenames', allPreviousNames);
+        }, function(status) {
+            // try again ?
+        });
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
     }
@@ -122,25 +133,25 @@ function addItemToWorkshopQueue() {
 }
 
 function loadNewWorkshopRecipeData(whichRecipe, whichWorkshop) {
-       getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
-          
-           appendRecipeData(data.recipe);
+    getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
 
-   var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
-            thisMarkup += '<img src="/images/game-world/inventory-items/'+data.recipe[whichRecipe].imageId+'.png" alt=""><h3>'+data.recipe[whichRecipe].recipeName+'</h3><p>'+data.recipe[whichRecipe].recipeDescription+'</p></li>';
+        appendRecipeData(data.recipe);
 
-             whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
-            // resize the scroll bar (if it's used):
-            if (thisDevicesScrollBarWidth > 0) {
-                window[whichWorkshop.id].init();
-            }
+        var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
+        thisMarkup += '<img src="/images/game-world/inventory-items/' + data.recipe[whichRecipe].imageId + '.png" alt=""><h3>' + data.recipe[whichRecipe].recipeName + '</h3><p>' + data.recipe[whichRecipe].recipeDescription + '</p></li>';
+
+        whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
+        // resize the scroll bar (if it's used):
+        if (thisDevicesScrollBarWidth > 0) {
+            window[whichWorkshop.id].init();
+        }
 
 
-        
-        }, function(status) {
-            // try again:
-            loadNewWorkshopRecipeData(whichRecipe);
-        });
+
+    }, function(status) {
+        // try again:
+        loadNewWorkshopRecipeData(whichRecipe);
+    });
 }
 
 function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
