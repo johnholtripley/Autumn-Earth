@@ -4739,9 +4739,12 @@ music.startplayBackTranscription(hero.inventory[whichSlotNumber].inscription.con
                     break;
             }
         }
+        // check that the item hasn't just been removed (eg. recipe learned):
+        if (typeof hero.inventory[whichSlotNumber] !== "undefined") {
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
             hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
         }
+    }
     }
 }
 
@@ -12901,19 +12904,26 @@ function determinePlatformIncrements(whichPlatform) {
     return [dx, dy, dz];
 }
 
+
+function loadNewRecipeData(whichRecipe) {
+    getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
+        hero.crafting[data.profession].recipes[whichRecipe] = data.recipe[whichRecipe];
+        hero.crafting[data.profession].sortOrder.unshift(whichRecipe);
+    }, function(status) {
+        // try again:
+        loadNewRecipeData(whichRecipe);
+    });
+}
+
 function canLearnRecipe(recipeIndex) {
     var wasSuccessful = false;
-
-
     console.log(hero.crafting);
-
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         // check for pre-requisites
         // #####
         hero.recipesKnown.push(parseInt(recipeIndex));
-
-        // reload the recipe data
-        // #####
+        // load the new recipe data
+        loadNewRecipeData(recipeIndex);
         wasSuccessful = true;
     }
     return wasSuccessful;

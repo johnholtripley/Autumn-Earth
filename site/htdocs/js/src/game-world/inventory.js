@@ -556,9 +556,12 @@ music.startplayBackTranscription(hero.inventory[whichSlotNumber].inscription.con
                     break;
             }
         }
+        // check that the item hasn't just been removed (eg. recipe learned):
+        if (typeof hero.inventory[whichSlotNumber] !== "undefined") {
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
             hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
         }
+    }
     }
 }
 
