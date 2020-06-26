@@ -3,6 +3,7 @@
 //include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 //include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/generateProceduralNameFunction.php");
 
 
 
@@ -1585,9 +1586,8 @@ if(isset($mapData['map']['workshops'])) {
 
 
 
-    // generate possible apprentice names procedurally: ####
-    // /game-world/generateretinuefollower.php?debug=true
-    $possibleWorkshopApprenticeNames = array("huldra"=>array("female"=>array("Eila Goldéirin", "Ithania Dewstem", "Narianna Auriesin", "Starsong Elmlldan"), "male"=>array("Eranril Leafglade", "Corithras Feymote", "Galar'thus Aurborn")), "dwarrow"=>array("female"=>array("Liri Rustbraid", "Linai Stonebear", "Ingrys Irontale"), "male"=>array("Duri Steelforge", "Frimil Farmantle", "Furi Bronzeward")), "human"=>array("female"=>array("Seyna Teague", "Amberta Farthing", "Annora Alverold"), "male"=>array("George Cadon", "Garrett Mortmaine", "Argyle Croft")));
+
+ 
     $possibleApprenticeSexes = ["female", "male"];
 
 
@@ -1729,6 +1729,10 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
 
     // add more apprentices:
+
+
+
+/*
     $possibleApprenticesForThisWorkshop = array();
     foreach ($possibleWorkshopApprenticeNames as $key => $value) {
         if (in_array($key, $mapData['map']['workshops'][$i]['possibleApprenticeRaces'])) {
@@ -1744,19 +1748,32 @@ foreach ($possibleWorkshopApprenticeNames as $key => $value) {
     }
 }
 
+*/
+
+
+$procedurallyPickedNames = array();
+foreach ($mapData['map']['workshops'][$i]['possibleApprenticeRaces'] as $key => $race) {
+foreach ($possibleApprenticeSexes as $innerkey => $sex) {
+     $procedurallyPickedNames[$race.$sex] = generateProceduralName($sex, $race);
+}
+}
+
+
+
+
 
 
     $numberOfApprenticesAlready = count($mapData['map']['workshops'][$i]['apprentices']);
     if($numberOfApprenticesAlready < $thisWorkshopsMaxApprenctices) {
 
     $dataAttributeForSuggestedNames = '';
-    foreach ($pickedNamesForRaceAndSex as $key => $value) {
+    foreach ($procedurallyPickedNames as $key => $value) {
     $dataAttributeForSuggestedNames .= ' data-'.$key.'="'.$value.'"';
     }
 
 
 
-        $workshopMarkupToOutput .= '<div class="hireApprentice"'.$dataAttributeForSuggestedNames.' data-allapprenticenames="'.implode(",", $pickedNamesForRaceAndSex).'"><h5>Hire more</h5>';
+        $workshopMarkupToOutput .= '<div class="hireApprentice"'.$dataAttributeForSuggestedNames.' data-allapprenticenames="'.implode(",", $procedurallyPickedNames).'"><h5>Hire more</h5>';
 
 // race:
         $workshopMarkupToOutput .= '<div class="selectWrapper"><select name="hireApprenticeRace" data-key="race">';
@@ -1787,7 +1804,7 @@ foreach ($possibleWorkshopApprenticeNames as $key => $value) {
         $workshopMarkupToOutput .= '<img class="apprenticePortrait" src="/images/retinue/source/'.strtolower($characterRace).'-'.strtolower($characterSex).'.png" alt="">';
 
         $sexAndRaceKey = strtolower($characterRace).strtolower($characterSex);
-        $workshopMarkupToOutput .= '<input name="hireApprenticeName" placeholder="Appentice\'s name" type="text" value="'.$pickedNamesForRaceAndSex[$sexAndRaceKey].'">';
+        $workshopMarkupToOutput .= '<input name="hireApprenticeName" placeholder="Appentice\'s name" type="text" value="'.$procedurallyPickedNames[$sexAndRaceKey].'">';
 
         // hire cost should exponentially increase:
         $hireCost = (($numberOfApprenticesAlready+1) * ($numberOfApprenticesAlready+1)) * 10000;

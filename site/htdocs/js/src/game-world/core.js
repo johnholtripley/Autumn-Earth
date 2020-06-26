@@ -1156,10 +1156,12 @@ function removeMapAssets() {
     }
 
     for (var i in backgroundImgs) {
-        backgroundImgs[i].onerror = '';
+     if(typeof backgroundImgs[i] !== "undefined") {
+             backgroundImgs[i].onerror = '';
         backgroundImgs[i].src = '';
         // backgroundImgs[i] = null;
         delete backgroundImgs[i];
+    }
     }
 
 
