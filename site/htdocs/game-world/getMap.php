@@ -7,6 +7,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/generateProceduralNameFunction.php"
 
 
 
+
+
+
 $chr = $_GET["chr"];
 $map = $_GET["map"];
 $debug = false;
@@ -1669,10 +1672,26 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
         $thereIsAlreadyAnItemBeingCrafted = false;
         $timeAlreadyUsed = 0;
         for ($j=0;$j<count($mapData['map']['workshops'][$i]['itemsQueued']);$j++) {
+            if($mapData['map']['workshops'][$i]['itemsQueued'][$j] != null) {
             $thisItem = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['item'];
             $thisStartTime = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['startTime'];
             $timeNowInMilliseconds = time()*1000;
             $elapsedTime = $timeNowInMilliseconds - $thisStartTime;
+
+
+
+// temp testing:
+if($j==1) {
+    // force it to be in progress:
+$elapsedTime = 293000;
+}
+if($j==2) {
+    // force it to be queued:
+$elapsedTime = -4;
+}
+
+
+
             $thisRecipe = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['fromWhichRecipe'];
             $thisRecipesTier = $allWorkshopRecipeData[$thisRecipe]['tier'];
             $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000/$numberOfApprentices;
@@ -1682,16 +1701,20 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
             if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
                 // completed
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup.'<div class="status">Complete</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-complete="true"'.$thisItemsMarkup.'<div class="status">Complete</div>';
                 $timeAlreadyUsed += $timeRequiredToCraft;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
                 // in progress
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"></div>';
+                $percentProgress = ($timeRequiredToCraft - ($timeRequiredToCraft-$elapsedTime))/$timeRequiredToCraft*100;
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"><div class="progressBarWrapper"><div class="progressBar" style="width:'.$percentProgress.'%;"></div></div></div>';
+                 
+                $thereIsAlreadyAnItemBeingCrafted = true;
             } else {
                 // queued
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
             }
             $workshopMarkupToOutput .= '</div>';
+        }
         }
 
  

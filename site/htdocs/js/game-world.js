@@ -9233,7 +9233,7 @@ function addItemToWorkshopQueue() {
         "finalImageSrc": craftingObject.finalImageSrc,
         "finalItemName": craftingObject.finalItemName,
         "startTime": Date.now(),
-        "hash": generateHash(craftingObject.finalItemName + startTime)
+        "hash": generateHash(craftingObject.finalItemName + Date.now())
     }
     // find the workshop with that name in thisMapData[currentMap]['workshops']:
     for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
@@ -9247,6 +9247,7 @@ function addItemToWorkshopQueue() {
     updateInventoryAfterCrafting();
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, true);
+    console.log(JSON.stringify(thisMapData[currentMap]['workshops']));
 }
 
 function loadNewWorkshopRecipeData(whichRecipe, whichWorkshop) {

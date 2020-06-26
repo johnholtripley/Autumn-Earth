@@ -492,7 +492,7 @@ $numberOfItemCategories: 20;
             @include transform(translateX(0px));
         }
 
-        background: #000 url('../images/game-world/interface/inventory-panel-bg.jpg') 100% 100%;
+        background: #000 url('../images/game-world/interface/parchment-repeat.jpg') 100% 100%;
         @include togglePanel(0.4s);
         color: #fff;
     }
@@ -566,7 +566,21 @@ $numberOfItemCategories: 20;
     .itemsQueued {
         .itemSlot {
             @include inventorySlot();
+            float: none;
             margin: 5px 6px;
+            position: relative;
+            .status {
+                position: absolute;
+                left: 110%;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .progressBarWrapper {
+                border-color: #111;
+            }
+            .progressBar {
+                background: #eebb3f;
+                } 
         }
     }
 

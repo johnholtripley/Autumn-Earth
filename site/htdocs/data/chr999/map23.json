@@ -195,27 +195,7 @@
                 "profession": 0,
                 "recipesKnown": [0, 1, 2],
                 "itemsQueued": [
-                {
-                    "item":
-                    {
-                        "colour": 21,
-                        "currentWear": 0,
-                        "durability": 100,
-                        "effectiveness": 100,
-                        "enchanted": 0,
-                        "hallmark": 0,
-                        "inscription": "",
-                        "quality": 100,
-                        "quantity": 1,
-                        "type": 12,
-                        "wrapped": 0
-                    },
-                    "fromWhichRecipe": 2,
-                    "finalImageSrc": "12-indigo",
-                    "finalItemName": "Indigo dye",
-                    "startTime": "1592851865474",
-                    "hash": "123456789"
-                }],
+            {"item":{"type":12,"quantity":1,"quality":100,"durability":100,"effectiveness":100,"currentWear":0,"wrapped":0,"colour":20,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-sapphire","finalItemName":"Sapphire Dye","startTime":1593200705735,"hash":1280936895},{"item":{"type":12,"quantity":1,"quality":100,"durability":100,"effectiveness":76,"currentWear":0,"wrapped":0,"colour":12,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-aquamarine","finalItemName":"Aquamarine Dye","startTime":1593200722332,"hash":-1069101215},{"item":{"type":12,"quantity":1,"quality":74,"durability":100,"effectiveness":68,"currentWear":0,"wrapped":0,"colour":4,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-blue","finalItemName":"Blue Dye","startTime":1593200727273,"hash":-449708900}],
                 "apprentices": [
                 {
                     "name": "Magnus Strongarm",
