@@ -1678,19 +1678,20 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
             $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000/$numberOfApprentices;
             $thisItemsMarkup = ' data-name="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalItemName'].'" data-item=\''.json_encode($mapData['map']['workshops'][$i]['itemsQueued'][$j]['item']).'\'><img src="/images/game-world/inventory-items/'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalImageSrc'].'.png">';
             $thisItemsMarkup .= '<p>'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalItemName'].'</p>';
-            $thisItemsMarkup .= '<span class="qty">'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['item']['quantity'].'</span></div>';
+            $thisItemsMarkup .= '<span class="qty">'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['item']['quantity'].'</span>';
 
             if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
                 // completed
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup;
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup.'<div class="status">Complete</div>';
                 $timeAlreadyUsed += $timeRequiredToCraft;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
                 // in progress
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup;
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"></div>';
             } else {
                 // queued
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup;
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-index="'.$j.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
             }
+            $workshopMarkupToOutput .= '</div>';
         }
 
  

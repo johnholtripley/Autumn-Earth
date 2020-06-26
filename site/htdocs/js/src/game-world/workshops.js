@@ -181,6 +181,14 @@ function checkIfWorkshopItemIsComplete(whichItemNode) {
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [workshopItem]);
             UI.showNotification("<p>My workshop item is in the post</p>");
         }
+        // remove it from the map JSON as well:
+        var workshopsName = whichItemNode.closest('.workshop').getAttribute('data-workshopname');
+        for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
+            if (thisMapData[currentMap]['workshops'][i]['name'] == workshopsName) {
+                delete thisMapData[currentMap]['workshops'][i]['itemsQueued'];
+                break;
+            }
+        }
         whichItemNode.remove();
     }
 }
