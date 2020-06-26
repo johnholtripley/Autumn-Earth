@@ -6600,6 +6600,10 @@ var UI = {
 
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id, false);
+        } else if (thisNode.id.substring(0, 13) == "workshopItems") {
+            
+checkIfWorkshopItemIsComplete(e.target.closest('.itemSlot'));
+            
         } else if (thisNode.id.substring(0, 8) == "workshop") {
             recipeSelectComponents(e.target.closest('li').getAttribute('data-recipe'), true);
         } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -9194,26 +9198,19 @@ function hireApprentice(e) {
         }
 
         // generate a new name for the next apprentice of this sex and race
-        // ####
-        console.log("old name"+apprenticeName);
-
-var sexAndRace = sexAndRaceImgSource.split("-");
-var sexAndRaceData = "data-"+sexAndRace[0]+sexAndRace[1];
-    sendGetData("/game-world/generateProceduralName.php?sex="+sexAndRace[1]+"&race="+sexAndRace[0], function(data) {
-       
-       parentPanel.querySelector('input[name=hireApprenticeName]').value = data;
-       parentPanel.querySelector('.hireApprentice').setAttribute(sexAndRaceData, data);
-       var allPreviousNames = parentPanel.querySelector('.hireApprentice').getAttribute('data-allapprenticenames');
-       console.log("was: "+allPreviousNames);
-       allPreviousNames = allPreviousNames.replace(apprenticeName, data);
-       console.log("now: "+allPreviousNames);
-       parentPanel.querySelector('.hireApprentice').setAttribute('data-allapprenticenames', allPreviousNames);
-    }, function(status) {
-        
-        // let user try again ########
-    });
-
-
+        var sexAndRace = sexAndRaceImgSource.split("-");
+        var sexAndRaceData = "data-" + sexAndRace[0] + sexAndRace[1];
+        sendGetData("/game-world/generateProceduralName.php?sex=" + sexAndRace[1] + "&race=" + sexAndRace[0], function(data) {
+            parentPanel.querySelector('input[name=hireApprenticeName]').value = data;
+            parentPanel.querySelector('.hireApprentice').setAttribute(sexAndRaceData, data);
+            var allPreviousNames = parentPanel.querySelector('.hireApprentice').getAttribute('data-allapprenticenames');
+            console.log("was: " + allPreviousNames);
+            allPreviousNames = allPreviousNames.replace(apprenticeName, data);
+            console.log("now: " + allPreviousNames);
+            parentPanel.querySelector('.hireApprentice').setAttribute('data-allapprenticenames', allPreviousNames);
+        }, function(status) {
+            // try again ?
+        });
     } else {
         UI.showNotification("<p>I don't have enough money</p>");
     }
@@ -9252,25 +9249,25 @@ function addItemToWorkshopQueue() {
 }
 
 function loadNewWorkshopRecipeData(whichRecipe, whichWorkshop) {
-       getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
-          
-           appendRecipeData(data.recipe);
+    getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
 
-   var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
-            thisMarkup += '<img src="/images/game-world/inventory-items/'+data.recipe[whichRecipe].imageId+'.png" alt=""><h3>'+data.recipe[whichRecipe].recipeName+'</h3><p>'+data.recipe[whichRecipe].recipeDescription+'</p></li>';
+        appendRecipeData(data.recipe);
 
-             whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
-            // resize the scroll bar (if it's used):
-            if (thisDevicesScrollBarWidth > 0) {
-                window[whichWorkshop.id].init();
-            }
+        var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
+        thisMarkup += '<img src="/images/game-world/inventory-items/' + data.recipe[whichRecipe].imageId + '.png" alt=""><h3>' + data.recipe[whichRecipe].recipeName + '</h3><p>' + data.recipe[whichRecipe].recipeDescription + '</p></li>';
+
+        whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
+        // resize the scroll bar (if it's used):
+        if (thisDevicesScrollBarWidth > 0) {
+            window[whichWorkshop.id].init();
+        }
 
 
-        
-        }, function(status) {
-            // try again:
-            loadNewWorkshopRecipeData(whichRecipe);
-        });
+
+    }, function(status) {
+        // try again:
+        loadNewWorkshopRecipeData(whichRecipe);
+    });
 }
 
 function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
@@ -9284,6 +9281,24 @@ function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
         }
     }
     loadNewWorkshopRecipeData(whichRecipe.contains, whichWorkshop);
+}
+
+function checkIfWorkshopItemIsComplete(whichItemNode) {
+    if (whichItemNode.hasAttribute('data-complete')) {
+        var workshopItem = JSON.parse(whichItemNode.getAttribute('data-item'));
+        var inventoryCheck = canAddItemToInventory([workshopItem]);
+        if (inventoryCheck[0]) {
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            // send the item by post:
+            var subjectLine = "Your crafted " + whichItemNode.getAttribute('data-name');
+            var message = "Some of our finest work...";
+            var whichNPC = activeObjectForDialogue.name;
+            sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [workshopItem]);
+            UI.showNotification("<p>My workshop item is in the post</p>");
+        }
+        whichItemNode.remove();
+    }
 }
 // service worker:
 if ('serviceWorker' in navigator) {

@@ -1665,12 +1665,9 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
 // loop through any queued items and determine if they're ready, being produced or queued:
     if(count($mapData['map']['workshops'][$i]['itemsQueued'])>0) {
-        $workshopMarkupToOutput .= '<div class="itemsQueued"><h5>Items</h5>';
+        $workshopMarkupToOutput .= '<div class="itemsQueued"><h5>Items</h5><div id="workshopItems'.$mapData['map']['workshops'][$i]['hash'].'">';
         $thereIsAlreadyAnItemBeingCrafted = false;
         $timeAlreadyUsed = 0;
-        $itemsCompletedMarkup = '';
-        $itemsInProgressMarkup = '';
-        $itemsQueuedMarkup = '';
         for ($j=0;$j<count($mapData['map']['workshops'][$i]['itemsQueued']);$j++) {
             $thisItem = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['item'];
             $thisStartTime = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['startTime'];
@@ -1679,31 +1676,25 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
             $thisRecipe = $mapData['map']['workshops'][$i]['itemsQueued'][$j]['fromWhichRecipe'];
             $thisRecipesTier = $allWorkshopRecipeData[$thisRecipe]['tier'];
             $timeRequiredToCraft = ($thisRecipesTier*$thisRecipesTier)*3000/$numberOfApprentices;
-            $thisItemsMarkup = '<div class="itemSlot"><img src="/images/game-world/inventory-items/'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalImageSrc'].'.png">';
+            $thisItemsMarkup = ' data-name="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalItemName'].'" data-item=\''.json_encode($mapData['map']['workshops'][$i]['itemsQueued'][$j]['item']).'\'><img src="/images/game-world/inventory-items/'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalImageSrc'].'.png">';
             $thisItemsMarkup .= '<p>'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['finalItemName'].'</p>';
-            $thisItemsMarkup .= '<span class="qty">1</span></div>';
+            $thisItemsMarkup .= '<span class="qty">'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['item']['quantity'].'</span></div>';
+
             if($elapsedTime >= ($timeRequiredToCraft + $timeAlreadyUsed)) {
-                $itemsCompletedMarkup .= $thisItemsMarkup;
+                // completed
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-complete="true" data-timeremaining="0"'.$thisItemsMarkup;
                 $timeAlreadyUsed += $timeRequiredToCraft;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
-                $itemsInProgressMarkup .= $thisItemsMarkup;
+                // in progress
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup;
             } else {
-                $itemsQueuedMarkup .= $thisItemsMarkup;
+                // queued
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup;
             }
         }
-        if($itemsQueuedMarkup != '') {
-            $workshopMarkupToOutput .= '<h6>Items queued</h6>';
-            $workshopMarkupToOutput .= $itemsQueuedMarkup;
-        }
-        if($itemsInProgressMarkup != '') {
-            $workshopMarkupToOutput .= '<h6>Items in progress</h6>';
-            $workshopMarkupToOutput .= $itemsInProgressMarkup;
-        }
-        if($itemsCompletedMarkup != '') {
-            $workshopMarkupToOutput .= '<h6>Items completed</h6>';
-            $workshopMarkupToOutput .= $itemsCompletedMarkup;
-        }
-        $workshopMarkupToOutput .= '</div>';
+
+ 
+        $workshopMarkupToOutput .= '</div></div>';
     }
 
 

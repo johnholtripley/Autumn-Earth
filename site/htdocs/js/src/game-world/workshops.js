@@ -166,3 +166,21 @@ function addRecipeToWorkshop(whichRecipe, whichWorkshop) {
     }
     loadNewWorkshopRecipeData(whichRecipe.contains, whichWorkshop);
 }
+
+function checkIfWorkshopItemIsComplete(whichItemNode) {
+    if (whichItemNode.hasAttribute('data-complete')) {
+        var workshopItem = JSON.parse(whichItemNode.getAttribute('data-item'));
+        var inventoryCheck = canAddItemToInventory([workshopItem]);
+        if (inventoryCheck[0]) {
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            // send the item by post:
+            var subjectLine = "Your crafted " + whichItemNode.getAttribute('data-name');
+            var message = "Some of our finest work...";
+            var whichNPC = activeObjectForDialogue.name;
+            sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [workshopItem]);
+            UI.showNotification("<p>My workshop item is in the post</p>");
+        }
+        whichItemNode.remove();
+    }
+}
