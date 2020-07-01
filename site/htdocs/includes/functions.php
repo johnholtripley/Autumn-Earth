@@ -1230,6 +1230,33 @@ if( $reldays > 0 ) {
     }
  }
  
+
+function parseTime($time) {
+    $reldays = $time/86400;
+    $relhours = $time/3600;
+    $relminutes = $time/60;
+if( $reldays > 0 ) {
+if  ( $relhours < 1 ) {
+if  ( $relminutes < 1 ) {
+    return $time . ' seconds';
+} else if ($relminutes < 2)  {
+    return '1 minute';
+} else {
+return floor($relminutes) . " minutes";
+}
+        } else if  ( $reldays < 1 ) {
+        return floor($relhours) . " hours";
+    } else if ( $reldays < 2 ) {
+            return '1 day';
+        } else if ( ( $reldays ) < 7 ) {
+            $reldays = floor( $reldays );
+            return $reldays . " days";
+        } 
+    }
+}
+
+
+
 function relativeShortFutureDate($time) {
     $today = strtotime("now");
  

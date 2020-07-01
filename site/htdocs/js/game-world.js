@@ -505,7 +505,10 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
-var workshopCurrentlyOpen = -1;
+var workshopTimers = [];
+var workshopObject = {
+    "workshopCurrentlyOpen": -1
+};
 const inflationModifier = 10;
 const sellPriceModifier = 0.7;
 const sellPriceSpecialismModifier = 0.8;
@@ -2183,7 +2186,7 @@ function dataURItoBlob(dataURI) {
 function getCurrentDateTimeFormatted() {
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
+    var mm = today.getMonth() + 1; //January is 0
     if (dd < 10) {
         dd = '0' + dd;
     }
@@ -2191,6 +2194,35 @@ function getCurrentDateTimeFormatted() {
         mm = '0' + mm;
     }
     return dd + '-' + mm + '-' + today.getFullYear() + '_' + today.getHours() + "-" + today.getMinutes() + "-"+today.getSeconds();
+}
+
+function parseTime(time) {
+    // https://stackoverflow.com/a/19700358/1054212
+    var seconds = Math.floor((time / 1000) % 60);
+    var minutes = Math.floor((time / (1000 * 60)) % 60);
+    var hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+    if (hours > 24) {
+        return Math.floor(hours / 24) + " days";
+    } else if (hours > 1) {
+        return hours + " hours";
+    } else if (hours == 1) {
+        if (minutes > 1) {
+            return "1 hour & " + minutes + " minutes";
+        } else if (minutes == 1) {
+            return "1 hour & 1 minute";
+        } else {
+            return "1 hour";
+        }
+
+    } else if (minutes > 1) {
+        return minutes + " minutes";
+    } else if ((minutes == 1) && (seconds == 0)) {
+        return "1 minute";
+    } else if (seconds == 1) {
+        return "1 second";
+    } else {
+        return seconds + " seconds";
+    }
 }
 
 function isATerrainCollision(x, y) {
@@ -7321,7 +7353,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 e.target.parentNode.classList.remove("active");
                 // check if it's a shop panel:
                 if (e.target.parentNode.classList.contains("workshop")) {
-                    workshopCurrentlyOpen = -1;
+                    workshopObject.workshopCurrentlyOpen = -1;
 
                     // close shop dialogue as well:
                     if (activeObjectForDialogue != '') {
@@ -7407,8 +7439,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
 
-    initWorkshopScrollBars: function(workshopHashes) {
-        // initialise these by workshop hash so they can be recalculated when recipes are added:
+    initWorkshops: function(workshopHashes) {
+        // initialise the scrollbars by workshop hash so they can be recalculated when recipes are added:
         var allWorkshopsForThisMap = workshopHashes.split(",");
         var thisScrollPanel;
         for (var i = 0; i < allWorkshopsForThisMap.length; i++) {
@@ -7420,6 +7452,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 // remove styling:
                 thisScrollPanel.querySelector('.customScrollBar').classList.add("inActive");
             }
+            // initialise the timer for this workshop:
+            workshopTimers[allWorkshopsForThisMap[i]] = Date.now();
         }
     },
 
@@ -7442,11 +7476,47 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
 
+    openWorkshop: function(whichWorkshop) {
+         workshopObject.workshopHash = generateHash(whichWorkshop);
+      
+        UI.showUI();
+        
+        workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
+        audio.playSound(soundEffects['buttonClick'], 0);
+        document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
+
+        // find which item is actively being crafted:
+        var allQueuedItems = document.getElementById("workshop" + workshopObject['workshopHash']).querySelectorAll('.itemSlot');
+        for (var i = 0; i < allQueuedItems.length; i++) {
+            if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
+                workshopObject.activeItemSlot = allQueuedItems[i];
+                workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
+                break;
+            }
+        }
+        workshopObject.lastTimeText = '';
+        UI.updateWorkshopTimer();
+    },
+
     closeWorkshop: function() {
-        document.getElementById("workshop" + workshopCurrentlyOpen).classList.remove("active");
+        document.getElementById("workshop" + workshopObject.workshopCurrentlyOpen).classList.remove("active");
         craftingSelectComponentsPanel.classList.remove("active");
         releaseLockedSlots();
-        workshopCurrentlyOpen = -1;
+        workshopObject = {
+            "workshopCurrentlyOpen": -1
+        }
+    },
+
+    updateWorkshopTimer: function() {
+          // check time elapsed:
+        var timeElapsedSincePanelWasCreated = Date.now() - workshopTimers["workshop" + workshopObject.workshopHash];
+      var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
+     var timeRemainingText = parseTime(timeRemaining);
+if(workshopObject.lastTimeText != timeRemainingText) {
+    // only update the DOM if the time has changed:
+workshopObject.activeItemSlot.querySelector('.status span').innerText = timeRemainingText;
+workshopObject.lastTimeText = timeRemainingText;
+}
     },
 
     shopSplitStackCancel: function() {
@@ -9871,7 +9941,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 
          if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            UI.initWorkshops(data.workshops.allWorkshopIds);
             appendRecipeData(data.workshops.recipeData);
         }
             // find new items that require data:
@@ -9919,7 +9989,7 @@ function loadMapJSON(mapFilePath) {
             UI.buildShop(data.shops.markup);
               if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            UI.initWorkshops(data.workshops.allWorkshopIds);
             appendRecipeData(data.workshops.recipeData);
         }
             processInitialMap();
@@ -11172,6 +11242,9 @@ function update() {
     if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
+    if (workshopObject.workshopCurrentlyOpen != -1) {
+        UI.updateWorkshopTimer();
+    }
     if (craftingObject.isCreating) {
         processCrafting();
     }
@@ -11697,11 +11770,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "workshop":
-              UI.showUI();
-              var workshopHash = generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])
-            workshopCurrentlyOpen = workshopHash;
-            audio.playSound(soundEffects['buttonClick'], 0);
-            document.getElementById("workshop" + workshopHash).classList.add("active");
+         
+            UI.openWorkshop(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]);
             
             break;
             case "post":

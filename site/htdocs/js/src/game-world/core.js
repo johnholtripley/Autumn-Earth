@@ -553,7 +553,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 
          if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            UI.initWorkshops(data.workshops.allWorkshopIds);
             appendRecipeData(data.workshops.recipeData);
         }
             // find new items that require data:
@@ -601,7 +601,7 @@ function loadMapJSON(mapFilePath) {
             UI.buildShop(data.shops.markup);
               if(data.workshops) {
             UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshopScrollBars(data.workshops.allWorkshopIds);
+            UI.initWorkshops(data.workshops.allWorkshopIds);
             appendRecipeData(data.workshops.recipeData);
         }
             processInitialMap();
@@ -1854,6 +1854,9 @@ function update() {
     if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
+    if (workshopObject.workshopCurrentlyOpen != -1) {
+        UI.updateWorkshopTimer();
+    }
     if (craftingObject.isCreating) {
         processCrafting();
     }
@@ -2379,11 +2382,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "workshop":
-              UI.showUI();
-              var workshopHash = generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])
-            workshopCurrentlyOpen = workshopHash;
-            audio.playSound(soundEffects['buttonClick'], 0);
-            document.getElementById("workshop" + workshopHash).classList.add("active");
+         
+            UI.openWorkshop(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]);
             
             break;
             case "post":

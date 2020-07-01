@@ -569,18 +569,15 @@ $numberOfItemCategories: 20;
             float: none;
             margin: 5px 6px;
             position: relative;
+
             .status {
                 position: absolute;
                 left: 110%;
                 top: 50%;
                 transform: translateY(-50%);
+                width: 280px;
+                font-size: 12px;
             }
-            .progressBarWrapper {
-                border-color: #111;
-            }
-            .progressBar {
-                background: #eebb3f;
-                } 
         }
     }
 

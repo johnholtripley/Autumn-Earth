@@ -1683,7 +1683,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 // temp testing:
 if($j==1) {
     // force it to be in progress:
-$elapsedTime = 293000;
+$elapsedTime = 130000;
 }
 if($j==2) {
     // force it to be queued:
@@ -1706,12 +1706,12 @@ $elapsedTime = -4;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
                 // in progress
                 $percentProgress = ($timeRequiredToCraft - ($timeRequiredToCraft-$elapsedTime))/$timeRequiredToCraft*100;
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status"><div class="progressBarWrapper"><div class="progressBar" style="width:'.$percentProgress.'%;"></div></div></div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status">Crafting (<span>'.parseTime(($timeRequiredToCraft-$elapsedTime)/1000).'</span>)</div>';
                  
                 $thereIsAlreadyAnItemBeingCrafted = true;
             } else {
                 // queued
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued (requires '.parseTime($timeRequiredToCraft/1000).')</div>';
             }
             $workshopMarkupToOutput .= '</div>';
         }

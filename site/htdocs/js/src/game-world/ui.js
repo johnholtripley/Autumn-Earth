@@ -1139,7 +1139,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 e.target.parentNode.classList.remove("active");
                 // check if it's a shop panel:
                 if (e.target.parentNode.classList.contains("workshop")) {
-                    workshopCurrentlyOpen = -1;
+                    workshopObject.workshopCurrentlyOpen = -1;
 
                     // close shop dialogue as well:
                     if (activeObjectForDialogue != '') {
@@ -1225,8 +1225,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
 
-    initWorkshopScrollBars: function(workshopHashes) {
-        // initialise these by workshop hash so they can be recalculated when recipes are added:
+    initWorkshops: function(workshopHashes) {
+        // initialise the scrollbars by workshop hash so they can be recalculated when recipes are added:
         var allWorkshopsForThisMap = workshopHashes.split(",");
         var thisScrollPanel;
         for (var i = 0; i < allWorkshopsForThisMap.length; i++) {
@@ -1238,6 +1238,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 // remove styling:
                 thisScrollPanel.querySelector('.customScrollBar').classList.add("inActive");
             }
+            // initialise the timer for this workshop:
+            workshopTimers[allWorkshopsForThisMap[i]] = Date.now();
         }
     },
 
@@ -1260,11 +1262,47 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
 
+    openWorkshop: function(whichWorkshop) {
+         workshopObject.workshopHash = generateHash(whichWorkshop);
+      
+        UI.showUI();
+        
+        workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
+        audio.playSound(soundEffects['buttonClick'], 0);
+        document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
+
+        // find which item is actively being crafted:
+        var allQueuedItems = document.getElementById("workshop" + workshopObject['workshopHash']).querySelectorAll('.itemSlot');
+        for (var i = 0; i < allQueuedItems.length; i++) {
+            if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
+                workshopObject.activeItemSlot = allQueuedItems[i];
+                workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
+                break;
+            }
+        }
+        workshopObject.lastTimeText = '';
+        UI.updateWorkshopTimer();
+    },
+
     closeWorkshop: function() {
-        document.getElementById("workshop" + workshopCurrentlyOpen).classList.remove("active");
+        document.getElementById("workshop" + workshopObject.workshopCurrentlyOpen).classList.remove("active");
         craftingSelectComponentsPanel.classList.remove("active");
         releaseLockedSlots();
-        workshopCurrentlyOpen = -1;
+        workshopObject = {
+            "workshopCurrentlyOpen": -1
+        }
+    },
+
+    updateWorkshopTimer: function() {
+          // check time elapsed:
+        var timeElapsedSincePanelWasCreated = Date.now() - workshopTimers["workshop" + workshopObject.workshopHash];
+      var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
+     var timeRemainingText = parseTime(timeRemaining);
+if(workshopObject.lastTimeText != timeRemainingText) {
+    // only update the DOM if the time has changed:
+workshopObject.activeItemSlot.querySelector('.status span').innerText = timeRemainingText;
+workshopObject.lastTimeText = timeRemainingText;
+}
     },
 
     shopSplitStackCancel: function() {

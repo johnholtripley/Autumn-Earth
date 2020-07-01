@@ -112,7 +112,10 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
-var workshopCurrentlyOpen = -1;
+var workshopTimers = [];
+var workshopObject = {
+    "workshopCurrentlyOpen": -1
+};
 const inflationModifier = 10;
 const sellPriceModifier = 0.7;
 const sellPriceSpecialismModifier = 0.8;
