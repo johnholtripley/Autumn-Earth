@@ -1855,7 +1855,10 @@ function update() {
         UI.updateRetinueTimers();
     }
     if (workshopObject.workshopCurrentlyOpen != -1) {
+        // make sure there is an item that needs a timer:
+     if(typeof workshopObject.activeItemSlot !== "undefined") {
         UI.updateWorkshopTimer();
+    }
     }
     if (craftingObject.isCreating) {
         processCrafting();

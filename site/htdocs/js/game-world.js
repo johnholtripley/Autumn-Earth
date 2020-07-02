@@ -2216,7 +2216,7 @@ function parseTime(time) {
 
     } else if (minutes > 1) {
         return minutes + " minutes";
-    } else if ((minutes == 1) && (seconds == 0)) {
+    } else if (minutes == 1) {
         return "1 minute";
     } else if (seconds == 1) {
         return "1 second";
@@ -7478,24 +7478,27 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     openWorkshop: function(whichWorkshop) {
          workshopObject.workshopHash = generateHash(whichWorkshop);
-      
         UI.showUI();
-        
         workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
+        UI.getActiveWorkshopItem(workshopObject.workshopHash);
+        workshopObject.lastTimeText = '';
+        UI.updateWorkshopTimer();
         audio.playSound(soundEffects['buttonClick'], 0);
         document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
+    },
 
-        // find which item is actively being crafted:
-        var allQueuedItems = document.getElementById("workshop" + workshopObject['workshopHash']).querySelectorAll('.itemSlot');
+    getActiveWorkshopItem: function (workshopHash){
+    // find which item is actively being crafted:
+        var allQueuedItems = document.getElementById("workshop" + workshopHash).querySelectorAll('.itemSlot');
         for (var i = 0; i < allQueuedItems.length; i++) {
             if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
                 workshopObject.activeItemSlot = allQueuedItems[i];
                 workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
+                workshopObject.activeItemSlot.querySelector('.status').innerHTML = 'Crafting (<span>'+parseTime(workshopObject.activeSlotTimeRequired)+'</span>)';
+                
                 break;
             }
         }
-        workshopObject.lastTimeText = '';
-        UI.updateWorkshopTimer();
     },
 
     closeWorkshop: function() {
@@ -7508,15 +7511,27 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     updateWorkshopTimer: function() {
-          // check time elapsed:
+        // check time elapsed:
         var timeElapsedSincePanelWasCreated = Date.now() - workshopTimers["workshop" + workshopObject.workshopHash];
-      var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
-     var timeRemainingText = parseTime(timeRemaining);
-if(workshopObject.lastTimeText != timeRemainingText) {
-    // only update the DOM if the time has changed:
-workshopObject.activeItemSlot.querySelector('.status span').innerText = timeRemainingText;
-workshopObject.lastTimeText = timeRemainingText;
-}
+        var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
+
+        if (timeRemaining < 1) {
+            // item complete ####
+            workshopObject.activeItemSlot.setAttribute('data-complete', 'true');
+            workshopObject.activeItemSlot.querySelector('.status').innerText = 'Complete';
+            // find if there's another item - and reset the timer for the next item:
+            workshopTimers["workshop" + workshopObject.workshopHash] = Date.now();
+            delete workshopObject.activeItemSlot;
+            UI.getActiveWorkshopItem(workshopObject.workshopHash);
+        } else {
+            var timeRemainingText = parseTime(timeRemaining);
+            if (workshopObject.lastTimeText != timeRemainingText) {
+                // only update the DOM if the time has changed:
+                workshopObject.activeItemSlot.querySelector('.status span').innerText = timeRemainingText;
+                workshopObject.lastTimeText = timeRemainingText;
+            }
+        }
+
     },
 
     shopSplitStackCancel: function() {
@@ -11243,7 +11258,10 @@ function update() {
         UI.updateRetinueTimers();
     }
     if (workshopObject.workshopCurrentlyOpen != -1) {
+        // make sure there is an item that needs a timer:
+     if(typeof workshopObject.activeItemSlot !== "undefined") {
         UI.updateWorkshopTimer();
+    }
     }
     if (craftingObject.isCreating) {
         processCrafting();

@@ -1683,7 +1683,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 // temp testing:
 if($j==1) {
     // force it to be in progress:
-$elapsedTime = 130000;
+$elapsedTime = 170000;
 }
 if($j==2) {
     // force it to be queued:

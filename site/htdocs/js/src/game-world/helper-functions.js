@@ -238,7 +238,7 @@ function parseTime(time) {
 
     } else if (minutes > 1) {
         return minutes + " minutes";
-    } else if ((minutes == 1) && (seconds == 0)) {
+    } else if (minutes == 1) {
         return "1 minute";
     } else if (seconds == 1) {
         return "1 second";
