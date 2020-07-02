@@ -1683,7 +1683,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 // temp testing:
 if($j==1) {
     // force it to be in progress:
-$elapsedTime = 170000;
+$elapsedTime = 245000;
 }
 if($j==2) {
     // force it to be queued:
@@ -1706,12 +1706,12 @@ $elapsedTime = -4;
             } else if (!$thereIsAlreadyAnItemBeingCrafted) {
                 // in progress
                 $percentProgress = ($timeRequiredToCraft - ($timeRequiredToCraft-$elapsedTime))/$timeRequiredToCraft*100;
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status">Crafting (<span>'.parseTime(($timeRequiredToCraft-$elapsedTime)/1000).'</span>)</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.($timeRequiredToCraft-$elapsedTime).'"'.$thisItemsMarkup.'<div class="status">Crafting (<span>'.parseTime(($timeRequiredToCraft-$elapsedTime)).'</span>)</div>';
                  
                 $thereIsAlreadyAnItemBeingCrafted = true;
             } else {
                 // queued
-                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued (requires '.parseTime($timeRequiredToCraft/1000).')</div>';
+                $workshopMarkupToOutput .= '<div class="itemSlot" data-hash="'.$mapData['map']['workshops'][$i]['itemsQueued'][$j]['hash'].'" data-timerequired="'.$timeRequiredToCraft.'" data-timeremaining="'.$timeRequiredToCraft.'"'.$thisItemsMarkup.'<div class="status">Queued (requires '.parseTime($timeRequiredToCraft).')</div>';
             }
             $workshopMarkupToOutput .= '</div>';
         }
@@ -1744,28 +1744,6 @@ $elapsedTime = -4;
 
 
     // add more apprentices:
-
-
-
-/*
-    $possibleApprenticesForThisWorkshop = array();
-    foreach ($possibleWorkshopApprenticeNames as $key => $value) {
-        if (in_array($key, $mapData['map']['workshops'][$i]['possibleApprenticeRaces'])) {
-            array_push($possibleApprenticesForThisWorkshop, array($key => $value));
-        }
-    }
-    
-
-$pickedNamesForRaceAndSex = array();
-foreach ($possibleWorkshopApprenticeNames as $key => $value) {
-    for ($j=0;$j<count($possibleApprenticeSexes);$j++) {
-        $pickedNamesForRaceAndSex[($key.$possibleApprenticeSexes[$j])] = $value[($possibleApprenticeSexes[$j])][mt_rand(0, count($value[($possibleApprenticeSexes[$j])]) - 1)];
-    }
-}
-
-*/
-
-
 $procedurallyPickedNames = array();
 foreach ($mapData['map']['workshops'][$i]['possibleApprenticeRaces'] as $key => $race) {
 foreach ($possibleApprenticeSexes as $innerkey => $sex) {

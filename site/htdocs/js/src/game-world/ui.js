@@ -1268,7 +1268,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
         UI.getActiveWorkshopItem(workshopObject.workshopHash);
         workshopObject.lastTimeText = '';
-        UI.updateWorkshopTimer();
         audio.playSound(soundEffects['buttonClick'], 0);
         document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
     },

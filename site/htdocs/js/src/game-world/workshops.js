@@ -189,9 +189,11 @@ function checkIfWorkshopItemIsComplete(whichItemNode) {
         for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
             if (thisMapData[currentMap]['workshops'][i]['name'] == workshopsName) {
                 // find the item with this hash
+                console.log(thisMapData[currentMap]['workshops'][i]['itemsQueued']);
                 for (var j = 0; j < thisMapData[currentMap]['workshops'][i]['itemsQueued'].length; j++) {
+                    console.log(thisMapData[currentMap]['workshops'][i]['itemsQueued'][j]);
                     if (thisMapData[currentMap]['workshops'][i]['itemsQueued'][j]['hash'] == requiredHash) {
-                        delete thisMapData[currentMap]['workshops'][i]['itemsQueued'][j];
+                        thisMapData[currentMap]['workshops'][i]['itemsQueued'].splice(j, 1);
                         break;
                     }
                 }
