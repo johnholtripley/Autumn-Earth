@@ -735,7 +735,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
 
     if (isInAWorkshop) {
         craftingObject.craftedItem.hallmark = 0;
-        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopCurrentlyOpen).getAttribute('data-workshopname');
+        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopObject.workshopCurrentlyOpen).getAttribute('data-workshopname');
     }
 
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
@@ -7417,7 +7417,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p><p>' + hero.currency.keys.length + '<span class="keys"><span></p>';
         bankCurrency.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p>';
-
     },
 
     buildShop: function(markup) {
@@ -7434,9 +7433,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
         UI.highlightedWorkshopRecipe = "";
         workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
-
         workshopPanel.querySelector('.workshopRecipeCreateButton').onclick = UI.workshopRecipeCreate;
-
     },
 
     initWorkshops: function(workshopHashes) {
@@ -7514,8 +7511,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var timeElapsedSincePanelWasCreated = Date.now() - workshopTimers["workshop" + workshopObject.workshopHash];
         var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
 
-        if (timeRemaining < 1) {
-            // item complete
+        if (timeRemaining < 1000) {
+            // item complete - 1000 milliseconds or less
             workshopObject.activeItemSlot.setAttribute('data-complete', 'true');
             workshopObject.activeItemSlot.querySelector('.status').innerText = 'Complete';
             // find if there's another item - and reset the timer for the next item:
@@ -9288,9 +9285,7 @@ function hireApprentice(e) {
             parentPanel.querySelector('input[name=hireApprenticeName]').value = data;
             parentPanel.querySelector('.hireApprentice').setAttribute(sexAndRaceData, data);
             var allPreviousNames = parentPanel.querySelector('.hireApprentice').getAttribute('data-allapprenticenames');
-            console.log("was: " + allPreviousNames);
             allPreviousNames = allPreviousNames.replace(apprenticeName, data);
-            console.log("now: " + allPreviousNames);
             parentPanel.querySelector('.hireApprentice').setAttribute('data-allapprenticenames', allPreviousNames);
         }, function(status) {
             // try again ?
@@ -9326,30 +9321,36 @@ function addItemToWorkshopQueue() {
             break;
         }
     }
-    // console.log(thisMapData[currentMap]);
+    var activeWorkshopPanel = document.getElementById('workshop' + workshopObject.workshopCurrentlyOpen);
+    // generate markup for the workshop panel:
+    var numberOfApprenticesActive = activeWorkshopPanel.querySelectorAll('.activeApprentices li').length;
+    var thisRecipesTier = craftingObject.thisRecipe.tier;
+    var timeRequiredToCraft = (thisRecipesTier * thisRecipesTier) * 3000 / numberOfApprenticesActive;
+    var newPanelMarkup = '<div class="itemSlot" data-hash="' + newWorkshopItem.hash + '" data-timerequired="' + timeRequiredToCraft + '" data-timeremaining="' + timeRequiredToCraft + '" data-name="' + craftingObject.finalItemName + '" data-item=\'' + JSON.stringify(craftingObject.craftedItem) + '\'><img src="/images/game-world/inventory-items/' + craftingObject.finalImageSrc + '.png"><p>' + craftingObject.finalItemName + '</p><span class="qty">1</span><div class="status">Queued (requires ' + parseTime(timeRequiredToCraft) + ')</div></div>';
+    activeWorkshopPanel.querySelector('.workshopItemsList').insertAdjacentHTML('beforeend', newPanelMarkup);
+
+    // check if the timer needs starting if the queue was empty:
+    if (typeof workshopObject.activeItemSlot === "undefined") {
+        workshopTimers["workshop" + workshopObject.workshopHash] = Date.now();
+        UI.getActiveWorkshopItem(workshopObject.workshopCurrentlyOpen);
+    }
+
     releaseLockedSlots();
     updateInventoryAfterCrafting();
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe, true);
-    console.log(JSON.stringify(thisMapData[currentMap]['workshops']));
 }
 
 function loadNewWorkshopRecipeData(whichRecipe, whichWorkshop) {
     getJSON("/game-world/getRecipeDetails.php?recipe=" + whichRecipe, function(data) {
-
         appendRecipeData(data.recipe);
-
         var thisMarkup = '<li data-recipe="' + whichRecipe + '">';
         thisMarkup += '<img src="/images/game-world/inventory-items/' + data.recipe[whichRecipe].imageId + '.png" alt=""><h3>' + data.recipe[whichRecipe].recipeName + '</h3><p>' + data.recipe[whichRecipe].recipeDescription + '</p></li>';
-
         whichWorkshop.querySelector('.availableRecipes ol').insertAdjacentHTML('beforeend', thisMarkup);
         // resize the scroll bar (if it's used):
         if (thisDevicesScrollBarWidth > 0) {
             window[whichWorkshop.id].init();
         }
-
-
-
     }, function(status) {
         // try again:
         loadNewWorkshopRecipeData(whichRecipe);
@@ -9389,7 +9390,6 @@ function checkIfWorkshopItemIsComplete(whichItemNode) {
         for (var i = 0; i < thisMapData[currentMap]['workshops'].length; i++) {
             if (thisMapData[currentMap]['workshops'][i]['name'] == workshopsName) {
                 // find the item with this hash
-                console.log(thisMapData[currentMap]['workshops'][i]['itemsQueued']);
                 for (var j = 0; j < thisMapData[currentMap]['workshops'][i]['itemsQueued'].length; j++) {
                     console.log(thisMapData[currentMap]['workshops'][i]['itemsQueued'][j]);
                     if (thisMapData[currentMap]['workshops'][i]['itemsQueued'][j]['hash'] == requiredHash) {

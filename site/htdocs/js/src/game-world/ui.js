@@ -1203,7 +1203,6 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p><p>' + hero.currency.keys.length + '<span class="keys"><span></p>';
         bankCurrency.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p>';
-
     },
 
     buildShop: function(markup) {
@@ -1220,9 +1219,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         workshopPanel.querySelector('.primaryButton').onclick = hireApprentice;
         UI.highlightedWorkshopRecipe = "";
         workshopPanel.querySelector('.availableRecipes ol').onclick = UI.workshopPanelSingleClick;
-
         workshopPanel.querySelector('.workshopRecipeCreateButton').onclick = UI.workshopRecipeCreate;
-
     },
 
     initWorkshops: function(workshopHashes) {
@@ -1300,8 +1297,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var timeElapsedSincePanelWasCreated = Date.now() - workshopTimers["workshop" + workshopObject.workshopHash];
         var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
 
-        if (timeRemaining < 1) {
-            // item complete
+        if (timeRemaining < 1000) {
+            // item complete - 1000 milliseconds or less
             workshopObject.activeItemSlot.setAttribute('data-complete', 'true');
             workshopObject.activeItemSlot.querySelector('.status').innerText = 'Complete';
             // find if there's another item - and reset the timer for the next item:

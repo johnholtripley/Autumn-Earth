@@ -122,7 +122,7 @@ function recipeSelectComponents(whichRecipe, isInAWorkshop) {
 
     if (isInAWorkshop) {
         craftingObject.craftedItem.hallmark = 0;
-        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopCurrentlyOpen).getAttribute('data-workshopname');
+        craftingObject.whichWorkshop = document.getElementById('workshop'+workshopObject.workshopCurrentlyOpen).getAttribute('data-workshopname');
     }
 
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';

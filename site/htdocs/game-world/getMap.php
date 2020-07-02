@@ -1668,7 +1668,7 @@ $numberOfApprentices = count($mapData['map']['workshops'][$i]['apprentices']);
 
 // loop through any queued items and determine if they're ready, being produced or queued:
     if(count($mapData['map']['workshops'][$i]['itemsQueued'])>0) {
-        $workshopMarkupToOutput .= '<div class="itemsQueued"><h5>Items</h5><div id="workshopItems'.$mapData['map']['workshops'][$i]['hash'].'">';
+        $workshopMarkupToOutput .= '<div class="itemsQueued"><h5>Items</h5><div class="workshopItemsList" id="workshopItems'.$mapData['map']['workshops'][$i]['hash'].'">';
         $thereIsAlreadyAnItemBeingCrafted = false;
         $timeAlreadyUsed = 0;
         for ($j=0;$j<count($mapData['map']['workshops'][$i]['itemsQueued']);$j++) {
