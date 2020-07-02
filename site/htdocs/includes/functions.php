@@ -1232,6 +1232,36 @@ if( $reldays > 0 ) {
  
 
 function parseTime($time) {
+    /*
+    function parseTime(time) {
+    // https://stackoverflow.com/a/19700358/1054212
+    var seconds = Math.floor((time / 1000) % 60);
+    var minutes = Math.floor((time / (1000 * 60)) % 60);
+    var hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+    if (hours > 24) {
+        return Math.floor(hours / 24) + " days";
+    } else if (hours > 1) {
+        return hours + " hours";
+    } else if (hours == 1) {
+        if (minutes > 1) {
+            return "1 hour & " + minutes + " minutes";
+        } else if (minutes == 1) {
+            return "1 hour & 1 minute";
+        } else {
+            return "1 hour";
+        }
+
+    } else if (minutes > 1) {
+        return minutes + " minutes";
+    } else if (minutes == 1) {
+        return "1 minute";
+    } else if (seconds == 1) {
+        return "1 second";
+    } else {
+        return seconds + " seconds";
+    }
+}
+*/
     $reldays = $time/86400;
     $relhours = $time/3600;
     $relminutes = $time/60;

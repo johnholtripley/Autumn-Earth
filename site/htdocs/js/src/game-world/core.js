@@ -1724,8 +1724,8 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
-                                        // close the shop
-                    if (workshopCurrentlyOpen != -1) {
+                                        // close the workshop
+                    if (workshopObject.workshopCurrentlyOpen != -1) {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeWorkshop();
                     }

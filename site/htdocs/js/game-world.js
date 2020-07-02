@@ -7487,18 +7487,18 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
     },
 
-    getActiveWorkshopItem: function (workshopHash){
-    // find which item is actively being crafted:
+    getActiveWorkshopItem: function(workshopHash) {
+        // find which item is actively being crafted:
         var allQueuedItems = document.getElementById("workshop" + workshopHash).querySelectorAll('.itemSlot');
-        for (var i = 0; i < allQueuedItems.length; i++) {
-            if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
-                workshopObject.activeItemSlot = allQueuedItems[i];
-                workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
-                workshopObject.activeItemSlot.querySelector('.status').innerHTML = 'Crafting (<span>'+parseTime(workshopObject.activeSlotTimeRequired)+'</span>)';
-                
-                break;
+            for (var i = 0; i < allQueuedItems.length; i++) {
+                if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
+                    workshopObject.activeItemSlot = allQueuedItems[i];
+                    workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
+                    workshopObject.activeItemSlot.querySelector('.status').innerHTML = 'Crafting (<span>' + parseTime(workshopObject.activeSlotTimeRequired) + '</span>)';
+
+                    break;
+                }
             }
-        }
     },
 
     closeWorkshop: function() {
@@ -7516,7 +7516,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var timeRemaining = workshopObject.activeSlotTimeRequired - timeElapsedSincePanelWasCreated;
 
         if (timeRemaining < 1) {
-            // item complete ####
+            // item complete
             workshopObject.activeItemSlot.setAttribute('data-complete', 'true');
             workshopObject.activeItemSlot.querySelector('.status').innerText = 'Complete';
             // find if there's another item - and reset the timer for the next item:
@@ -11127,8 +11127,8 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
-                                        // close the shop
-                    if (workshopCurrentlyOpen != -1) {
+                                        // close the workshop
+                    if (workshopObject.workshopCurrentlyOpen != -1) {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeWorkshop();
                     }
