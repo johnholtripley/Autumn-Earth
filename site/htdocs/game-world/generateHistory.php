@@ -32,10 +32,8 @@ if(isset($_GET["debug"])) {
 }
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-female.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-male.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-prefix.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-suffix.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/generateProceduralNameFunction.php");
+
 
 
 $HistorySource = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/scriptorium/history-grammar.json');
@@ -68,10 +66,13 @@ class historyPerson extends historyEntity {
         } else {
             $this->sex = "female";
         }
-        $this->race = "Uldra";
-        $this->firstname = generatePersonFirstName($this->race,$this->sex);
-        $this->lastname = generatePersonLastName($this->race);
-        $this->name = $this->firstname." ".$this->lastname;
+        $this->race = "huldra";
+
+$this->name = generateProceduralName($this->sex, $this->race);
+$thisNameSplit = explode(" ", $this->name);
+        $this->firstname = $thisNameSplit[0];
+        $this->lastname = $thisNameSplit[1];
+        
      }
 }
 
