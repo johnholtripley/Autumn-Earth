@@ -1086,16 +1086,17 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     workshopPanelSingleClick: function(e) {
-        var thisNode = getNearestParentId(e.target);
-        if (thisNode.id.substring(0, 6) == "recipe") {
+           //.closest not supported in IE11 ###
+       var thisRecipeNode = e.target.closest('li');
             if (UI.highlightedWorkshopRecipe != "") {
-                document.getElementById(UI.highlightedWorkshopRecipe).classList.remove('highlighted');
+                document.getElementById('workshop'+workshopObject.workshopHash).querySelector('li[data-recipe="'+UI.highlightedWorkshopRecipe+'"]').classList.remove('highlighted');
+            
             }
-            UI.highlightedWorkshopRecipe = thisNode.id;
-            document.getElementById(UI.highlightedWorkshopRecipe).classList.add('highlighted');
-            //.closest not supported in IE11 ###
+            UI.highlightedWorkshopRecipe = thisRecipeNode.getAttribute('data-recipe');
+            thisRecipeNode.classList.add('highlighted');
+         
             e.target.closest(".workshop").querySelector('.workshopRecipeCreateButton').disabled = false;
-        }
+        
     },
 
     workshopRecipeCreate: function() {
@@ -1237,6 +1238,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
             // initialise the timer for this workshop:
             workshopTimers[allWorkshopsForThisMap[i]] = Date.now();
+
+
         }
     },
 
@@ -1265,8 +1268,16 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
         UI.getActiveWorkshopItem(workshopObject.workshopHash);
         workshopObject.lastTimeText = '';
+        UI.highlightedWorkshopRecipe = "";
         audio.playSound(soundEffects['buttonClick'], 0);
-        document.getElementById("workshop" + workshopObject['workshopHash']).classList.add("active");
+        var whichWorkshopPanel = document.getElementById("workshop" + workshopObject['workshopHash']);
+        whichWorkshopPanel.classList.add("active");
+        whichWorkshopPanel.querySelector('.workshopRecipeCreateButton').disabled = true;
+        // remove highlight on all recipes:
+        var allPanelRecipes = whichWorkshopPanel.querySelectorAll('.availableRecipes li');
+        for (var i=0;i<allPanelRecipes.length;i++) {
+            allPanelRecipes[i].classList.remove('highlighted');
+        }
     },
 
     getActiveWorkshopItem: function(workshopHash) {
