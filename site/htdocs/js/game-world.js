@@ -12520,10 +12520,6 @@ function moveNPCs() {
                     thisNPC.tileY = getTileY(thisNPC.y);
                     if (typeof thisNPC.following !== "undefined") {
                         if (!thisNPC.forceNewMovementCheck) {
-
-
-
-
                             checkForEscortQuestEnd(thisNPC);
 
                         }
@@ -12678,7 +12674,40 @@ function moveNPCs() {
                             }
                             break;
 
-                        case 'proximity':
+                            case 'marker':
+                            // these should only be triggered by another NPC's 'trigger' movement code, so reset back to the start:
+                            thisNPC.movementIndex = 0;
+                            break;
+
+                            case 'trigger':
+                            switch (thisNextMovement[1]) {
+                                case 'npc':
+                                    // trigger another NPC's movement code.
+                                    var npcToTriggersName = thisNextMovement[2];
+                                    var markerIDtoLookFor = thisNextMovement[3];
+                                    for (var j = 0; j < visibleMaps.length; j++) {
+                                        for (var k = 0; k < thisMapData[(visibleMaps[j])].npcs.length; k++) {
+                                            if (thisMapData[(visibleMaps[j])].npcs[k].name == npcToTriggersName) {
+                                                for (var l = 0; l < thisMapData[(visibleMaps[j])].npcs[k].movement.length; l++) {
+                                                    if (typeof thisMapData[(visibleMaps[j])].npcs[k].movement[l] !== 'string') {
+                                                        if (thisMapData[(visibleMaps[j])].npcs[k].movement[l][0] == 'marker') {
+                                                            if (thisMapData[(visibleMaps[j])].npcs[k].movement[l][1] == markerIDtoLookFor) {
+                                                                // set this NPC's movement code to the after the marker:
+                                                                thisMapData[(visibleMaps[j])].npcs[k].movementIndex = l + 1;
+                                                                thisMapData[(visibleMaps[j])].npcs[k].forceNewMovementCheck = true;
+                                                                thisMapData[(visibleMaps[j])].npcs[k].isMoving = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+
+                            case 'proximity':
                             // wait for the hero to be nearby
                             thisNPC.forceNewMovementCheck = true;
                             var tileRadius = thisNextMovement[1];

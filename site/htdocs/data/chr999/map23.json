@@ -390,14 +390,73 @@
                 "centreY": 32,
                 "tileX": 24,
                 "tileY": 21,
-                "movement": [["proximity", 4], "remove", ["sound", "hen", true], ["speech", "bwok, bwok"], "remove", ["wait", 250],["animate","peck",1], "s", "-"],
+                "movement": [["proximity", 4], "remove", ["sound", "hen", true], ["speech", "bwok, bwok"], "remove", ["trigger", "npc", "white hen", "cutscene"],["wait", 250],["animate","peck",1], "s", "-"],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [
-                    ["Hi ##characterName##, let's have a look at your transcriptions, eh?"]
+                    []
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+              {
+                    "wait":
+                    {
+                        "length": 1,
+                          "n": 0,
+                        "e": 1,                     
+                        "s": 2,
+                         "w": 3
+                    },
+                    "walk":
+                    {
+                        "length": 23,
+                          "n": 4,
+                        "e": 5,                     
+                        "s": 6,
+                         "w": 7
+                    },
+                    "peck":
+                    {
+                         "length": 51,
+                        "n": 8,
+                        "e": 9,
+                        "s": 10,
+                        "w": 11
+                    }
+                }
+            },
+                      {
+            "name": "white hen",
+                "src": "white-hen.png",
+               "width": 20,
+                "length": 20,
+               "spriteWidth": 33,
+                "spriteHeight": 38,
+                "centreX": 22,
+                "centreY": 32,
+                "tileX": 21,
+                "tileY": 25,
+                "movement": ["-", ["marker", "cutscene"],"s","s"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    []
                 ],
                 "cardGameSpeech":
                 {
