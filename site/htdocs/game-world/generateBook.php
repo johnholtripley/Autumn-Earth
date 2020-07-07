@@ -103,19 +103,19 @@ $isAStartPhrase = true;
 do {
   // get next 2 words:
   if($textSplit[$i+1] != ".") {
-  $thisSecondOrder = $textSplit[$i]." ".$textSplit[$i+1];
-  if($isAStartPhrase) {
-    array_push($startPhrases, $thisSecondOrder);
-  }
-  if (array_key_exists($thisSecondOrder, $markovSequence)) {
-    array_push($markovSequence[($thisSecondOrder)],$textSplit[$i+2]);
+    $thisSecondOrder = $textSplit[$i]." ".$textSplit[$i+1];
+    if($isAStartPhrase) {
+      array_push($startPhrases, $thisSecondOrder);
+    }
+    if (array_key_exists($thisSecondOrder, $markovSequence)) {
+      array_push($markovSequence[($thisSecondOrder)],$textSplit[$i+2]);
+    } else {
+      $markovSequence[$thisSecondOrder] = array(($textSplit[$i+2]));
+    }
   } else {
-    $markovSequence[$thisSecondOrder] = array(($textSplit[$i+2]));
+    // skip the full stop
+    $i++;
   }
-} else {
-  // skip the full stop
-  $i++;
-}
   $isAStartPhrase = false;
   if($textSplit[$i] == ".") {
     $isAStartPhrase = true;
