@@ -392,7 +392,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "home":
                     var location = hero.inventory[whichSlotNumber].additional.split("|");
-                    jumpToLocation(location[0], location[1], location[2]);
+                    jumpToLocation(location[0], location[1]);
                     break;
                 case "pet":
                 inventorySlotReference = whichSlotNumber;

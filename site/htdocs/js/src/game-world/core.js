@@ -585,6 +585,7 @@ function loadNewVisibleMap(whichNewMap) {
 
 
 function loadMapJSON(mapFilePath) {
+    
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
 
@@ -2927,10 +2928,10 @@ function checkForChallenges() {
     key[6] = 0;
 }
 
-function jumpToLocation(mapId, tileX, tileY) {
+function jumpToLocation(tileX, tileY) {
     activeDoorX = tileX;
     activeDoorY = tileY;
-    jumpMapId = mapId;
+    jumpMapId = findWhichWorldMap(tileX, tileY);
     startDoorTransition();
 }
 

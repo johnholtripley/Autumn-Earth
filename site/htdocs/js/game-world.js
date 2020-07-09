@@ -4607,7 +4607,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "home":
                     var location = hero.inventory[whichSlotNumber].additional.split("|");
-                    jumpToLocation(location[0], location[1], location[2]);
+                    jumpToLocation(location[0], location[1]);
                     break;
                 case "pet":
                 inventorySlotReference = whichSlotNumber;
@@ -10000,6 +10000,7 @@ function loadNewVisibleMap(whichNewMap) {
 
 
 function loadMapJSON(mapFilePath) {
+    
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
 
@@ -12342,10 +12343,10 @@ function checkForChallenges() {
     key[6] = 0;
 }
 
-function jumpToLocation(mapId, tileX, tileY) {
+function jumpToLocation(tileX, tileY) {
     activeDoorX = tileX;
     activeDoorY = tileY;
-    jumpMapId = mapId;
+    jumpMapId = findWhichWorldMap(tileX, tileY);
     startDoorTransition();
 }
 
