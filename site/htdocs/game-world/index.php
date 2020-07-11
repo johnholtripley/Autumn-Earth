@@ -80,7 +80,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
     <form id="splitStackPanel" class="quantityInputPanel">
       <fieldset>
         <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
-        <input type="number" placeholder="Enter quantity" min="0" max="20" id="splitStackInput">
+        <input type="text" placeholder="Enter quantity" min="0" max="20" inputmode="decimal" pattern="[0-9]*" id="splitStackInput">
         <button id="splitStackCancel" type="button">Cancel</button>
         <input type="submit" value="Ok">
       </fieldset>

@@ -30,6 +30,8 @@ function acceptQuest() {
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][6], questResponseNPC.speech[questResponseNPC.speechIndex][7], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
     canCloseDialogueBalloonNextClick = true;
+    dialogue.classList.add("delayAndSlowerFade");
+                    dialogue.classList.remove("active");
     questResponseNPC = null;
 }
 

@@ -13,6 +13,9 @@ if (isset($_GET["seed"])) {
 }
 
 if($debug) {
+ echo '<meta charset="utf-8">';
+ echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
+ echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
  echo '<style>* { font-family: arial, helvetica, sans-serif; }</style>';
 }
 

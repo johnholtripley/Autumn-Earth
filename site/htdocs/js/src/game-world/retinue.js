@@ -6,9 +6,6 @@ function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, h
         thisTimeRequired += getPythagorasDistance(retinueBaseLocationX, retinueBaseLocationY, destinationX, destinationY);
     }
 
-
-
-
     var seconds = Math.floor((thisTimeRequired * 60) % 60);
     var minutes = Math.floor(thisTimeRequired % 60);
     var hours = Math.floor((thisTimeRequired / 60) % 24);
@@ -147,7 +144,7 @@ function hireNewFollower() {
             // update database:
             sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + thisFollowerNPC.followerId);
             // show in retinue panel:
-            var followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + '</h3><p>waiting for a quest</p></li>';
+            var followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available hired" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + ' (hired)</h3><p>waiting for a quest</p></li>';
             retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
         }
     } else {

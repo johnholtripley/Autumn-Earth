@@ -17,6 +17,11 @@
         @include transition-duration(2s);
     }
 
+        &.delayAndSlowerFade {
+            @include transition-delay(3s);
+        @include transition-duration(2s);
+    }
+
     &:before {
         border-color: #cbbc9f transparent;
         border-style: solid;

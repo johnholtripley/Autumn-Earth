@@ -82,6 +82,12 @@ switch ($race) {
 // use connvert case and not ucfirst to get accented characters:
 $firstNameOutput = mb_convert_case(mb_substr($builtFirstName,0,1), MB_CASE_UPPER, "UTF-8").mb_substr($builtFirstName, 1);
 $lastNamePrefixOutput = mb_convert_case(mb_substr($lastNamePrefix,0,1), MB_CASE_UPPER, "UTF-8").mb_substr($lastNamePrefix, 1);
+
+if (mb_substr($lastNamePrefixOutput, -1, 1) == mb_substr($lastNameSuffix, 0, 1)) {
+	// make sure the last character of the first word isn't the same as the first of the last word - so don't get dragonsstar - get dragonstar instead
+$lastNamePrefixOutput = mb_substr($lastNamePrefixOutput, 0, -1);
+}
+
 	$name = $firstNameOutput." ".($lastNamePrefixOutput.$lastNameSuffix);
 
 

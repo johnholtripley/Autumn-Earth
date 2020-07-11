@@ -995,9 +995,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         splitStackInput.focus();
 
 
-                        // can't set selection for number type input:
-                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                     
+                           splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                         var clickedSlotRect = thisNode.getBoundingClientRect();
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                         // 3px padding on the slots:
@@ -1137,6 +1136,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     globalClick: function(e) {
         if (e.target.className) {
             if (e.target.className == "closePanel") {
+                console.log();
                 e.target.parentNode.classList.remove("active");
                 // check if it's a shop panel:
                 if (e.target.parentNode.classList.contains("workshop")) {
@@ -1162,7 +1162,14 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         UI.removeActiveDialogue();
 
                     }
+} else if (e.target.parentNode.id == 'retinuePanel') {
+     if (activeObjectForDialogue != '') {
+                        //  dialogue.classList.add("slowerFade");
+                        dialogue.classList.remove("active");
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.removeActiveDialogue();
 
+                    }
                 } else {
                     switch (e.target.parentNode.id) {
                         case 'gatheringPanel':
@@ -1423,9 +1430,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                             shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
                             shopSplitStackInput.value = 1;
                             shopSplitStackInput.focus();
-                            // can't set selection for number type input:
-                            // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                            //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                       
+                               splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                             var clickedSlotRect = thisNode.getBoundingClientRect();
                             var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                             // 3px padding on the slots:
@@ -2586,7 +2592,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 // remove follower:
                 var whichFollower = e.target.getAttribute('data-follower');
                 retinueList.removeChild(document.getElementById('retinueFollower' + whichFollower));
-                sendDataWithoutNeedingAResponse("/game-world/removeHiredFollower.php?id=" + questId);
+                sendDataWithoutNeedingAResponse("/game-world/removeHiredFollower.php?id=" + whichFollower);
                 // close panel:       
                 parentPanel.classList.remove('active');
                 break;

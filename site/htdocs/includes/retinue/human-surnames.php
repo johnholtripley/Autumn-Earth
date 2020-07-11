@@ -1,5 +1,5 @@
 <?php
-$surnamePrefixes = array("mort", "farth", "bere");
+$surnamePrefixes = array("mort", "farth", "bere", "burgh", "fenn");
 
-$surnameSuffixes = array("maine", "hyrst", "burh");
+$surnameSuffixes = array("maine", "hyrst", "burh", "er");
 ?>
