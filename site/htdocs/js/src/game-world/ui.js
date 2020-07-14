@@ -1823,10 +1823,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
-                        // just money
+                        // just money:
                         chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[i].quantity + ' worth of coins">';
                         chestContents += '<p><em>' + parseMoney(contents[i].quantity) + ' worth of coins </em></p>';
                         chestContents += '<span class="qty">' + parseMoney(contents[i].quantity) + '</span>';
+                    } else if (contents[i].type == "*") {
+                        // just card dust:
+                         chestContents += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + contents[i].quantity + ' worth of card dust">';
+                        chestContents += '<p><em>' + contents[i].quantity + ' worth of card dust </em></p>';
+                        chestContents += '<span class="qty">' + contents[i].quantity + '</span>';
                     } else {
                         // create defaults:
                         thisChestObject = {

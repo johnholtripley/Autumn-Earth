@@ -4220,6 +4220,7 @@ function canAddItemToInventory(itemObj) {
     var slotsUpdated = [];
     var allItemsAdded = true;
     var moneyToAdd = 0;
+    var cardDustToAdd = 0;
     var followersAdded = [];
     var professionsAdded = [];
     var followerMarkupToAdd;
@@ -4229,6 +4230,9 @@ function canAddItemToInventory(itemObj) {
         switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
+                break;
+            case '*':
+                cardDustToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
@@ -4307,6 +4311,10 @@ function canAddItemToInventory(itemObj) {
             hero.currency['money'] += moneyToAdd;
             UI.updateCurrencies();
             audio.playSound(soundEffects['coins'], 0);
+        }
+        if (cardDustToAdd > 0) {
+            hero.currency['cardDust'] += cardDustToAdd;
+            UI.updateCurrencies();
         }
         if (followersAdded.length > 0) {
             for (var i = 0; i < followersAdded.length; i++) {
@@ -6211,6 +6219,55 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+function generateTreasureChest() {
+    //  (another treasure map (#82), a quest starting letter (#55), eggs (#111), quests that reward followers (#55), card crafting recipes if they’re added, follower slot unlocks if they’re added etc.)
+    // test with:
+    /*
+    thisChest = generateTreasureChest();
+    thisChest.tileX = hero.tileX;
+    thisChest.tileY = hero.tileY+1;
+    thisMapData[currentMap].items.push(thisChest);
+    initialiseItem(thisMapData[currentMap].items[thisMapData[currentMap].items.length - 1]);
+    */
+    var newTreasureChest = {
+        "type": 48,
+        "contains": [{
+            // house deed:
+                "type": 58
+            },
+            {
+                // house deed:
+                "type": 57
+            },
+               {
+                // instrument:
+                "type": 113
+            },
+            {
+                // random recipe:
+                "type": 29,
+                "contains": getRandomKeyFromObject(allRecipes)
+            },
+            {
+                // gold:
+                "type": "$",
+                "quantity": getRandomIntegerInclusive(3500, 7500)
+            },
+                       {
+                // card dust:
+                "type": "*",
+                "quantity": getRandomIntegerInclusive(30, 70)
+            },
+            {
+                // card:
+                // give a chance it's a rare with a negative number ###
+                "type": 34,
+                "contains": getRandomIntegerInclusive(1, (cardGameNameSpace.allCardData.length-1))
+            }
+        ]
+    };
+    return newTreasureChest;
+}
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
 const clearRecipeSearch = document.getElementById('clearRecipeSearch');
@@ -8036,10 +8093,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
-                        // just money
+                        // just money:
                         chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[i].quantity + ' worth of coins">';
                         chestContents += '<p><em>' + parseMoney(contents[i].quantity) + ' worth of coins </em></p>';
                         chestContents += '<span class="qty">' + parseMoney(contents[i].quantity) + '</span>';
+                    } else if (contents[i].type == "*") {
+                        // just card dust:
+                         chestContents += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + contents[i].quantity + ' worth of card dust">';
+                        chestContents += '<p><em>' + contents[i].quantity + ' worth of card dust </em></p>';
+                        chestContents += '<span class="qty">' + contents[i].quantity + '</span>';
                     } else {
                         // create defaults:
                         thisChestObject = {
@@ -11519,20 +11581,7 @@ function usedActiveTool() {
                     treasureCoordinates = hero.activeTreasureMaps[i].split("_");
                     if (getPythagorasDistance(hero.tileX, hero.tileY, treasureCoordinates[0], treasureCoordinates[1]) < 2) {
                         // add chest:
-                        thisChest = {
-                            "type": 48,
-                            "contains": [{
-                                    "type": 6
-                                },
-                                {
-                                    "type": 2
-                                },
-                                {
-                                    "type": "$",
-                                    "quantity": 5000
-                                }
-                            ]
-                        };
+                        thisChest = generateTreasureChest();
 
                         tryFacing = hero.facing;
                         switch (tryFacing) {

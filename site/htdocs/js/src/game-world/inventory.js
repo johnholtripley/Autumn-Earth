@@ -5,6 +5,7 @@ function canAddItemToInventory(itemObj) {
     var slotsUpdated = [];
     var allItemsAdded = true;
     var moneyToAdd = 0;
+    var cardDustToAdd = 0;
     var followersAdded = [];
     var professionsAdded = [];
     var followerMarkupToAdd;
@@ -14,6 +15,9 @@ function canAddItemToInventory(itemObj) {
         switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
+                break;
+            case '*':
+                cardDustToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
@@ -92,6 +96,10 @@ function canAddItemToInventory(itemObj) {
             hero.currency['money'] += moneyToAdd;
             UI.updateCurrencies();
             audio.playSound(soundEffects['coins'], 0);
+        }
+        if (cardDustToAdd > 0) {
+            hero.currency['cardDust'] += cardDustToAdd;
+            UI.updateCurrencies();
         }
         if (followersAdded.length > 0) {
             for (var i = 0; i < followersAdded.length; i++) {

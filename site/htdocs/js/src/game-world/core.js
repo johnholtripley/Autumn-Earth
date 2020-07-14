@@ -2099,20 +2099,7 @@ function usedActiveTool() {
                     treasureCoordinates = hero.activeTreasureMaps[i].split("_");
                     if (getPythagorasDistance(hero.tileX, hero.tileY, treasureCoordinates[0], treasureCoordinates[1]) < 2) {
                         // add chest:
-                        thisChest = {
-                            "type": 48,
-                            "contains": [{
-                                    "type": 6
-                                },
-                                {
-                                    "type": 2
-                                },
-                                {
-                                    "type": "$",
-                                    "quantity": 5000
-                                }
-                            ]
-                        };
+                        thisChest = generateTreasureChest();
 
                         tryFacing = hero.facing;
                         switch (tryFacing) {
