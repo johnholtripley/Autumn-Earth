@@ -101,6 +101,7 @@ $outputJSON .= '"inventory": '.$inventory.',';
 $outputJSON .= '"cards": '.$cards.',';
 $outputJSON .= '"stats": '.$stats.',';
 $outputJSON .= '"settings": '.$settings.',';
+$outputJSON .= '"homeStoneLocation": "'.$homeStoneLocation.'",';
 $outputJSON .= '"titlesEarned": '.$titlesEarned.',';
 $possibleCurrentTitles = explode(",",   str_replace("[", "", str_replace("]", "", $titlesEarned)));
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
@@ -757,7 +758,8 @@ $thisProfession = $profession;
     }
 	
 	$outputJSON .= '"'.$recipeID.'":{';
-$outputJSON .= '"components":'.$components.',';
+    // remove tabs and newlines - https://stackoverflow.com/questions/5539169/how-do-i-remove-extra-spaces-tabs-and-line-feeds-from-a-sentence-and-substitute/5539233#answer-5539233
+$outputJSON .= '"components":'.preg_replace('/\s+/S', " ", $components).',';
 
 $componentsSplit = explode(",", $components);
 

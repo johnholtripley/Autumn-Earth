@@ -399,7 +399,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     removeFromInventory(whichSlotNumber, 1);
                     break;
                 case "home":
-                    var location = hero.inventory[whichSlotNumber].additional.split("|");
+                    var location = hero.homeStoneLocation.split(",");
                     jumpToLocation(location[0], location[1]);
                     break;
                 case "pet":

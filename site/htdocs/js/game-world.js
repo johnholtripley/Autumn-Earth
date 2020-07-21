@@ -4614,7 +4614,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     removeFromInventory(whichSlotNumber, 1);
                     break;
                 case "home":
-                    var location = hero.inventory[whichSlotNumber].additional.split("|");
+                    var location = hero.homeStoneLocation.split(",");
                     jumpToLocation(location[0], location[1]);
                     break;
                 case "pet":
@@ -6230,16 +6230,25 @@ function generateTreasureChest() {
     initialiseItem(thisMapData[currentMap].items[thisMapData[currentMap].items.length - 1]);
     */
     var newTreasureChest = {
-        "type": 48,
-        "contains": [{
-            // house deed:
+        "type": 115,
+        "contains": [
+            {
+                // house deed:
                 "type": 58
             },
             {
                 // house deed:
                 "type": 57
             },
-               {
+            {
+                // bag:
+                "type": 17
+            },
+            {
+                // bag:
+                "type": 20
+            },
+            {
                 // instrument:
                 "type": 113
             },
@@ -6253,7 +6262,7 @@ function generateTreasureChest() {
                 "type": "$",
                 "quantity": getRandomIntegerInclusive(3500, 7500)
             },
-                       {
+            {
                 // card dust:
                 "type": "*",
                 "quantity": getRandomIntegerInclusive(30, 70)
@@ -6263,7 +6272,11 @@ function generateTreasureChest() {
                 // give a chance it's a rare with a negative number ###
                 "type": 34,
                 "contains": getRandomIntegerInclusive(1, (cardGameNameSpace.allCardData.length-1))
-            }
+            },
+            {
+                // card pack:
+                "type": 21
+            },
         ]
     };
     return newTreasureChest;
