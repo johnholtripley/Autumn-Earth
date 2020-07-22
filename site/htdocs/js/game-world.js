@@ -11900,6 +11900,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 */
                 break;
+            case "homeStone":
+            // reset homestone location:
+           
+
+//UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
+
+            hero.homeStoneLocation = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+break;
             case "hire":
                 UI.openHireFollowerPanel(thisObjectSpeaking);
                 thisObjectSpeaking.speechIndex--;

@@ -222,7 +222,19 @@ for ($i = 0; $i < count($mapData['map']['items']); $i++) {
 for ($i = 0; $i < count($mapData['map']['npcs']); $i++) {
     $mapData['map']['npcs'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
     $mapData['map']['npcs'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+    if(isset($mapData['map']['npcs'][$i]["speech"])) {
+        for ($j = 0; $j < count($mapData['map']['npcs'][$i]["speech"]); $j++) {
+            if(isset($mapData['map']['npcs'][$i]["speech"][$j][1])) {
+                if($mapData['map']['npcs'][$i]["speech"][$j][1] == "homeStone") {
+                    $homeStoneLocation = explode(",",$mapData['map']['npcs'][$i]["speech"][$j][2]);
+                    $mapData['map']['npcs'][$i]["speech"][$j][2] = ($homeStoneLocation[0] + ($globalPosition[0] * $worldMapTileLength)).",".($homeStoneLocation[1] + ($globalPosition[1] * $worldMapTileLength));
+               
+                }
+            }
+        }
+    }
 }
+
 // doors:
 foreach ($mapData['map']['doors'] as $key => $value) {
 $thisKeySplit = explode(",",$key);

@@ -352,7 +352,54 @@
                      ["Do my quest, please?|Keep looking|You completed it - good job", "quest", "14"],
                         ["other conversation, not quest related...", ""]
                 ],
-                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+  
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+                  {
+                "name": "Home Stone Keeper",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 31,
+                "tileY": 24,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                     ["Welcome to the Ashenvale Inn", "homeStone", "31,25"]
+                      
+                ],
+            
                 "cardGameSpeech":
                 {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
