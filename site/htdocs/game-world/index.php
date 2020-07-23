@@ -318,11 +318,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <button id="yesNoDialogueButton2"></button>
     </div>
 
-    <div id="acceptQuestChoice">
-      <button id="questDecline">Decline</button>
-      <button id="questAccept">Accept</button>
-    </div>
-
     <div id="quickHold"></div>
 
     <div id="touchTapAction"></div>

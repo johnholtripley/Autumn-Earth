@@ -598,7 +598,10 @@ $numberOfItemCategories: 20;
     background: #53160d;
     color: #fff;
     z-index: 1;
-
+    section {
+        // stop base64 encoding going off the page:
+        overflow: hidden;
+    }
     p {
         padding: 3px 8px 6px 8px;
         font-size: 12px;

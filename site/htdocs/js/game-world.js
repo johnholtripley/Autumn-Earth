@@ -5808,7 +5808,8 @@ function removeFromJournal(whichQuestId) {
 }
 
 function declineQuest() {
-    acceptQuestChoice.classList.remove('active');
+UI.hideYesNoDialogueBox();
+    
     // show declined speech:
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4], questResponseNPC.speech[questResponseNPC.speechIndex][5], false);
     canCloseDialogueBalloonNextClick = true;
@@ -5816,13 +5817,14 @@ function declineQuest() {
 }
 
 function acceptQuest() {
-    acceptQuestChoice.classList.remove('active');
+    UI.hideYesNoDialogueBox();
     // show accepted speech:
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][6], questResponseNPC.speech[questResponseNPC.speechIndex][7], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
     canCloseDialogueBalloonNextClick = true;
     dialogue.classList.add("delayAndSlowerFade");
-                    dialogue.classList.remove("active");
+    dialogue.classList.remove("active");
+    dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     questResponseNPC = null;
 }
 
@@ -6337,9 +6339,6 @@ const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
 const questJournalEntries = document.getElementById('questJournalEntries');
 const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
-const acceptQuestChoice = document.getElementById('acceptQuestChoice');
-const questDecline = document.getElementById('questDecline');
-const questAccept = document.getElementById('questAccept');
 const postPanel = document.getElementById('postPanel');
 const sendPostTab = document.getElementById('sendPostTab');
 const sendPostPanel = document.getElementById('sendPostPanel');
@@ -6536,8 +6535,6 @@ var UI = {
         UI.initInventoryDrag('.inventoryBag ol');
         document.getElementById('openSettings').onclick = UI.openSettings;
         actionBar.onclick = UI.actionBarClick;
-        questDecline.onclick = declineQuest;
-        questAccept.onclick = acceptQuest;
         UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
@@ -6778,6 +6775,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     removeActiveDialogue: function() {
         activeObjectForDialogue = '';
+        // remove any slow fade classes:
+        dialogue.className = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         //thisObjectSpeaking = {};
     },
@@ -11215,6 +11214,7 @@ function update() {
                 if (!(isInRange(hero.x, hero.y, activeObjectForDialogue.x, activeObjectForDialogue.y, closeDialogueDistance))) {
                     dialogue.classList.add("slowerFade");
                     dialogue.classList.remove("active");
+                    UI.hideYesNoDialogueBox();
                     // close the shop
                     if (shopCurrentlyOpen != -1) {
                         activeObjectForDialogue.speechIndex = 0;
@@ -11225,8 +11225,7 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeWorkshop();
                     }
-                    // close the accept/decline buttons as well in case they're open:
-                    acceptQuestChoice.classList.remove('active');
+
                     // only remove this after dialogue has faded out completely:
                     dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                 }
@@ -11901,12 +11900,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 */
                 break;
             case "homeStone":
-            // reset homestone location:
-           
-
-//UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
-
-            hero.homeStoneLocation = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+            // reset homestone location - set the activeDialgue in advance of showing the speech bubble so the homestone function knows which to use:
+                    activeObjectForDialogue = thisObjectSpeaking;
+                    // keep the speech here for the homestone function to get this speech correctly:
+                    thisObjectSpeaking.speechIndex--;
+            UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
 break;
             case "hire":
                 UI.openHireFollowerPanel(thisObjectSpeaking);
@@ -12290,7 +12288,12 @@ break;
                     } else if (individualSpeechCodes[i] == "quest-optional") {
                         // the player has a choice whether to accept this or not:
                         questResponseNPC = thisObjectSpeaking;
-                        acceptQuestChoice.classList.add('active');
+                      //  acceptQuestChoice.classList.add('active');
+                       
+
+
+UI.showYesNoDialogueBox("Agree?", "Yes", "Not just now", "acceptQuest", "declineQuest");
+
                         thisSpeech = questSpeech[0];
                         if (thisObjectSpeaking != null) {
                             // keep the NPC on this quest speech:
@@ -12346,6 +12349,10 @@ break;
 }
 
 
+function setHomeStoneToSpeaker() {
+    hero.homeStoneLocation = activeObjectForDialogue.speech[activeObjectForDialogue.speechIndex][2];
+    UI.hideYesNoDialogueBox();
+}
 
 
 function updateItems() {

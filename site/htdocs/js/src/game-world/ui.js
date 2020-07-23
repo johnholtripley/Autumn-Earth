@@ -54,9 +54,6 @@ const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
 const questJournalEntries = document.getElementById('questJournalEntries');
 const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
-const acceptQuestChoice = document.getElementById('acceptQuestChoice');
-const questDecline = document.getElementById('questDecline');
-const questAccept = document.getElementById('questAccept');
 const postPanel = document.getElementById('postPanel');
 const sendPostTab = document.getElementById('sendPostTab');
 const sendPostPanel = document.getElementById('sendPostPanel');
@@ -253,8 +250,6 @@ var UI = {
         UI.initInventoryDrag('.inventoryBag ol');
         document.getElementById('openSettings').onclick = UI.openSettings;
         actionBar.onclick = UI.actionBarClick;
-        questDecline.onclick = declineQuest;
-        questAccept.onclick = acceptQuest;
         UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
@@ -495,6 +490,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     removeActiveDialogue: function() {
         activeObjectForDialogue = '';
+        // remove any slow fade classes:
+        dialogue.className = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         //thisObjectSpeaking = {};
     },

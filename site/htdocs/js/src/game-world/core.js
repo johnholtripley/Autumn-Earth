@@ -1720,6 +1720,7 @@ function update() {
                 if (!(isInRange(hero.x, hero.y, activeObjectForDialogue.x, activeObjectForDialogue.y, closeDialogueDistance))) {
                     dialogue.classList.add("slowerFade");
                     dialogue.classList.remove("active");
+                    UI.hideYesNoDialogueBox();
                     // close the shop
                     if (shopCurrentlyOpen != -1) {
                         activeObjectForDialogue.speechIndex = 0;
@@ -1730,8 +1731,7 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeWorkshop();
                     }
-                    // close the accept/decline buttons as well in case they're open:
-                    acceptQuestChoice.classList.remove('active');
+
                     // only remove this after dialogue has faded out completely:
                     dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                 }
@@ -2406,12 +2406,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 */
                 break;
             case "homeStone":
-            // reset homestone location:
-           
-
-//UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
-
-            hero.homeStoneLocation = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+            // reset homestone location - set the activeDialgue in advance of showing the speech bubble so the homestone function knows which to use:
+                    activeObjectForDialogue = thisObjectSpeaking;
+                    // keep the speech here for the homestone function to get this speech correctly:
+                    thisObjectSpeaking.speechIndex--;
+            UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
 break;
             case "hire":
                 UI.openHireFollowerPanel(thisObjectSpeaking);
@@ -2795,7 +2794,12 @@ break;
                     } else if (individualSpeechCodes[i] == "quest-optional") {
                         // the player has a choice whether to accept this or not:
                         questResponseNPC = thisObjectSpeaking;
-                        acceptQuestChoice.classList.add('active');
+                      //  acceptQuestChoice.classList.add('active');
+                       
+
+
+UI.showYesNoDialogueBox("Agree?", "Yes", "Not just now", "acceptQuest", "declineQuest");
+
                         thisSpeech = questSpeech[0];
                         if (thisObjectSpeaking != null) {
                             // keep the NPC on this quest speech:
@@ -2851,6 +2855,10 @@ break;
 }
 
 
+function setHomeStoneToSpeaker() {
+    hero.homeStoneLocation = activeObjectForDialogue.speech[activeObjectForDialogue.speechIndex][2];
+    UI.hideYesNoDialogueBox();
+}
 
 
 function updateItems() {

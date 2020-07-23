@@ -17,7 +17,8 @@ function removeFromJournal(whichQuestId) {
 }
 
 function declineQuest() {
-    acceptQuestChoice.classList.remove('active');
+UI.hideYesNoDialogueBox();
+    
     // show declined speech:
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4], questResponseNPC.speech[questResponseNPC.speechIndex][5], false);
     canCloseDialogueBalloonNextClick = true;
@@ -25,13 +26,14 @@ function declineQuest() {
 }
 
 function acceptQuest() {
-    acceptQuestChoice.classList.remove('active');
+    UI.hideYesNoDialogueBox();
     // show accepted speech:
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][6], questResponseNPC.speech[questResponseNPC.speechIndex][7], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
     canCloseDialogueBalloonNextClick = true;
     dialogue.classList.add("delayAndSlowerFade");
-                    dialogue.classList.remove("active");
+    dialogue.classList.remove("active");
+    dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     questResponseNPC = null;
 }
 
