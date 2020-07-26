@@ -1,6 +1,6 @@
 function addToJournal(whichQuestId) {
     // pass hero.totalGameTimePlayed to allow sorting when loading from scratch? ###
-    getJSON("/game-world/getQuestJournalEntries.php?chr="+characterId+"&questID=" + whichQuestId, function(data) {
+    getJSON("/game-world/getQuestJournalEntries.php?chr=" + characterId + "&questID=" + whichQuestId, function(data) {
         UI.addToQuestJournal(data);
     }, function(status) {
         // error - try again:
@@ -11,14 +11,14 @@ function addToJournal(whichQuestId) {
 function removeFromJournal(whichQuestId) {
     var elementToRemove = document.getElementById("quest" + whichQuestId);
     // check it exists, in case it was hidden from the Journal:
-    if(elementToRemove) {
-    elementToRemove.remove();
-}
+    if (elementToRemove) {
+        elementToRemove.remove();
+    }
 }
 
 function declineQuest() {
-UI.hideYesNoDialogueBox();
-    
+    UI.hideYesNoDialogueBox();
+
     // show declined speech:
     processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4], questResponseNPC.speech[questResponseNPC.speechIndex][5], false);
     canCloseDialogueBalloonNextClick = true;
@@ -105,7 +105,13 @@ function openQuest(questId) {
                 break;
             default:
                 // threshold quest:
-                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);      
+                if (questData[questId].whatIsRequiredForCompletion.indexOf('stats.temporary') !== -1) {
+                    // create this if it's needed:
+                    if (typeof hero.stats.temporary[(questData[questId].whatIsRequiredForCompletion)] == "undefined") {
+                        hero.stats.temporary[(questData[questId].whatIsRequiredForCompletion.replace('hero.stats.temporary.', ''))] = 0;
+                    }
+                }
+                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
                 break;
         }
         questData[questId].isUnderway = true;
@@ -118,32 +124,32 @@ function checkForEscortQuestEnd(whichNPC) {
     var destination = whichNPC.speech[whichNPC.speechIndex][3].split("|");
     // global coordinates are passed in here:
 
-        var destinationTileCentreX = getTileCentreCoordX(destination[0]);
-        var destinationTileCentreY = getTileCentreCoordY(destination[1]);
-       
-        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[2] * tileW)) {
-            // quest complete
-        
-            whichNPC.drawnFacing = turntoFace(whichNPC, hero);
-            // remove the reference to it in the hero object:
-            for (var i = 0; i < hero.npcsFollowing.length; i++) {
-                if (hero.npcsFollowing[i] === whichNPC) {
-                    hero.npcsFollowing.splice(i, 1);
-                    break;
-                }
+    var destinationTileCentreX = getTileCentreCoordX(destination[0]);
+    var destinationTileCentreY = getTileCentreCoordY(destination[1]);
+
+    if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[2] * tileW)) {
+        // quest complete
+
+        whichNPC.drawnFacing = turntoFace(whichNPC, hero);
+        // remove the reference to it in the hero object:
+        for (var i = 0; i < hero.npcsFollowing.length; i++) {
+            if (hero.npcsFollowing[i] === whichNPC) {
+                hero.npcsFollowing.splice(i, 1);
+                break;
             }
-            // get fae to move to this NPC:
-            fae.targetX = whichNPC.x;
-            fae.targetY = whichNPC.y;
-            fae.currentState = "away";
-            //whichNPC.movement[whichNPC.movementIndex] = "-";
-            whichNPC.isMoving = false;
-            whichNPC.movementIndex--;
-            whichNPC.forceNewMovementCheck = false;
-            whichNPC.hasCompletedEscortQuest = true;
-            delete whichNPC.following;
         }
-    
+        // get fae to move to this NPC:
+        fae.targetX = whichNPC.x;
+        fae.targetY = whichNPC.y;
+        fae.currentState = "away";
+        //whichNPC.movement[whichNPC.movementIndex] = "-";
+        whichNPC.isMoving = false;
+        whichNPC.movementIndex--;
+        whichNPC.forceNewMovementCheck = false;
+        whichNPC.hasCompletedEscortQuest = true;
+        delete whichNPC.following;
+    }
+
 }
 
 
@@ -156,9 +162,13 @@ function closeQuest(whichNPC, whichQuestId) {
     giveQuestRewards(whichNPC, whichQuestId);
     if (questData[whichQuestId].isRepeatable > 0) {
         questData[whichQuestId].hasBeenCompleted = false;
-        
+
     } else {
         questData[whichQuestId].hasBeenCompleted = true;
+        if (questData[whichQuestId].whatIsRequiredForCompletion.indexOf('stats.temporary') !== -1) {
+            // remove this data:
+            delete hero.stats.temporary[(questData[whichQuestId].whatIsRequiredForCompletion.replace('hero.stats.temporary.', ''))];
+        }
         // remove quest text now:
         whichNPC.speech.splice(whichNPC.speechIndex, 1);
         // knock this back one so to keep it in step with the removed item:
@@ -176,12 +186,11 @@ function closeQuest(whichNPC, whichQuestId) {
 
 }
 
-
 function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion;
-     
+
         awardQuestRewards(whichNPC, questRewards, false);
     }
     /*else {

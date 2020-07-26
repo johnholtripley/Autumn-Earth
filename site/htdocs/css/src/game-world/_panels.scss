@@ -854,32 +854,7 @@ $numberOfItemCategories: 20;
     }
 }
 
-#acceptQuestChoice {
-    @include togglePanel(0.4s);
-    left: 50%;
-    top: 50%;
-    @include transform(translate(-50%, -50%));
 
-    button {
-        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
-        background: #363636;
-        @include transition(background 0.4s ease);
-        border: 2px solid #cbbc9f;
-        @include border-radius(5px);
-        filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
-        color: #fff;
-        @include pxRem('font-size', 12px);
-        @include pxRem('padding', 8px 12px);
-        @include pxRem('margin', 0 6px);
-        line-height: 1;
-        font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
-        outline: 0;
-
-        @include attention() {
-            background: #857d6e;
-        }
-    }
-}
 
 
 

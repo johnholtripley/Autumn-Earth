@@ -551,11 +551,11 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
             //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
 
-         if(data.workshops) {
-            UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshops(data.workshops.allWorkshopIds);
-            appendRecipeData(data.workshops.recipeData);
-        }
+            if (data.workshops) {
+                UI.buildWorkshop(data.workshops.markup);
+                UI.initWorkshops(data.workshops.allWorkshopIds);
+                appendRecipeData(data.workshops.recipeData);
+            }
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -585,7 +585,7 @@ function loadNewVisibleMap(whichNewMap) {
 
 
 function loadMapJSON(mapFilePath) {
-    
+
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
 
@@ -600,11 +600,11 @@ function loadMapJSON(mapFilePath) {
             visibleMaps.push(thisCurrentMap);
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
-              if(data.workshops) {
-            UI.buildWorkshop(data.workshops.markup);
-            UI.initWorkshops(data.workshops.allWorkshopIds);
-            appendRecipeData(data.workshops.recipeData);
-        }
+            if (data.workshops) {
+                UI.buildWorkshop(data.workshops.markup);
+                UI.initWorkshops(data.workshops.allWorkshopIds);
+                appendRecipeData(data.workshops.recipeData);
+            }
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
             if (isOverWorldMap) {
@@ -1157,12 +1157,12 @@ function removeMapAssets() {
     }
 
     for (var i in backgroundImgs) {
-     if(typeof backgroundImgs[i] !== "undefined") {
-             backgroundImgs[i].onerror = '';
-        backgroundImgs[i].src = '';
-        // backgroundImgs[i] = null;
-        delete backgroundImgs[i];
-    }
+        if (typeof backgroundImgs[i] !== "undefined") {
+            backgroundImgs[i].onerror = '';
+            backgroundImgs[i].src = '';
+            // backgroundImgs[i] = null;
+            delete backgroundImgs[i];
+        }
     }
 
 
@@ -1726,7 +1726,7 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
-                                        // close the workshop
+                    // close the workshop
                     if (workshopObject.workshopCurrentlyOpen != -1) {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeWorkshop();
@@ -1857,9 +1857,9 @@ function update() {
     }
     if (workshopObject.workshopCurrentlyOpen != -1) {
         // make sure there is an item that needs a timer:
-     if(typeof workshopObject.activeItemSlot !== "undefined") {
-        UI.updateWorkshopTimer();
-    }
+        if (typeof workshopObject.activeItemSlot !== "undefined") {
+            UI.updateWorkshopTimer();
+        }
     }
     if (craftingObject.isCreating) {
         processCrafting();
@@ -2207,6 +2207,11 @@ function checkForActions() {
                                 case "nest":
                                     // can't interact with it - do nothing
                                     break;
+                                case "stat":
+                                    // increment this temp stat:
+                                    hero.stats.temporary[actionValue]++;
+                                    // remove item:
+                                    thisMapData[(visibleMaps[m])].items.splice(i, 1);
                                 case "sound":
                                     audio.playSound(soundEffects[actionValue], 0);
                                     break;
@@ -2373,15 +2378,34 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "workshop":
-         
-            UI.openWorkshop(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]);
-            
-            break;
+                UI.openWorkshop(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]);
+                break;
             case "post":
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
             case "bank":
                 UI.openBank(thisObjectSpeaking.x, thisObjectSpeaking.y, thisObjectSpeaking);
+                break;
+            case "stat":
+                // check if the quest is active for this stat (ie. does the stat exist?)
+                if (typeof hero.stats.temporary[(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])] == "undefined") {
+                    // show the next text:
+                    var thisNextTextIndex = thisObjectSpeaking.speechIndex + 1;
+                    if (thisNextTextIndex >= thisObjectSpeaking.speech.length) {
+                        thisNextTextIndex = 0;
+                    }
+                    thisSpeech = thisObjectSpeaking.speech[thisNextTextIndex][0];
+                    // ...but keep the NPC on this text:
+                    thisObjectSpeaking.speechIndex--;
+                    isPartOfNPCsNormalSpeech = false;
+                } else {
+                    // increase this temp stat:
+                    hero.stats.temporary[(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2])]++;
+                    // remove this dialogue:
+                    thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
+                    // knock this back one so to keep it in step with the removed item:
+                    thisObjectSpeaking.speechIndex--;
+                }
                 break;
             case "retinue":
                 UI.openRetinuePanel(thisObjectSpeaking);
@@ -2406,12 +2430,12 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 */
                 break;
             case "homeStone":
-            // reset homestone location - set the activeDialgue in advance of showing the speech bubble so the homestone function knows which to use:
-                    activeObjectForDialogue = thisObjectSpeaking;
-                    // keep the speech here for the homestone function to get this speech correctly:
-                    thisObjectSpeaking.speechIndex--;
-            UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
-break;
+                // reset homestone location - set the activeDialgue in advance of showing the speech bubble so the homestone function knows which to use:
+                activeObjectForDialogue = thisObjectSpeaking;
+                // keep the speech here for the homestone function to get this speech correctly:
+                thisObjectSpeaking.speechIndex--;
+                UI.showYesNoDialogueBox("Make this Inn your home?", "Yes", "No", "setHomeStoneToSpeaker", "UI.hideYesNoDialogueBox");
+                break;
             case "hire":
                 UI.openHireFollowerPanel(thisObjectSpeaking);
                 thisObjectSpeaking.speechIndex--;
@@ -2794,11 +2818,11 @@ break;
                     } else if (individualSpeechCodes[i] == "quest-optional") {
                         // the player has a choice whether to accept this or not:
                         questResponseNPC = thisObjectSpeaking;
-                      //  acceptQuestChoice.classList.add('active');
-                       
+                        //  acceptQuestChoice.classList.add('active');
 
 
-UI.showYesNoDialogueBox("Agree?", "Yes", "Not just now", "acceptQuest", "declineQuest");
+
+                        UI.showYesNoDialogueBox("Agree?", "Yes", "Not just now", "acceptQuest", "declineQuest");
 
                         thisSpeech = questSpeech[0];
                         if (thisObjectSpeaking != null) {
@@ -3263,12 +3287,12 @@ function moveNPCs() {
                             }
                             break;
 
-                            case 'marker':
+                        case 'marker':
                             // these should only be triggered by another NPC's 'trigger' movement code, so reset back to the start:
                             thisNPC.movementIndex = 0;
                             break;
 
-                            case 'trigger':
+                        case 'trigger':
                             switch (thisNextMovement[1]) {
                                 case 'npc':
                                     // trigger another NPC's movement code.
@@ -3296,7 +3320,7 @@ function moveNPCs() {
                             }
                             break;
 
-                            case 'proximity':
+                        case 'proximity':
                             // wait for the hero to be nearby
                             thisNPC.forceNewMovementCheck = true;
                             var tileRadius = thisNextMovement[1];
