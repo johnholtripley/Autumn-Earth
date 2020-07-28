@@ -79,11 +79,11 @@ if($debug) {
 	* {
 		padding: 0;
 		margin: 0;
+		font-family: arial, helvetica, sans-serif;
 	}
 	.sequenceBlock {
 		position: relative;
 		width: <?php echo $canvaDimension; ?>px;
-		font-family: arial, helvetica, sans-serif;
 		font-size: 10px;
 	}
 	.sequenceBlock span {
@@ -170,7 +170,7 @@ if ($targetFound) {
 	}
 	array_push($reversedOrder, $startNode->name);
 	$order = array_reverse($reversedOrder);
-	echo implode($order," -> ");
+	echo implode($order," &rsaquo; ");
 } else {
 	echo 'target not found';
 }
