@@ -47,8 +47,8 @@ function addNode($name, $x, $y, $connections) {
 
 addNode(0,30,30,array(5));
 addNode(1,120,80,array(3));
-addNode(2,70,270,array(3,5));
-addNode(3,40,200,array(4,2,1,5));
+addNode(2,110,270,array(3,5));
+addNode(3,40,220,array(4,2,1,5));
 addNode(4,10,130,array(3));
 addNode(5,20,60,array(0,3,2));
 
