@@ -13,6 +13,11 @@ if (isset($_GET["debug"])) {
     $proceduralDebug = false;
 }
 
+if($proceduralDebug) {
+    include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+    include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+}
+
 
 // see if this file is an include in getMap.php:
 $isIncluded = false;
@@ -1572,10 +1577,6 @@ function createGridLayout()
 
     // increase the nodes to be half way between that and the closest other used node:
 
-
-
-
-
 switch ($dungeonDetails[$dungeonName]['roomType']) {
     case "adjoining-rooms":
 
@@ -2216,6 +2217,99 @@ if(!$proceduralDebug) {
 
 }
 
+
+
+function doErosion($inputMap) {
+    global $proceduralMapTilesX, $proceduralMapTilesY;
+
+    $birthLimit = 3;
+    $iterations = 3;
+
+    $outputMap = array();
+    for ($i = 0; $i < $proceduralMapTilesX; $i++) {    
+        $outputMap[$i] = array();
+        for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+            array_push($outputMap[$i], $inputMap[$i][$j]);
+        }
+    }
+
+    for ($k = 0; $k < $iterations; $k++) {
+        for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+                $numberOfNeighbours = countAliveNeighbours($outputMap, $i, $j);
+             if ($outputMap[$j][$i] == ".") {
+                    if($numberOfNeighbours > $birthLimit){
+                         if(mt_rand(1,2) == 1) {
+                            $outputMap[$j][$i] = "#";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return $outputMap;
+}
+
+
+function countAliveNeighbours($map, $x, $y) {
+    global $proceduralMapTilesX, $proceduralMapTilesY;
+    $count = 0;
+    for($i = -1; $i < 2; $i++){
+        for($j = -1; $j < 2; $j++){
+            $nb_x = $i+$x;
+            $nb_y = $j+$y;
+            if(!($i == 0 && $j == 0)){
+                // if it's at the edges, count it was solid:
+                if(($nb_x < 0) || ($nb_y < 0) || ($nb_x >= $proceduralMapTilesX) || ($nb_y >= $proceduralMapTilesY)){
+                    $count++;   
+                } else if($map[$nb_y][$nb_x] == "#"){
+                    $count++; 
+                }
+            }
+        }
+    }
+    return $count;
+}
+
+/*
+
+function doCellularAutomata($inputMap) {
+global $proceduralMapTilesX, $proceduralMapTilesY;
+
+$deathLimit = 3;
+$birthLimit = 4;
+$iterations = 3;
+
+$outputMap = array();
+for ($i = 0; $i < $proceduralMapTilesX; $i++) {    
+    $outputMap[$i] = array();
+    for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+        array_push($outputMap[$i], $inputMap[$i][$j]);
+    }
+}
+
+for ($k = 0; $k < $iterations; $k++) {
+    for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+        for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+            $numberOfNeighbours = countAliveNeighbours($outputMap, $i, $j);
+            // if this tile is blocked:
+            if($outputMap[$j][$i] == "#") {
+                if($numberOfNeighbours < $deathLimit){
+                        $outputMap[$j][$i] = ".";
+                }
+            } else if ($outputMap[$j][$i] == ".") {
+                if($numberOfNeighbours > $birthLimit){
+                        $outputMap[$j][$i] = "#";
+                }
+            }
+        }
+    }
+}
+
+return $outputMap;
+}
+*/
 
 
 function outputTileMap() {
@@ -3173,6 +3267,16 @@ $proceduralMap[$j][$proceduralMapTilesX-1] = "#";
 }
 
 
+
+if($dungeonDetails[$dungeonName]['needsErosion']) {
+    outputTileMap();
+    $proceduralMap = doErosion($proceduralMap);
+    outputTileMap();
+}
+
+
+
+
 // plot connections:
 
 
@@ -3311,9 +3415,12 @@ break;
 
 
 
-    
+protectDoors();    
 
 outputTileMap();
+
+
+
 
 
 // find blank tiles (tiles completely surrounded by non-walkable tiles):
@@ -3369,25 +3476,15 @@ function bresenhamLinePath($x1,$y1,$x2,$y2) {
 }
 
 function drawWonkyPath($from, $to) {
-    // john
-
-
-
     global $proceduralDebug;
 /*    if($proceduralDebug) {
         echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
     }
 */
-
-
 bresenhamLinePath($from[0],$from[1],$to[0],$to[1]);
 // thicken up the path:
 bresenhamLinePath($from[0]-1,$from[1],$to[0]-1,$to[1]);
 bresenhamLinePath($from[0],$from[1]-1,$to[0],$to[1]-1);
-
-
-
-
 }
 
 
@@ -3520,6 +3617,16 @@ echo"</pre></code>";
 */
 }
 
+function protectDoors() {
+    // make sure that there is space around each entrance and exit:
+    global $exitX,$exitY,$entranceX,$entranceY,$proceduralMap;
+    for ($i=-2;$i<=2;$i++) {
+        for ($j=-2;$j<=2;$j++) {
+            $proceduralMap[$exitY+$j][$exitX+$i] = '.';
+            $proceduralMap[$entranceY+$j][$entranceX+$i] = '.';
+        }
+    }
+}
 
 function placeDoors() {
     global $doorsJSON, $exitX, $exitY, $thisMapsId, $proceduralMap, $thisPlayersId, $dungeonName, $entranceX, $entranceY, $dungeonDetails;
@@ -3760,7 +3867,7 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function outputIsometricView() {
-global $tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
+global $connection,$tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
 $tileW = 48;
 $tileH = $tileW/2;
 
@@ -3770,7 +3877,7 @@ $tileH = $tileW/2;
     echo '<div class="sequenceBlock wider">';
 
 
-$rootFolder = '../images/game-world/terrain/';
+$rootFolder = '../images/game-world/';
 $bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
 
 
@@ -3782,11 +3889,49 @@ $canvasOffsetY = 0;
 
 $fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
 
+$allNPCsToDraw = array();
+$allItemsToDraw = array();
+
 imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
- $decodedJSON = json_decode($outputJSON, true);
+$decodedJSON = json_decode($outputJSON, true);
 for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
-  ${'assetImg'.$i} = imagecreatefrompng($rootFolder.$decodedJSON["map"]["graphics"][$i]["src"]);
+  ${'assetImg'.$i} = imagecreatefrompng($rootFolder.'terrain/'.$decodedJSON["map"]["graphics"][$i]["src"]);
 }
+for ($i=0;$i<count($decodedJSON["map"]["npcs"]);$i++) {
+  ${'assetNPCImg'.$i} = imagecreatefrompng($rootFolder.'npcs/'.$decodedJSON["map"]["npcs"][$i]["src"]);
+  $allNPCsToDraw[$decodedJSON["map"]["npcs"][$i]["tileX"]."-".$decodedJSON["map"]["npcs"][$i]["tileY"]] = array($decodedJSON["map"]["npcs"][$i], ${'assetNPCImg'.$i});
+}
+$allInteriorDoors = array();
+foreach ($decodedJSON["map"]["innerDoors"] as &$thisInnerDoor) {
+  ${'assetDoorImg'.$i} = imagecreatefrompng($rootFolder.'terrain/'.$decodedJSON["map"]["graphics"][($thisInnerDoor["graphic"])]["src"]);
+  $allInteriorDoors[$thisInnerDoor["tileX"]."-".$thisInnerDoor["tileY"]] = array($thisInnerDoor,$decodedJSON["map"]["graphics"][($thisInnerDoor["graphic"])],${'assetDoorImg'.$i});
+}
+
+
+$allItemsRequired = array();
+for ($i=0;$i<count($decodedJSON["map"]["items"]);$i++) {
+  array_push($allItemsRequired, $decodedJSON["map"]["items"][$i]["type"]);
+}
+
+$allItemsRequired = array_unique($allItemsRequired);
+$itemIdsToGet =implode(",",$allItemsRequired);
+$inventoryItemData = array();
+$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.")";
+$result3 = mysqli_query($connection, $query3) or die ("tblinventoryitems 2 failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+    extract($row);
+    $inventoryItemData[$itemID] = $row;
+}
+mysqli_free_result($result3);
+
+
+
+for ($i=0;$i<count($decodedJSON["map"]["items"]);$i++) {
+    ${'assetItemImg'.$i} = imagecreatefrompng($rootFolder.'items/'.$inventoryItemData[($decodedJSON["map"]["items"][$i]["type"])]["cleanURL"].'.png');
+  $allItemsToDraw[$decodedJSON["map"]["items"][$i]["tileX"]."-".$decodedJSON["map"]["items"][$i]["tileY"]] = array($inventoryItemData[($decodedJSON["map"]["items"][$i]["type"])], ${'assetItemImg'.$i});
+}
+
+
 
 $isoMap = $decodedJSON["map"]["terrain"];
 // draw tiles
@@ -3794,16 +3939,40 @@ for ( $i = 0; $i < $proceduralMapTilesX; $i++) {
             for ( $j = 0; $j < $proceduralMapTilesY; $j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                 // this makes the map array more readable when editing
-    if (is_numeric($isoMap[$j][$i])) {
-                    $thisX = getTileIsoCentreCoordX($i, $j);
+                 $thisX = getTileIsoCentreCoordX($i, $j);
                     $thisY = getTileIsoCentreCoordY($i, $j);
+    if (is_numeric($isoMap[$j][$i])) {
+                   
                    $whichAsset = intval($isoMap[$j][$i]); 
                      $thisGraphicCentreX = $decodedJSON["map"]["graphics"][$whichAsset]["centreX"];
                     $thisGraphicCentreY = $decodedJSON["map"]["graphics"][$whichAsset]["centreY"];  
 // need to offset by half a tile to match starting hero position at tile centre:
                     imagecopy ( $fullImage, ${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX + $canvasOffsetX ), floor($thisY - $thisGraphicCentreY + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset}) );
                   }
+// check for NPCs:
+                  $tileReference = $i."-".$j;
+                  if (array_key_exists($tileReference, $allNPCsToDraw)) {
+                    // this does ignore facing #####
+                    imagecopy ( $fullImage , $allNPCsToDraw[$tileReference][1] , floor($thisX - $allNPCsToDraw[$tileReference][0]['centreX'] + $canvasOffsetX ), floor($thisY - $allNPCsToDraw[$tileReference][0]['centreY'] + $canvasOffsetY + $tileH/2) , 0 , 0 , $allNPCsToDraw[$tileReference][0]['spriteWidth'] , $allNPCsToDraw[$tileReference][0]['spriteHeight'] );
+                  }
+                  // check for items:
+                  if (array_key_exists($tileReference, $allItemsToDraw)) {
+                    $spriteWidth = imagesx($allItemsToDraw[$tileReference][1]);
+                    $spriteHeight = imagesy($allItemsToDraw[$tileReference][1]);
 
+                    if($allItemsToDraw[$tileReference][0]["spriteWidth"] !== NULL) {
+$spriteWidth = $allItemsToDraw[$tileReference][0]["spriteWidth"];
+                    }
+                     if($allItemsToDraw[$tileReference][0]["spriteHeight"] !== NULL) {
+$spriteHeight = $allItemsToDraw[$tileReference][0]["spriteHeight"];
+                    }
+                    imagecopy ( $fullImage , $allItemsToDraw[$tileReference][1] , floor($thisX - $allItemsToDraw[$tileReference][0]["centreX"] + $canvasOffsetX ), floor($thisY - $allItemsToDraw[$tileReference][0]["centreY"] + $canvasOffsetY + $tileH/2) , 0 , 0 , $spriteWidth, $spriteHeight );
+                  }
+                  // check for inner doors:
+                  if (array_key_exists($tileReference, $allInteriorDoors)) {
+                    // inner door object, graphic object, graphic asset
+                    imagecopy ( $fullImage , $allInteriorDoors[$tileReference][2] , floor($thisX - $allInteriorDoors[$tileReference][1]["centreX"] + $canvasOffsetX ), floor($thisY - $allInteriorDoors[$tileReference][1]["centreY"] + $canvasOffsetY + $tileH/2) , 0 , 0 , imagesx($allInteriorDoors[$tileReference][2]), imagesy($allInteriorDoors[$tileReference][2]) );
+                  }
 
             }
         }
@@ -3937,6 +4106,7 @@ gridTileGrid();
 //createElevationMap();
 placeDoors();
 findRelevantTemplates();
+
 outputTileMap();
 addRandomItems();
 outputJSONContent();

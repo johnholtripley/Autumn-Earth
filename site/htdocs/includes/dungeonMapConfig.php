@@ -13,6 +13,7 @@ $dungeonDetails = array(
 'underlyingGridLayout' => 'offset-grid',
 // adjoining-rooms or caverns:
 'roomType' => 'adjoining-rooms',
+'needsErosion' => false,
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',
@@ -34,6 +35,7 @@ $dungeonDetails = array(
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
 'underlyingGridLayout' => 'wonky-grid',
 'roomType' => 'cavern',
+'needsErosion' => true,
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',

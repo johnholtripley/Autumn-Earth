@@ -1,0 +1,241 @@
+<html>
+<head>
+
+<style>
+* {
+padding:0;margin:0;
+}
+canvas {
+width: 600px;height:600px;border:1px solid #cecece;margin: 20px auto;display:block;
+}
+</style>
+</head>
+<body>
+
+<canvas width="800" height="800" id="gameWorld"></canvas>
+
+<script>
+
+function drawCircle(fillStyle, x, y, radius, whichContext) {
+    whichContext.fillStyle = fillStyle;
+    whichContext.beginPath();
+    whichContext.arc(x, y, radius, 0, 2 * Math.PI);
+    whichContext.fill();
+}
+
+function draw() {
+       gameContext.fillStyle = "#ffffff";
+        gameContext.fillRect(0, 0, 800, 800);
+    drawCircle("rgb(128,128,255)", playersCharacter._x, playersCharacter._y, 6, gameContext);
+    for (var i=0;i<numberOfOpponents;i++) {
+        drawCircle("rgb(255,"+(60*(i+1))+","+(60*(i+1))+")", allOpponents[i]._x, allOpponents[i]._y, 6, gameContext);
+    }
+}
+
+function gameLoop() {
+
+    if (raceStarted) {
+        if (!raceFinished) {
+            /*
+            if (Key.isDown(keymoveup)) {
+                if (currentSpeed < topSpeed) {
+                    currentSpeed = currentSpeed + 1 / playersWeight;
+                }
+            }
+            if (Key.isDown(keymovedown)) {
+                if (currentSpeed > 0) {
+                    currentSpeed = currentSpeed - 1 / playersWeight;
+                }
+            }
+            if (currentSpeed > nonTiringSpeed) {
+                staminaRemaining = staminaRemaining - (currentSpeed - nonTiringSpeed);
+            }
+            distanceTravelled = distanceTravelled + currentSpeed;
+            if (staminaRemaining <= 0) {
+                currentSpeed = currentSpeed - 2;
+            }
+            if (currentSpeed < 0) {
+                currentSpeed = 0;
+            }
+            playersCharacter._y = 500 - distanceTravelled / 2;
+            if (distanceTravelled > raceDistance) {
+                raceFinished = true;
+                console.log("player won");
+            }
+            */
+            for (var i=0;i<numberOfOpponents;i++) {
+                var newSpeed = allOpponents[i].currentSpeed + 1 / allOpponents[i].playersWeight;
+                var loc12 = Math.ceil((raceDistance - allOpponents[i].distanceTravelled) / newSpeed);
+                var loc13 = Math.ceil(newSpeed - allOpponents[i].nonTiringSpeed);
+                var loc11 = Math.ceil(loc13 * loc12);
+                var loc4 = allOpponents[i].currentSpeed;
+                
+                switch (allOpponents[i].behaviour) {
+                    case "fastest":
+                        if (allOpponents[i].currentSpeed < allOpponents[i].nonTiringSpeed) {
+                            loc4 += 1 / allOpponents[i].playersWeight;
+                        } else if ((allOpponents[i].staminaRemaining > loc11) && (newSpeed <= allOpponents[i].topSpeed)) {
+                            loc4 = newSpeed;
+                        }
+                        break;
+                    case "faststart":
+                        if (allOpponents[i].okToFastStart) {
+                            var loc7 = allOpponents[i].currentSpeed;
+                            if (allOpponents[i].currentSpeed < allOpponents[i].topSpeed) {
+                                loc7 = loc7 + 1 / allOpponents[i].playersWeight;
+                            }
+                            if (loc7 > allOpponents[i].topSpeed) {
+                                loc7 = allOpponents[i].topSpeed;
+                            }
+                            if (loc7 > allOpponents[i].nonTiringSpeed) {
+                                var loc10 = loc7 - allOpponents[i].nonTiringSpeed;
+                            } else {
+                                loc10 = 0;
+                            }
+                            var loc9 = allOpponents[i].staminaRemaining - loc10;
+                            if (loc9 - allOpponents[i].staminaNeededToSlow <= 0) {
+                                loc4 = loc4 - 1 / allOpponents[i].playersWeight;
+                                allOpponents[i].okToFastStart = false;
+                            } else {
+                                loc4 = loc4 + 1 / allOpponents[i].playersWeight;
+                            }
+                        } else if (allOpponents[i].currentSpeed > allOpponents[i].nonTiringSpeed) {
+                            loc4 = loc4 - 1 / allOpponents[i].playersWeight;
+                        }
+                        break;
+                    default:
+                        if (allOpponents[i].currentSpeed < allOpponents[i].nonTiringSpeed) {
+                            loc4 = loc4 + 1 / allOpponents[i].playersWeight;
+                            break;
+                        }
+                }
+                
+                
+                if (allOpponents[i].okToSprint) {
+                    loc4 = newSpeed;
+                } else {
+                    var loc6 = allOpponents[i].staminaRemaining;
+                    var loc3 = allOpponents[i].currentSpeed;
+                    var loc8 = allOpponents[i].distanceTravelled;
+                    do {
+                        loc3 = loc3 + 1 / allOpponents[i].playersWeight;
+                        if (loc3 > allOpponents[i].topSpeed) {
+                            loc3 = allOpponents[i].topSpeed;
+                        }
+                        if (loc3 > allOpponents[i].nonTiringSpeed) {
+                            loc6 = loc6 - (loc3 - allOpponents[i].nonTiringSpeed);
+                        }
+                        if (loc6 <= 0) {
+                            loc3 = loc3 - 2;
+                        }
+                        loc8 = loc8 + loc3;
+                    } while (loc6 > 0);
+                    if (loc8 > raceDistance) {
+                        loc4 = newSpeed;
+                        allOpponents[i].okToSprint = true;
+                    }
+                }
+                allOpponents[i].currentSpeed = loc4;
+                if (allOpponents[i].currentSpeed > allOpponents[i].topSpeed) {
+                    allOpponents[i].currentSpeed = allOpponents[i].topSpeed;
+                }
+                if (allOpponents[i].currentSpeed > allOpponents[i].nonTiringSpeed) {
+                    allOpponents[i].staminaRemaining = allOpponents[i].staminaRemaining - (allOpponents[i].currentSpeed - allOpponents[i].nonTiringSpeed);
+                }
+                if (allOpponents[i].staminaRemaining <= 0) {
+                    allOpponents[i].currentSpeed = allOpponents[i].currentSpeed - 2;
+                }
+                if (allOpponents[i].currentSpeed < 0) {
+                    allOpponents[i].currentSpeed = 0;
+                }
+                allOpponents[i].distanceTravelled += allOpponents[i].currentSpeed;
+                allOpponents[i]._y = 700 - allOpponents[i].distanceTravelled / 2;
+                if (allOpponents[i].distanceTravelled > raceDistance) {
+                    raceFinished = true;
+                    console.log("opponent won");
+                }
+                //this["staminaOpponent" + i]._height = allOpponents[i].staminaRemaining * 2;
+                
+            }
+            //staminaDisplay._height = staminaRemaining * 2;
+        }
+    }
+    
+    draw();
+    window.requestAnimationFrame(gameLoop);
+}
+
+
+
+
+
+
+gameCanvas = document.getElementById("gameWorld");
+gameContext = gameCanvas.getContext('2d');
+    gameContext.canvas.width = 800;
+    gameContext.canvas.height = 800;
+
+raceFinished = false;
+raceStarted = false;
+raceDistance = 1000;
+topSpeed = 20;
+staminaRemaining = 200;
+currentSpeed = 0;
+nonTiringSpeed = topSpeed / 2;
+distanceTravelled = 0;
+playersWeight = 1;
+playersCharacter = {};
+playersCharacter._x = 100;
+playersCharacter._y = 700 - distanceTravelled / 2;
+//staminaDisplay._height = staminaRemaining * 2;
+numberOfOpponents = 3;
+//staminaDisplay._y = 550;
+//staminaDisplay._x = 400;
+allOpponents = [];
+var thisOpponent;
+for (var i=0;i<numberOfOpponents;i++) {
+    //this.attachMovie("opponent", "opponent" + i, 50 + i);
+    //this.attachMovie("staminaDisplay", "staminaOpponent" + i, 1000 + i);
+    //this["staminaOpponent" + i]._x = 430 + i * 30;
+    //this["staminaOpponent" + i]._y = 550;
+    thisOpponent = {};
+   thisOpponent.topSpeed = 20;
+    thisOpponent.staminaRemaining = 200;
+    //this["staminaOpponent" + i]._height = allOpponents[i].staminaRemaining * 2;
+    thisOpponent.currentSpeed = 0;
+    thisOpponent.okToSprint = false;
+    thisOpponent.nonTiringSpeed = thisOpponent.topSpeed / 2;
+    thisOpponent.distanceTravelled = 0;
+    thisOpponent.playersWeight = 1;
+    thisOpponent.okToFastStart = false;
+    switch (i) {
+        case 0:
+            thisOpponent.behaviour = "fastest";
+            break;
+        case 1:
+            thisOpponent.behaviour = "faststart";
+            thisOpponent.okToFastStart = true;
+            var tempSpeed = thisOpponent.topSpeed;
+            var tempStaminaUsed = 0;
+            do {
+                tempSpeed = tempSpeed - 1 / thisOpponent.playersWeight;
+                tempStaminaUsed = tempStaminaUsed + (tempSpeed - thisOpponent.nonTiringSpeed);
+            } while (tempSpeed > thisOpponent.nonTiringSpeed);
+
+            thisOpponent.staminaNeededToSlow = tempStaminaUsed;
+    }
+    thisOpponent._x = 140 + 40 * i;
+    thisOpponent._y = 700 - thisOpponent.distanceTravelled / 2;
+   allOpponents.push(thisOpponent);
+}
+keymoveleft = 37;
+keymoveup = 38;
+keymoveright = 39;
+keymovedown = 40;
+
+raceStarted = true;
+gameLoop();
+
+</script>
+</body>
+</html>

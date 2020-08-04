@@ -46,14 +46,24 @@ function addNode($name, $x, $y, $connections) {
 }
 
 addNode(0,30,30,array(5));
-addNode(1,120,80,array(3));
-addNode(2,110,270,array(3,5));
+addNode(1,120,80,array(3,6));
+addNode(2,110,270,array(3,5,7));
 addNode(3,40,220,array(4,2,1,5));
 addNode(4,10,130,array(3));
-addNode(5,20,60,array(0,3,2));
+addNode(5,20,60,array(0,3,2,7));
+addNode(6,90,40,array(1));
+addNode(7,140,10,array(2,5));
 
 
+$startPoint = $_GET['from'];
+$endPoint = $_GET['to'];
 
+if(isset($nodeList[$startPoint])) {
+	$startNode =  $nodeList[$startPoint];
+}
+if(isset($nodeList[$endPoint])) {
+	$endNode =  $nodeList[$endPoint];
+}
 
 if($debug) {
 	echo '<div class="sequenceBlock">';
@@ -69,7 +79,16 @@ if($debug) {
 		}
 	}
 	foreach ($nodeList as $thisNode) {
-		imagefilledellipse($outputCanvas, $thisNode->x * $horizScaling, $thisNode->y * $vertScaling * $ratio, 16, 16, imagecolorallocate($outputCanvas, 64, 64, 64));
+		$red = 64;
+		$green = 64;
+		$blue = 64;
+		if($thisNode == $startNode) {
+			$green = 137;
+		}
+		if($thisNode == $endNode) {
+			$red = 255;
+		}
+		imagefilledellipse($outputCanvas, $thisNode->x * $horizScaling, $thisNode->y * $vertScaling * $ratio, 16, 16, imagecolorallocate($outputCanvas, $red, $green, $blue));
 		echo '<span style="left: '.(($thisNode->x * $horizScaling)/$canvaDimension*100).'%;top:'.(($thisNode->y * $vertScaling * $ratio)/($canvaDimension*$ratio)*100).'%">'.$thisNode->name.'</span>';
 	}
 
@@ -103,20 +122,12 @@ if($debug) {
 }
 
 
-$startPoint = $_GET['from'];
-$endPoint = $_GET['to'];
+
 
 // do pathfinding:
 
 $searchNodes = array();
 $uncheckedNodes = array();
-if(isset($nodeList[$startPoint])) {
-	$startNode =  $nodeList[$startPoint];
-}
-if(isset($nodeList[$endPoint])) {
-	$endNode =  $nodeList[$endPoint];
-}
-
 $targetFound = false;
 
 if(isset($startNode) && isset($endNode)) {
