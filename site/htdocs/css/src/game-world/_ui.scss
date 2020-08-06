@@ -120,7 +120,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    cursor: move;
+    
     font-family: 'Bree Serif', Georgia, 'Times New Roman', Times, Palatino, serif;
     @include text-shadow(-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
     text-transform: uppercase;
@@ -131,6 +131,11 @@
     color: #fff;
     padding: 3px 23px 6px 8px;
     @include border-radius(3px);
+}
+#interface.active {
+    .draggableBar {
+        cursor: move;
+    }
 }
 
 #toolbar {

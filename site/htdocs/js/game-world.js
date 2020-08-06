@@ -6190,11 +6190,20 @@ function hireNewFollower() {
 }
 
 function getLocalCoordinatesX(tileX) {
+    if (!isOverWorldMap) {
+        return tileX;
+    } else {
     // get local map coordinates from global coordinates:
     return tileX%worldMapTileLength;
 }
+}
 function getLocalCoordinatesY(tileY) {
-    return tileY%worldMapTileLength;
+    if (!isOverWorldMap) {
+        return tileY;
+    } else {
+      return tileY%worldMapTileLength;  
+    }
+    
 }
 
 function findMapNumberFromGlobalCoordinates(tileX, tileY) {
@@ -13404,6 +13413,7 @@ function draw() {
         if (isOverWorldMap) {
             // draw the sea:
             gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
             // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
             var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
             var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
@@ -13441,7 +13451,7 @@ function draw() {
             waterContext.globalCompositeOperation = 'source-over';
         } else {
             // draw a black background:
-            gameContext.fillStyle = "#000000";
+            gameContext.fillStyle = "#101010";
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             // gameContext.fill();
 

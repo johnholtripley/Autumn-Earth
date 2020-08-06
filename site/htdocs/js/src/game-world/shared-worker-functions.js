@@ -1,9 +1,18 @@
 function getLocalCoordinatesX(tileX) {
+    if (!isOverWorldMap) {
+        return tileX;
+    } else {
     // get local map coordinates from global coordinates:
     return tileX%worldMapTileLength;
 }
+}
 function getLocalCoordinatesY(tileY) {
-    return tileY%worldMapTileLength;
+    if (!isOverWorldMap) {
+        return tileY;
+    } else {
+      return tileY%worldMapTileLength;  
+    }
+    
 }
 
 function findMapNumberFromGlobalCoordinates(tileX, tileY) {

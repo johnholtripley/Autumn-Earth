@@ -166,8 +166,14 @@ $numberOfItemCategories: 20;
     width: 19px;
     height: 19px;
     border: 0;
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     outline: none;
+    cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+}
+
+#interface.active {
+    .closePanel {
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
+    }
 }
 
 #inventoryPanels {
