@@ -7,6 +7,7 @@
 $dungeonDetails = array(
 
 'the-dwarrow-mines' => array(
+'fullName' => 'The Dwarrow Mines',
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
  // random, grid, wonky-grid, offset-grid
@@ -14,6 +15,8 @@ $dungeonDetails = array(
 // adjoining-rooms or caverns:
 'roomType' => 'adjoining-rooms',
 'needsErosion' => false,
+'fullyExpandRooms' => true,
+'needsDynamicallyCreatedBackground' => false,
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',
@@ -31,11 +34,14 @@ $dungeonDetails = array(
 	)
 	),
 'the-barrow-mines' => array(
+'fullName' => 'The Barrow Mines',
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
 'underlyingGridLayout' => 'wonky-grid',
 'roomType' => 'cavern',
 'needsErosion' => true,
+'fullyExpandRooms' => true,
+'needsDynamicallyCreatedBackground' => false,
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',
@@ -46,6 +52,33 @@ $dungeonDetails = array(
 'maxElevation' => 50,
 'possibleHiddenResourceCategories' => array(4),
 'levelLockedTemplates' => array()
+	),
+'the-gobling-mines' => array(
+'fullName' => 'The Gobling Mines',
+'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
+'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
+ // random, grid, wonky-grid, offset-grid
+'underlyingGridLayout' => 'offset-grid',
+// adjoining-rooms or caverns:
+'roomType' => 'adjoining-rooms',
+'needsErosion' => false,
+'fullyExpandRooms' => false,
+'needsDynamicallyCreatedBackground' => true,
+'possibleRandomItems' => array(32,35,44,45,46),
+'randomItemsMin' => '4',
+'randomItemsMax' => '8',
+'templatesMin' => '4',
+'templatesMax' => '6',
+'doorCentreWhenLeavingTheDungeon' => array(2,1),
+'mapWhenLeavingTheDungeon' => 2,
+'maxElevation' => 50,
+'possibleHiddenResourceCategories' => array(4),
+'levelLockedTemplates' => array(
+	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
+	// if not included, just use it without restrictions
+'mining-expedition' => array(1,INF),
+'store-room' => array(1,4)
+	)
 	)
 	);
 

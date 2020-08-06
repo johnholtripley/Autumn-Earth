@@ -72,7 +72,7 @@ var canvasWidth = 800;
 var canvasHeight = 600;
 
 var randomDungeonName = "";
-var randomDungeons = ["", "the-dwarrow-mines", "the-barrow-mines"];
+var randomDungeons = ["", "the-dwarrow-mines", "the-barrow-mines", "the-gobling-mines"];
 var previousZoneName = "";
 
 var currentActiveInventoryItems = {};

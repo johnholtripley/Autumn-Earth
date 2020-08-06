@@ -1616,9 +1616,10 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
             }
         }
 
+    
+
+if($dungeonDetails[$dungeonName]['fullyExpandRooms']) {
     outputSizedNodesLayout();
-
-
             foreach($sortedVertices as $thisVertex) {
         $smallestHorizontalSpacingAvailable = INF;
         $smallestVerticalSpacingAvailable = INF;
@@ -1654,6 +1655,7 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
             $thisVertex->proximityToNeighboursVertical = $maxNodeDimension;
             }
         }
+    }
         break;
     case "cavern":
         // make the rooms as large as possible without hitting another room:
@@ -1895,7 +1897,7 @@ global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKe
 
 
 
-$outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$unadjustedSeed.'",';
+$outputJSON = '{"map":{"zoneName": "'.$dungeonDetails[$dungeonName]['fullName'].' - level #'.abs($thisMapsId).' ('.$unadjustedSeed.')",';
 $outputJSON .='"region": "Teldrassil", ';
 $outputJSON .='"isInside": true, ';
 if(isset($dungeonDetails[$dungeonName]['ambientSounds'])){
@@ -2317,7 +2319,7 @@ global $proceduralMap, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimensi
 
 if($proceduralDebug) {
     echo '<div class="sequenceBlock">';
-}
+
 
 $drawnTileSize = 8; 
 $drawnOffset = 20;
@@ -2411,15 +2413,15 @@ imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnO
 imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
 imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
 */
-if($proceduralDebug) {
+
        ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
 
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
-}
+
     imagedestroy($outputCanvas);
-    
+    }
     }
 
 
@@ -3866,19 +3868,31 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
     return $tileH / 2 * ($tileY + $tileX);
 }
 
+function createBackgroundImage() {
+    global $dungeonDetails, $dungeonName, $thisPlayersId, $thisMapsId;
+    // create unique background image for this map:
+    if($dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground']) {
+        $bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
+        // dynamically draw the floor tiles:
+        // john ########
+    } else {
+        // just copy the base one:
+        $bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
+    }
+    imagejpeg($bgImage, "../data/chr" . $thisPlayersId . "/dungeon/". $dungeonName ."/backgrounds/" . $thisMapsId . ".jpg", 95);
+    imagedestroy($bgImage);
+}
+
 function outputIsometricView() {
-global $connection,$tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
+global $connection,$dungeonDetails,$tileW,$tileH, $thisMapsId, $thisPlayersId, $proceduralDebug, $dungeonName, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
 $tileW = 48;
 $tileH = $tileW/2;
-
- 
-
-
     echo '<div class="sequenceBlock wider">';
-
-
 $rootFolder = '../images/game-world/';
-$bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
+
+    $bgImage = imagecreatefromjpeg("../data/chr" . $thisPlayersId . "/dungeon/". $dungeonName ."/backgrounds/" . $thisMapsId . ".jpg");
+
+
 
 
 $canvasWidth =  imagesx($bgImage); 
@@ -4110,6 +4124,7 @@ findRelevantTemplates();
 outputTileMap();
 addRandomItems();
 outputJSONContent();
+createBackgroundImage();
 if($proceduralDebug) {
     outputIsometricView();
 }

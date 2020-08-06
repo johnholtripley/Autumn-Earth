@@ -371,8 +371,10 @@ function updateZoneName() {
 }
 
 function loadNewVisibleMapAssets(whichMap) {
+    var backgroundSource = '/images/game-world/backgrounds/' + whichMap + '.png';
     if (whichMap < 0) {
         whichMap = 'dungeon/' + randomDungeonName;
+        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + whichMap + '.png';
     }
     // doesn't need full loader - don't need progress etc.:
     var newBackground = new Image();
@@ -383,7 +385,7 @@ function loadNewVisibleMapAssets(whichMap) {
         // error handling? ####
 
     };
-    newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
+    newBackground.src = backgroundSource;
 
 
     // load items:
@@ -667,6 +669,7 @@ function loadMapAssets() {
     var thisItemIdentifier = '';
     var thisImagePath = '';
     var resultantPlantType;
+    var backgroundSource;
     tileGraphicsToLoad = [];
 
 
@@ -683,9 +686,18 @@ function loadMapAssets() {
                 src: '/images/game-world/backgrounds/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
             });
         } else {
+
+
+    if (visibleMaps[m] < 0) {
+        
+        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + currentMap + '.jpg';
+    } else {
+        backgroundSource = '/images/game-world/backgrounds/' + assetPath + '.png';
+    }
+
             imagesToLoad.push({
                 name: "backgroundImg" + visibleMaps[m],
-                src: '/images/game-world/backgrounds/' + assetPath + '.png'
+                src: backgroundSource
             });
 
 
@@ -3871,7 +3883,7 @@ function printScreen() {
 function draw() {
 
     if (gameMode == "mapLoading") {
-        gameContext.fillStyle = "#000000";
+        gameContext.fillStyle = "#101010";
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         // gameContext.fill();
     } else {
@@ -4532,20 +4544,20 @@ function draw() {
 
             if (gradientSize < 0.02) {
                 // draw a rectangle, otherwise a pixel hole is still visible:
-                gameContext.fillStyle = "#000000";
+                gameContext.fillStyle = "#101010";
                 gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             } else {
                 var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
-                gradient.addColorStop(0, "rgba(0,0,0,1)");
-                gradient.addColorStop(1, "rgba(0,0,0,0)");
+                gradient.addColorStop(0, "rgba(16,16,16,1)");
+                gradient.addColorStop(1, "rgba(16,16,16,0)");
                 gameContext.fillStyle = gradient;
                 gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             }
         } else if (mapTransition == "in") {
             var gradientSize = ((mapTransitionCurrentFrames / mapTransitionMaxFrames));
             var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
-            gradient.addColorStop(0, "rgba(0,0,0,1)");
-            gradient.addColorStop(1, "rgba(0,0,0,0)");
+            gradient.addColorStop(0, "rgba(16,16,16,1)");
+            gradient.addColorStop(1, "rgba(16,16,16,0)");
             gameContext.fillStyle = gradient;
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         }
