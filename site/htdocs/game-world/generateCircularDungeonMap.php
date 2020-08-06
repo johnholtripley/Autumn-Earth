@@ -3907,7 +3907,7 @@ function createBackgroundImage() {
                     $thisY = getTileIsoCentreCoordY($i, $j);
                     $whichHardFloorAsset = mt_rand(1,3);
                     imagecopy ( $fullImage, ${'roomFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'roomFloorTile'.$whichHardFloorAsset}), imagesy(${'roomFloorTile'.$whichHardFloorAsset}) );
-                } else if($proceduralMap[$j][$i] == '|') {
+                } else if(($proceduralMap[$j][$i] == '|') || ($proceduralMap[$j][$i] == 'd') || ($proceduralMap[$j][$i] == 'D')) {
                     $thisX = getTileIsoCentreCoordX($i, $j);
                     $thisY = getTileIsoCentreCoordY($i, $j);
                     $whichHardFloorAsset = mt_rand(1,2);
