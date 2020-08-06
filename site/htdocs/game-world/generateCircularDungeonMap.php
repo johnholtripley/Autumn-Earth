@@ -1948,7 +1948,13 @@ switch ($proceduralMap[$i][$j]) {
         $terrainString.= '4, ';
         break;
     case "-":
+    if($dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground']) {
+        // these tiles will be drawn onto the background:
+        $terrainString.= '"*", ';
+    } else {
         $terrainString.= '0, ';
+    }
+        
         break;
     case "#":
         $terrainString.= '1, ';
@@ -3347,14 +3353,14 @@ $rightTileEdge = $storedEdge;
             if(!$isInRoom) {
                 // make paths 3 wide at least:
                 if($leftTileEdge == $rightTileEdge) {
-                    $proceduralMap[$k][$j-1] = ".";
-                    $proceduralMap[$k][$j+1] = ".";
+                    $proceduralMap[$k][$j-1] = "|";
+                    $proceduralMap[$k][$j+1] = "|";
                 }
                 if($topTileEdge == $bottomTileEdge) {
-                    $proceduralMap[$k-1][$j] = ".";
-                    $proceduralMap[$k+1][$j] = ".";
+                    $proceduralMap[$k-1][$j] = "|";
+                    $proceduralMap[$k+1][$j] = "|";
                 }
-                $proceduralMap[$k][$j] = ".";
+                $proceduralMap[$k][$j] = "|";
             }
         }
     }
@@ -3869,55 +3875,47 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function createBackgroundImage() {
-    global $dungeonDetails, $dungeonName, $tileW,$tileH, $thisPlayersId, $thisMapsId, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY;
-    
+    global $dungeonDetails, $dungeonName, $tileW,$tileH, $thisPlayersId, $thisMapsId, $proceduralMap, $proceduralMapTilesX, $proceduralMapTilesY;
+
     // create unique background image for this map:
     if($dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground']) {
         $bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
         // dynamically draw the floor tiles:
-
-
-
         $canvasWidth =  imagesx($bgImage); 
- $canvasHeight =  imagesy($bgImage); 
-
-$fullImage = imagecreatetruecolor($canvasWidth, $canvasHeight);
-
-$rootFolder = '../images/game-world/';
+        $canvasHeight =  imagesy($bgImage); 
+        $fullImage = imagecreatetruecolor($canvasWidth, $canvasHeight);
+        $rootFolder = '../images/game-world/dungeon-terrain/';
         $canvasOffsetX = 0;
-$canvasOffsetY = 0;
+        $canvasOffsetY = 0;
 
-$decodedJSON = json_decode($outputJSON, true);
-for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
-  ${'assetImg'.$i} = imagecreatefrompng($rootFolder.'terrain/'.$decodedJSON["map"]["graphics"][$i]["src"]);
-}
+        imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
 
-       imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
+        // draw walkable floors:
+        // john #######
 
-$isoMap = $decodedJSON["map"]["terrain"];
-// draw tiles
+        for ($i=1;$i<=3;$i++) {
+          ${'roomFloorTile'.$i} = imagecreatefrompng($rootFolder.$dungeonName.'/stone-'.$i.'.png');
+        }
+        for ($i=1;$i<=2;$i++) {
+          ${'corridorFloorTile'.$i} = imagecreatefrompng($rootFolder.$dungeonName.'/wood-'.$i.'.png');
+        }
 
-for ( $i = 0; $i < $proceduralMapTilesX; $i++) {
-            for ( $j = 0; $j < $proceduralMapTilesY; $j++) {
-                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
-                // this makes the map array more readable when editing
-                $thisX = getTileIsoCentreCoordX($i, $j);
-                $thisY = getTileIsoCentreCoordY($i, $j);
-    if (is_numeric($isoMap[$j][$i])) {
-
-                   
-                   $whichAsset = intval($isoMap[$j][$i]); 
-                     $thisGraphicCentreX = $decodedJSON["map"]["graphics"][$whichAsset]["centreX"];
-                    $thisGraphicCentreY = $decodedJSON["map"]["graphics"][$whichAsset]["centreY"];  
-// need to offset by half a tile to match starting hero position at tile centre:
-                    
-                    imagecopy ( $fullImage, ${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX + $canvasOffsetX ), floor($thisY - $thisGraphicCentreY + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset}) );
-                  }
-
-       
-
+        for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+                if($proceduralMap[$j][$i] == '.') {
+                    $thisX = getTileIsoCentreCoordX($i, $j);
+                    $thisY = getTileIsoCentreCoordY($i, $j);
+                    $whichHardFloorAsset = mt_rand(1,3);
+                    imagecopy ( $fullImage, ${'roomFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'roomFloorTile'.$whichHardFloorAsset}), imagesy(${'roomFloorTile'.$whichHardFloorAsset}) );
+                } else if($proceduralMap[$j][$i] == '|') {
+                    $thisX = getTileIsoCentreCoordX($i, $j);
+                    $thisY = getTileIsoCentreCoordY($i, $j);
+                    $whichHardFloorAsset = mt_rand(1,2);
+                    imagecopy ( $fullImage, ${'corridorFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'corridorFloorTile'.$whichHardFloorAsset}), imagesy(${'corridorFloorTile'.$whichHardFloorAsset}) );
+                }
             }
         }
+
         imagedestroy($bgImage);
     } else {
         // just copy the base one:
@@ -3925,7 +3923,6 @@ for ( $i = 0; $i < $proceduralMapTilesX; $i++) {
     }
     imagejpeg($fullImage, "../data/chr" . $thisPlayersId . "/dungeon/". $dungeonName ."/backgrounds/" . $thisMapsId . ".jpg", 95);
     imagedestroy($fullImage);
-    
 }
 
 function outputIsometricView() {
