@@ -2161,6 +2161,9 @@ $commonNameString = $commonNameIntro[mt_rand(0, count($commonNameIntro) - 1)].tr
 body, p {
 font-family:arial,helvetica,sans-serif;font-size:14px;
 }
+body {
+	background: #e0dcc3;
+}
 </style>
 <?php
 
@@ -2171,7 +2174,7 @@ echo '<p>'.$startingText.'</p>';
 $plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
 drawPlant();
 
-echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
+echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.png" width="480" height="480" alt="'.$latinName.'">';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p>Associated with the '.$combinedButterflyName.', and '.$combinedBatName.'.</p>';
 $debugQueryString = '';
@@ -2184,7 +2187,7 @@ if($debug) {
 $debugQueryString = '?debug=true';
 }
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].$debugQueryString.'">New seed</a></p>';
-
+echo '<p style="font-size:0.7em;"><a href="/herbarium/">The full Herbarium</a></p>';
 
 $lastError = error_get_last();
 

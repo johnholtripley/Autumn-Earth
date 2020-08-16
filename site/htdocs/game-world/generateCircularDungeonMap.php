@@ -57,33 +57,7 @@ img {
 }
 
 
-/* ----
 
-TO DO:
-Create meta levels so can have foreshadowing and hints about future encounters
-elevations
-Convert locks, valves, hazards and treasure into interesting variants
-Decorate rooms so they are different and identifiable
-pathfind to confirm map doors are connected (including checks for items, elevation, locked doors and static NPCs)
-remove doors for small rooms (unless locked) (?)
-the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well
-have some sort of persistence between dungeon visits. keep track of creature populations etc.
-water or lava courses (?)
-offset doors (and connecting corridors) (?)
-make sure templates don't block entrance and exits to the level or individual rooms (stairs themselves are checked, but not the starting space in front of them)
-rarer items should be placed more often the deeper in to the dungeon the player has gone
-check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
-rotate entrance and exit doors for variation. 
-
-Look for any external edges and recursively add rooms on to any edge walls
-
-http://develop.ae/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513619057 - would be good to test wonky path on
-
-ISSUES:
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1513161267 - double thickness walls look odd
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
-
----- */
 
 // avoid script time out:
 set_time_limit(0);
@@ -265,9 +239,8 @@ class delaunayTriangle
     }
 }
 
-function addNode($type, $x, $y)
-{
-
+function addNode($type, $x, $y) {
+global $proceduralDebug;
     $newNode       = new node();
     $newNode->type = $type;
 
@@ -286,8 +259,10 @@ function addNode($type, $x, $y)
     $newNode->radius      = getRNGNumber() * 10 + 15;
     $newNode->connections = 0;
   //  $newNode->connectedTo = array();
-    // might be inefficient to call this every time: ###
+    // might be inefficient to call this every time:
+    if($proceduralDebug) {
     moveNodesApart();
+}
 
     return $newNode;
 }
@@ -467,8 +442,6 @@ function outputConnections()
 
 
         if($proceduralDebug) {
-
-
         echo "<br>joint from " . $thisJoint->nodeA . " (" . strtolower($nodeList[$thisJoint->nodeA]->type) . ") to " . $thisJoint->nodeB . " (" . strtolower($nodeList[$thisJoint->nodeB]->type) . ")";
 if($thisJoint->isLocked) {
 echo " - is locked";
@@ -510,8 +483,7 @@ function chooseRandomElements($inputString) {
 }
 
 
-function init()
-{
+function init() {
     global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $proceduralMap, $map, $chr, $randomDungeonName, $randomDungeonSeed;
 if($isIncluded) {
 $thisMapsId = intval($map);
@@ -532,8 +504,8 @@ $thisPlayersId = $chr;
         array(19, 209, 46)
     );
     $canvaDimension = 600;
-    $nodeList       = array();
-    $jointList      = array();
+    $nodeList = array();
+    $jointList = array();
 
 
 if($isIncluded) {
@@ -778,7 +750,7 @@ function parseStringGrammar($thisGrammar)
                 // #1# = lock for key #1
                 // #12# = lock for key #12
                 $closingHashPos = strpos($thisGrammar, "#", $characterCounter + 1);
-                $whichKey       = substr($thisGrammar, $characterCounter + 1, ($closingHashPos - $characterCounter - 1));
+                $whichKey = substr($thisGrammar, $characterCounter + 1, ($closingHashPos - $characterCounter - 1));
                 $characterCounter += strlen($whichKey) + 1;
                 $nextJointLock[count($nextJointLock) - 1] = $whichKey;
                 break;
@@ -956,12 +928,12 @@ break;
         }
     }
 
-    $minX               = INF;
-    $minY               = INF;
-    $maxX               = 0;
-    $maxY               = 0;
+    $minX = INF;
+    $minY = INF;
+    $maxX = 0;
+    $maxY = 0;
     $distanceFromCentre = INF;
-    $centreVertex       = null;
+    $centreVertex = null;
 // find boundaries
     foreach ($delaunayVertices as &$thisVertex) {
         if ($thisVertex->x < $minX) {
@@ -978,12 +950,12 @@ break;
         }
 
 // find closest node to the centre:
-        $xDifference            = $thisVertex->x - $canvaDimension / 2;
-        $yDifference            = $thisVertex->y - $canvaDimension / 2;
+        $xDifference = $thisVertex->x - $canvaDimension / 2;
+        $yDifference = $thisVertex->y - $canvaDimension / 2;
         $thisDistanceFromCentre = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
         if ($thisDistanceFromCentre < $distanceFromCentre) {
             $distanceFromCentre = $thisDistanceFromCentre;
-            $centreVertex       = $thisVertex;
+            $centreVertex = $thisVertex;
         }
 
     }
@@ -1729,8 +1701,7 @@ $thisVertex->proximityToNeighboursVertical+= $smallestRadiusSpacingAvailable;
 
 
 
-function removeDiagonalEdges()
-{
+function removeDiagonalEdges() {
     
 global $allDelaunayEdges;
 foreach ($allDelaunayEdges as $key => $thisEdge) {
@@ -1746,8 +1717,7 @@ unset($allDelaunayEdges[$key]);
  
 }
 
-function outputSizedNodesLayout()
-{
+function outputSizedNodesLayout() {
 
     global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $proceduralDebug, $dungeonDetails, $dungeonName;
 
@@ -1844,7 +1814,7 @@ imagerectangle($outputCanvas,$minLeft,$minTop,$maxRight,$maxBottom,imagecolorall
 $requiredWidth = $maxRight - $minLeft;
 $requiredHeight = $maxBottom - $minTop;
 
-// draw edges:
+// draw edges (corridors):
     foreach($allDelaunayEdges as $thisEdge) {
          if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
         imagesetthickness($outputCanvas, 2);
@@ -2122,8 +2092,9 @@ break;
 }
 
 
-// randomly pick a key or a lever:
-$keyType = mt_rand(42,43);
+// randomly pick a key type:
+$keyType = $dungeonDetails[$dungeonName]['keyTypes'][mt_rand(0, count($dungeonDetails[$dungeonName]['keyTypes']) - 1)];
+
 
 $animationString = '';
 if($keyType == 42) {
@@ -2604,6 +2575,10 @@ $storePositionZero = $position[0];
     }
 
     if(count($filesFound) > 0) {
+
+if($proceduralDebug) {
+echo '<div class="sequenceBlock">';
+}
     // have a few goes at finding an in-level template:
     $attempt = 0;
     $templatesToUse = array();
@@ -2613,9 +2588,9 @@ $storePositionZero = $position[0];
         $templateName = explode(".json", $filesFound[$randomFile])[0];
         $proceduralMapIdAbsolute = abs($thisMapsId);
         // check if this map level is within the min and max for this template:
-        if (isset($dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName])) {
-            if ($proceduralMapIdAbsolute >= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][0]) {
-                if ($proceduralMapIdAbsolute <= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][1]) {
+        if (isset($dungeonDetails[$dungeonName]['levelLockedTemplates'][$templateName])) {
+            if ($proceduralMapIdAbsolute >= $dungeonDetails[$dungeonName]['levelLockedTemplates'][$templateName][0]) {
+                if ($proceduralMapIdAbsolute <= $dungeonDetails[$dungeonName]['levelLockedTemplates'][$templateName][1]) {
                     array_push($templatesToUse, $templateName);
                 }
             }
@@ -2652,7 +2627,9 @@ $storePositionZero = $position[0];
             $templateType = $templateJSON['template']['type'];
             $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
 
-
+            if($proceduralDebug) {
+                echo "trying to place template ".$templatesToUse[$i]." ";
+            }
 
 
             if ($templateJSON['template']['rotatable']) {
@@ -2685,7 +2662,7 @@ $storePositionZero = $position[0];
 
 
 
-           
+          
 
                 // rotate items, npcs and hotspot positions:
                 switch ($rotation) {
@@ -2858,11 +2835,23 @@ $storePositionZero = $position[0];
                                                 }
                                             }
                                         }
-                                        // check it doesn't block the doors:
+                                        // check it doesn't block the doors, or the tiles around the door:
                                         for ($k = 0; $k < $templateWidth; $k++) {
                                             for ($j = 0; $j < $templateHeight; $j++) {
-                                                if($proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] == "e") {
-                                                    $overlapsExistingStructure = true;
+                                                for ($l = -1; $l <=1; $l++) {
+                                                    for ($m = -1; $m <=1; $m++) {
+                                                        
+                                                            switch ($proceduralMap[$j + $thisTemplateOffsetY + $l][$k + $thisTemplateOffsetX + $m]) {
+                                                                case "e":
+                                                                case "d":
+                                                                case "D":
+                                                                $overlapsExistingStructure = true;
+                                                                break;
+
+                                                            }
+                                                            
+                                                           
+                                                    }
                                                 }
                                             }
                                         }
@@ -3074,6 +3063,11 @@ $storePositionZero = $position[0];
                     }
                 }
                 if ($foundRoom != null) {
+
+  if($proceduralDebug) {
+echo '(placed at '.$thisTemplateOffsetX.", ".$thisTemplateOffsetY.")";
+}
+
                     if ($isUniquePerLevel) {
                         // don't use it again:
                         array_push($uniquePerLevelTemplatesUsed, $fileToUse);
@@ -3102,11 +3096,18 @@ $storePositionZero = $position[0];
                     for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
                         $thisItem = $templateJSON['template']['items'][$j];
                         // map their location:
+
+
+
                         $thisItem['tileX'] += $thisTemplateOffsetX;
                         $thisItem['tileY'] += $thisTemplateOffsetY;
+
                         $templateItemsToAppend .= json_encode($thisItem).', ';
                     }
                 }
+                  if($proceduralDebug) {
+echo '<br>';
+}
             }
         }
         // remove last comma:
@@ -3115,6 +3116,9 @@ $storePositionZero = $position[0];
         $templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
         $templateHotspotsToAppend = rtrim($templateHotspotsToAppend, ', ');
     }
+    if($proceduralDebug) {
+echo '</div>';
+}
 }
 }
 
@@ -3154,7 +3158,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 
-function gridTileGrid() {
+function createTileGrid() {
     global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
     // define the tile area to be used:
     $proceduralMapTilesX = 70;
@@ -3625,6 +3629,121 @@ echo"</pre></code>";
 */
 }
 
+function addTracks() {
+    global $allDelaunayEdges, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $lockedJoints, $proceduralDebug;
+
+            // find all unlocked edges:
+
+$allUnlockedEdges = array();
+$allRelevantNodes = array();
+foreach($allDelaunayEdges as $thisEdge) {
+     if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
+// check nodes attached to these vertices to see if a joint exists which is locked
+        $theseConnectedNodes = "";
+        foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+            if ($thisVertex->whichNode === $thisEdge->v0->whichNode) {
+                $theseConnectedNodes .= "|" . $thisVertex->whichNode->name;
+            }
+            if ($thisVertex->whichNode === $thisEdge->v1->whichNode) {
+                $theseConnectedNodes .= "|" . $thisVertex->whichNode->name;
+            }
+        }
+        $testTheseConnectedNodes = str_replace("|", "-", $theseConnectedNodes);
+        if (isset($lockedJoints[$testTheseConnectedNodes])) {
+       // locked - ignore
+        } else {
+        // remove first pipe, and then split node names into an array:
+            $edgesToAdd = explode("|", ltrim($theseConnectedNodes, '|'));
+        array_push($allUnlockedEdges, $edgesToAdd);
+        array_push($allRelevantNodes, $edgesToAdd[0]);
+        array_push($allRelevantNodes, $edgesToAdd[1]);
+        }
+     }
+    }
+    // loop through all of these, and find the longest stretch of connections - or a loop back to the start node
+
+    $allRelevantNodes = array_unique($allRelevantNodes);
+
+    $longestConnectionofNodes = array();
+    foreach($allRelevantNodes as $thisNode) {
+        $nodesToCheck = array();
+        array_push($nodesToCheck, array("whichNode"=>$thisNode, "lengthSoFar"=>0, "nodesAlreadyUsed"=>array($thisNode),"edgesAlreadyUsed"=>array()));
+
+        do {
+            $thisInnerNode = array_shift($nodesToCheck);
+            // find connections for this node:
+            foreach($allUnlockedEdges as $thisEdge) {
+                $thisEdgeReference = implode(",", $thisEdge);
+                if($thisEdge[0] == $thisInnerNode['whichNode']) {
+                    //echo " connected to ".$thisEdge[1];
+                    if (!(in_array($thisEdge[1], $thisInnerNode['nodesAlreadyUsed']))) {
+                        $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
+                        array_push($nodesAlreadyUsed, $thisEdge[1]);
+                        $edgesAlreadyUsed = $thisInnerNode['edgesAlreadyUsed'];
+                        array_push($edgesAlreadyUsed, $thisEdgeReference);
+                        $newLength = $thisInnerNode['lengthSoFar']+1;
+                        array_push($nodesToCheck, array("whichNode"=>$thisEdge[1], "lengthSoFar"=>$newLength, "nodesAlreadyUsed"=>$nodesAlreadyUsed,"edgesAlreadyUsed"=>$edgesAlreadyUsed));
+                        if($newLength > count($longestConnectionofNodes)) {
+                            $longestConnectionofNodes = $nodesAlreadyUsed;
+                        }
+                    }
+                    // check for loops:
+                    if($thisEdge[1] == $thisNode) {
+                        // but make sure that this edge hasn't been used before, to determine if it's a loop:
+                        if (!(in_array($thisEdgeReference, $thisInnerNode['edgesAlreadyUsed']))) {
+                            $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
+                            array_push($nodesAlreadyUsed, $thisEdge[1]);
+                            // favour loops:
+                            $newLength = INF;
+                            array_push($nodesToCheck, array("whichNode"=>$thisEdge[1], "lengthSoFar"=>$newLength, "nodesAlreadyUsed"=>$nodesAlreadyUsed,"edgesAlreadyUsed"=>$edgesAlreadyUsed));
+                            $longestConnectionofNodes = $nodesAlreadyUsed;
+                            //echo "loop found<br>";
+                        }
+                    }
+                }
+                if($thisEdge[1] == $thisInnerNode['whichNode']) {
+                    //echo " connected to ".$thisEdge[0];
+                      if (!(in_array($thisEdge[0], $thisInnerNode['nodesAlreadyUsed']))) {
+                        $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
+                        array_push($nodesAlreadyUsed, $thisEdge[0]);
+                        $edgesAlreadyUsed = $thisInnerNode['edgesAlreadyUsed'];
+                        array_push($edgesAlreadyUsed, $thisEdgeReference);
+                        $newLength = $thisInnerNode['lengthSoFar']+1;
+                        array_push($nodesToCheck, array("whichNode"=>$thisEdge[0], "lengthSoFar"=>$newLength, "nodesAlreadyUsed"=>$nodesAlreadyUsed,"edgesAlreadyUsed"=>$edgesAlreadyUsed));
+                        if($newLength > count($longestConnectionofNodes)) {
+                            $longestConnectionofNodes = $nodesAlreadyUsed;
+                        }
+                    }
+                    // check for loops:
+                    if($thisEdge[0] == $thisNode) {
+                        // but make sure that this edge hasn't been used before, to determine if it's a loop:
+                        if (!(in_array($thisEdgeReference, $thisInnerNode['edgesAlreadyUsed']))) {
+                            $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
+                            array_push($nodesAlreadyUsed, $thisEdge[0]);
+                            // favour loops:
+                            $newLength = INF;
+                            array_push($nodesToCheck, array("whichNode"=>$thisEdge[0], "lengthSoFar"=>$newLength, "nodesAlreadyUsed"=>$nodesAlreadyUsed,"edgesAlreadyUsed"=>$edgesAlreadyUsed));
+                            $longestConnectionofNodes = $nodesAlreadyUsed;
+                            //echo "loop found<br>";
+                        }
+                    }
+                }
+            }
+        } while (count($nodesToCheck)>0);
+    }
+    if($proceduralDebug) {
+        echo '<div class="sequenceBlock">';
+        echo "longest unlocked sequence found:<br>";
+        foreach($longestConnectionofNodes as $thisNode) {
+            echo $thisNode." -> ";
+        }
+        echo "</div>";
+    }
+    // loop through this sequence, widen each unlocked door along the way to be 3 wide, and lay track along the middle of the route
+    // john ###
+
+}
+
 function protectDoors() {
     // make sure that there is space around each entrance and exit:
     global $exitX,$exitY,$entranceX,$entranceY,$proceduralMap;
@@ -3891,9 +4010,7 @@ function createBackgroundImage() {
         imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
 
         // draw walkable floors:
-        // john #######
-
-        for ($i=1;$i<=3;$i++) {
+         for ($i=1;$i<=3;$i++) {
           ${'roomFloorTile'.$i} = imagecreatefrompng($rootFolder.$dungeonName.'/stone-'.$i.'.png');
         }
         for ($i=1;$i<=2;$i++) {
@@ -3951,6 +4068,7 @@ imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImag
 $decodedJSON = json_decode($outputJSON, true);
 for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
   ${'assetImg'.$i} = imagecreatefrompng($rootFolder.'terrain/'.$decodedJSON["map"]["graphics"][$i]["src"]);
+
 }
 for ($i=0;$i<count($decodedJSON["map"]["npcs"]);$i++) {
   ${'assetNPCImg'.$i} = imagecreatefrompng($rootFolder.'npcs/'.$decodedJSON["map"]["npcs"][$i]["src"]);
@@ -4160,12 +4278,16 @@ $tileH = $tileW/2;
 outputDelaunayGraph();
 createGridLayout();
 outputSizedNodesLayout();
-gridTileGrid();
+createTileGrid();
 //createElevationMap();
 placeDoors();
 findRelevantTemplates();
-
 outputTileMap();
+if(mt_rand(1,100) <= $dungeonDetails[$dungeonName]['percentChanceOfTracks']) {
+    addTracks();
+    // will need a dynamic background to draw the tracks:
+    $dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground'] = true;
+}
 addRandomItems();
 outputJSONContent();
 createBackgroundImage();

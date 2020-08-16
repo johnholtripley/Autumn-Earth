@@ -131,13 +131,9 @@ $uncheckedNodes = array();
 $targetFound = false;
 
 if(isset($startNode) && isset($endNode)) {
-
 	$heuristic = sqrt((($endNode->x - $startNode->x) * ($endNode->x - $startNode->x)) + (($endNode->y - $startNode->y) * ($endNode->y - $startNode->y)));
-
 	$searchNodes[$startNode->name] = array('node' => $startNode, 'parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
 	array_push($uncheckedNodes, $searchNodes[$startNode->name]);
-
-
 	do {
 		// get the next node:
 		$thisNextEntry = array_shift($uncheckedNodes);
@@ -147,15 +143,11 @@ if(isset($startNode) && isset($endNode)) {
 			$targetFound = true;
 		} else {
 			// add connected nodes:
-
 			$thisCost  = intval($thisNextEntry['cost']);
 			$heuristic = sqrt((($endNode->x - $thisNextNode->x) * ($endNode->x - $thisNextNode->x)) + (($endNode->y - $thisNextNode->y) * ($endNode->y - $thisNextNode->y)));
-
-
 			foreach ($thisNextNode->connections as $thisJointEntry) {
 				$thisJoint = $nodeList[$thisJointEntry];
 				if (isset($searchNodes[$thisJoint->name])) {
-
 					// update the details if this is faster
 					if ($thisCost < $searchNodes[$thisJoint->name]['cost']) {
 						$searchNodes[$thisJoint->name]['parentNode'] = $thisNextEntry;
@@ -164,12 +156,10 @@ if(isset($startNode) && isset($endNode)) {
 					}
 				} else {
 					// add connections:
-					
 						$searchNodes[$thisJoint->name] = array('node' => $thisJoint, 'parentNode' => $thisNextEntry, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
 						array_push($uncheckedNodes, $searchNodes[$thisJoint->name]);
 				}
 			}
-
 		}
 	} while ((count($uncheckedNodes) > 0) && !$targetFound);
 }

@@ -1,0 +1,37 @@
+{
+    "template": {
+        "entranceX": 1,
+        "entranceY": 1,
+        "rotatable": true,
+        "uniquePerLevel": false,
+        "uniquePerSession": false,
+        "type": "inner",
+        "collisions": [
+            [0]
+      
+
+        ],
+        "terrain": [
+            ["*"]
+        ],
+        "elevation": [
+                  [0]],
+        "graphics": [
+           
+
+        ],
+        "npcs": [
+
+    
+        ],
+        "items": [{
+
+               "type": 22,
+                "tileX": 0,
+                "tileY": 0
+
+        }
+      ],
+      "hotspots": []
+    }
+}

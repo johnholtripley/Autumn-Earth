@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map inx="0" iny="2" outx="0" outy="2">
+<row>#####</row>
+<row>.....</row>
+<row>.....</row>
+<row>.....</row>
+<row>#####</row>
+<tiles>109,107,109,108,109</tiles>
+<tiles>2,2,2,2,2</tiles>
+<tiles>2,2,2,2,2</tiles>
+<tiles>2,2,2,2,2</tiles>
+<tiles>109,107,109,108,109</tiles>
+<npc>2,0,5,4,1,0,1,0,0,0,Dwarven Scholar,0,4.3,1,5,18,19</npc>
+</map>
