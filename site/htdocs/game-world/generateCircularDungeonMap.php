@@ -3159,7 +3159,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 function createTileGrid() {
-    global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
+    global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $entranceX, $entranceY, $exitX, $exitY, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
     // define the tile area to be used:
     $proceduralMapTilesX = 70;
     $proceduralMapTilesY = 70;
@@ -3629,8 +3629,69 @@ echo"</pre></code>";
 */
 }
 
+
+
+
+
+
+
+function outputTileTrackMap() {
+global $proceduralMapTrack, $proceduralDebug, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
+
+
+
+if($proceduralDebug) {
+    echo '<div class="sequenceBlock">';
+
+
+$drawnTileSize = 8; 
+$drawnOffset = 20;
+   $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+  for ($i = 0; $i < $proceduralMapTilesX; $i++) {      
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+                switch ($proceduralMapTrack[$j][$i]) {
+    case "#":
+  
+    // non-walkable tile:
+       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 75, 75, 75));
+        break;
+       
+      
+    case ".":
+        // empty
+        break;      
+}
+
+// draw border:
+  imagerectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 128, 128, 128));
+
+
+            }
+          
+        }
+
+
+
+       ob_start();
+    imagejpeg($outputCanvas, null, 100);
+    $rawImageBytes = ob_get_clean();
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+
+    imagedestroy($outputCanvas);
+    }
+    }
+
+
+
+
+
 function addTracks() {
-    global $allDelaunayEdges, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $lockedJoints, $proceduralDebug;
+    global $allDelaunayEdges, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $lockedJoints, $proceduralDebug, $drawnTileRooms, $proceduralMapTilesX, $proceduralMapTilesY, $proceduralMapTrack;
 
             // find all unlocked edges:
 
@@ -3739,8 +3800,56 @@ foreach($allDelaunayEdges as $thisEdge) {
         }
         echo "</div>";
     }
+
+
+    // find centre of these rooms and plot the track:
+    
+    $trackRoomCentres = array();
+    foreach($longestConnectionofNodes as $thisNode) {
+        foreach($drawnTileRooms as $thisDrawnRoom) {
+            // left, top, right, bottom, name
+             if(strval($thisDrawnRoom[4]) === strval($thisNode)) {
+                $roomCentreX = floor(($thisDrawnRoom[0] + $thisDrawnRoom[2])/2);
+                $roomCentreY = floor(($thisDrawnRoom[1] + $thisDrawnRoom[3])/2);
+                array_push($trackRoomCentres, array($roomCentreX, $roomCentreY));
+                //echo $roomCentreX.", ".$roomCentreY."<br>";
+            }
+        }
+    }
+
+    for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+        $proceduralMapTrack[$i] = array();
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+            array_push($proceduralMapTrack[$i], ".");
+            }
+        }
+
+
+
+for ($i=1;$i<count($trackRoomCentres);$i++) {
+    $previousX = $trackRoomCentres[($i-1)][0];
+$previousY = $trackRoomCentres[($i-1)][1];
+    if($trackRoomCentres[$i][0] == $previousX) {
+        $start = min($previousY, $trackRoomCentres[$i][1]);
+        $end = max($previousY, $trackRoomCentres[$i][1]);
+        for ($j = $start; $j <= $end ; $j++) {
+            $proceduralMapTrack[$j][$previousX] = "#";
+         
+        }
+    } else if ($trackRoomCentres[$i][1] == $previousY) {
+         $start = min($previousX, $trackRoomCentres[$i][0]);
+        $end = max($previousX, $trackRoomCentres[$i][0]);
+     for ($j = $start; $j <= $end; $j++) {
+            $proceduralMapTrack[$previousY][$j] = "#";
+            
+        }
+    }
+
+}
     // loop through this sequence, widen each unlocked door along the way to be 3 wide, and lay track along the middle of the route
     // john ###
+// http://develop.ae/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-gobling-mines&requestedMap=-1&seed=1597765374
+    outputTileTrackMap();
 
 }
 
@@ -3994,7 +4103,7 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function createBackgroundImage() {
-    global $dungeonDetails, $dungeonName, $tileW,$tileH, $thisPlayersId, $thisMapsId, $proceduralMap, $proceduralMapTilesX, $proceduralMapTilesY;
+    global $dungeonDetails, $dungeonName, $tileW,$tileH, $thisPlayersId, $thisMapsId, $proceduralMap, $proceduralMapTrack, $proceduralMapTilesX, $proceduralMapTilesY;
 
     // create unique background image for this map:
     if($dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground']) {
@@ -4016,6 +4125,7 @@ function createBackgroundImage() {
         for ($i=1;$i<=2;$i++) {
           ${'corridorFloorTile'.$i} = imagecreatefrompng($rootFolder.$dungeonName.'/wood-'.$i.'.png');
         }
+        $trackTile = imagecreatefrompng($rootFolder.$dungeonName.'/track-1.png');
 
         for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
             for ($j = 0; $j < $proceduralMapTilesY; $j++) {
@@ -4029,6 +4139,16 @@ function createBackgroundImage() {
                     $thisY = getTileIsoCentreCoordY($i, $j);
                     $whichHardFloorAsset = mt_rand(1,2);
                     imagecopy ( $fullImage, ${'corridorFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'corridorFloorTile'.$whichHardFloorAsset}), imagesy(${'corridorFloorTile'.$whichHardFloorAsset}) );
+                }
+                if(isset($proceduralMapTrack)) {
+                    
+                    if($proceduralMapTrack[$j][$i] == '#') {
+
+                        $thisX = getTileIsoCentreCoordX($i, $j);
+                        $thisY = getTileIsoCentreCoordY($i, $j);
+                        imagecopy ( $fullImage, $trackTile, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx($trackTile), imagesy($trackTile) );
+                    }
+
                 }
             }
         }
