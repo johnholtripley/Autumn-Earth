@@ -40,13 +40,25 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
     margin: 0 1.25% 2.5% 1.25%;
 }
 
+.sequenceBlock p {
+    padding: 0;
+    margin: 0;
+}
+
+.clearer {
+    width: 100%;
+    clear: both;
+}
+
 .wider {
     width: 97.5%;
 }
 
+/*
 .sequenceBlock:nth-child(4n+1) {
     clear: left;
 }
+*/
 
 img {
     display: block;
@@ -569,6 +581,7 @@ function growGrammar($thisGrammar, $iterations)
     $currentKey = 0;
 
 if($proceduralDebug) {
+    echo '<div class="clearer"></div>';
     echo '<div class="sequenceBlock"><p>start grammar: ' . htmlentities($thisGrammar) . '<br>';
 }
     for ($i = 0; $i < $iterations; $i++) {
@@ -1210,7 +1223,7 @@ if(isset($firstNewNode)) {
 
     } else {
         if($proceduralDebug) {
-        echo "<br>Didn't find path<br>";
+        echo '<div class="sequenceBlock"><p>Couldn\'t find path through the Delaunay graph.</p></div>';
     }
     }
     return $targetFound;
@@ -1391,7 +1404,7 @@ function plotConnectivityOnDelaunayGraph()
     } while (($connectionsRemainingToBePlotted > 0) && ($foundUnusedVertex));
     if (!$foundUnusedVertex) {
         if($proceduralDebug) {
-        echo "FAILED... RESTARTING...<br>";
+        echo '<div class="sequenceBlock"><p>Failed to find connections on the Delaunay graph.<br>RESTARTING&hellip;</p></div>';
     
     }
     }
@@ -2634,7 +2647,7 @@ echo '<div class="sequenceBlock">';
             $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
 
             if($proceduralDebug) {
-                echo "trying to place template ".$templatesToUse[$i]." ";
+                echo "trying to place (".$templateType.") template ".$templatesToUse[$i]." ";
             }
 
 
@@ -3165,7 +3178,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 function createTileGrid() {
-    global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $entranceX, $entranceY, $exitX, $exitY, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
+    global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $entranceX, $entranceY, $exitX, $exitY, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph, $ratio;
     // define the tile area to be used:
     $proceduralMapTilesX = 70;
     $proceduralMapTilesY = 70;
@@ -3309,7 +3322,7 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
     case "adjoining-rooms":
         foreach($allDelaunayEdges as $thisEdge) {
          if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-        echo $thisEdge->v0->whichNode->name . " to ". $thisEdge->v1->whichNode->name ."<hr>";
+       
 $leftEdge = $thisEdge->v0->x  - $minLeft;
 $rightEdge = $thisEdge->v1->x  - $minLeft;
 $topEdge = $thisEdge->v0->y  - $minTop;
@@ -3732,7 +3745,7 @@ for ($i = 0; $i < count($drawnTileDoors); $i++) {
 
 
 function addTracks() {
-    global $allDelaunayEdges, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $lockedJoints, $proceduralDebug, $drawnTileRooms, $proceduralMapTilesX, $proceduralMapTilesY, $proceduralMapTrack, $proceduralMap;
+    global $allDelaunayEdges, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $lockedJoints, $proceduralDebug, $drawnTileRooms, $proceduralMapTilesX, $proceduralMapTilesY, $proceduralMapTrack, $proceduralMap, $dungeonDetails, $dungeonName, $minLeft, $minTop, $ratio, $requiredWidth, $requiredHeight;
 
             // find all unlocked edges:
 
@@ -3834,6 +3847,7 @@ foreach($allDelaunayEdges as $thisEdge) {
         } while (count($nodesToCheck)>0);
     }
     
+    /*
     if($proceduralDebug) {
         echo '<div class="sequenceBlock">';
         echo "longest unlocked sequence found:<br>";
@@ -3842,15 +3856,7 @@ foreach($allDelaunayEdges as $thisEdge) {
         }
         echo "</div>";
     }
-    
-
-
-
-
-
-
-
-
+    */
 
 
 // track drawing should use the same corridor code from createTileGrid so that they're in the centre of corridors
@@ -3858,90 +3864,98 @@ foreach($allDelaunayEdges as $thisEdge) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    // find centre of these rooms and plot the track:
-    
-    $trackRoomCentres = array();
-    foreach($longestConnectionofNodes as $thisNode) {
-        foreach($drawnTileRooms as $thisDrawnRoom) {
-            // left, top, right, bottom, name
-             if(strval($thisDrawnRoom[4]) === strval($thisNode)) {
-                $roomCentreX = floor(($thisDrawnRoom[0] + $thisDrawnRoom[2])/2);
-                $roomCentreY = floor(($thisDrawnRoom[1] + $thisDrawnRoom[3])/2);
-
-
-                /*
-                echo $thisDrawnRoom[4]." - ".$roomCentreX.", ".$roomCentreY."<br>";
-                if($thisDrawnRoom[1] % 2 == 0) {
-                    // it's even:
-                    $roomCentreY -=0.5;
-                }
-                           if($thisDrawnRoom[0] % 2 == 1) {
-                    // it's even:
-                    $roomCentreX --;
-                }
-                $roomCentreX = ceil($roomCentreX);
-                $roomCentreY = floor($roomCentreY);
-                */
-
-
-
-           
-
-                
-                array_push($trackRoomCentres, array($roomCentreX, $roomCentreY));
-            }
-        }
-    }
-
-    for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+   for ($i = 0; $i < $proceduralMapTilesX; $i++) {
         $proceduralMapTrack[$i] = array();
             for ($j = 0; $j < $proceduralMapTilesY; $j++) {
             array_push($proceduralMapTrack[$i], ".");
             }
         }
 
-// loop through this sequence, widen each unlocked door along the way to be 3 wide, and lay track along the middle of the route
+  $tileMapWidth = floor($requiredWidth * $ratio);
+    $tileMapHeight = floor($requiredHeight * $ratio);
+  $tileOffsetX = floor(($proceduralMapTilesX - $tileMapWidth)/2);
+    $tileOffsetY = floor(($proceduralMapTilesY - $tileMapHeight)/2);
 
-for ($i=1;$i<count($trackRoomCentres);$i++) {
-    $previousX = $trackRoomCentres[($i-1)][0];
-$previousY = $trackRoomCentres[($i-1)][1];
-    if($trackRoomCentres[$i][0] == $previousX) {
-        $start = min($previousY, $trackRoomCentres[$i][1]);
-        $end = max($previousY, $trackRoomCentres[$i][1]);
-        for ($j = $start; $j <= $end ; $j++) {
-            $proceduralMapTrack[$j][$previousX] = "|";
-            if($proceduralMap[$j][$previousX] == "d") {
-               
-                removeInnerDoor($j,$previousX);
 
+$currentNode = $longestConnectionofNodes[0];
+for ($n = 1; $n < count($longestConnectionofNodes); $n++) {
+
+// start a lot of code duplication from createTileGrid():
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
+        foreach($allDelaunayEdges as $thisEdge) {
+         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
+     
+        if((($thisEdge->v0->whichNode->name == $currentNode) && ($thisEdge->v1->whichNode->name == $longestConnectionofNodes[$n])) || (($thisEdge->v1->whichNode->name == $currentNode) && ($thisEdge->v0->whichNode->name == $longestConnectionofNodes[$n]))){
+              // echo $thisEdge->v0->whichNode->name . " to ". $thisEdge->v1->whichNode->name ."<hr>";
+$leftEdge = $thisEdge->v0->x  - $minLeft;
+$rightEdge = $thisEdge->v1->x  - $minLeft;
+$topEdge = $thisEdge->v0->y  - $minTop;
+$bottomEdge = $thisEdge->v1->y  - $minTop;
+
+$leftTileEdge = floor($leftEdge * $ratio);
+$rightTileEdge = floor($rightEdge * $ratio);
+$topTileEdge = floor($topEdge * $ratio);
+$bottomTileEdge = floor($bottomEdge * $ratio);
+
+// centre the map:
+$leftTileEdge += $tileOffsetX;
+$rightTileEdge += $tileOffsetX;
+$topTileEdge += $tileOffsetY;
+$bottomTileEdge += $tileOffsetY;
+
+if($topTileEdge > $bottomTileEdge) {
+    // reverse them:
+$storedEdge = $topTileEdge;
+$topTileEdge = $bottomTileEdge;
+$bottomTileEdge = $storedEdge;
+}
+if($leftTileEdge > $rightTileEdge) {
+$storedEdge = $leftTileEdge;
+$leftTileEdge = $rightTileEdge;
+$rightTileEdge = $storedEdge;
+}
+    for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
+        for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+            // check if this is in a room or not:
+            for ($l = 0; $l < count($drawnTileRooms); $l++) {
+                if($j>=$drawnTileRooms[$l][0]) {
+                    if($k>=$drawnTileRooms[$l][1]) {
+                        if($j<=$drawnTileRooms[$l][2]) {
+                            if($k<=$drawnTileRooms[$l][3]) {
+                                if($proceduralMap[$k][$j] != ".") {
+                                    // not already been plotted by the room, so it's a door:
+                                    removeInnerDoor($k,$j);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-         
-        }
-    } else if ($trackRoomCentres[$i][1] == $previousY) {
-         $start = min($previousX, $trackRoomCentres[$i][0]);
-        $end = max($previousX, $trackRoomCentres[$i][0]);
-     for ($j = $start; $j <= $end; $j++) {
-            $proceduralMapTrack[$previousY][$j] = "-";
-                        if($proceduralMap[$previousY][$j] == "d") {
-                removeInnerDoor($previousY,$j);
+            if($topTileEdge == $bottomTileEdge) {
+$proceduralMapTrack[$k][$j] = "-";
+            } else {
+                $proceduralMapTrack[$k][$j] = "|";
             }
             
         }
     }
+}
+}
+}
+
+break;
+
+case "cavern":
+// how to find track path through cavern corridors? #####
+break;
 
 }
-    
+// end code from createTileGrid
+$currentNode = $longestConnectionofNodes[$n];
+}
 
     outputTileTrackMap();
 
