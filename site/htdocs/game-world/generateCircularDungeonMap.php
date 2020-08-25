@@ -555,11 +555,7 @@ $dungeonName = $randomDungeonName;
 
 
     
-    $proceduralMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
-    if ((is_file($proceduralMapFilename)) && !$proceduralDebug && !$isIncluded) {
-        header("Location: /" . $proceduralMapFilename);
-        die();
-    }
+
 
     $unadjustedSeed = $storedSeed;
     // make sure the level is unique even if the same seed is used:
@@ -1772,7 +1768,6 @@ function outputSizedNodesLayout() {
 
 
 
-
 switch ($dungeonDetails[$dungeonName]['roomType']) {
 case "adjoining-rooms":
 
@@ -1876,7 +1871,7 @@ if($proceduralDebug) {
 
 
 function outputJSONContent() {
-global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $proceduralMapTilesX, $proceduralMapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed, $isIncluded;
+global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $proceduralMapTilesX, $proceduralMapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed, $isIncluded, $proceduralMapTrack;
 
 
 
@@ -1961,13 +1956,18 @@ $terrainString .= ']';
 
 
 
-
 $elevationString = '"properties": [';
 
   for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
   $elevationString .= '[';   
             for ($j = 0; $j < $proceduralMapTilesY; $j++) {
-               $elevationString.= '{}, ';
+                if($proceduralMapTrack[$i][$j] != ".") {
+                    // make anything walking on a track be raised slightly:
+                    $elevationString.= '{"elevation":8}, ';
+                } else {
+                    $elevationString.= '{}, ';
+                }
+               
                 }
                 // remove last comma:
 $elevationString = rtrim($elevationString, ', ');
@@ -2035,11 +2035,6 @@ for ($t = 0; $t < count($allTemplateJSON); $t++) {
 
 // substr(1,-1) to remove the added { and } earlier:
 $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($terrain),1,-1).", ".substr(json_encode($elevations),1,-1);
-
-
-
-
-
 
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"weather": [""],';
@@ -3789,7 +3784,7 @@ foreach($allDelaunayEdges as $thisEdge) {
             // find connections for this node:
             foreach($allUnlockedEdges as $thisEdge) {
                 $thisEdgeReference = implode(",", $thisEdge);
-                if($thisEdge[0] == $thisInnerNode['whichNode']) {
+                if(strval($thisEdge[0]) == strval($thisInnerNode['whichNode'])) {
                     //echo " connected to ".$thisEdge[1];
                     if (!(in_array($thisEdge[1], $thisInnerNode['nodesAlreadyUsed']))) {
                         $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
@@ -3803,7 +3798,7 @@ foreach($allDelaunayEdges as $thisEdge) {
                         }
                     }
                     // check for loops:
-                    if($thisEdge[1] == $thisNode) {
+                    if(strval($thisEdge[1]) == strval($thisNode)) {
                         // but make sure that this edge hasn't been used before, to determine if it's a loop:
                         if (!(in_array($thisEdgeReference, $thisInnerNode['edgesAlreadyUsed']))) {
                             $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
@@ -3816,7 +3811,7 @@ foreach($allDelaunayEdges as $thisEdge) {
                         }
                     }
                 }
-                if($thisEdge[1] == $thisInnerNode['whichNode']) {
+                if(strval($thisEdge[1]) == strval($thisInnerNode['whichNode'])) {
                     //echo " connected to ".$thisEdge[0];
                       if (!(in_array($thisEdge[0], $thisInnerNode['nodesAlreadyUsed']))) {
                         $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
@@ -3830,7 +3825,7 @@ foreach($allDelaunayEdges as $thisEdge) {
                         }
                     }
                     // check for loops:
-                    if($thisEdge[0] == $thisNode) {
+                    if(strval($thisEdge[0]) == strval($thisNode)) {
                         // but make sure that this edge hasn't been used before, to determine if it's a loop:
                         if (!(in_array($thisEdgeReference, $thisInnerNode['edgesAlreadyUsed']))) {
                             $nodesAlreadyUsed = $thisInnerNode['nodesAlreadyUsed'];
@@ -3887,9 +3882,10 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
     case "adjoining-rooms":
         foreach($allDelaunayEdges as $thisEdge) {
          if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-     
-        if((($thisEdge->v0->whichNode->name == $currentNode) && ($thisEdge->v1->whichNode->name == $longestConnectionofNodes[$n])) || (($thisEdge->v1->whichNode->name == $currentNode) && ($thisEdge->v0->whichNode->name == $longestConnectionofNodes[$n]))){
-              // echo $thisEdge->v0->whichNode->name . " to ". $thisEdge->v1->whichNode->name ."<hr>";
+     // use strval so nodes called 0 or 1 don't evaluate to true or false:
+        if(((strval($thisEdge->v0->whichNode->name) == strval($currentNode)) && (strval($thisEdge->v1->whichNode->name) == strval($longestConnectionofNodes[$n]))) || ((strval($thisEdge->v1->whichNode->name) == strval($currentNode)) && (strval($thisEdge->v0->whichNode->name) == strval($longestConnectionofNodes[$n])))){
+             //  echo $thisEdge->v0->whichNode->name . " to ". $thisEdge->v1->whichNode->name ."(".$currentNode." and ".$longestConnectionofNodes[$n].")";
+       
 $leftEdge = $thisEdge->v0->x  - $minLeft;
 $rightEdge = $thisEdge->v1->x  - $minLeft;
 $topEdge = $thisEdge->v0->y  - $minTop;
@@ -4227,7 +4223,7 @@ function createBackgroundImage() {
         imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
 
         // draw walkable floors:
-         for ($i=1;$i<=3;$i++) {
+         for ($i=1;$i<=2;$i++) {
           ${'roomFloorTile'.$i} = imagecreatefrompng($rootFolder.$dungeonName.'/stone-'.$i.'.png');
         }
         for ($i=1;$i<=2;$i++) {
@@ -4241,7 +4237,7 @@ function createBackgroundImage() {
                 if($proceduralMap[$j][$i] == '.') {
                     $thisX = getTileIsoCentreCoordX($i, $j);
                     $thisY = getTileIsoCentreCoordY($i, $j);
-                    $whichHardFloorAsset = mt_rand(1,3);
+                    $whichHardFloorAsset = mt_rand(1,2);
                     imagecopy ( $fullImage, ${'roomFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'roomFloorTile'.$whichHardFloorAsset}), imagesy(${'roomFloorTile'.$whichHardFloorAsset}) );
                 } else if(($proceduralMap[$j][$i] == '|') || ($proceduralMap[$j][$i] == 'd') || ($proceduralMap[$j][$i] == 'D')) {
                     $thisX = getTileIsoCentreCoordX($i, $j);
@@ -4442,111 +4438,153 @@ imagedestroy($fullImage);
 
 // triangular branch:
 // $startGrammar = "S{,O}E";
-do {
-    init();
-
-    $possibleStartGrammars = array(
-        // really simple, linear path:
-        "SXE",
-    );
-
-// secret to treasure (with one way continuation back to the main path):
-    $grownGrammar = "S{?O[$]>,O}E";
-
-// dramatic cycle (see the goal early on, but can't get to it yet, so builds anticipation):
-    $grownGrammar = "S{:,OO}E";
-
-// simple lock and key cycle:
-    $grownGrammar = "S{,O[K#1]>}O#1#E";
-
-// variant lock and key cycle:
-    $grownGrammar = "SO{,<O[K#1]}O#1#E";
-
-// branching with a shorter but more hazardous path:
-    $grownGrammar = "S{O[!!],OOOOO}E";
-
-// double lock and key:
-    $grownGrammar = "S{O[K#1],#1#O[K#2]>}O#2#E";
-
-// unknown return path (eg. bridge collapses behind to get to the goal):
-    $grownGrammar = "S{<,>O[K#1#],#1#E|}O";
-
-// gambit with visible reward on alternate path:
-    $grownGrammar = "S{,:O[$]O[!]}E";
-
-// key item cycle:
-    $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
-
- 
-
-
-// zelda gnarled root dungeon:
-$grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
-
-
-   $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
-
-    parseStringGrammar($grownGrammar);
-    moveNodesApart();
-   
-
-    outputConnections();
-
-    // random, grid, wonky-grid, offset-grid
-    $layoutType = $dungeonDetails[$dungeonName]['underlyingGridLayout'];
 
 
 
-
-    createDelaunayGraph($layoutType);
-    if (($layoutType == "offset-grid") || ($layoutType == "grid")) {
-       removeDiagonalEdges();
-    }
-} while (!plotConnectivityOnDelaunayGraph());
+$fileIsAlreadyGenerated = false;
+// check if the file has already been created:
 
 
-$tileW = 48;
-$tileH = $tileW/2;
-
-outputDelaunayGraph();
-createGridLayout();
-outputSizedNodesLayout();
-createTileGrid();
-//createElevationMap();
-placeDoors();
-findRelevantTemplates();
-outputTileMap();
-if(mt_rand(1,100) <= $dungeonDetails[$dungeonName]['percentChanceOfTracks']) {
-    addTracks();
-    // will need a dynamic background to draw the tracks:
-    $dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground'] = true;
-}
-addRandomItems();
-outputJSONContent();
-createBackgroundImage();
-if($proceduralDebug) {
-    outputIsometricView();
-}
-
-
-if($proceduralDebug) {
-echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
-echo htmlentities($outputJSON);
+if($isIncluded) {
+$thisMapsId = intval($map);
+$thisPlayersId = $chr;
 } else {
-    if($isIncluded) {
-$thisMapDataJson = $outputJSON;
+      $thisMapsId = $_GET['requestedMap'];
+    $thisPlayersId = 999;
+        if(isset($_GET['chr'])) {
+    $thisPlayersId = $_GET['chr'];
+}
+}
+
+if($isIncluded) {
+    $dungeonName = $randomDungeonName;
+} else {
+    $dungeonName = $_GET["dungeonName"];
+}
+$proceduralMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
+ if (!$proceduralDebug) {
+    if (is_file($proceduralMapFilename)) {
+        if ($isIncluded) {
+            $thisMapDataJson = file_get_contents($proceduralMapFilename);
+            $fileIsAlreadyGenerated = true;
+        } else {
+            header("Location: /" . $proceduralMapFilename);
+            die();
+        }
+    }
+}
+
+
+
+
+
+if(!($fileIsAlreadyGenerated)) {
+    do {
+        init();
+
+        $possibleStartGrammars = array(
+            // really simple, linear path:
+            "SXE",
+        );
+
+    // secret to treasure (with one way continuation back to the main path):
+        $grownGrammar = "S{?O[$]>,O}E";
+
+    // dramatic cycle (see the goal early on, but can't get to it yet, so builds anticipation):
+        $grownGrammar = "S{:,OO}E";
+
+    // simple lock and key cycle:
+        $grownGrammar = "S{,O[K#1]>}O#1#E";
+
+    // variant lock and key cycle:
+        $grownGrammar = "SO{,<O[K#1]}O#1#E";
+
+    // branching with a shorter but more hazardous path:
+        $grownGrammar = "S{O[!!],OOOOO}E";
+
+    // double lock and key:
+        $grownGrammar = "S{O[K#1],#1#O[K#2]>}O#2#E";
+
+    // unknown return path (eg. bridge collapses behind to get to the goal):
+        $grownGrammar = "S{<,>O[K#1#],#1#E|}O";
+
+    // gambit with visible reward on alternate path:
+        $grownGrammar = "S{,:O[$]O[!]}E";
+
+    // key item cycle:
+        $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
+
+     
+
+
+    // zelda gnarled root dungeon:
+    $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
+
+
+       $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
+
+        parseStringGrammar($grownGrammar);
+        moveNodesApart();
+       
+
+        outputConnections();
+
+        // random, grid, wonky-grid, offset-grid
+        $layoutType = $dungeonDetails[$dungeonName]['underlyingGridLayout'];
+
+
+
+
+        createDelaunayGraph($layoutType);
+        if (($layoutType == "offset-grid") || ($layoutType == "grid")) {
+           removeDiagonalEdges();
+        }
+    } while (!plotConnectivityOnDelaunayGraph());
+
+
+    $tileW = 48;
+    $tileH = $tileW/2;
+
+    outputDelaunayGraph();
+    createGridLayout();
+    outputSizedNodesLayout();
+    createTileGrid();
+    //createElevationMap();
+    placeDoors();
+    findRelevantTemplates();
+    outputTileMap();
+    if(mt_rand(1,100) <= $dungeonDetails[$dungeonName]['percentChanceOfTracks']) {
+        addTracks();
+        // will need a dynamic background to draw the tracks:
+        $dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground'] = true;
+    }
+    addRandomItems();
+    outputJSONContent();
+    createBackgroundImage();
+    if($proceduralDebug) {
+        outputIsometricView();
+    }
+
+
+    if($proceduralDebug) {
+    echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
+    echo htmlentities($outputJSON);
     } else {
-    echo $outputJSON;
-}
-}
+        if($isIncluded) {
+    $thisMapDataJson = $outputJSON;
+        } else {
+        echo $outputJSON;
+    }
+    }
 
-if($proceduralDebug) {
-echo '</code>';
-}
+    if($proceduralDebug) {
+    echo '</code>';
+    }
 
 
 
-if($proceduralDebug) {
-echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $unadjustedSeed . '">' . $unadjustedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
+    if($proceduralDebug) {
+    echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $unadjustedSeed . '">' . $unadjustedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
+    }
 }
 ?>
