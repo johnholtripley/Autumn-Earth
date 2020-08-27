@@ -58,7 +58,6 @@
         opacity: 0.85;
         @include pxRem('font-size', 13px);
         @include pxRem('line-height', 19px);
-        font-weight: bold;
     }
 
     h4 {

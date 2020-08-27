@@ -36,7 +36,9 @@ $dungeonName="";
 $isADungeon = false;
 if(isset($_GET["dungeonName"])) {
   if($_GET["dungeonName"]!= "") {
-$dungeonName=$_GET["dungeonName"]."/";
+
+$dungeonNamePlain = $_GET["dungeonName"];
+$dungeonName=$dungeonNamePlain."/";
 }
 }
 
@@ -44,11 +46,15 @@ if($requestedMap<0) {
   $isADungeon = true;
 }
 
+
+
+/*
 //if($format == "xml") {
 //$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 //} else {
   if($isADungeon) {
 $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName.$requestedMap.".json";
+
 } else {
 
   //$fileToUse = "../data/chr".$playerId."/map".$requestedMap.".json";
@@ -56,8 +62,12 @@ $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName.$requestedMap.".js
   $fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap;
 
 }
-
-
+*/
+if($isADungeon) {
+$fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap."&dungeonName=".$dungeonNamePlain;
+} else {
+ $fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap;
+}
 //}
 
 $plotChests = false;
@@ -71,9 +81,9 @@ $useOverlay = false;
 }
 
 
-
 if (is_numeric($playerId)) {
     if (is_numeric($requestedMap)) {
+
 
 
 

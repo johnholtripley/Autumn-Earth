@@ -206,8 +206,12 @@ p {
   margin: 0;
 }
 
+
+
+@supports (font-feature-settings:"sups" 1) {
 sup {
   font-feature-settings: "sups" 1;
+}
 }
 
 @supports (font-variant-position:super) {
