@@ -1684,7 +1684,7 @@ $queryPantheon = "select * from tblpantheon";
 $resultPantheon = mysqli_query($connection, $queryPantheon) or die ("couldn't execute Pantheon query");
 while ($rowPantheon = mysqli_fetch_array($resultPantheon)) {
     extract($rowPantheon);
-    array_push($json['gods'.$godGender], $godName);
+    array_push($json['gods'.$godSex], $godName);
 }
 
 // create common names:
@@ -1777,10 +1777,12 @@ if($i==0) {
 	$primaryCommonName = $thisCommonName;
 	do {
 $variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
-} while ($variantCommonName == $primaryCommonName);
 $variantCommonName = str_ireplace("*", "", $variantCommonName);
 $variantCommonName = str_ireplace("^", "", $variantCommonName);
 $variantCommonName = str_replace("  ", " ", $variantCommonName);
+} while ($variantCommonName == $primaryCommonName);
+
+
 }
 array_push($commonNames,$thisCommonName);
 }
@@ -2015,7 +2017,9 @@ if(substr($primaryCommonName, -2) == "ss") {
 }
 
 
-
+if(substr($primaryCommonName, -2) == "sh") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+}
 
 if(substr($primaryCommonName, -1) == "y") {
 	// check letter before the Y isn't a vowel:
@@ -2202,7 +2206,7 @@ if(stripos($lastError["file"], "generate.php") === false) {
 
 if($debug) {
 $timeElapsedSecs = microtime(true) - $startTime;
-echo '<p style="font-size:0.7em;">Took '.$timeElapsedSecs.' seconds</p>';
+echo '<p style="font-size:0.7em;">Took '.number_format($timeElapsedSecs, 2).' seconds</p>';
 }
 
 

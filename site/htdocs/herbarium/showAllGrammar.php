@@ -191,7 +191,7 @@ $queryPantheon = "select * from tblpantheon";
 $resultPantheon = mysqli_query($connection, $queryPantheon) or die ("couldn't execute Pantheon query");
 while ($rowPantheon = mysqli_fetch_array($resultPantheon)) {
     extract($rowPantheon);
-    array_push($json['gods'.$godGender], $godName);
+    array_push($json['gods'.$godSex], $godName);
 }
 
 
@@ -256,10 +256,12 @@ if($i==0) {
 	$primaryCommonName = $thisCommonName;
     do {
 $variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
-} while ($variantCommonName == $primaryCommonName);
 $variantCommonName = str_ireplace("*", "", $variantCommonName);
 $variantCommonName = str_ireplace("^", "", $variantCommonName);
 $variantCommonName = str_replace("  ", " ", $variantCommonName);
+} while ($variantCommonName == $primaryCommonName);
+
+
 }
 array_push($commonNames,$thisCommonName);
 }
@@ -530,6 +532,9 @@ if(substr($primaryCommonName, -2) == "ss") {
 } else if(substr($primaryCommonName, -1) == "s") {
     $primaryCommonNamePlural = $primaryCommonName;
 }
+if(substr($primaryCommonName, -2) == "sh") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+}
 if(substr($primaryCommonName, -1) == "y") {
     // check letter before the Y isn't a vowel:
     if((substr($primaryCommonName, -2, 1) != "a") && (substr($primaryCommonName, -2, 1) != "e") && (substr($primaryCommonName, -2, 1) != "i") && (substr($primaryCommonName, -2, 1) != "o") && (substr($primaryCommonName, -2, 1) != "u")) {
@@ -655,8 +660,8 @@ body {
 </style>
 
 <ul>
-    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=insects">Insects</a></li>
-    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=bats">Bats</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=insects">Insects</a> ✓</li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=bats">Bats</a> ✓</li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a></li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=place">Place</a></li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=virtues">Virtues</a></li>
