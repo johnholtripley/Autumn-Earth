@@ -535,7 +535,37 @@ $blue = capValues($blue,0,255);
 return [$red, $green, $blue];
 }
 
-
+function generateMonths($startingText) {
+    $hasUsedReplacedMonth = false;
+    $hasPlacedAMonthAlready = false; 
+    // add in month name(s):
+if(strpos($startingText, '++month++') !== false) {
+    $allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    $nextMonth = mt_rand(0, count($allMonths) - 1);
+    do {
+        $thisNextMonth = $allMonths[$nextMonth];
+     if((!$hasUsedReplacedMonth) && (mt_rand(1,4) == 1) && ($hasPlacedAMonthAlready)) {
+        
+               if(mt_rand(1,2) == 1) {
+            $thisNextMonth = 'the next month';
+        } else {
+            $thisNextMonth = 'the month following';
+        }
+            $hasUsedReplacedMonth = true;
+        
+    } else {
+        $hasPlacedAMonthAlready = true;
+    }
+        $startingText = str_replace_first('++month++', $thisNextMonth, $startingText);
+        // for any further occurences, use the subsequent month name to make more sense:
+        $nextMonth+=mt_rand(1,2);
+        if($nextMonth >= count($allMonths)) {
+            $nextMonth = 0;
+        }
+    } while (strpos($startingText, '++month++') !== false);
+}
+return $startingText;
+}
 
 function addPrefix($thisCommonName, $shouldForcePrefix) {
 	
@@ -2015,7 +2045,9 @@ if(substr($primaryCommonName, -2) == "ss") {
 } else if(substr($primaryCommonName, -1) == "s") {
     $primaryCommonNamePlural = $primaryCommonName;
 }
-
+if(substr($primaryCommonName, -2) == "ch") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+}
 
 if(substr($primaryCommonName, -2) == "sh") {
     $primaryCommonNamePlural = $primaryCommonName."es";
@@ -2087,21 +2119,21 @@ function str_replace_first($from, $to, $subject) {
 
 
 
-// add in month name(s):
-if(strpos($startingText, '++month++') !== false) {
-	$allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+$startingText = generateMonths($startingText);
 
-	$nextMonth = mt_rand(0, count($allMonths) - 1);
 
-	do {
-		$startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
-		// for any further occurences, use the subsequent month name to make more sense:
-		$nextMonth+=mt_rand(1,2);
-		if($nextMonth >= count($allMonths)) {
-			$nextMonth = 0;
-		}
-	} while (strpos($startingText, '++month++') !== false);
-
+// add in seasons:
+if(strpos($startingText, '++season++') !== false) {
+    $allSeasons = array("Spring", "Summer", "Autumn", "Winter");
+    // make spring and summer more likely:
+    $startingSeasons = array("Spring", "Spring", "Spring", "Summer", "Summer", "Autumn", "Winter");
+    $firstSeason = mt_rand(0, count($startingSeasons) - 1);
+    $seasonAfter = array_search($startingSeasons[$firstSeason], $allSeasons) + 1;
+    if($seasonAfter >= count($allSeasons)) {
+            $seasonAfter = 0;
+        }
+    $startingText = str_replace('++season++', '<i>'.$startingSeasons[$firstSeason].'</i>', $startingText);
+    $startingText = str_replace('++seasonafter++', '<i>'.$allSeasons[$seasonAfter].'</i>', $startingText);
 }
 
 if(strpos($startingText, '++otherplants++') !== false) {

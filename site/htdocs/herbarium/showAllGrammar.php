@@ -51,6 +51,36 @@ function random_key($array){
 }
 
 
+function generateMonths($startingText) {
+    $hasUsedReplacedMonth = false;
+    $hasPlacedAMonthAlready = false; 
+    // add in month name(s):
+if(strpos($startingText, '++month++') !== false) {
+    $allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    $nextMonth = mt_rand(0, count($allMonths) - 1);
+    do {
+        $thisNextMonth = $allMonths[$nextMonth];
+     if((!$hasUsedReplacedMonth) && (mt_rand(1,4) == 1) && ($hasPlacedAMonthAlready)) {
+        if(mt_rand(1,2) == 1) {
+            $thisNextMonth = 'the next month';
+        } else {
+            $thisNextMonth = 'the month following';
+        }
+            $hasUsedReplacedMonth = true;
+        
+    } else {
+        $hasPlacedAMonthAlready = true;
+    }
+        $startingText = str_replace_first('++month++', '<i>'.$thisNextMonth.'</i>', $startingText);
+        // for any further occurences, use the subsequent month name to make more sense:
+        $nextMonth+=mt_rand(1,2);
+        if($nextMonth >= count($allMonths)) {
+            $nextMonth = 0;
+        }
+    } while (strpos($startingText, '++month++') !== false);
+}
+return $startingText;
+}
 
  
 function findAndReplaceHashes($stringToCheck, &$json='') {
@@ -325,7 +355,7 @@ $startingText .= $placeText;
 }
 
         
-        $startingText .= "<h2>Aquatic:</h2>";
+        $startingText .= '<hr style="margin: 24px 0;"><h2>Aquatic:</h2>';
 
 foreach ($json["place-aquatic"] as $value) {
      $placeText = '';
@@ -347,6 +377,7 @@ $startingText .= $placeText;
 //$whichInsectElem = mt_rand(0,(count($json["batDetails"])-1));
 $batDetails .= '<p>'.ucfirst($value).'</p>';
 $batDetails = findAndReplaceHashes($batDetails)." ";
+$batDetails = generateMonths($batDetails);
         $startingText .= $batDetails;
 }
 
@@ -360,6 +391,7 @@ $batDetails = findAndReplaceHashes($batDetails)." ";
 //$whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
 $insectDetails .= '<p>'.ucfirst($value).'</p>';
 $insectDetails = findAndReplaceHashes($insectDetails)." ";
+$insectDetails = generateMonths($insectDetails);
         $startingText .= $insectDetails;
 }
 
@@ -370,6 +402,7 @@ foreach ($json["time"] as $value) {
  $timeText = '';
 $timeText .= '<p>'.ucfirst($value).'</p>';
 $timeText = findAndReplaceHashes($timeText);
+$timeText = generateMonths($timeText);
 $startingText .= $timeText;
 }
 
@@ -381,6 +414,7 @@ foreach ($json["virtues"] as $value) {
     $virtueText = '';
 $virtueText .= '<p>'.ucfirst($value).'</p>';
 $virtueText = findAndReplaceHashes($virtueText);
+$virtueText = generateMonths($virtueText);
         $startingText .= $virtueText;
 }
 
@@ -392,6 +426,7 @@ foreach ($json[$whichBaseStringToUse] as $value) {
     $baseText = '';
 $baseText .= '<p>'.ucfirst($value).'</p>';
 $baseText = findAndReplaceHashes($baseText);
+$baseText = generateMonths($baseText);
 $startingText .= $baseText;
 }
 
@@ -535,6 +570,9 @@ if(substr($primaryCommonName, -2) == "ss") {
 if(substr($primaryCommonName, -2) == "sh") {
     $primaryCommonNamePlural = $primaryCommonName."es";
 }
+if(substr($primaryCommonName, -2) == "ch") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+}
 if(substr($primaryCommonName, -1) == "y") {
     // check letter before the Y isn't a vowel:
     if((substr($primaryCommonName, -2, 1) != "a") && (substr($primaryCommonName, -2, 1) != "e") && (substr($primaryCommonName, -2, 1) != "i") && (substr($primaryCommonName, -2, 1) != "o") && (substr($primaryCommonName, -2, 1) != "u")) {
@@ -589,22 +627,26 @@ $startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $
 
 
 
-// add in month name(s):
-if(strpos($startingText, '++month++') !== false) {
-    $allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 
-    $nextMonth = mt_rand(0, count($allMonths) - 1);
 
-    do {
-        $startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
-        // for any further occurences, use the subsequent month name to make more sense:
-        $nextMonth+=mt_rand(1,2);
-        if($nextMonth >= count($allMonths)) {
-            $nextMonth = 0;
+
+
+// add in seasons:
+if(strpos($startingText, '++season++') !== false) {
+    $allSeasons = array("Spring", "Summer", "Autumn", "Winter");
+    // make spring and summer more likely:
+    $startingSeasons = array("Spring", "Spring", "Spring", "Summer", "Summer", "Autumn", "Winter");
+    $firstSeason = mt_rand(0, count($startingSeasons) - 1);
+    $seasonAfter = array_search($startingSeasons[$firstSeason], $allSeasons) + 1;
+    if($seasonAfter >= count($allSeasons)) {
+            $seasonAfter = 0;
         }
-    } while (strpos($startingText, '++month++') !== false);
-
+    $startingText = str_replace('++season++', '<i>'.$startingSeasons[$firstSeason].'</i>', $startingText);
+    $startingText = str_replace('++seasonafter++', '<i>'.$allSeasons[$seasonAfter].'</i>', $startingText);
 }
+
+
+
 
 if(strpos($startingText, '++otherplants++') !== false) {
     // find other plant names:
@@ -662,11 +704,12 @@ body {
 <ul>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=insects">Insects</a> ✓</li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=bats">Bats</a> ✓</li>
-    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a></li>
-    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=place">Place</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a> ✓</li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=place">Place</a> ✓</li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=virtues">Virtues</a></li>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=start">Start</a></li>
 </ul>
+
 <?php
 echo $startingText;
 ?>
