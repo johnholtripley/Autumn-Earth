@@ -103,20 +103,14 @@ $additionalClass .= " imageOffset";
 
 
 	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
-$allCommonNames = explode("/",$commonNamesJoined);
-for ($j=0; $j<count($allCommonNames);$j++) {
-   
-     $htmlOutput .= '<span itemprop="alternateName">'.$allCommonNames[$j].'</span>';
-   
-if(count($allCommonNames)>1) {
-	if($j == count($allCommonNames)-2) {
-$htmlOutput .= ' or ';
-	} else if($j != count($allCommonNames)-1) {
-	$htmlOutput .= ', ';
-}
-}
 
+$allCommonNames = explode("/",$commonNamesJoined);
+for ($i=0; $i<count($allCommonNames);$i++) {
+    $richSnippetText = '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
+    $commonNames = str_replace($allCommonNames[$i], $richSnippetText, $commonNames);
 }
+$htmlOutput .= $commonNames;
+
 	$htmlOutput .= '</h5>';
 	// picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
 $htmlOutput .= '<img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);">';

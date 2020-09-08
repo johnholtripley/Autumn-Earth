@@ -1887,7 +1887,7 @@ $insectDetails = "";
 $entriesAlreadyUsed = [];
 if($isAquatic != 1) {
 	// aquatic plants shouldn't refer to butterflies
-if(mt_rand(1,3) == 1) {
+if(mt_rand(1,2) == 1) {
 
 if($isNight == 1) {
 if(mt_rand(1,2) == 1) {
@@ -1910,9 +1910,10 @@ $insectDetails = findAndReplaceHashes($insectDetails)." ";
 }
 }
 
-$startingText = '<p>'.ucfirst($startingText).'</p>';
+$originText = $startingText;
+$startingText = '<p>'.ucfirst($placeText) .' '.ucfirst($timeText) . ' '. ucfirst($insectDetails) . '</p>';
 
-$startingText .= '<p>'.ucfirst($placeText) .'</p><p>'. ucfirst($insectDetails) . '</p><p>'.ucfirst($timeText) . '</p><p>'.ucfirst($virtueText).'</p>';
+$startingText .= '<p>'.ucfirst($originText).'</p><p>'.ucfirst($virtueText).'</p>';
 
 
 // generate a butterfly:
@@ -1924,8 +1925,8 @@ $thisSecondButterflyName = $butterflySuffixes[mt_rand(0,count($butterflySuffixes
 $butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPrefixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisButterflyName == $thisSecondButterflyName);
-$combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
-$combinedButterflyPluralName = $thisButterflyName." ".$thisSecondButterflyName;
+$combinedButterflyName = ucfirst($thisButterflyName)." ".ucfirst($thisSecondButterflyName);
+$combinedButterflyPluralName = ucfirst($thisButterflyName)." ".ucfirst($thisSecondButterflyName);
 
 
 
@@ -1965,7 +1966,7 @@ $combinedBatName = '';
 $batJsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/bat-grammar.json');
 $batJson = json_decode($batJsonResults, true);
 $whichBatElem = mt_rand(0,(count($batJson['name'])-1));
-$combinedBatName = $batJson['name'][$whichBatElem];
+$combinedBatName = ucfirst($batJson['name'][$whichBatElem]);
 $batConnector = 'the ';
 $batExtendingName = '';
 switch (mt_rand(0,2)) {
@@ -1980,6 +1981,9 @@ $batExtendingName = $batJson['evocative'][(mt_rand(0,(count($batJson['evocative'
 break;
 }
 $batPhysicalName = $batJson['physical'][(mt_rand(0,(count($batJson['physical'])-1)))];
+
+$batPhysicalName = ucfirst($batPhysicalName);
+$batExtendingName = ucfirst($batExtendingName);
 switch (mt_rand(0,4)) {
 case 0:
 $combinedBatName = $batExtendingName." ".$combinedBatName;
@@ -2132,8 +2136,8 @@ if(strpos($startingText, '++season++') !== false) {
     if($seasonAfter >= count($allSeasons)) {
             $seasonAfter = 0;
         }
-    $startingText = str_replace('++season++', '<i>'.$startingSeasons[$firstSeason].'</i>', $startingText);
-    $startingText = str_replace('++seasonafter++', '<i>'.$allSeasons[$seasonAfter].'</i>', $startingText);
+    $startingText = str_replace('++season++', $startingSeasons[$firstSeason], $startingText);
+    $startingText = str_replace('++seasonafter++', $allSeasons[$seasonAfter], $startingText);
 }
 
 if(strpos($startingText, '++otherplants++') !== false) {
@@ -2151,8 +2155,9 @@ if(strpos($startingText, '++otherplants++') !== false) {
 	  }
 	}
 	mysqli_free_result($plantNameResult);
-	$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
+	
 	do {
+		$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
 		$startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
 	
 		$plantNamesUsed++;

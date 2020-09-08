@@ -26,18 +26,16 @@ extract($row);
 
 	<h2 itemprop="name"><?php echo $latinName; ?></h2>
 	<h3>
-        <?php
+<?php
+
+
+        
 $allCommonNames = explode("/",$commonNamesJoined);
 for ($i=0; $i<count($allCommonNames);$i++) {
-    echo '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
-    if(count($allCommonNames)>1) {
-    if($i == count($allCommonNames)-2) {
-echo ' or ';
-    } else if($i != count($allCommonNames)-1) {
-    echo ', ';
+    $richSnippetText = '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
+    $commonNames = str_replace($allCommonNames[$i], $richSnippetText, $commonNames);
 }
-}
-}
+echo $commonNames;
         ?>
     </h3>
 	<p><?php echo $plantDesc; ?></p>

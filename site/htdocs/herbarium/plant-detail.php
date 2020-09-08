@@ -24,36 +24,14 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 if (mysqli_num_rows($result) > 0) {
 $row = mysqli_fetch_array($result);
 extract($row);
-?>
-
-
-
-<?php
 	echo buildBreadCrumb('herbarium/'.$plantUrl,'The Herbarium/'.$latinName);
 ?>
 
-
-
 </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <?php
-
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/plant-detail.php");
-
 } else {
 	
 echo "<h2>Sorry, couldn't find that plant</h2>";
@@ -63,16 +41,6 @@ echo "<h2>Sorry, couldn't find that plant</h2>";
 }
 
 ?>
-
-
-
-
-
-
-
-
-
-
 
 <?php
 

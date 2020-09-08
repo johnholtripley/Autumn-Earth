@@ -422,13 +422,29 @@ $virtueText = generateMonths($virtueText);
         default:
         
 
-foreach ($json[$whichBaseStringToUse] as $value) {
+
+$allBaseStrings = array("origin", "origin-aquatic", "origin-night");
+foreach ($allBaseStrings as $whichOrigin) {
+ if ($whichOrigin == 'origin-night') {
+    $isNight = 1;
+} else {
+$isNight = 0;
+}
+    $startingText .= '<hr style="margin: 24px 0;"><h2>'.ucfirst(str_replace('origin-','',$whichOrigin)).':</h2>';
+    foreach ($json[$whichOrigin] as $value) {
     $baseText = '';
 $baseText .= '<p>'.ucfirst($value).'</p>';
 $baseText = findAndReplaceHashes($baseText);
 $baseText = generateMonths($baseText);
 $startingText .= $baseText;
 }
+}
+
+
+
+
+
+
 
     }
 
@@ -443,8 +459,8 @@ $thisSecondButterflyName = $butterflySuffixes[mt_rand(0,count($butterflySuffixes
 $butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPrefixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisButterflyName == $thisSecondButterflyName);
-$combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
-$combinedButterflyPluralName = $thisButterflyName." ".$thisSecondButterflyName;
+$combinedButterflyName = ucfirst($thisButterflyName)." ".ucfirst($thisSecondButterflyName);
+$combinedButterflyPluralName = ucfirst($thisButterflyName)." ".ucfirst($thisSecondButterflyName);
 
 
 
@@ -486,7 +502,7 @@ $combinedBatName = '';
 $batJsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/bat-grammar.json');
 $batJson = json_decode($batJsonResults, true);
 $whichBatElem = mt_rand(0,(count($batJson['name'])-1));
-$combinedBatName = $batJson['name'][$whichBatElem];
+$combinedBatName = ucfirst($batJson['name'][$whichBatElem]);
 $batConnector = 'the ';
 $batExtendingName = '';
 switch (mt_rand(0,2)) {
@@ -501,6 +517,9 @@ $batExtendingName = $batJson['evocative'][(mt_rand(0,(count($batJson['evocative'
 break;
 }
 $batPhysicalName = $batJson['physical'][(mt_rand(0,(count($batJson['physical'])-1)))];
+
+$batPhysicalName = ucfirst($batPhysicalName);
+$batExtendingName = ucfirst($batExtendingName);
 switch (mt_rand(0,4)) {
 case 0:
 $combinedBatName = $batExtendingName." ".$combinedBatName;
@@ -583,7 +602,7 @@ if(substr($primaryCommonName, -1) == "x") {
     $primaryCommonNamePlural = $primaryCommonName."es";
 }
 
-$startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
+$startingText = str_ireplace("++commonnameplural++", '<i>'.$primaryCommonNamePlural.'</i>', $startingText);
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/petal-colours.php");
 $petalColourName = random_key($petalColours);
@@ -615,7 +634,7 @@ $petalGreen = capValues($petalGreen,0,255);
 $petalBlue = capValues($petalBlue,0,255);
 
 
-$startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
+$startingText = str_ireplace("++petalcolour++", '<i>'.$displayPetalColourName.'</i>', $startingText);
 
 $displayPetalColourIshName = $displayPetalColourName."ish";
 if($displayPetalColourIshName == "redish") {
@@ -623,7 +642,7 @@ $displayPetalColourIshName = "reddish";
 }
 
 
-$startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $startingText);
+$startingText = str_ireplace("++petalcolourish++", '<i>'.$displayPetalColourIshName.'</i>', $startingText);
 
 
 
@@ -663,9 +682,10 @@ if(strpos($startingText, '++otherplants++') !== false) {
       }
     }
     mysqli_free_result($plantNameResult);
-    $plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
+
     do {
-        $startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
+        $plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
+        $startingText = str_replace_first('++otherplants++', '<a href="/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
         // for any further occurences, use the subsequent month name to make more sense:
         $plantNamesUsed++;
         if($plantNamesUsed >= count($plantNamesUsed)) {
