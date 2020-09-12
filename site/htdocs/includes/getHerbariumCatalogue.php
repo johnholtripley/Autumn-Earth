@@ -95,14 +95,14 @@ $additionalClass .= " imageOffset";
 }
 
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'" data-night="'.$isNight.'"><div '.$innerClass.' itemscope itemtype="http://schema.org/Thing/Species">';
-				$htmlOutput .= '<a itemprop="mainEntityOfPage" href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal" data-url="'.$plantUrl.'">';
+				$htmlOutput .= '<span itemprop="mainEntityOfPage">';
 
 
 
 
 
 
-	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
+	$htmlOutput .= '<h4 itemprop="name"><a href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal" data-url="'.$plantUrl.'">'.$latinName.'</a></h4><h5><a href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal" data-url="'.$plantUrl.'">';
 
 $allCommonNames = explode("/",$commonNamesJoined);
 for ($i=0; $i<count($allCommonNames);$i++) {
@@ -111,10 +111,10 @@ for ($i=0; $i<count($allCommonNames);$i++) {
 }
 $htmlOutput .= $commonNames;
 
-	$htmlOutput .= '</h5>';
+	$htmlOutput .= '</a></h5>';
 	// picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, ' itemprop="image"', $htmlOutput);
-$htmlOutput .= '<img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);">';
-	$htmlOutput .= '<p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate(strtotime($timeCreated))).'</p></a></div></li>';
+$htmlOutput .= '<a href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal" data-url="'.$plantUrl.'"><img src="/images/herbarium/plants/'.$plantUrl.'.png" style="-webkit-shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);shape-outside: url(/images/herbarium/plants/'.$plantUrl.'.png);"></a>';
+	$htmlOutput .= $plantDesc.'<p>Catalogued '.lcfirst(relativePastDate(strtotime($timeCreated))).'</p></span></div></li>';
 
 
 

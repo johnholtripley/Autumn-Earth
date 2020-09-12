@@ -84,8 +84,22 @@ set_time_limit(0);
 
 if(isset($_GET["clearMaps"])) {
 
-// Don't just do a single dungeon - do all of them ######################
+    if($isIncluded) {
 
+$thisPlayersId = $chr;
+} else {
+
+    $thisPlayersId = 999;
+        if(isset($_GET['chr'])) {
+    $thisPlayersId = $_GET['chr'];
+}
+}
+
+
+foreach ($dungeonDetails as $thisDungeonsName => $thisDungeonObject) {
+   
+  $dir = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName;
+  
  if (is_dir($dir)) { 
     if ($thisDirectory = opendir($dir)) {
       while (($file = readdir($thisDirectory)) !== false) {
@@ -97,10 +111,12 @@ if(isset($_GET["clearMaps"])) {
     closedir($thisDirectory);
     }
     
+    /*
     // restore session file:
     if (!copy('../data/source/session.php', $dir.'/session.php')) {
     // error handling ########
     }
+    */
     
     
   }
@@ -111,7 +127,6 @@ if(isset($_GET["clearMaps"])) {
     if ($thisDirectory = opendir($cartographyDirectory)) {
       while (($file = readdir($thisDirectory)) !== false) {
       if(is_file($cartographyDirectory."/".$file)) {
-      // don't delete any maps that have undiscovered treasure still on ###########################
         unlink($cartographyDirectory."/".$file);
       }
     }
@@ -119,6 +134,20 @@ if(isset($_GET["clearMaps"])) {
     }
   }
 
+  // delete backgrounds too:
+  $backgroundsDirectory = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/backgrounds";
+ if (is_dir($backgroundsDirectory)) { 
+    if ($thisDirectory = opendir($backgroundsDirectory)) {
+      while (($file = readdir($thisDirectory)) !== false) {
+      if(is_file($backgroundsDirectory."/".$file)) {
+        unlink($backgroundsDirectory."/".$file);
+      }
+    }
+    closedir($thisDirectory);
+    }
+  }
+
+}
 
 die();
 

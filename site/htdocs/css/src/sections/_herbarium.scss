@@ -51,6 +51,8 @@
         shape-image-threshold: 0.5;
         -webkit-shape-margin: 40px;
         shape-margin: 40px;
+        position: relative;
+        z-index: 1;
     }
 
     p {
@@ -58,10 +60,19 @@
         opacity: 0.85;
         @include pxRem('font-size', 13px);
         @include pxRem('line-height', 19px);
+        a {
+            color: $titleColour;
+            
+        }
     }
 
     h4 {
         font-style: italic;
+    }
+    h5, h4 {
+        a {
+            color: inherit;
+        }
     }
 
 }

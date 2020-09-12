@@ -97,7 +97,7 @@ $result = $twitterConnection->post('media/metadata/create', $parameters);
 
 var_dump($result);
 */
-$textString = $latinName."\r\n".$commonNameString;
+$textString = $latinName."\r\n".$commonNameString.".";
 // removing the paragraph tags means a space is needed between the sentences:
 $startingTextCorrected = str_replace('</p>', ' ', $startingText);
 
@@ -576,6 +576,7 @@ $shouldAddPrefix = mt_rand(1,11);
 	$shouldAddPrefix = mt_rand(1,44);
 }
 
+ $thisCommonName = ucwords(trim($thisCommonName));
 
 switch ($shouldAddPrefix) {
     case 1:
@@ -614,7 +615,7 @@ $thisCommonName = "False ".$thisCommonName;
 
 break;
     default:
-       $thisCommonName = ucfirst($thisCommonName);
+    
 } 
 return $thisCommonName;
 }
@@ -739,7 +740,7 @@ return $commandString;
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour, $plantCanvas;
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour, $plantCanvas, $commandString;
 	$canvaDimension = 2500;
 	$outputCanvaDimension = 754;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
@@ -1557,10 +1558,14 @@ imagesavealpha($transparentImageMask, true);
 	imagefill($transparentImageMask, 0, 0, $transparentGroundMask);
 
 
-$filledGroundColour = array(219, 215, 190);
-$resizedGround = imagecolorallocate($imageResampled, $filledGroundColour[0], $filledGroundColour[1], $filledGroundColour[2]);
+//$filledGroundColour = array(219, 215, 190);
+//$resizedGround = imagecolorallocate($imageResampled, $filledGroundColour[0], $filledGroundColour[1], $filledGroundColour[2]);
+//imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
+$groundTexture = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT']."/images/herbarium/catalogue-background-NOT_MINE.jpg");
+$groundOffsetPossibleX = imagesx($groundTexture) - $outputCanvaDimension;
+$groundOffsetPossibleY = imagesy($groundTexture) - $outputCanvaDimension;
+imagecopy($imageResampled, $groundTexture, 0,0,mt_rand(0,$groundOffsetPossibleX),mt_rand(0,$groundOffsetPossibleY),$outputCanvaDimension, $outputCanvaDimension);
 
-imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
 imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 imagecopyresampled($transparentImageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 imagecopyresampled($transparentImageMask, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
@@ -1602,6 +1607,7 @@ imagesetpixel($transparentImageResampled, $x,$y, imagecolorallocatealpha($transp
 	imagedestroy($plantCanvas);
 	imagedestroy($textureOverlay);
 	imagedestroy($imageResampled);
+	imagedestroy($groundTexture);
 	imagedestroy($transparentImageResampled);
 	imagedestroy($transparentImageMask);
 
@@ -2213,6 +2219,9 @@ echo "<h2>".$commonNameString.".</h2>";
 echo '<p>'.$startingText.'</p>';
 
 $plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
+if($debug) {
+$drawStartTime = microtime(true);
+}
 drawPlant();
 
 echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.png" width="480" height="480" alt="'.$latinName.'">';
@@ -2228,22 +2237,21 @@ if($debug) {
 $debugQueryString = '?debug=true';
 }
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].$debugQueryString.'">New seed</a></p>';
-echo '<p style="font-size:0.7em;"><a href="/herbarium/">The full Herbarium</a></p>';
+echo '<p style="font-size:0.7em;"><a href="/herbarium/" target="_blank">The full Herbarium</a> | <a href="https://twitter.com/HerbariumArcana" target="_blank">Twitter</a></p>';
 
 $lastError = error_get_last();
 
 if(stripos($lastError["file"], "generate.php") === false) {
 	// don't Tweet if any errors within this file (may be error reported in connection include for example):
-
 	sendToTwitter();
-
 }
 
-
-
 if($debug) {
+echo '<p style="font-size:0.7em;">'.$commandString.'</p>';
 $timeElapsedSecs = microtime(true) - $startTime;
-echo '<p style="font-size:0.7em;">Took '.number_format($timeElapsedSecs, 2).' seconds</p>';
+$timeElapsedDrawingSecs = microtime(true) - $drawStartTime;
+$textElapsedTime = $timeElapsedSecs - $timeElapsedDrawingSecs;
+echo '<p style="font-size:0.7em;">Drawing took '.number_format($timeElapsedDrawingSecs, 2).' seconds - text took '.number_format($textElapsedTime, 2).' - total time was '.number_format($timeElapsedSecs, 2).' seconds.</p>';
 }
 
 
