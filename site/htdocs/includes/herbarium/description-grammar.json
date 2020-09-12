@@ -64,12 +64,19 @@
     "on": ["on", "upon"],
     "in": ["in", "in", "in or near"],
     "region": ["(Will be replaced with data from the database - tblRegions)"],
-    "regional": ["Norse", "European"],
     "city": ["Woven", "Farthingate"],
+
+
+
     "river": ["Trent"],
+    "regional": ["Norse", "European"],
     "country": ["England", "Wales", "Scotland"],
+
+
+
+
     "abundantly": ["in divers places of this land", "in divers other places", "almost in every county of this land", "in all counties of this land", "in all parts of this land", "in many places of this land", "in many parts of this land", "in many other places in this nation", "throughout this land", "through all this land", "in sundry places in this land"],
-    "peoples": ["Northerners"],
+    "peoples": ["Dwarrow"],
     "apothecary": ["Bald", "Galen"],
     "reference": ["it", "it", "it", "this", "this", "this", "++commonname++", "the ++commonname++", "our ++commonname++"],
     "referenceplural": ["they", "++commonnameplural++", "these", "they", "these", "they", "these", "our ++commonnameplural++"]
