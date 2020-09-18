@@ -3209,6 +3209,11 @@ window.Loader = (function() {
 })();
 
 // -----------------------------------------------------------
+function homeStoneToHouse() {
+    // need to make sure this is clear (the assumption is that all plots will be placed with a clear 1 tile around them so they never block a path):
+    jumpToLocation(hero.housing.southEastCornerTileX + 1, hero.housing.southEastCornerTileY + 1);
+}
+
 function placePlotPlacement() {
     if (plotPlacement.numberOfBlockedTiles == 0) {
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
@@ -6531,6 +6536,7 @@ var UI = {
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('bankBuyMoreSlots').onclick = UI.buyMoreBankSlots;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
+        document.getElementById('housingHomeStoneButton').onclick = homeStoneToHouse;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;

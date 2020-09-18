@@ -228,6 +228,7 @@ var UI = {
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('bankBuyMoreSlots').onclick = UI.buyMoreBankSlots;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
+        document.getElementById('housingHomeStoneButton').onclick = homeStoneToHouse;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;

@@ -80,9 +80,11 @@ $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
     <li class="socialFacebook">
         <a class="popupWindow" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $urlToShare; ?>">Share on Facebook</a>
     </li>
+    <?php /*
     <li class="socialGoogle">
         <a class="popupWindow" target="_blank" href="https://plus.google.com/share?url=<?php echo $urlToShare; ?>">Share on Google+</a>
     </li>
+    */ ?>
         <li class="socialTumblr">
         <a class="popupWindow" target="_blank" href="https://tumblr.com/widgets/share/tool?canonicalUrl=<?php echo $urlToShare; ?>&amp;posttype=photo&amp;caption=<?php echo $descToShare; ?>&amp;content=<?php echo $shareImagePath; ?>">Share on Tumblr</a>
     </li>

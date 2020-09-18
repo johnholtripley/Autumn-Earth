@@ -1,3 +1,8 @@
+function homeStoneToHouse() {
+    // need to make sure this is clear (the assumption is that all plots will be placed with a clear 1 tile around them so they never block a path):
+    jumpToLocation(hero.housing.southEastCornerTileX + 1, hero.housing.southEastCornerTileY + 1);
+}
+
 function placePlotPlacement() {
     if (plotPlacement.numberOfBlockedTiles == 0) {
         document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
