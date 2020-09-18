@@ -200,7 +200,6 @@ var UI = {
             }
         }
 
-        // inventoryPanels.innerHTML = inventoryMarkup;
         inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
         bankCurrency.insertAdjacentHTML('beforebegin', bankMarkup);
         gameWrapper.ondblclick = UI.doubleClick;
@@ -228,7 +227,6 @@ var UI = {
         document.getElementById('touchTapAction').onclick = UI.touchTapAction;
         document.getElementById('bankBuyMoreSlots').onclick = UI.buyMoreBankSlots;
         document.getElementById('openHousingConstructButton').onclick = UI.openHousingConstructionPanel;
-        document.getElementById('housingHomeStoneButton').onclick = homeStoneToHouse;
         document.getElementById('housingTileSelection').onclick = housingNameSpace.selectNewTile;
         document.getElementById('housingConstructionSaveButton').onclick = housingNameSpace.commitDesign;
         document.getElementById('housingConstructionTools').onclick = housingNameSpace.changeActiveTool;
@@ -432,6 +430,8 @@ checkIfWorkshopItemIsComplete(e.target.closest('.itemSlot'));
             UI.readPostMessage(thisNode.id);
         } else if (thisNode.id.substring(0, 8) == "fromSlot") {
             addCraftingComponents(thisNode.id, true);
+        } else if (thisNode.id == "housingHomeStoneButton") {
+homeStoneToHouse();
         }
 
 
