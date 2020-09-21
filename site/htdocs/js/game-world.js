@@ -546,8 +546,8 @@ var hero = {
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,
     //   animationUpdateTime: (1000 / animationFramesPerSecond),
-    spriteWidth: 83,
-    spriteHeight: 88,
+    spriteWidth: 99,
+    spriteHeight: 105,
     isMoving: false,
     facing: 's',
     terrain: 'earth',
@@ -570,7 +570,7 @@ var hero = {
             "w": 3
         },
         "idle": {
-            "length": 31,
+            "length": 30,
             "start-row": 8,
             "n": 0,
             "e": 1,
@@ -580,6 +580,22 @@ var hero = {
         "music": {
             "length": 18,
             "start-row": 12,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
+        },
+                "draw": {
+            "length": 73,
+            "start-row": 16,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
+        },
+                "cast": {
+            "length": 81,
+            "start-row": 20,
             "n": 0,
             "e": 1,
             "s": 2,
@@ -6712,18 +6728,11 @@ var UI = {
 
     doubleClick: function(e) {
         var thisItemsAction = e.target.getAttribute('data-action');
-        //    if (thisItemsAction) {
-        //        inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
-        //    } else {
-
         var thisNode = getNearestParentId(e.target);
-
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id, false);
         } else if (thisNode.id.substring(0, 13) == "workshopItems") {
-            
-checkIfWorkshopItemIsComplete(e.target.closest('.itemSlot'));
-            
+            checkIfWorkshopItemIsComplete(e.target.closest('.itemSlot'));
         } else if (thisNode.id.substring(0, 8) == "workshop") {
             recipeSelectComponents(e.target.closest('li').getAttribute('data-recipe'), true);
         } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -6739,15 +6748,11 @@ checkIfWorkshopItemIsComplete(e.target.closest('.itemSlot'));
         } else if (thisNode.id.substring(0, 8) == "fromSlot") {
             addCraftingComponents(thisNode.id, true);
         } else if (thisNode.id == "housingHomeStoneButton") {
-homeStoneToHouse();
+            homeStoneToHouse();
         }
-
-
         if (thisItemsAction) {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
-
-        //   }
     },
 
     showDialogue: function(thisObjectSpeaking, text) {
