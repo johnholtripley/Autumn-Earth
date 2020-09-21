@@ -552,6 +552,7 @@ var hero = {
     facing: 's',
     terrain: 'earth',
     currentAnimation: 'idle',
+    currentStateAnimation: '',
     "animation": {
         "walk": {
             "length": 19,
@@ -5172,6 +5173,17 @@ if (window.Worker) {
 function updateLightMap() {
     lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange, lightMap]);
 }
+var magic = {
+     heroCast: function() {
+        hero.currentStateAnimation = 'cast';
+        // save currentAnimationFrame so this can start at frame 1
+        // need callback on animation end
+        // ###ss
+     },
+     heroDraw: function () {
+        hero.currentStateAnimation = 'draw';
+     }
+}
 const music = {
     currentInstrument: '',
     isTranscribing: true,
@@ -8349,6 +8361,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         music.startTranscription();
                     }
                     break;
+                    case "cast":
+                    magic.heroCast();
+                    break;
+                    case "draw":
+                    magic.heroDraw();
+                    break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();
@@ -11360,10 +11378,14 @@ function update() {
 
             music.exitMusicMode();
         }
+        hero.currentStateAnimation = '';
     } else {
 
         if (music.currentInstrument != '') {
             hero.currentAnimation = 'music';
+            hero.currentStateAnimation = '';
+        } else if (hero.currentStateAnimation != '') {
+            hero.currentAnimation = hero.currentStateAnimation;
         } else {
             hero.currentAnimation = 'idle';
         }

@@ -159,6 +159,7 @@ var hero = {
     facing: 's',
     terrain: 'earth',
     currentAnimation: 'idle',
+    currentStateAnimation: '',
     "animation": {
         "walk": {
             "length": 19,

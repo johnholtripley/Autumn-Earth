@@ -2025,6 +2025,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         music.startTranscription();
                     }
                     break;
+                    case "cast":
+                    magic.heroCast();
+                    break;
+                    case "draw":
+                    magic.heroDraw();
+                    break;
                 case "plant-breeding":
                     if (activeAction == "survey") {
                         surveyingStopped();

@@ -1837,10 +1837,14 @@ function update() {
 
             music.exitMusicMode();
         }
+        hero.currentStateAnimation = '';
     } else {
 
         if (music.currentInstrument != '') {
             hero.currentAnimation = 'music';
+            hero.currentStateAnimation = '';
+        } else if (hero.currentStateAnimation != '') {
+            hero.currentAnimation = hero.currentStateAnimation;
         } else {
             hero.currentAnimation = 'idle';
         }
