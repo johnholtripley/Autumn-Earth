@@ -26,7 +26,9 @@ var soundsToLoad = {
     'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3',
     'splash': '../sounds/water-splash-NOT_MINE-fesliyanstudios.mp3',
     'whistle': '../sounds/whistle-NOT_MINE-wow.mp3',
-    'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3'
+    'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3',
+    'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
+    'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3'
 };
 
 

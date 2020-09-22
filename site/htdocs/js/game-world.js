@@ -27,7 +27,9 @@ var soundsToLoad = {
     'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3',
     'splash': '../sounds/water-splash-NOT_MINE-fesliyanstudios.mp3',
     'whistle': '../sounds/whistle-NOT_MINE-wow.mp3',
-    'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3'
+    'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3',
+    'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
+    'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3'
 };
 
 
@@ -5175,12 +5177,14 @@ function updateLightMap() {
 }
 var magic = {
      heroCast: function() {
+          audio.playSound(soundEffects['cast-summon'], 0);
         hero.currentStateAnimation = 'cast';
         // save currentAnimationFrame so this can start at frame 1
         // need callback on animation end
         // ###ss
      },
      heroDraw: function () {
+        audio.playSound(soundEffects['draw-energy'], 0);
         hero.currentStateAnimation = 'draw';
      }
 }
