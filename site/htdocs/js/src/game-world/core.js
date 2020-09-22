@@ -374,7 +374,7 @@ function loadNewVisibleMapAssets(whichMap) {
     var backgroundSource = '/images/game-world/backgrounds/' + whichMap + '.png';
     if (whichMap < 0) {
         whichMap = 'dungeon/' + randomDungeonName;
-        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + whichMap + '.png';
+        backgroundSource = '/data/chr' + characterId + '/dungeon/' + randomDungeonName + '/backgrounds/' + whichMap + '.png';
     }
     // doesn't need full loader - don't need progress etc.:
     var newBackground = new Image();
@@ -688,12 +688,12 @@ function loadMapAssets() {
         } else {
 
 
-    if (visibleMaps[m] < 0) {
-        
-        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + currentMap + '.jpg';
-    } else {
-        backgroundSource = '/images/game-world/backgrounds/' + assetPath + '.png';
-    }
+            if (visibleMaps[m] < 0) {
+
+                backgroundSource = '/data/chr' + characterId + '/dungeon/' + randomDungeonName + '/backgrounds/' + currentMap + '.jpg';
+            } else {
+                backgroundSource = '/images/game-world/backgrounds/' + assetPath + '.png';
+            }
 
             imagesToLoad.push({
                 name: "backgroundImg" + visibleMaps[m],
@@ -1834,7 +1834,6 @@ function update() {
             hero.currentAnimation = 'walk';
         }
         if (music.currentInstrument != '') {
-
             music.exitMusicMode();
         }
         hero.currentStateAnimation = '';
@@ -1883,7 +1882,13 @@ function update() {
 }
 
 
-
+function changeHeroState(whichState) {
+    if (music.currentInstrument != '') {
+        music.exitMusicMode();
+    }
+    activeAction = "";
+    hero.currentStateAnimation = whichState;
+}
 
 
 function updateVisibleMaps() {
@@ -3960,11 +3965,35 @@ function draw() {
 
 
         // get all assets to be drawn in a list
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY, heroOffsetCol, heroOffsetRow;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-        var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
-        var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
+
+        if (hero.currentStateAnimation == '') {
+            heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
+        } else {
+            heroOffsetCol = (currentAnimationFrame + 1 - hero.animationWaitingTimer) % hero["animation"][hero.currentAnimation]["length"];
+            if ((heroOffsetCol + 1) == hero["animation"][hero.currentAnimation]["length"]) {
+                // animation finished:
+                hero.currentStateAnimation = '';
+            }
+            if (typeof hero.animationCallback !== "undefined") {
+                if (heroOffsetCol >= hero.animationCallback[0]) {
+
+                    var dynamicFunctionSplit = hero.animationCallback[1].split(".");
+                    if (dynamicFunctionSplit.length > 1) {
+                        window[dynamicFunctionSplit[0]][dynamicFunctionSplit[1]]();
+                    } else {
+                        window[hero.animationCallback[1]]();
+                    }
+
+                    delete hero.animationCallback;
+                }
+
+            }
+        }
+        heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
+
         // determine if any clipping needs to occur for being in a body of water:
 
         var heroClipping = 0;

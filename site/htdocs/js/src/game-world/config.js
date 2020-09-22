@@ -147,8 +147,8 @@ var hero = {
 
     width: 20,
     length: 20,
-    centreX: 51,
-    centreY: 68,
+    centreX: 55,
+    centreY: 81,
     speed: 4,
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,
@@ -160,6 +160,8 @@ var hero = {
     terrain: 'earth',
     currentAnimation: 'idle',
     currentStateAnimation: '',
+    animationWaitingTimer: 0,
+
     "animation": {
         "walk": {
             "length": 19,

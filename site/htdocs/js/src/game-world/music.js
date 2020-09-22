@@ -1,6 +1,6 @@
 const music = {
     currentInstrument: '',
-    isTranscribing: true,
+    isTranscribing: false,
     currentTranscriptionStartTime: '',
     currentTranscription: [],
     isPlayingBackTranscription: false,

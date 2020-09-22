@@ -542,8 +542,8 @@ var hero = {
 
     width: 20,
     length: 20,
-    centreX: 51,
-    centreY: 68,
+    centreX: 55,
+    centreY: 81,
     speed: 4,
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,
@@ -555,6 +555,8 @@ var hero = {
     terrain: 'earth',
     currentAnimation: 'idle',
     currentStateAnimation: '',
+    animationWaitingTimer: 0,
+
     "animation": {
         "walk": {
             "length": 19,
@@ -5176,21 +5178,40 @@ function updateLightMap() {
     lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange, lightMap]);
 }
 var magic = {
-     heroCast: function() {
-          audio.playSound(soundEffects['cast-summon'], 0);
-        hero.currentStateAnimation = 'cast';
-        // save currentAnimationFrame so this can start at frame 1
-        // need callback on animation end
-        // ###ss
-     },
-     heroDraw: function () {
-        audio.playSound(soundEffects['draw-energy'], 0);
-        hero.currentStateAnimation = 'draw';
-     }
+    heroCast: function() {
+        if (hero.currentStateAnimation != 'cast') {
+            audio.playSound(soundEffects['cast-summon'], 0);
+            hero.animationWaitingTimer = currentAnimationFrame;
+
+            changeHeroState('cast');
+            // number of frames to trigger the callback, and then the callback function name
+            // (don't use animation frame end, as the action will have visually completed and then there's an animated reset after)
+            hero.animationCallback = [62, "magic.heroCastComplete"];
+            // need callback on animation end
+        }
+    },
+
+    heroCastComplete: function() {
+        console.log("cast complete");
+    },
+
+    heroDraw: function() {
+        if (hero.currentStateAnimation != 'draw') {
+            audio.playSound(soundEffects['draw-energy'], 0);
+            hero.animationWaitingTimer = currentAnimationFrame;
+            
+            changeHeroState('draw');
+            hero.animationCallback = [52, "magic.heroDrawComplete"];
+        }
+    },
+
+    heroDrawComplete: function() {
+        console.log("draw complete");
+    }
 }
 const music = {
     currentInstrument: '',
-    isTranscribing: true,
+    isTranscribing: false,
     currentTranscriptionStartTime: '',
     currentTranscription: [],
     isPlayingBackTranscription: false,
@@ -7244,7 +7265,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 // is a recipe - check it's relevant to this workshop's profession:
                 var relevantRecipes = thisNode.getAttribute('data-possiblerecipes').split(",");
                 // make sure the contains is treated as a string to match the string numbers from the data attribute:
-                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains+'') != -1) {
+                if (relevantRecipes.indexOf(UI.draggedInventoryObject.contains + '') != -1) {
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     UI.droppedSuccessfully();
@@ -7322,8 +7343,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         splitStackInput.focus();
 
 
-                     
-                           splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+
+                        splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                         var clickedSlotRect = thisNode.getBoundingClientRect();
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                         // 3px padding on the slots:
@@ -7412,17 +7433,17 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     workshopPanelSingleClick: function(e) {
-           //.closest not supported in IE11 ###
-       var thisRecipeNode = e.target.closest('li');
-            if (UI.highlightedWorkshopRecipe != "") {
-                document.getElementById('workshop'+workshopObject.workshopHash).querySelector('li[data-recipe="'+UI.highlightedWorkshopRecipe+'"]').classList.remove('highlighted');
-            
-            }
-            UI.highlightedWorkshopRecipe = thisRecipeNode.getAttribute('data-recipe');
-            thisRecipeNode.classList.add('highlighted');
-         
-            e.target.closest(".workshop").querySelector('.workshopRecipeCreateButton').disabled = false;
-        
+        //.closest not supported in IE11 ###
+        var thisRecipeNode = e.target.closest('li');
+        if (UI.highlightedWorkshopRecipe != "") {
+            document.getElementById('workshop' + workshopObject.workshopHash).querySelector('li[data-recipe="' + UI.highlightedWorkshopRecipe + '"]').classList.remove('highlighted');
+
+        }
+        UI.highlightedWorkshopRecipe = thisRecipeNode.getAttribute('data-recipe');
+        thisRecipeNode.classList.add('highlighted');
+
+        e.target.closest(".workshop").querySelector('.workshopRecipeCreateButton').disabled = false;
+
     },
 
     workshopRecipeCreate: function() {
@@ -7489,8 +7510,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         UI.removeActiveDialogue();
 
                     }
-} else if (e.target.parentNode.id == 'retinuePanel') {
-     if (activeObjectForDialogue != '') {
+                } else if (e.target.parentNode.id == 'retinuePanel') {
+                    if (activeObjectForDialogue != '') {
                         //  dialogue.classList.add("slowerFade");
                         dialogue.classList.remove("active");
                         activeObjectForDialogue.speechIndex = 0;
@@ -7597,7 +7618,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     openWorkshop: function(whichWorkshop) {
-         workshopObject.workshopHash = generateHash(whichWorkshop);
+        workshopObject.workshopHash = generateHash(whichWorkshop);
         UI.showUI();
         workshopObject.workshopCurrentlyOpen = workshopObject.workshopHash;
         UI.getActiveWorkshopItem(workshopObject.workshopHash);
@@ -7609,7 +7630,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         whichWorkshopPanel.querySelector('.workshopRecipeCreateButton').disabled = true;
         // remove highlight on all recipes:
         var allPanelRecipes = whichWorkshopPanel.querySelectorAll('.availableRecipes li');
-        for (var i=0;i<allPanelRecipes.length;i++) {
+        for (var i = 0; i < allPanelRecipes.length; i++) {
             allPanelRecipes[i].classList.remove('highlighted');
         }
     },
@@ -7617,15 +7638,15 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     getActiveWorkshopItem: function(workshopHash) {
         // find which item is actively being crafted:
         var allQueuedItems = document.getElementById("workshop" + workshopHash).querySelectorAll('.itemSlot');
-            for (var i = 0; i < allQueuedItems.length; i++) {
-                if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
-                    workshopObject.activeItemSlot = allQueuedItems[i];
-                    workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
-                    workshopObject.activeItemSlot.querySelector('.status').innerHTML = 'Crafting (<span>' + parseTime(workshopObject.activeSlotTimeRequired) + '</span>)';
+        for (var i = 0; i < allQueuedItems.length; i++) {
+            if (!(allQueuedItems[i].hasAttribute('data-complete'))) {
+                workshopObject.activeItemSlot = allQueuedItems[i];
+                workshopObject.activeSlotTimeRequired = parseInt(allQueuedItems[i].getAttribute('data-timeremaining'));
+                workshopObject.activeItemSlot.querySelector('.status').innerHTML = 'Crafting (<span>' + parseTime(workshopObject.activeSlotTimeRequired) + '</span>)';
 
-                    break;
-                }
+                break;
             }
+        }
     },
 
     closeWorkshop: function() {
@@ -7757,8 +7778,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                             shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
                             shopSplitStackInput.value = 1;
                             shopSplitStackInput.focus();
-                       
-                               splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+
+                            splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                             var clickedSlotRect = thisNode.getBoundingClientRect();
                             var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                             // 3px padding on the slots:
@@ -8156,7 +8177,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         chestContents += '<span class="qty">' + parseMoney(contents[i].quantity) + '</span>';
                     } else if (contents[i].type == "*") {
                         // just card dust:
-                         chestContents += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + contents[i].quantity + ' worth of card dust">';
+                        chestContents += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + contents[i].quantity + ' worth of card dust">';
                         chestContents += '<p><em>' + contents[i].quantity + ' worth of card dust </em></p>';
                         chestContents += '<span class="qty">' + contents[i].quantity + '</span>';
                     } else {
@@ -8365,10 +8386,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         music.startTranscription();
                     }
                     break;
-                    case "cast":
+                case "cast":
                     magic.heroCast();
                     break;
-                    case "draw":
+                case "draw":
                     magic.heroDraw();
                     break;
                 case "plant-breeding":
@@ -9919,7 +9940,7 @@ function loadNewVisibleMapAssets(whichMap) {
     var backgroundSource = '/images/game-world/backgrounds/' + whichMap + '.png';
     if (whichMap < 0) {
         whichMap = 'dungeon/' + randomDungeonName;
-        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + whichMap + '.png';
+        backgroundSource = '/data/chr' + characterId + '/dungeon/' + randomDungeonName + '/backgrounds/' + whichMap + '.png';
     }
     // doesn't need full loader - don't need progress etc.:
     var newBackground = new Image();
@@ -10233,12 +10254,12 @@ function loadMapAssets() {
         } else {
 
 
-    if (visibleMaps[m] < 0) {
-        
-        backgroundSource = '/data/chr'+characterId+'/dungeon/'+randomDungeonName+'/backgrounds/' + currentMap + '.jpg';
-    } else {
-        backgroundSource = '/images/game-world/backgrounds/' + assetPath + '.png';
-    }
+            if (visibleMaps[m] < 0) {
+
+                backgroundSource = '/data/chr' + characterId + '/dungeon/' + randomDungeonName + '/backgrounds/' + currentMap + '.jpg';
+            } else {
+                backgroundSource = '/images/game-world/backgrounds/' + assetPath + '.png';
+            }
 
             imagesToLoad.push({
                 name: "backgroundImg" + visibleMaps[m],
@@ -11379,7 +11400,6 @@ function update() {
             hero.currentAnimation = 'walk';
         }
         if (music.currentInstrument != '') {
-
             music.exitMusicMode();
         }
         hero.currentStateAnimation = '';
@@ -11428,7 +11448,13 @@ function update() {
 }
 
 
-
+function changeHeroState(whichState) {
+    if (music.currentInstrument != '') {
+        music.exitMusicMode();
+    }
+    activeAction = "";
+    hero.currentStateAnimation = whichState;
+}
 
 
 function updateVisibleMaps() {
@@ -13505,11 +13531,35 @@ function draw() {
 
 
         // get all assets to be drawn in a list
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY, heroOffsetCol, heroOffsetRow;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-        var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
-        var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
+
+        if (hero.currentStateAnimation == '') {
+            heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
+        } else {
+            heroOffsetCol = (currentAnimationFrame + 1 - hero.animationWaitingTimer) % hero["animation"][hero.currentAnimation]["length"];
+            if ((heroOffsetCol + 1) == hero["animation"][hero.currentAnimation]["length"]) {
+                // animation finished:
+                hero.currentStateAnimation = '';
+            }
+            if (typeof hero.animationCallback !== "undefined") {
+                if (heroOffsetCol >= hero.animationCallback[0]) {
+
+                    var dynamicFunctionSplit = hero.animationCallback[1].split(".");
+                    if (dynamicFunctionSplit.length > 1) {
+                        window[dynamicFunctionSplit[0]][dynamicFunctionSplit[1]]();
+                    } else {
+                        window[hero.animationCallback[1]]();
+                    }
+
+                    delete hero.animationCallback;
+                }
+
+            }
+        }
+        heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
+
         // determine if any clipping needs to occur for being in a body of water:
 
         var heroClipping = 0;
