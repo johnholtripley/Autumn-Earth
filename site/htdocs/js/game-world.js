@@ -8167,7 +8167,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var chestContents = '';
         var thisChestObject;
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '-' + itemsMap + '">';
+            chestContents += '<li id="chestSlot_' + itemReference + '_' + i + '_' + itemsMap + '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -8206,7 +8206,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
-        chestIdOpen = itemReference + "-" + itemsMap;
+        chestIdOpen = itemReference + "_" + itemsMap;
         chestPanel.classList.add('active');
     },
 
@@ -8218,8 +8218,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     addFromChest: function(chestSlotId) {
-        var itemDetails = chestSlotId.split("-");
+     
+
+// use underscore so dungeon maps with negative ids work:
+        var itemDetails = chestSlotId.split("_");
         var whichMap = itemDetails[3];
+
         var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
         if (typeof whichChestItem !== "undefined") {
@@ -11317,7 +11321,7 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            chestIdSplit = chestIdOpen.split("-");
+            chestIdSplit = chestIdOpen.split("_");
             if (!(isInRange(hero.x, hero.y, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].x, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].y, closeDialogueDistance / 2))) {
                 UI.closeChest();
             }
@@ -11402,7 +11406,8 @@ function update() {
         if (music.currentInstrument != '') {
             music.exitMusicMode();
         }
-       cancelHeroState()
+        // this only needs running if the state has changed: ##
+       cancelHeroState();
 
 
 
@@ -11411,7 +11416,7 @@ function update() {
 
         if (music.currentInstrument != '') {
             hero.currentAnimation = 'music';
-            cancelHeroState()
+            cancelHeroState();
         } else if (hero.currentStateAnimation != '') {
             hero.currentAnimation = hero.currentStateAnimation;
         } else {
@@ -11462,10 +11467,12 @@ function changeHeroState(whichState) {
 
 function cancelHeroState() {
     hero.currentStateAnimation = '';
+    if (typeof hero.animationCallback !== "undefined") {
     if (typeof hero.animationCallback[2] !== "undefined") {
         // cancel the sound:
         hero.animationCallback[2].stop();
     }
+}
 }
 
 

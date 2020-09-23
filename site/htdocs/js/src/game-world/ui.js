@@ -1806,7 +1806,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         var chestContents = '';
         var thisChestObject;
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '-' + itemsMap + '">';
+            chestContents += '<li id="chestSlot_' + itemReference + '_' + i + '_' + itemsMap + '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -1845,7 +1845,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
-        chestIdOpen = itemReference + "-" + itemsMap;
+        chestIdOpen = itemReference + "_" + itemsMap;
         chestPanel.classList.add('active');
     },
 
@@ -1857,8 +1857,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     addFromChest: function(chestSlotId) {
-        var itemDetails = chestSlotId.split("-");
+     
+
+// use underscore so dungeon maps with negative ids work:
+        var itemDetails = chestSlotId.split("_");
         var whichMap = itemDetails[3];
+
         var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
         if (typeof whichChestItem !== "undefined") {

@@ -1751,7 +1751,7 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            chestIdSplit = chestIdOpen.split("-");
+            chestIdSplit = chestIdOpen.split("_");
             if (!(isInRange(hero.x, hero.y, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].x, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].y, closeDialogueDistance / 2))) {
                 UI.closeChest();
             }
@@ -1836,7 +1836,8 @@ function update() {
         if (music.currentInstrument != '') {
             music.exitMusicMode();
         }
-       cancelHeroState()
+        // this only needs running if the state has changed: ##
+       cancelHeroState();
 
 
 
@@ -1845,7 +1846,7 @@ function update() {
 
         if (music.currentInstrument != '') {
             hero.currentAnimation = 'music';
-            cancelHeroState()
+            cancelHeroState();
         } else if (hero.currentStateAnimation != '') {
             hero.currentAnimation = hero.currentStateAnimation;
         } else {
@@ -1896,10 +1897,12 @@ function changeHeroState(whichState) {
 
 function cancelHeroState() {
     hero.currentStateAnimation = '';
+    if (typeof hero.animationCallback !== "undefined") {
     if (typeof hero.animationCallback[2] !== "undefined") {
         // cancel the sound:
         hero.animationCallback[2].stop();
     }
+}
 }
 
 
