@@ -1836,12 +1836,16 @@ function update() {
         if (music.currentInstrument != '') {
             music.exitMusicMode();
         }
-        hero.currentStateAnimation = '';
+       cancelHeroState()
+
+
+
+
     } else {
 
         if (music.currentInstrument != '') {
             hero.currentAnimation = 'music';
-            hero.currentStateAnimation = '';
+            cancelHeroState()
         } else if (hero.currentStateAnimation != '') {
             hero.currentAnimation = hero.currentStateAnimation;
         } else {
@@ -1888,6 +1892,14 @@ function changeHeroState(whichState) {
     }
     activeAction = "";
     hero.currentStateAnimation = whichState;
+}
+
+function cancelHeroState() {
+    hero.currentStateAnimation = '';
+    if (typeof hero.animationCallback[2] !== "undefined") {
+        // cancel the sound:
+        hero.animationCallback[2].stop();
+    }
 }
 
 

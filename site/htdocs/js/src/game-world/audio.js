@@ -134,7 +134,7 @@ var audio = {
         } else {
             source.start(delay);
         }
-
+return source;
     },
 
 
