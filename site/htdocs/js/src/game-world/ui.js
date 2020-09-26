@@ -1909,6 +1909,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     if (typeof hero.actions[i][3]['pet-name'] !== "undefined") {
                         toolTipText += " " + hero.actions[i][3]['pet-name'];
                     }
+                    if (typeof hero.actions[i][3]['spell'] !== "undefined") {
+                        toolTipText += " " + hero.actions[i][3]['spell'];
+                    }
                 } else {
                     imageSrc = hero.actions[i][2] + '-' + hero.actions[i][1];
                     toolTipText = hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')';

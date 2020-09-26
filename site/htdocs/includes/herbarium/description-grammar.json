@@ -44,7 +44,7 @@
 	"The perfumed ++petalcolour++ flowers are well know to draw the ++butterfly++.",
 	"#|reference# is particularly well known to entice the ++butterfly++.",
 	"#|reference# is an excellent food plant for the ++butterfly++ larvae."],
-	"bees": ["Honey ", "Bumble", "Mason ", "Burrowing ", "Furrow ", "Carder "],
+	"bees": ["Honey ", "Bumble", "Mason ", "Burrowing ", "Furrow ", "Carder ", "Tunnelling "],
 	"batDetails": ["Divers colonies of bats delight in these; especially ++bat++.", "++bats++ swarm to these at dusk.", "#|reference# is particularly well known to entice the ++bat++.", "An excellent nector plant, alluring to the ++bat++.", "The heavily perfumed flowers are well know to draw the ++bat++."],
 	"habitats": ["#|dry-habitats#", "#|wet-habitats#"],
 	"dry-habitats": ["hedgerows", "gardens", "meadows"],

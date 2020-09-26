@@ -14,6 +14,7 @@ const music = {
     },
     enterMusicMode: function(whichInstrument) {
         music.currentInstrument = whichInstrument;
+        changeHeroState('music');
     },
     exitMusicMode: function() {
         music.currentInstrument = '';

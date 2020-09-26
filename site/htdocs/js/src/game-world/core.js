@@ -1827,33 +1827,21 @@ function update() {
         timeSinceLastFrameSwap = 0;
         animateFae();
     }
+
     if (hero.isMoving) {
         if (key[5]) {
-            hero.currentAnimation = 'run';
+            changeHeroState('run');
         } else {
-            hero.currentAnimation = 'walk';
+            changeHeroState('walk');
         }
-        if (music.currentInstrument != '') {
-            music.exitMusicMode();
-        }
-        // this only needs running if the state has changed: ##
-       cancelHeroState();
-
-
-
-
     } else {
-
-        if (music.currentInstrument != '') {
-            hero.currentAnimation = 'music';
-            cancelHeroState();
-        } else if (hero.currentStateAnimation != '') {
-            hero.currentAnimation = hero.currentStateAnimation;
-        } else {
-            hero.currentAnimation = 'idle';
+        if ((hero.state.name == 'run') || (hero.state.name == 'walk')) {
+            // hero was just moving and now isn't:
+            changeHeroState('idle');
         }
 
     }
+
     moveFae();
     moveNPCs();
     movePet();
@@ -1887,23 +1875,30 @@ function update() {
 }
 
 
-function changeHeroState(whichState) {
-    if (music.currentInstrument != '') {
-        music.exitMusicMode();
+function changeHeroState(whichState, callbackFrame = null, callback = null, associatedSound = null, playAnimationOnce = false) {
+    if (hero.state.name != whichState) {
+        if (hero.state.name == 'music') {
+            music.exitMusicMode();
+        }
+        hero.state.name = whichState;
+        if (hero.animation.hasOwnProperty(whichState)) {
+            hero.currentAnimation = whichState;
+        } else {
+            hero.currentAnimation = 'idle';
+        }
+        // check for assoicated sound and cancel it if so:
+        if (hero.state.associatedSound != null) {
+            hero.state.associatedSound.stop();
+        }
+        hero.state.startFrame = currentAnimationFrame;
+        hero.state.callback = callback;
+        hero.state.callbackFrame = callbackFrame;
+        hero.state.associatedSound = associatedSound;
+        hero.state.playAnimationOnce = playAnimationOnce;
     }
-    activeAction = "";
-    hero.currentStateAnimation = whichState;
 }
 
-function cancelHeroState() {
-    hero.currentStateAnimation = '';
-    if (typeof hero.animationCallback !== "undefined") {
-    if (typeof hero.animationCallback[2] !== "undefined") {
-        // cancel the sound:
-        hero.animationCallback[2].stop();
-    }
-}
-}
+
 
 
 function updateVisibleMaps() {
@@ -3984,29 +3979,8 @@ function draw() {
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
 
-        if (hero.currentStateAnimation == '') {
-            heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
-        } else {
-            heroOffsetCol = (currentAnimationFrame + 1 - hero.animationWaitingTimer) % hero["animation"][hero.currentAnimation]["length"];
-            if ((heroOffsetCol + 1) == hero["animation"][hero.currentAnimation]["length"]) {
-                // animation finished:
-                hero.currentStateAnimation = '';
-            }
-            if (typeof hero.animationCallback !== "undefined") {
-                if (heroOffsetCol >= hero.animationCallback[0]) {
 
-                    var dynamicFunctionSplit = hero.animationCallback[1].split(".");
-                    if (dynamicFunctionSplit.length > 1) {
-                        window[dynamicFunctionSplit[0]][dynamicFunctionSplit[1]]();
-                    } else {
-                        window[hero.animationCallback[1]]();
-                    }
-
-                    delete hero.animationCallback;
-                }
-
-            }
-        }
+        heroOffsetCol = (currentAnimationFrame + 1 - hero.state.startFrame) % hero["animation"][hero.currentAnimation]["length"];
         heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
 
         // determine if any clipping needs to occur for being in a body of water:
@@ -4025,6 +3999,28 @@ function draw() {
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, (hero.spriteHeight - heroClipping), Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, (hero.spriteHeight - heroClipping), , (hero.centreY - heroClipping / 2)]
         ];
+
+        if (hero.state.callbackFrame != null) {
+            if (heroOffsetCol >= hero.state.callbackFrame) {
+                var dynamicFunctionSplit = hero.state.callback.split(".");
+                if (dynamicFunctionSplit.length > 1) {
+                    window[dynamicFunctionSplit[0]][dynamicFunctionSplit[1]]();
+                } else {
+                    window[hero.state.callback]();
+                }
+                hero.state.callback = null;
+                hero.state.callbackFrame = null;
+                hero.state.associatedSound = null;
+            }
+        }
+
+        if (hero.state.playAnimationOnce) {
+            if (heroOffsetCol >= hero["animation"][hero.currentAnimation]["length"] - 1) {
+                changeHeroState('idle');
+            }
+        }
+
+
         if (interfaceIsVisible) {
             switch (activeAction) {
                 case 'dowse':

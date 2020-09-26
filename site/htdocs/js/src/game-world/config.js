@@ -159,8 +159,16 @@ var hero = {
     facing: 's',
     terrain: 'earth',
     currentAnimation: 'idle',
-    currentStateAnimation: '',
-    animationWaitingTimer: 0,
+    state: {
+        "name": 'idle',
+        "startFrame": 0,
+        "callback": null,
+        "callbackFrame": null,
+        "associatedSound": null,
+        "playAnimationOnce": false
+    },
+    //currentStateAnimation: '',
+    //animationWaitingTimer: 0,
 
     "animation": {
         "walk": {
