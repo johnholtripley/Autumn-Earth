@@ -637,6 +637,16 @@
         ],
         "doors": {},
         "items": [
+        
+{
+            "type": 117,
+                 "tileX": 21,
+                "tileY": 33,
+                "facing": "e"
+         
+                
+            },
+
         {
             "type": 112,
                  "tileX": 21,
