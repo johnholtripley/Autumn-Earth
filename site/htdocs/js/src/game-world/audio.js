@@ -28,7 +28,8 @@ var soundsToLoad = {
     'whistle': '../sounds/whistle-NOT_MINE-wow.mp3',
     'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3',
     'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
-    'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3'
+    'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
+    'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3'
 };
 
 
@@ -62,6 +63,7 @@ var loadAudioBuffer = function(url, name) {
 var audio = {
     lastTrack: "",
     playingHourChime: false,
+    proximitySounds: [],
     init: function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -103,17 +105,15 @@ var audio = {
         }
     },
 
-    playSound: function(buffer, delay, numberToPlay, volumeAdjustment) {
-        if (typeof numberToPlay === "undefined") {
-            numberToPlay = 0;
-        }
+    playSound: function(buffer, delay, numberToPlay = 0, volumeAdjustment) {
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.numberToPlay = numberToPlay;
         if (typeof volumeAdjustment !== "undefined") {
             // don't use 100% of the main sound volume:
+            // volumeAdjustment will be in the range 0 - 1
             var variableVolumeSoundGainNode = audioContext.createGain();
-            variableVolumeSoundGainNode.gain.value = volumeAdjustment / gameSettings.soundVolume;
+            variableVolumeSoundGainNode.gain.value = gameSettings.soundVolume * volumeAdjustment;
             variableVolumeSoundGainNode.connect(audioContext.destination);
             source.connect(variableVolumeSoundGainNode);
         } else {
@@ -134,7 +134,40 @@ var audio = {
         } else {
             source.start(delay);
         }
-return source;
+        return source;
+    },
+
+    playProximitySound: function(buffer) {
+        var source = audioContext.createBufferSource();
+
+        source.buffer = buffer;
+        var variableVolumeSoundGainNode = audioContext.createGain();
+        variableVolumeSoundGainNode.gain.value = gameSettings.soundVolume;
+        variableVolumeSoundGainNode.connect(audioContext.destination);
+        source.connect(variableVolumeSoundGainNode);
+        source.addEventListener('ended', function soundEnded(e) {
+            var proximityAudioGain;
+
+            // find the existing entry:
+            for (var i = 0; i < audio.proximitySounds.length; i++) {
+                if (this.buffer == buffer) {
+                    // recreate the buffer and update the array with the new one:
+                    proximityAudioGain = audio.playProximitySound(this.buffer);
+                    proximityAudioGain.gain.value = gameSettings.soundVolume * getTileProximityScale(hero.tileX, hero.tileY, audio.proximitySounds[i][1], audio.proximitySounds[i][2]);
+                    audio.proximitySounds[i][0] = proximityAudioGain;
+                    break;
+                }
+            }
+
+            // remove this event listener:
+            return e.currentTarget.removeEventListener('ended', soundEnded, false);
+        }, false);
+        if (!source.start) {
+            source.start = source.noteOn;
+        } else {
+            source.start(0);
+        }
+        return variableVolumeSoundGainNode;
     },
 
 

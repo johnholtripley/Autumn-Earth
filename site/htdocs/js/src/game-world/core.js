@@ -968,6 +968,7 @@ function initialiseNPC(whichNPC) {
 }
 
 function initialiseItem(whichItem) {
+    var proximityAudioGain;
     whichItem.x = getTileCentreCoordX(whichItem.tileX);
     whichItem.y = getTileCentreCoordY(whichItem.tileY);
     if (typeof whichItem.tileZ === "undefined") {
@@ -1008,6 +1009,12 @@ function initialiseItem(whichItem) {
     if (currentActiveInventoryItems[whichItem.type].action == "nest") {
         whichItem.timeLastSpawned = hero.totalGameTimePlayed;
         whichItem.spawnsRemaining = whichItem.additional;
+    }
+    if (typeof whichItem.proximitySound !== "undefined") {
+
+        proximityAudioGain = audio.playProximitySound(soundEffects[whichItem.proximitySound]);
+        proximityAudioGain.gain.value = gameSettings.soundVolume * getTileProximityScale(hero.tileX, hero.tileY, whichItem.tileX, whichItem.tileY);
+        audio.proximitySounds.push([proximityAudioGain, whichItem.tileX, whichItem.tileY, findWhichWorldMap(whichItem.tileX, whichItem.tileY)]);
     }
 }
 
@@ -2064,6 +2071,22 @@ function heroIsInNewTile() {
     }
     if (activeAction == "survey") {
         surveyingStopped();
+    }
+    checkProximitySounds();
+}
+
+function getTileProximityScale(ax, ay, bx, by) {
+    var tileDistance = getPythagorasDistance(ax, ay, bx, by);
+    tileDistance = capValues((1 / tileDistance), 0, 1);
+    console.log(tileDistance);
+    return tileDistance;
+}
+
+function checkProximitySounds() {
+    if (audio.proximitySounds.length > 0) {
+        for (var i = 0; i < audio.proximitySounds.length; i++) {
+            audio.proximitySounds[i][0].gain.value = gameSettings.soundVolume * getTileProximityScale(hero.tileX, hero.tileY, audio.proximitySounds[i][1], audio.proximitySounds[i][2]);
+        }
     }
 }
 

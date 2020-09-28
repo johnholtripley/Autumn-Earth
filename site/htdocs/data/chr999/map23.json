@@ -642,7 +642,8 @@
             "type": 117,
                  "tileX": 21,
                 "tileY": 33,
-                "facing": "e"
+                "facing": "e",
+                "proximitySound": "bees"
          
                 
             },
