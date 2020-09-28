@@ -2077,8 +2077,8 @@ function heroIsInNewTile() {
 
 function getTileProximityScale(ax, ay, bx, by) {
     var tileDistance = getPythagorasDistance(ax, ay, bx, by);
-    tileDistance = capValues((1 / tileDistance), 0, 1);
-    console.log(tileDistance);
+    tileDistance = (32 - (tileDistance)) / 32;
+    tileDistance = capValues(tileDistance, 0, 1);
     return tileDistance;
 }
 
