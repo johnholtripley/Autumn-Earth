@@ -495,10 +495,9 @@ function processNewVisibleMapData(whichNewMap) {
         initialiseItem(thisMapData[whichNewMap].items[i]);
     }
     for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
-
         initialiseNPC(thisMapData[whichNewMap].npcs[i]);
     }
-
+buildHotSpots();
 
     /*
     // look for shops:
@@ -1131,6 +1130,7 @@ function prepareGame() {
     fae.dz = 1;
     // fae.pulse = 0;
     setupWeather();
+    buildHotSpots();
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
@@ -1184,7 +1184,7 @@ function removeMapAssets() {
         }
     }
 
-
+// remove proximitySounds for this map ####
 
 }
 
@@ -1969,55 +1969,71 @@ function updateVisibleMaps() {
 
 }
 
+function buildHotSpots() {
+    var thisHotspot;
+    for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].hotspots.length; i++) {
+            thisHotspot = thisMapData[(visibleMaps[m])].hotspots[i];
+            if (typeof thisHotspot.proximitySound !== "undefined") {
+                proximityAudioGain = audio.playProximitySound(soundEffects[thisHotspot.proximitySound]);
+                proximityAudioGain.gain.value = gameSettings.soundVolume * getTileProximityScale(hero.tileX, hero.tileY, thisHotspot.tileX, thisHotspot.tileY);
+                audio.proximitySounds.push([proximityAudioGain, thisHotspot.tileX, thisHotspot.tileY, visibleMaps[m]]);
+            }
+        }
+    }
+}
+
 function checkForHotspots() {
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
-    for (var i = 0; i < thisMapData[currentMap].hotspots.length; i++) {
-        thisHotspot = thisMapData[currentMap].hotspots[i];
-        thisTileCentreX = getTileCentreCoordX(thisHotspot.centreX);
-        thisTileCentreY = getTileCentreCoordY(thisHotspot.centreY);
-        if (isInRange(hero.x, hero.y, thisTileCentreX, thisTileCentreY, thisHotspot.radius * tileW)) {
-            if (typeof thisHotspot.quest !== "undefined") {
-                if (questData[thisHotspot.quest].hasBeenActivated < 1) {
-                    UI.showNotification("<p>" + thisHotspot.message + "</p>");
+    for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].hotspots.length; i++) {
+            thisHotspot = thisMapData[(visibleMaps[m])].hotspots[i];
+            thisTileCentreX = getTileCentreCoordX(thisHotspot.centreX);
+            thisTileCentreY = getTileCentreCoordY(thisHotspot.centreY);
+            if (isInRange(hero.x, hero.y, thisTileCentreX, thisTileCentreY, thisHotspot.radius * tileW)) {
+                if (typeof thisHotspot.quest !== "undefined") {
+                    if (questData[thisHotspot.quest].hasBeenActivated < 1) {
+                        UI.showNotification("<p>" + thisHotspot.message + "</p>");
+                    }
+                    questData[thisHotspot.quest].hasBeenActivated = 1;
                 }
-                questData[thisHotspot.quest].hasBeenActivated = 1;
+                if (typeof thisHotspot.music !== "undefined") {
+                    audio.playMusic(thisHotspot.music);
+                }
+                if (typeof thisHotspot.weather !== "undefined") {
+                    changeWeather(thisHotspot.weather);
+                }
+                if (typeof thisHotspot.openInnerDoor !== "undefined") {
+                    unlockInnerDoor(thisHotspot.openInnerDoor);
+                    openInnerDoor(thisHotspot.openInnerDoor);
+                }
+                if (typeof thisHotspot.closeInnerDoor !== "undefined") {
+                    closeInnerDoor(thisHotspot.closeInnerDoor);
+                }
+                if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
+                    toggleInnerDoor(thisHotspot.toggleInnerDoor);
+                }
+                if (typeof thisHotspot.remove !== "undefined") {
+                    // remove this hotspot now it's been triggered:
+                    thisMapData[currentMap].hotspots.splice(i, 1);
+                    i--;
+                }
             }
-            if (typeof thisHotspot.music !== "undefined") {
-                audio.playMusic(thisHotspot.music);
-            }
-            if (typeof thisHotspot.weather !== "undefined") {
-                changeWeather(thisHotspot.weather);
-            }
-            if (typeof thisHotspot.openInnerDoor !== "undefined") {
-                unlockInnerDoor(thisHotspot.openInnerDoor);
-                openInnerDoor(thisHotspot.openInnerDoor);
-            }
-            if (typeof thisHotspot.closeInnerDoor !== "undefined") {
-                closeInnerDoor(thisHotspot.closeInnerDoor);
-            }
-            if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
-                toggleInnerDoor(thisHotspot.toggleInnerDoor);
-            }
-            if (typeof thisHotspot.remove !== "undefined") {
-                // remove this hotspot now it's been triggered:
-                thisMapData[currentMap].hotspots.splice(i, 1);
-                i--;
-            }
-        }
 
-        if (fae.currentState == "hero") {
-            // check if the fae should react to this one:
-            if (typeof thisHotspot.faeIgnore === "undefined") {
-                // check it's not recently visited this hotspot:
-                if (fae.recentHotspots.indexOf(i) === -1) {
-                    if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
-                        if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
-                            fae.targetX = thisTileCentreX;
-                            fae.targetY = thisTileCentreY;
-                            // add this to the list of hotspots so it doesn't return to it again and again:
-                            fae.recentHotspots.push(i);
-                            fae.currentState = "away";
+            if (fae.currentState == "hero") {
+                // check if the fae should react to this one:
+                if (typeof thisHotspot.faeIgnore === "undefined") {
+                    // check it's not recently visited this hotspot:
+                    if (fae.recentHotspots.indexOf(i) === -1) {
+                        if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
+                            if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
+                                fae.targetX = thisTileCentreX;
+                                fae.targetY = thisTileCentreY;
+                                // add this to the list of hotspots so it doesn't return to it again and again:
+                                fae.recentHotspots.push(i);
+                                fae.currentState = "away";
+                            }
                         }
                     }
                 }
