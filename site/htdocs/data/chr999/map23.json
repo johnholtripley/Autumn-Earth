@@ -637,8 +637,12 @@
         ],
         "doors": {},
         "items": [
-        
-{
+        {
+            "type": 6,
+               "tileX": 16,
+                "tileY": 36
+            },
+        {
             "type": 117,
                  "tileX": 21,
                 "tileY": 33,
