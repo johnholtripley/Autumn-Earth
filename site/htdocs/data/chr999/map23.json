@@ -643,7 +643,37 @@
                  "tileX": 21,
                 "tileY": 33,
                 "facing": "e",
-                "proximitySound": "bees"
+                "proximitySound": "bees",
+                        "additional": 4,
+            "contains": [
+            {
+                "name": "butterfly",
+                "src": "orange-butterfly.png",
+                "width": 15,
+                "length": 15,
+                "spriteWidth": 15,
+                "spriteHeight": 48,
+                "centreX": 7,
+                "centreY": 72,
+                "movement": ["?"],
+                "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": false,
+                "isMoving": true,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 10,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            }]
          
                 
             },

@@ -10826,6 +10826,7 @@ function changeMaps(doorX, doorY) {
     }
     visibleMaps = [];
     loadMap();
+    checkProximitySounds();
 }
 
 
@@ -11571,6 +11572,7 @@ function updateVisibleMaps() {
     }
 
     // and unload any not required now
+    // remove proximitySounds for this map etc ####
     // ####
 
 }
@@ -12582,10 +12584,13 @@ function updateItems() {
                         // find a clear space around the item:
                         whichStartPoint = getRandomElementFromArray(startPointsPossible);
                         whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
-                        whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
+                        whichCreature.tileY = thisItem.tileY + whichStartPoint[1]; 
                         if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
                             // create a copy so they are distinct:
                             thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                            // name needs to be unique:
+                            thisMapData[(visibleMaps[m])].npcs[thisMapData[(visibleMaps[m])].npcs.length - 1].name = whichCreature.name + thisItem.spawnsRemaining;
+
                             initialiseNPC(thisMapData[(visibleMaps[m])].npcs[(thisMapData[(visibleMaps[m])].npcs.length - 1)]);
                             thisItem.spawnsRemaining--;
                             // reset timer:
@@ -13170,7 +13175,8 @@ function moveNPCs() {
 
 
                                 //   console.log(getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y));
-                                thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y)) / worldMapWidthPx;
+                                //thisSoundsVolume = (worldMapWidthPx - getPythagorasDistance(thisNPC.x, thisNPC.y, hero.x, hero.y)) / worldMapWidthPx;
+                                thisSoundsVolume = getTileProximityScale(hero.tileX, hero.tileY, thisNPC.tileX, thisNPC.tileY);
                                 //  console.log(thisSoundsVolume);
                             }
                             if (thisSoundsVolume > 0.05) {
