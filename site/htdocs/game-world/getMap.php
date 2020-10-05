@@ -158,6 +158,66 @@ $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
 
 
 
+// check which events are active
+
+
+// get current active events:
+$activeEvents = [];
+$activeEventsID = [];
+$eventsQuery = "SELECT cleanURL, eventID from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+$eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
+if ( $numberofrows>0 ) {
+    while ( $row = mysqli_fetch_array( $eventsResult ) ) {
+    array_push($activeEvents, $row['cleanURL']);
+    array_push($activeEventsID, $row['eventID']);
+    }
+}
+mysqli_free_result($eventsResult);
+
+
+$activeEventsQuery = '';
+if(count($activeEventsID)>0) {
+$activeEventsQuery = 'activeduringseason in (".implode(",",$activeEventsID).") or ';
+}
+
+function str_replace_first($from, $to, $content) {
+    // https://stackoverflow.com/questions/1252693/using-str-replace-so-that-it-only-acts-on-the-first-match#answer-1252705
+    $from = '/'.preg_quote($from, '/').'/';
+    return preg_replace($from, $to, $content, 1);
+}
+
+// check for itemCategory replacement - replace a string with an array of all item ids that match that category
+// eg. "##itemCategory##1"
+$positionOfItemCategory = strpos($mapDataFile, '##itemCategory##');
+if($positionOfItemCategory !== false) {
+    do {
+        $itemIDs = array();
+        $positionOfItemCategory = strpos($mapDataFile, '##itemCategory##');
+        $positionOfItemCategoryClose = strpos($mapDataFile, '##', ($positionOfItemCategory+16));
+        $thisItemCategory = substr($mapDataFile, $positionOfItemCategory+16, ($positionOfItemCategoryClose-$positionOfItemCategory-16));
+        $itemCategoryQuery = "SELECT itemID from tblinventoryitems where (itemcategories = ".$thisItemCategory." ) and (".$activeEventsQuery."activeduringseason IS NULL)";
+
+        $itemCategoryResult = mysqli_query($connection,  $itemCategoryQuery ) or die ( "couldn't execute item cat query: ".$itemCategoryQuery );
+        $numberofrows = mysqli_num_rows( $itemCategoryResult );
+        if ( $numberofrows>0 ) {
+            while ( $row = mysqli_fetch_array( $itemCategoryResult ) ) {
+                extract($row);
+                array_push($itemIDs, $itemID);
+            }
+        }
+        mysqli_free_result($itemCategoryResult);
+        $stringToReplace = '"##itemCategory##'.$thisItemCategory.'##"';
+        $mapDataFile = str_replace_first($stringToReplace, '['.implode($itemIDs,",").']', $mapDataFile);
+
+
+$positionOfItemCategory = strpos($mapDataFile, '##itemCategory##');
+    } while ($positionOfItemCategory !== false);
+}
+
+
+
 $mapData = json_decode($mapDataFile, true);
 
 if(!(isset($mapData['map']['musicOnEnter']))) {
@@ -186,27 +246,6 @@ $mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
 }
 
 $mapData['map']['mapId'] = $map;
-
-
-
-// check which events are active
-
-
-// get current active events:
-$activeEvents = [];
-$activeEventsID = [];
-$eventsQuery = "SELECT cleanURL, eventID from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
-
-$eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysqli_num_rows( $eventsResult );
-if ( $numberofrows>0 ) {
-    while ( $row = mysqli_fetch_array( $eventsResult ) ) {
-    array_push($activeEvents, $row['cleanURL']);
-    array_push($activeEventsID, $row['eventID']);
-    }
-}
-mysqli_free_result($eventsResult);
-
 
 
 

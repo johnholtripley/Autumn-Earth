@@ -644,11 +644,11 @@
             },
         {
             "type": 117,
-                 "tileX": 21,
-                "tileY": 33,
-                "facing": "e",
-                "proximitySound": "bees",
-                        "additional": 4,
+            "tileX": 21,
+            "tileY": 33,
+            "facing": "e",
+            "proximitySound": "bees",
+            "additional": 6,
             "contains": [
             {
                 "name": "butterfly",
@@ -659,7 +659,10 @@
                 "spriteHeight": 48,
                 "centreX": 7,
                 "centreY": 72,
-                "movement": ["?"],
+                "movement": [
+                    ["find", ["item", "##itemCategory##1##"], "walk", 0],
+                    ["find", ["item", "117"], "walk", 0]
+                ],
                 "facing": "w",
                 "walkThroughDoors": false,
                 "speed": 2,
@@ -669,6 +672,14 @@
                 "animation":
                 {
                     "walk":
+                    {
+                        "length": 10,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
                     {
                         "length": 10,
                         "n": 0,

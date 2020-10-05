@@ -959,7 +959,7 @@ function initialiseNPC(whichNPC) {
     whichNPC.lastTargetDestination = "";
     // whichNPC.index = whichNPC;
 
-    whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
+    //whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
     if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
@@ -3121,7 +3121,7 @@ function moveNPCs() {
                         for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
                             thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
                             //  thisInnerUniqueIdentifier = n+"-"+j;
-                            if (thisNPC.uniqueIndex != thisOtherNPC.uniqueIndex) {
+                            if (thisNPC.name != thisOtherNPC.name) {
 
                                 if (thisOtherNPC.isCollidable) {
                                     if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {

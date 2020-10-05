@@ -2620,10 +2620,6 @@ function isInRange(ax, ay, bx, by, ra) {
     }
 }
 
-function getPythagorasDistance(ax, ay, bx, by) {
-    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
-}
-
 function turntoFace(obj1, obj2) {
     // obj1 is the one which will react and turn to face obj2
     var xDiff = obj1.x - obj2.x;
@@ -5394,42 +5390,37 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-//console.log("pathfinding returned from Worker");
-   
+            //console.log("pathfinding returned from Worker");
+            var thisNPC = null;
+            for (var m = 0; m < visibleMaps.length; m++) {
 
-
-var thisNPC = null;
-for (var m = 0; m < visibleMaps.length; m++) {
-
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-     //   console.log("checking "+thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex+" is = "+thisAgentsName);
-     if(thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex == thisAgentsName) {
-thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-//console.log(thisNPC);
-     }
-        }
-    }
-
-             if(thisNPC != null) {
-        //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
-            // insert the new path:
-            // http://stackoverflow.com/a/7032717/1054212
-            thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
-    //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
-//console.log((e.data[1]));
-
-
-            thisNPC.waitingForAPath = false;
-            if (typeof e.data[2] !== "undefined") {
-                // store the target tile so it doesn't try and go straight back to it after:
-                thisNPC.lastTargetDestination = e.data[2];
-            //    console.log("heading for "+e.data[2]);
+                for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+                    //   console.log("checking "+thisMapData[(visibleMaps[m])].npcs[i].name+" is = "+thisAgentsName);
+                    if (thisMapData[(visibleMaps[m])].npcs[i].name == thisAgentsName) {
+                        thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+                        //console.log(thisNPC);
+                    }
+                }
             }
 
-        }
-        //    console.log(thisMapData.npcs[thisNPCsIndex].movementIndex);
-          //  console.log(thisMapData.npcs[thisNPCsIndex].movement);
-         //   console.log(thisMapData.npcs[thisNPCsIndex].movement[(thisMapData.npcs[thisNPCsIndex].movementIndex)]);
+            if (thisNPC != null) {
+                //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
+                // insert the new path:
+                // http://stackoverflow.com/a/7032717/1054212
+                thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
+                //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
+                //console.log((e.data[1]));
+
+                thisNPC.waitingForAPath = false;
+                if (typeof e.data[2] !== "undefined") {
+                    // store the target tile so it doesn't try and go straight back to it after:
+                    thisNPC.lastTargetDestination = e.data[2];
+                    //    console.log("heading for "+e.data[2]);
+                }
+            }
+            //    console.log(thisMapData.npcs[thisNPCsIndex].movementIndex);
+            //  console.log(thisMapData.npcs[thisNPCsIndex].movement);
+            //   console.log(thisMapData.npcs[thisNPCsIndex].movement[(thisMapData.npcs[thisNPCsIndex].movementIndex)]);
         }
     }
 }
@@ -6260,7 +6251,7 @@ function hireNewFollower() {
         for (var m = 0; m < visibleMaps.length; m++) {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
                 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-                if (thisNPC.uniqueIndex == whichNPCIndex) {
+                if (thisNPC.name == whichNPCIndex) {
                     thisFollowerNPC = thisNPC;
                 }
             }
@@ -6284,21 +6275,26 @@ function getLocalCoordinatesX(tileX) {
     if (!isOverWorldMap) {
         return tileX;
     } else {
-    // get local map coordinates from global coordinates:
-    return tileX%worldMapTileLength;
+        // get local map coordinates from global coordinates:
+        return tileX % worldMapTileLength;
+    }
 }
-}
+
 function getLocalCoordinatesY(tileY) {
     if (!isOverWorldMap) {
         return tileY;
     } else {
-      return tileY%worldMapTileLength;  
+        return tileY % worldMapTileLength;
     }
-    
+
 }
 
 function findMapNumberFromGlobalCoordinates(tileX, tileY) {
-return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+    return worldMap[Math.floor(tileY / worldMapTileLength)][Math.floor(tileX / worldMapTileLength)];
+}
+
+function getPythagorasDistance(ax, ay, bx, by) {
+    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
 }
 
 // https://mathiasbynens.be/notes/xhr-responsetype-json
@@ -9183,7 +9179,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     openHireFollowerPanel: function(whichNPC) {
         hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/' + whichNPC.followerId + '.png" alt="">Would you like to hire ' + whichNPC.name + '?';
         hireRetinueFollowerPanel.classList.add('active');
-        hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.uniqueIndex);
+        hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.name);
     },
     closeHireFollowerPanel: function() {
         hireRetinueFollowerPanel.classList.remove('active');
@@ -10565,7 +10561,7 @@ function initialiseNPC(whichNPC) {
     whichNPC.lastTargetDestination = "";
     // whichNPC.index = whichNPC;
 
-    whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
+    //whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
     if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
@@ -12727,7 +12723,7 @@ function moveNPCs() {
                         for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
                             thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
                             //  thisInnerUniqueIdentifier = n+"-"+j;
-                            if (thisNPC.uniqueIndex != thisOtherNPC.uniqueIndex) {
+                            if (thisNPC.name != thisOtherNPC.name) {
 
                                 if (thisOtherNPC.isCollidable) {
                                     if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {

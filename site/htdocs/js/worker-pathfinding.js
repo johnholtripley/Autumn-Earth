@@ -162,7 +162,7 @@ function findPath(startX, startY, endX, endY) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
 
             // make sure other NPCs don't block - except for the any in the destination tile:
-            if (thisMapData[(visibleMaps[m])].npcs.uniqueIndex != thisAgentsIndex) {
+            if (thisMapData[(visibleMaps[m])].npcs.name != thisAgentsIndex) {
                 // only include stationary NPCS:
                 if (thisMapData[(visibleMaps[m])].npcs[i].movement[thisMapData[(visibleMaps[m])].npcs[i].movementIndex] == '-') {
                     if (thisMapData[(visibleMaps[m])].npcs[i].isCollidable) {
@@ -180,7 +180,10 @@ function findPath(startX, startY, endX, endY) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
             localTileX = getLocalCoordinatesX(thisMapData[(visibleMaps[m])].items[i].tileX);
             localTileY = getLocalCoordinatesY(thisMapData[(visibleMaps[m])].items[i].tileY);
+            // allow item at the destination:
+            if (!((thisMapData[(visibleMaps[m])].items[i].tileX == endX) && (thisMapData[(visibleMaps[m])].items[i].tileY == endY))) {
             thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX] = 1;
+        }
             // needs to also see if the item is wider than a single tile:
             // needs debugging ##############
             if (thisMapData[(visibleMaps[m])].items[i].width > tileW) {
@@ -266,8 +269,14 @@ function findPath(startX, startY, endX, endY) {
 
 
 onmessage = function(e) {
+
+    var findType = e.data[0];
+    if (Array.isArray(findType)) {
+        findType = e.data[0][0];
+    }
+
     if (worldMap != '') {
-        switch (e.data[0]) {
+        switch (findType) {
             case 'tile':
                 var destinationX = e.data[1];
                 var destinationY = e.data[2];
@@ -284,7 +293,7 @@ onmessage = function(e) {
 
 
 
-                postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX + "-" + destinationY]);
+                postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX + "-" + destinationY]);
 
 
                 break;
@@ -298,7 +307,7 @@ onmessage = function(e) {
 
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
-                thisAgentsIndex = thisAgent.uniqueIndex;
+                thisAgentsIndex = thisAgent.name;
                 var thisLoopNPC;
                 var shopsFound = [];
                 var shopsFoundOnWhichMap = [];
@@ -306,7 +315,7 @@ onmessage = function(e) {
 
                     for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
 
-                        if (thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex != thisAgentsIndex) {
+                        if (thisMapData[(visibleMaps[m])].npcs[i].name != thisAgentsIndex) {
                             // just make sure it's not checking its own shop (...just in case)
                             thisLoopNPC = thisMapData[(visibleMaps[m])].npcs[i];
                             if (thisLoopNPC.speech) {
@@ -327,10 +336,41 @@ onmessage = function(e) {
                         chosenShop = Math.floor(Math.random() * shopsFound.length);
                         chosenShopLocation = thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX + "-" + thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY;
                     } while (chosenShopLocation == thisAgent.lastTargetDestination);
-                    postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
+                    postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
                 } else {
                     // stay still:
-                    postMessage([thisAgent.uniqueIndex, ["-", "pathEnd"], ""]);
+                    postMessage([thisAgent.name, ["-", "pathEnd"], ""]);
+                }
+                break;
+            case 'item':
+                // find the nearest item that matches the required type(s)
+                var thisAgent = e.data[1];
+                thisMapData = e.data[2];
+                visibleMaps = e.data[3];
+                isOverWorldMap = e.data[4];
+                for (firstKey in thisMapData) break;
+
+                mapTilesY = thisMapData[firstKey].terrain.length;
+                mapTilesX = thisMapData[firstKey].terrain[0].length;
+                var closesMatchingItemSoFar, thisDistance;
+                var closestDistanceSoFar = Infinity;
+                for (var m = 0; m < visibleMaps.length; m++) {
+                    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+                        if (e.data[0][1].indexOf(thisMapData[(visibleMaps[m])].items[i].type) != -1) {
+                            thisDistance = getPythagorasDistance(thisMapData[(visibleMaps[m])].items[i].tileX, thisMapData[(visibleMaps[m])].items[i].tileY, thisAgent.tileX, thisAgent.tileY)
+                            if (thisDistance < closestDistanceSoFar) {
+                                closestDistanceSoFar = thisDistance;
+                                closesMatchingItemSoFar = [m, i];
+                            }
+                        }
+                    }
+                }
+                if (closestDistanceSoFar < Infinity) {
+                    var whichMap = thisMapData[visibleMaps[(closesMatchingItemSoFar[0])]];  
+                     postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, whichMap.items[(closesMatchingItemSoFar[1])].tileX, whichMap.items[(closesMatchingItemSoFar[1])].tileY)]);
+                } else {
+                    // stay still:
+                    postMessage([thisAgent.name, ["-", "pathEnd"], ""]);
                 }
                 break;
             case 'petToHero':
@@ -354,8 +394,8 @@ onmessage = function(e) {
                 for (firstKey in thisMapData) break;
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
-                thisAgentsIndex = thisAgent.uniqueIndex;
-                postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
+                thisAgentsIndex = thisAgent.name;
+                postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
                 break;
         }
     }

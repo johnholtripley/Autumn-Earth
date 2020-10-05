@@ -580,10 +580,6 @@ function isInRange(ax, ay, bx, by, ra) {
     }
 }
 
-function getPythagorasDistance(ax, ay, bx, by) {
-    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
-}
-
 function turntoFace(obj1, obj2) {
     // obj1 is the one which will react and turn to face obj2
     var xDiff = obj1.x - obj2.x;

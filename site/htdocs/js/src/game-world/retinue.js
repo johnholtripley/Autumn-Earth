@@ -133,7 +133,7 @@ function hireNewFollower() {
         for (var m = 0; m < visibleMaps.length; m++) {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
                 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-                if (thisNPC.uniqueIndex == whichNPCIndex) {
+                if (thisNPC.name == whichNPCIndex) {
                     thisFollowerNPC = thisNPC;
                 }
             }

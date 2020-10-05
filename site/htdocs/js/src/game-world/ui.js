@@ -2789,7 +2789,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     openHireFollowerPanel: function(whichNPC) {
         hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/' + whichNPC.followerId + '.png" alt="">Would you like to hire ' + whichNPC.name + '?';
         hireRetinueFollowerPanel.classList.add('active');
-        hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.uniqueIndex);
+        hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.name);
     },
     closeHireFollowerPanel: function() {
         hireRetinueFollowerPanel.classList.remove('active');

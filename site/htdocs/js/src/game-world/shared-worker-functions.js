@@ -2,21 +2,26 @@ function getLocalCoordinatesX(tileX) {
     if (!isOverWorldMap) {
         return tileX;
     } else {
-    // get local map coordinates from global coordinates:
-    return tileX%worldMapTileLength;
+        // get local map coordinates from global coordinates:
+        return tileX % worldMapTileLength;
+    }
 }
-}
+
 function getLocalCoordinatesY(tileY) {
     if (!isOverWorldMap) {
         return tileY;
     } else {
-      return tileY%worldMapTileLength;  
+        return tileY % worldMapTileLength;
     }
-    
+
 }
 
 function findMapNumberFromGlobalCoordinates(tileX, tileY) {
-return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+    return worldMap[Math.floor(tileY / worldMapTileLength)][Math.floor(tileX / worldMapTileLength)];
+}
+
+function getPythagorasDistance(ax, ay, bx, by) {
+    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
 }
 
 // https://mathiasbynens.be/notes/xhr-responsetype-json
