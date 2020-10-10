@@ -648,8 +648,8 @@
             "tileY": 33,
             "facing": "e",
             "proximitySound": "bees",
-            "additional": 6,
-            "contains": [
+            "maxSpawns": 6,
+            "spawns": [
             {
                 "name": "butterfly",
                 "src": "orange-butterfly.png",

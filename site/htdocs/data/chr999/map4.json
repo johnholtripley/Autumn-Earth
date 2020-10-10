@@ -167,8 +167,8 @@
             "type": 47,
             "tileX": 4,
             "tileY": 34,
-            "additional": 4,
-            "contains": [
+            "maxSpawns": 4,
+            "spawns": [
             {
                 "name": "butterfly",
                 "src": "orange-butterfly.png",

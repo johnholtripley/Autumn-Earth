@@ -461,7 +461,7 @@ function loadNewVisibleMapAssets(whichMap) {
     // check for nests, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
         if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
-            for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
+            for (var j = 0; j < thisMapData[whichMap].items[i].spawns.length; j++) {
                 thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
                 if (typeof npcImages[thisNPCIdentifier] === "undefined") {
                     newNPCImagesToLoad[thisNPCIdentifier] = new Image();
@@ -738,12 +738,12 @@ function loadMapAssets() {
         // check for nests, and get the graphics for any creatures they will spawn:
         for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
             if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
-                for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].contains.length; j++) {
-                    thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].src;
+                for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].spawns.length; j++) {
+                    thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].spawns[j].src;
                     if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
                         imagesToLoad.push({
                             name: thisNPCIdentifier,
-                            src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].items[i].contains[j].src
+                            src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].items[i].spawns[j].src
                         });
                         npcGraphicsToLoad.push(thisNPCIdentifier);
                     }
@@ -964,6 +964,9 @@ function initialiseNPC(whichNPC) {
     if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
     }
+        if (typeof whichNPC.inventory === "undefined") {
+        whichNPC.inventory = [];
+    }
 }
 
 function initialiseItem(whichItem) {
@@ -988,6 +991,7 @@ function initialiseItem(whichItem) {
             whichItem.isCollidable = false;
         }
     }
+
     // check for node resources:
     if (currentActiveInventoryItems[whichItem.type].action == "node") {
         // use the saved value if it has one:
@@ -995,7 +999,6 @@ function initialiseItem(whichItem) {
             // otherwise, set it so it can be instantly harvested:
             whichItem.timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[whichItem.type].respawnRate;
         }
-
         // add stability and quantity values if it doesn't have them
         if (typeof whichItem.stability === "undefined") {
             whichItem.stability = whichItem.maxStability;
@@ -1003,14 +1006,13 @@ function initialiseItem(whichItem) {
         if (typeof whichItem.quantity === "undefined") {
             whichItem.quantity = whichItem.maxQuantity;
         }
-
     }
+
     if (currentActiveInventoryItems[whichItem.type].action == "nest") {
         whichItem.timeLastSpawned = hero.totalGameTimePlayed;
-        whichItem.spawnsRemaining = whichItem.additional;
+        whichItem.spawnsRemaining = whichItem.maxSpawns;
     }
     if (typeof whichItem.proximitySound !== "undefined") {
-
         proximityAudioGain = audio.playProximitySound(soundEffects[whichItem.proximitySound]);
         proximityAudioGain.gain.value = gameSettings.soundVolume * getTileProximityScale(hero.tileX, hero.tileY, whichItem.tileX, whichItem.tileY);
         audio.proximitySounds.push([proximityAudioGain, whichItem.tileX, whichItem.tileY, findWhichWorldMap(whichItem.tileX, whichItem.tileY)]);
@@ -2969,12 +2971,11 @@ function updateItems() {
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
             thisItem = thisMapData[(visibleMaps[m])].items[i];
-
             if (currentActiveInventoryItems[thisItem.type].action == "nest") {
                 if (thisItem.spawnsRemaining > 0) {
                     if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
                         // pick a random creature from all possible:
-                        whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
+                        whichCreature = thisItem.spawns[(getRandomIntegerInclusive(1, thisItem.spawns.length) - 1)];
                         // find a clear space around the item:
                         whichStartPoint = getRandomElementFromArray(startPointsPossible);
                         whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
@@ -2984,7 +2985,6 @@ function updateItems() {
                             thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
                             // name needs to be unique:
                             thisMapData[(visibleMaps[m])].npcs[thisMapData[(visibleMaps[m])].npcs.length - 1].name = whichCreature.name + thisItem.spawnsRemaining;
-
                             initialiseNPC(thisMapData[(visibleMaps[m])].npcs[(thisMapData[(visibleMaps[m])].npcs.length - 1)]);
                             thisItem.spawnsRemaining--;
                             // reset timer:
