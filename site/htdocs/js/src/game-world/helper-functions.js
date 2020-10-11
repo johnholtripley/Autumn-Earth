@@ -362,6 +362,22 @@ function findItemAtTile(tileX, tileY) {
     return foundItem;
 }
 
+function findItemObjectAtTile(tileX, tileY) {
+    var foundItem = null;
+    var thisItem;
+    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    for (var i = 0; i < thisMapData[thisMap].items.length; i++) {
+        thisItem = thisMapData[thisMap].items[i];
+        if (tileX == thisItem.tileX) {
+            if (tileY == thisItem.tileY) {
+                foundItem = thisMapData[thisMap].items[i];
+                break;
+            }
+        }
+    }
+    return foundItem;
+}
+
 
 function findItemWithinArmsLength() {
     // check if there's a relevant item on the hero's tile, or at arm's length:

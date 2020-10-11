@@ -640,7 +640,14 @@
         {
             "type": 6,
                "tileX": 16,
-                "tileY": 36
+                "tileY": 36,
+                    "contains": [
+                {
+                    "item": 118,
+                    "quantity": true
+                }
+            ]
+
             },
         {
             "type": 117,
@@ -648,6 +655,7 @@
             "tileY": 33,
             "facing": "e",
             "proximitySound": "bees",
+        
             "maxSpawns": 6,
             "spawns": [
             {
@@ -661,6 +669,7 @@
                 "centreY": 72,
                 "movement": [
                     ["find", ["item", "##itemCategory##1##"], "walk", 0],
+                    ["harvest", 1],
                     ["find", ["item", "117"], "walk", 0]
                 ],
                 "facing": "w",

@@ -497,7 +497,7 @@ function processNewVisibleMapData(whichNewMap) {
     for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
         initialiseNPC(thisMapData[whichNewMap].npcs[i]);
     }
-buildHotSpots();
+    buildHotSpots();
 
     /*
     // look for shops:
@@ -964,7 +964,7 @@ function initialiseNPC(whichNPC) {
     if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
     }
-        if (typeof whichNPC.inventory === "undefined") {
+    if (typeof whichNPC.inventory === "undefined") {
         whichNPC.inventory = [];
     }
 }
@@ -1186,7 +1186,7 @@ function removeMapAssets() {
         }
     }
 
-// remove proximitySounds for this map ####
+    // remove proximitySounds for this map ####
 
 }
 
@@ -2979,7 +2979,7 @@ function updateItems() {
                         // find a clear space around the item:
                         whichStartPoint = getRandomElementFromArray(startPointsPossible);
                         whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
-                        whichCreature.tileY = thisItem.tileY + whichStartPoint[1]; 
+                        whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
                         if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
                             // create a copy so they are distinct:
                             thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
@@ -3361,7 +3361,37 @@ function moveNPCs() {
                                 }
                             }
                             break;
-
+                        case 'harvest':
+                            // check for current or adjacent tile of category indicated by the next value, and add that to the NPC's inventory:
+                            var directionOffsetsToCheck = [
+                                [0, 0],
+                                [0, 1],
+                                [1, 0],
+                                [0, -1],
+                                [-1, 0],
+                            ];
+                            var thisItemCheck;
+                            for (var j = 0; j < directionOffsetsToCheck.length; j++) {
+                                thisItemCheck = findItemObjectAtTile(thisNPC.tileX + directionOffsetsToCheck[j][0], thisNPC.tileY + directionOffsetsToCheck[j][1]);
+                                if (thisItemCheck !== null) {
+                                    if (currentActiveInventoryItems[thisItemCheck.type].category == thisNextMovement[1]) {
+                                        if (thisItemCheck.contains) {
+                                            for (var k = 0; k < thisItemCheck.contains.length; k++) {
+                                                // check the quantity if greater than zero, or could be 'true' if the amount is infinite:
+                                                if (thisItemCheck.contains[k].quantity > 0) {
+                                                    thisNPC.inventory.push({ "item": thisItemCheck.contains[k].item, "quantity": 1 });
+                                                    if (!(isNaN(thisItemCheck.contains[k].quantity))) {
+                                                        // it is a number, so needs to be decreased:
+                                                        thisItemCheck.contains[k].quantity--;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
                         case 'marker':
                             // these should only be triggered by another NPC's 'trigger' movement code, so reset back to the start:
                             thisNPC.movementIndex = 0;
