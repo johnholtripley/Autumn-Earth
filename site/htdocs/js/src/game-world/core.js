@@ -3168,8 +3168,8 @@ function moveNPCs() {
 
                     // check for inner doors:
                     if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
-                        for (var i in thisMapData[currentMap].innerDoors) {
-                            thisInnerDoor = thisMapData[currentMap].innerDoors[i];
+                        for (var j in thisMapData[currentMap].innerDoors) {
+                            thisInnerDoor = thisMapData[currentMap].innerDoors[j];
                             if (!thisInnerDoor.isOpen) {
                                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
                                     thisNPC.x = oldNPCx;
@@ -3361,6 +3361,45 @@ function moveNPCs() {
                                 }
                             }
                             break;
+                        case 'deposit':
+                            // check for current or adjacent tile of item type indicated by the next value, and add that the NPC's inventory to the items contains attribute:
+                            var directionOffsetsToCheck = [
+                                [0, 0],
+                                [0, 1],
+                                [1, 0],
+                                [0, -1],
+                                [-1, 0],
+                            ];
+                            var thisItemCheck, thisNPCItemAdded;
+                            for (var j = 0; j < directionOffsetsToCheck.length; j++) {
+                                thisItemCheck = findItemObjectAtTile(thisNPC.tileX + directionOffsetsToCheck[j][0], thisNPC.tileY + directionOffsetsToCheck[j][1]);
+                                if (thisItemCheck !== null) {
+                                    // for bees this should be their parent hive, not just any hive #####
+                                    if (thisItemCheck.type == thisNextMovement[1]) {
+                                        if (thisNPC.inventory.length > 0) {
+
+                                            for (var k in thisNPC.inventory) {
+                                                // add to item's contains - check for duplicate types already added:  
+                                                thisNPCItemAdded = false;
+                                                for (var l in thisItemCheck.contains) {
+                                                    if (thisItemCheck.contains[l].type == thisNPC.inventory[k].type) {
+                                                        thisItemCheck.contains[l].quantity += thisNPC.inventory[k].quantity;
+                                                        thisNPCItemAdded = true;
+                                                    }
+                                                }
+                                                if (!thisNPCItemAdded) {
+                                                    thisItemCheck.contains.push(thisNPC.inventory[k]);
+                                                }
+                                                // call item's processing function ####
+                                            }
+                                            // remove from NPC's inventory:
+                                            thisNPC.inventory = [];
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
                         case 'harvest':
                             // check for current or adjacent tile of category indicated by the next value, and add that to the NPC's inventory:
                             var directionOffsetsToCheck = [
@@ -3380,7 +3419,7 @@ function moveNPCs() {
                                                 // check the quantity if greater than zero, or could be 'true' if the amount is infinite:
                                                 if (thisItemCheck.contains[k].quantity > 0) {
                                                     thisNPC.inventory.push({ "item": thisItemCheck.contains[k].item, "quantity": 1 });
-                                                    if (!(isNaN(thisItemCheck.contains[k].quantity))) {
+                                                    if (Number.isInteger(thisItemCheck.contains[k].quantity)) {
                                                         // it is a number, so needs to be decreased:
                                                         thisItemCheck.contains[k].quantity--;
                                                     }

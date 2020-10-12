@@ -654,6 +654,7 @@
             "tileX": 21,
             "tileY": 33,
             "facing": "e",
+            "contains": [],
             "proximitySound": "bees",
         
             "maxSpawns": 6,
@@ -670,7 +671,8 @@
                 "movement": [
                     ["find", ["item", "##itemCategory##1##"], "walk", 0],
                     ["harvest", 1],
-                    ["find", ["item", "117"], "walk", 0]
+                    ["find", ["item", "117"], "walk", 0],
+                    ["deposit", 117]
                 ],
                 "facing": "w",
                 "walkThroughDoors": false,
