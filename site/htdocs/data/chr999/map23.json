@@ -167,569 +167,683 @@
             [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
         ],
         "graphics": [
-            {
-                "src": "silver-birch.png",
-                "centreX": 290,
-                "centreY": 391,
-                "animation":
-                {
-                    "currentFrame": 0,
-                    "length": 20,
-                    "spriteWidth": 427,
-                    "spriteHeight": 455
-                }
-            }
-        ],
-        "weather": [""],
-        "shops": [  {
-                "name": "Song transcriptions",
-                "uniqueItems": "##transcriptions##",
-                "specialism": null,
-                "categories": [],
-                "size": "small",
-                "currency": "cardDust"
-            }],
-            "workshops": [
-            {
-                "name": "Dye workshop",
-                "profession": 0,
-                "recipesKnown": [0, 1, 2],
-                "itemsQueued": [
-            {"item":{"type":12,"quantity":1,"quality":100,"durability":100,"effectiveness":100,"currentWear":0,"wrapped":0,"colour":20,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-sapphire","finalItemName":"Sapphire Dye","startTime":1593200705735,"hash":1280936895},{"item":{"type":12,"quantity":1,"quality":100,"durability":100,"effectiveness":76,"currentWear":0,"wrapped":0,"colour":12,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-aquamarine","finalItemName":"Aquamarine Dye","startTime":1593200722332,"hash":-1069101215},{"item":{"type":12,"quantity":1,"quality":74,"durability":100,"effectiveness":68,"currentWear":0,"wrapped":0,"colour":4,"enchanted":0,"hallmark":0,"inscription":""},"fromWhichRecipe":"2","finalImageSrc":"12-blue","finalItemName":"Blue Dye","startTime":1593200727273,"hash":-449708900}],
-                "apprentices": [
-                {
-                    "name": "Magnus Strongarm",
-                    "sex": "male",
-                    "race": "dwarrow"
-                }],
-                "possibleApprenticeRaces": ["dwarrow", "huldra", "human"]
-
-            }],
-                    "npcs": [
-                        {
-                "name": "deer",
-                "src": "deer.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 94,
-                "spriteHeight": 82,
-                "centreX": 69,
-                "centreY": 56,
-                "tileX": 23,
-                "tileY": 24,
-                "movement": ["-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "speech": [
-                   
-
-                ],
-
-                "isCollidable": true,
-                "isMoving": false,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 25,
-                        "n": 0,
-                        "e": 0,
-                        "s": 0,
-                        "w": 0
-                    }
-                }
-            },
-             {
-                "name": "Hand crafted items shopkeeper",
-                "src": "shopkeeper1.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 75,
-                "spriteHeight": 85,
-                "centreX": 56,
-                "centreY": 73,
-                "tileX": 24,
-                "tileY": 24,
-                "movement": ["-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                    ["Hi ##characterName##, let's have a look at your transcriptions, eh?", "shop", "Song transcriptions"]
-                ],
-                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 2,
-                        "e": 3,
-                        "s": 0,
-                        "w": 1
-                    }
-                }
-            },
-
 {
-                "name": "Dye workshop owner",
-                "src": "retinue.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 62,
-                "spriteHeight": 79,
-                "centreX": 40,
-                "centreY": 69,
-                "tileX": 20,
-                "tileY": 29,
-                "movement": ["-"],
-                "facing": "e",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                    ["Hi ##characterClass##, would you like some dyes preparing?", "workshop", "Dye workshop"]
-                ],
-                "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-                          {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
+    "src": "silver-birch.png",
+    "centreX": 290,
+    "centreY": 391,
+    "animation":
+    {
+        "currentFrame": 0,
+        "length": 20,
+        "spriteWidth": 427,
+        "spriteHeight": 455
+    }
+}],
+"weather": [""],
+"shops": [
+{
+    "name": "Song transcriptions",
+    "uniqueItems": "##transcriptions##",
+    "specialism": null,
+    "categories": [],
+    "size": "small",
+    "currency": "cardDust"
+}],
+"workshops": [
+{
+    "name": "Dye workshop",
+    "profession": 0,
+    "recipesKnown": [0, 1, 2],
+    "itemsQueued": [
+    {
+        "item":
+        {
+            "type": 12,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "effectiveness": 100,
+            "currentWear": 0,
+            "wrapped": 0,
+            "colour": 20,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "fromWhichRecipe": "2",
+        "finalImageSrc": "12-sapphire",
+        "finalItemName": "Sapphire Dye",
+        "startTime": 1593200705735,
+        "hash": 1280936895
+    },
+    {
+        "item":
+        {
+            "type": 12,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "effectiveness": 76,
+            "currentWear": 0,
+            "wrapped": 0,
+            "colour": 12,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "fromWhichRecipe": "2",
+        "finalImageSrc": "12-aquamarine",
+        "finalItemName": "Aquamarine Dye",
+        "startTime": 1593200722332,
+        "hash": -1069101215
+    },
+    {
+        "item":
+        {
+            "type": 12,
+            "quantity": 1,
+            "quality": 74,
+            "durability": 100,
+            "effectiveness": 68,
+            "currentWear": 0,
+            "wrapped": 0,
+            "colour": 4,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "fromWhichRecipe": "2",
+        "finalImageSrc": "12-blue",
+        "finalItemName": "Blue Dye",
+        "startTime": 1593200727273,
+        "hash": -449708900
+    }],
+    "apprentices": [
+    {
+        "name": "Magnus Strongarm",
+        "sex": "male",
+        "race": "dwarrow"
+    }],
+    "possibleApprenticeRaces": ["dwarrow", "huldra", "human"]
+
+}],
+"npcs": [
+    {
+        "name": "deer",
+        "src": "deer.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 94,
+        "spriteHeight": 82,
+        "centreX": 69,
+        "centreY": 56,
+        "tileX": 23,
+        "tileY": 24,
+        "movement": ["-"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "speech": [
+
+
+        ],
+
+        "isCollidable": true,
+        "isMoving": false,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 25,
+                "n": 0,
+                "e": 0,
+                "s": 0,
+                "w": 0
+            }
+        }
+    },
+    {
+        "name": "Hand crafted items shopkeeper",
+        "src": "shopkeeper1.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 75,
+        "spriteHeight": 85,
+        "centreX": 56,
+        "centreY": 73,
+        "tileX": 24,
+        "tileY": 24,
+        "movement": ["-"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            ["Hi ##characterName##, let's have a look at your transcriptions, eh?", "shop", "Song transcriptions"]
+        ],
+        "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 2,
+                "e": 3,
+                "s": 0,
+                "w": 1
+            }
+        }
+    },
+
+    {
+        "name": "Dye workshop owner",
+        "src": "retinue.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 62,
+        "spriteHeight": 79,
+        "centreX": 40,
+        "centreY": 69,
+        "tileX": 20,
+        "tileY": 29,
+        "movement": ["-"],
+        "facing": "e",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            ["Hi ##characterClass##, would you like some dyes preparing?", "workshop", "Dye workshop"]
+        ],
+        "shopEmptySpeech": "Oh, it looks like you haven't transcribed anything yet&hellip;",
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
+            }
+        }
+    },
+
+
+    {
+        "name": "Prequisite quest NPC",
+        "src": "shopkeeper1.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 75,
+        "spriteHeight": 85,
+        "centreX": 56,
+        "centreY": 73,
+        "tileX": 28,
+        "tileY": 24,
+        "movement": ["-"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            ["Do my quest, please?|Keep looking|You completed it - good job", "quest", "14"],
+            ["other conversation, not quest related...", ""]
+        ],
+
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 2,
+                "e": 3,
+                "s": 0,
+                "w": 1
+            }
+        }
+    },
+
+
+    {
+        "name": "Home Stone Keeper",
+        "src": "shopkeeper1.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 75,
+        "spriteHeight": 85,
+        "centreX": 56,
+        "centreY": 73,
+        "tileX": 31,
+        "tileY": 24,
+        "movement": ["-"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            ["Welcome to the Ashenvale Inn", "homeStone", "31,25"]
+
+        ],
+
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 2,
+                "e": 3,
+                "s": 0,
+                "w": 1
+            }
+        }
+    },
+
+    {
+        "name": "Temp stat quest",
+        "src": "retinue.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 62,
+        "spriteHeight": 79,
+        "centreX": 40,
+        "centreY": 69,
+        "tileX": 32,
+        "tileY": 24,
+        "movement": ["-"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            ["Increase some stats - yellow pumpkins and yellow people|Keep looking|You completed it - good job", "quest", "15"],
+            ["all done, thanks", ""]
+        ],
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 1,
+        "uniqueCards": [2, 2],
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
+            }
+        }
+    },
+
+    {
+        "name": "Temp stat quest stat",
+        "src": "retinue2.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 62,
+        "spriteHeight": 79,
+        "centreX": 40,
+        "centreY": 69,
+        "tileX": 35,
+        "tileY": 26,
+        "movement": ["-"],
+        "facing": "w",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+
+            ["just increased that stat for you", "stat", "test"],
+            ["just some other chatting", ""]
+        ],
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 1,
+        "uniqueCards": [2, 2],
+        "baseCardPack": 0,
+        "animation":
+        {
+            "walk":
+            {
+                "length": 1,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
+            }
+        }
+    },
+
+
+
+    {
+        "name": "brown hen",
+        "src": "brown-hen.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 34,
+        "spriteHeight": 37,
+        "centreX": 22,
+        "centreY": 32,
+        "tileX": 24,
+        "tileY": 21,
+        "movement": [
+            ["proximity", 4], "remove", ["sound", "hen", true],
+            ["speech", "bwok, bwok"], "remove", ["trigger", "npc", "white hen", "cutscene"],
+            ["wait", 250],
+            ["animate", "peck", 1], "s", "-"
+        ],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            []
+        ],
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "wait":
+            {
+                "length": 1,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
             },
-
-
-           {
-                "name": "Prequisite quest NPC",
-                "src": "shopkeeper1.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 75,
-                "spriteHeight": 85,
-                "centreX": 56,
-                "centreY": 73,
-                "tileX": 28,
-                "tileY": 24,
-                "movement": ["-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                     ["Do my quest, please?|Keep looking|You completed it - good job", "quest", "14"],
-                        ["other conversation, not quest related...", ""]
-                ],
-  
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 2,
-                        "e": 3,
-                        "s": 0,
-                        "w": 1
-                    }
-                }
+            "walk":
+            {
+                "length": 23,
+                "n": 4,
+                "e": 5,
+                "s": 6,
+                "w": 7
             },
-
-
-                  {
-                "name": "Home Stone Keeper",
-                "src": "shopkeeper1.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 75,
-                "spriteHeight": 85,
-                "centreX": 56,
-                "centreY": 73,
-                "tileX": 31,
-                "tileY": 24,
-                "movement": ["-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                     ["Welcome to the Ashenvale Inn", "homeStone", "31,25"]
-                      
-                ],
-            
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 2,
-                        "e": 3,
-                        "s": 0,
-                        "w": 1
-                    }
-                }
+            "peck":
+            {
+                "length": 51,
+                "n": 8,
+                "e": 9,
+                "s": 10,
+                "w": 11
+            }
+        }
+    },
+    {
+        "name": "white hen",
+        "src": "white-hen.png",
+        "width": 20,
+        "length": 20,
+        "spriteWidth": 33,
+        "spriteHeight": 38,
+        "centreX": 22,
+        "centreY": 32,
+        "tileX": 21,
+        "tileY": 25,
+        "movement": ["-", ["marker", "cutscene"], "s", "s"],
+        "facing": "s",
+        "walkThroughDoors": false,
+        "speed": 2,
+        "isCollidable": true,
+        "isMoving": false,
+        "speech": [
+            []
+        ],
+        "cardGameSpeech":
+        {
+            "challenge": ["Do you play? Fancy a game then?", "play"],
+            "win": ["Woo! I won!", ""],
+            "lose": ["Ahh, you beat me...", ""],
+            "draw": ["Well played", ""]
+        },
+        "cardSkill": 8,
+        "uniqueCards": [2, 2],
+        "cardBackId": 4,
+        "baseCardPack": 0,
+        "animation":
+        {
+            "wait":
+            {
+                "length": 1,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
             },
-
-             {
-                "name": "Temp stat quest",
-                "src": "retinue.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 62,
-                "spriteHeight": 79,
-                "centreX": 40,
-                "centreY": 69,
-                "tileX": 32,
-                "tileY": 24,
-                "movement": ["-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                    ["Increase some stats - yellow pumpkins and yellow people|Keep looking|You completed it - good job", "quest", "15"],
-                    ["all done, thanks", ""]
-                ],
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 1,
-                "uniqueCards": [2, 2],
-                "baseCardPack": 0,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
+            "walk":
+            {
+                "length": 23,
+                "n": 4,
+                "e": 5,
+                "s": 6,
+                "w": 7
             },
+            "peck":
+            {
+                "length": 51,
+                "n": 8,
+                "e": 9,
+                "s": 10,
+                "w": 11
+            }
+        }
+    }
 
-             {
-                "name": "Temp stat quest stat",
-                "src": "retinue2.png",
-                "width": 20,
-                "length": 20,
-                "spriteWidth": 62,
-                "spriteHeight": 79,
-                "centreX": 40,
-                "centreY": 69,
-                "tileX": 35,
-                "tileY": 26,
-                "movement": ["-"],
-                "facing": "w",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
+],
+"doors":
+{},
+"items": [
+    {
+        "type": 6,
+        "tileX": 16,
+        "tileY": 36,
+        "contains": [
+        {
+            "type": 118,
+            "quantity": true
+        }]
 
-                    ["just increased that stat for you", "stat", "test"],
-                    ["just some other chatting", ""]
-                ],
-                "cardGameSpeech":
-                {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 1,
-                "uniqueCards": [2, 2],
-                "baseCardPack": 0,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
+    },
+
+
+    {
+
+        "type": 56,
+        "tileX": 18,
+        "tileY": 33,
+        "facing": "s"
+
+
+    },
+    {
+
+        "type": 56,
+        "tileX": 19,
+        "tileY": 33,
+        "facing": "w"
+
+
+    },
+
+    {
+        "type": 117,
+        "tileX": 21,
+        "tileY": 33,
+        "facing": "e",
+        "contains": [],
+        "processContents": "makeHoney",
+        "proximitySound": "bees",
+        "animation":
+        {
+            "empty":
+            {
+                "length": 1,
+                "row": 0,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
             },
+            "full":
+            {
+                "length": 1,
+                "row": 0,
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
+            }
 
+        },
+        "state": "empty",
 
-
-                  {
-            "name": "brown hen",
-                "src": "brown-hen.png",
-               "width": 20,
-                "length": 20,
-                "spriteWidth": 34,
-                "spriteHeight": 37,
-                "centreX": 22,
-                "centreY": 32,
-                "tileX": 24,
-                "tileY": 21,
-                "movement": [["proximity", 4], "remove", ["sound", "hen", true], ["speech", "bwok, bwok"], "remove", ["trigger", "npc", "white hen", "cutscene"],["wait", 250],["animate","peck",1], "s", "-"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                    []
-                ],
-                "cardGameSpeech":
+        "maxSpawns": 6,
+        "spawns": [
+        {
+            "name": "butterfly",
+            "src": "orange-butterfly.png",
+            "width": 15,
+            "length": 15,
+            "spriteWidth": 15,
+            "spriteHeight": 48,
+            "centreX": 7,
+            "centreY": 72,
+            "movement": [
+                ["find", ["item", "##itemCategory##1##"], "walk", 0],
+                ["harvest", 1],
+                ["find", ["item", "117"], "walk", 0],
+                ["deposit", 117]
+            ],
+            "facing": "w",
+            "walkThroughDoors": false,
+            "speed": 2,
+            "speech": "",
+            "isCollidable": false,
+            "isMoving": true,
+            "animation":
+            {
+                "walk":
                 {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
+                    "length": 10,
+                    "n": 0,
+                    "e": 1,
+                    "s": 2,
+                    "w": 3
                 },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-              {
-                    "wait":
-                    {
-                        "length": 1,
-                          "n": 0,
-                        "e": 1,                     
-                        "s": 2,
-                         "w": 3
-                    },
-                    "walk":
-                    {
-                        "length": 23,
-                          "n": 4,
-                        "e": 5,                     
-                        "s": 6,
-                         "w": 7
-                    },
-                    "peck":
-                    {
-                         "length": 51,
-                        "n": 8,
-                        "e": 9,
-                        "s": 10,
-                        "w": 11
-                    }
-                }
-            },
-                      {
-            "name": "white hen",
-                "src": "white-hen.png",
-               "width": 20,
-                "length": 20,
-               "spriteWidth": 33,
-                "spriteHeight": 38,
-                "centreX": 22,
-                "centreY": 32,
-                "tileX": 21,
-                "tileY": 25,
-                "movement": ["-", ["marker", "cutscene"],"s","s"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speech": [
-                    []
-                ],
-                "cardGameSpeech":
+                "wait":
                 {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 8,
-                "uniqueCards": [2, 2],
-                "cardBackId": 4,
-                "baseCardPack": 0,
-                "animation":
-              {
-                    "wait":
-                    {
-                        "length": 1,
-                          "n": 0,
-                        "e": 1,                     
-                        "s": 2,
-                         "w": 3
-                    },
-                    "walk":
-                    {
-                        "length": 23,
-                          "n": 4,
-                        "e": 5,                     
-                        "s": 6,
-                         "w": 7
-                    },
-                    "peck":
-                    {
-                         "length": 51,
-                        "n": 8,
-                        "e": 9,
-                        "s": 10,
-                        "w": 11
-                    }
+                    "length": 10,
+                    "n": 0,
+                    "e": 1,
+                    "s": 2,
+                    "w": 3
                 }
             }
-     
-        ],
-        "doors": {},
-        "items": [
+        }]
+
+
+    },
+
+    {
+        "type": 112,
+        "tileX": 21,
+        "tileY": 24,
+        "contains":
         {
-            "type": 6,
-               "tileX": 16,
-                "tileY": 36,
-                    "contains": [
-                {
-                    "type": 118,
-                    "quantity": true
-                }
-            ]
+            "North": "The Old Meadows",
+            "South": "Ashenvale shore"
+        }
 
-            },
-        {
-            "type": 117,
-            "tileX": 21,
-            "tileY": 33,
-            "facing": "e",
-            "contains": [],
-            "processContents": "makeHoney",
-            "proximitySound": "bees",
-        
-            "maxSpawns": 6,
-            "spawns": [
-            {
-                "name": "butterfly",
-                "src": "orange-butterfly.png",
-                "width": 15,
-                "length": 15,
-                "spriteWidth": 15,
-                "spriteHeight": 48,
-                "centreX": 7,
-                "centreY": 72,
-                "movement": [
-                    ["find", ["item", "##itemCategory##1##"], "walk", 0],
-                    ["harvest", 1],
-                    ["find", ["item", "117"], "walk", 0],
-                    ["deposit", 117]
-                ],
-                "facing": "w",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "speech": "",
-                "isCollidable": false,
-                "isMoving": true,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 10,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    },
-                    "wait":
-                    {
-                        "length": 10,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
-            }]
-         
-                
-            },
-
-        {
-            "type": 112,
-                 "tileX": 21,
-                "tileY": 24,
-                "contains": 
-                    {"North":"The Old Meadows",
-                    "South":"Ashenvale shore"}
-                
-            },{
-                "type": 19,
-                "tileX": 17,
-                "tileY": 28,
-                "activeForQuest": 14
-                },
+    },
+    {
+        "type": 19,
+        "tileX": 17,
+        "tileY": 28,
+        "activeForQuest": 14
+    },
 
 
-     {
-                "type": 116,
-                "tileX": 34,
-                "tileY": 24,
-                "activeForQuest": 15
-                }
-                ],
-        "hotspots": [],
-        "hiddenResourceCategories": [4],
-        "hiddenResourceTier": 7
+    {
+        "type": 116,
+        "tileX": 34,
+        "tileY": 24,
+        "activeForQuest": 15
     }
+],
+"hotspots": [],
+"hiddenResourceCategories": [4],
+"hiddenResourceTier": 7
+}
 }

@@ -12992,32 +12992,35 @@ function moveNPCs() {
                             for (var j = 0; j < directionOffsetsToCheck.length; j++) {
                                 thisItemCheck = findItemObjectAtTile(thisNPC.tileX + directionOffsetsToCheck[j][0], thisNPC.tileY + directionOffsetsToCheck[j][1]);
                                 if (thisItemCheck !== null) {
+
                                     // for bees this should be their parent hive, not just any hive #####
                                     if (thisItemCheck.type == thisNextMovement[1]) {
                                         if (thisNPC.inventory.length > 0) {
-
-                                            for (var k in thisNPC.inventory) {
-                                                // add to item's contains - check for duplicate types already added:  
-                                                thisNPCItemAdded = false;
-                                                for (var l in thisItemCheck.contains) {
-                                                    if (thisItemCheck.contains[l].type == thisNPC.inventory[k].type) {
-                                                        thisItemCheck.contains[l].quantity += thisNPC.inventory[k].quantity;
-                                                        thisNPCItemAdded = true;
+                                            if (thisItemCheck.state != "full") {
+                                                for (var k in thisNPC.inventory) {
+                                                    // add to item's contains - check for duplicate types already added:  
+                                                    thisNPCItemAdded = false;
+                                                    for (var l in thisItemCheck.contains) {
+                                                        if (thisItemCheck.contains[l].type == thisNPC.inventory[k].type) {
+                                                            thisItemCheck.contains[l].quantity += thisNPC.inventory[k].quantity;
+                                                            thisNPCItemAdded = true;
+                                                        }
+                                                    }
+                                                    if (!thisNPCItemAdded) {
+                                                        thisItemCheck.contains.push(thisNPC.inventory[k]);
+                                                    }
+                                                    // call item's processing function:
+                                                    if (thisItemCheck.processContents) {
+                                                        window[thisItemCheck.processContents](thisItemCheck);
                                                     }
                                                 }
-                                                if (!thisNPCItemAdded) {
-                                                    thisItemCheck.contains.push(thisNPC.inventory[k]);
-                                                }
-                                                // call item's processing function:
-                                                if (thisItemCheck.processContents) {
-                                                    window[thisItemCheck.processContents](thisItemCheck);
-                                                }
                                             }
-                                            // remove from NPC's inventory:
+                                            // remove from NPC's inventory (even if item is full):
                                             thisNPC.inventory = [];
                                         }
                                         break;
                                     }
+
                                 }
                             }
                             break;
@@ -13382,9 +13385,6 @@ function moveNPCs() {
 }
 
 function makeHoney(whichItem) {
-    //  console.log("making honey...");
-    console.log(whichItem.contains);
-
     var amountOfNectarRequired = 6;
     var amountOfNectarCurrently = 0;
     var nectarTypesFound = [];
@@ -13404,24 +13404,18 @@ function makeHoney(whichItem) {
         whichItem.contains = [];
     } else {
         if (amountOfNectarCurrently >= amountOfNectarRequired) {
-            console.log("make honey!!!");
-            
-            if(nectarTypesFound.length == 1) {
-                // there's only a single nectar been used:
-                honeyToProduce = currentActiveInventoryItems[(whichItem.contains[i].type)].actionValue;
+            if (nectarTypesFound.length == 1) {
+                // there's only a single nectar been used - find its corresponding honey from it's Action Value:
+                honeyToProduce = currentActiveInventoryItems[nectarTypesFound[0]].actionValue;
             } else {
                 // multiple nectars, so just create a generic honey:
                 honeyToProduce = 120;
             }
-            console.log(honeyToProduce);
-
+            console.log("honey complete");
+            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }];
+            whichItem.state = "full";
         }
     }
-
-
-
-    
-
 }
 
 function movePlatforms() {
