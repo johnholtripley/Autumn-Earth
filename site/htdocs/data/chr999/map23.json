@@ -643,7 +643,7 @@
                 "tileY": 36,
                     "contains": [
                 {
-                    "item": 118,
+                    "type": 118,
                     "quantity": true
                 }
             ]

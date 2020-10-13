@@ -3421,7 +3421,7 @@ function moveNPCs() {
                                             for (var k = 0; k < thisItemCheck.contains.length; k++) {
                                                 // check the quantity if greater than zero, or could be 'true' if the amount is infinite:
                                                 if (thisItemCheck.contains[k].quantity > 0) {
-                                                    thisNPC.inventory.push({ "item": thisItemCheck.contains[k].item, "quantity": 1 });
+                                                    thisNPC.inventory.push({ "type": thisItemCheck.contains[k].type, "quantity": 1 });
                                                     if (Number.isInteger(thisItemCheck.contains[k].quantity)) {
                                                         // it is a number, so needs to be decreased:
                                                         thisItemCheck.contains[k].quantity--;
@@ -3764,8 +3764,46 @@ function moveNPCs() {
 }
 
 function makeHoney(whichItem) {
-    console.log("making honey...");
-    console.log(whichItem);
+    //  console.log("making honey...");
+    console.log(whichItem.contains);
+
+    var amountOfNectarRequired = 6;
+    var amountOfNectarCurrently = 0;
+    var nectarTypesFound = [];
+    var anyNotNectarFound = false;
+    var honeyToProduce;
+    for (var i in whichItem.contains) {
+        // nectar is item category '12'
+        if (currentActiveInventoryItems[(whichItem.contains[i].type)].category != 12) {
+            anyNotNectarFound = true;
+        } else {
+            amountOfNectarCurrently += whichItem.contains[i].quantity;
+            nectarTypesFound.push(whichItem.contains[i].type);
+        }
+    }
+    if (anyNotNectarFound) {
+        // it's all spoiled:
+        whichItem.contains = [];
+    } else {
+        if (amountOfNectarCurrently >= amountOfNectarRequired) {
+            console.log("make honey!!!");
+            
+            if(nectarTypesFound.length == 1) {
+                // there's only a single nectar been used:
+                honeyToProduce = currentActiveInventoryItems[(whichItem.contains[i].type)].actionValue;
+            } else {
+                // multiple nectars, so just create a generic honey:
+                honeyToProduce = 120;
+            }
+            console.log(honeyToProduce);
+
+        }
+    }
+
+
+
+    
+
 }
 
 function movePlatforms() {
