@@ -655,6 +655,7 @@
             "tileY": 33,
             "facing": "e",
             "contains": [],
+            "processContents": "makeHoney",
             "proximitySound": "bees",
         
             "maxSpawns": 6,

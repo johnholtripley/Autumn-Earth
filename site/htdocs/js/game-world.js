@@ -13008,7 +13008,10 @@ function moveNPCs() {
                                                 if (!thisNPCItemAdded) {
                                                     thisItemCheck.contains.push(thisNPC.inventory[k]);
                                                 }
-                                                // call item's processing function ####
+                                                // call item's processing function:
+                                                if (thisItemCheck.processContents) {
+                                                    window[thisItemCheck.processContents](thisItemCheck);
+                                                }
                                             }
                                             // remove from NPC's inventory:
                                             thisNPC.inventory = [];
@@ -13038,7 +13041,6 @@ function moveNPCs() {
                                                 if (thisItemCheck.contains[k].quantity > 0) {
                                                     thisNPC.inventory.push({ "item": thisItemCheck.contains[k].item, "quantity": 1 });
                                                     if (Number.isInteger(thisItemCheck.contains[k].quantity)) {
-
                                                         // it is a number, so needs to be decreased:
                                                         thisItemCheck.contains[k].quantity--;
                                                     }
@@ -13379,6 +13381,10 @@ function moveNPCs() {
     }
 }
 
+function makeHoney(whichItem) {
+    console.log("making honey...");
+    console.log(whichItem);
+}
 
 function movePlatforms() {
     if (thisMapData[currentMap].movingPlatforms) {

@@ -3390,7 +3390,10 @@ function moveNPCs() {
                                                 if (!thisNPCItemAdded) {
                                                     thisItemCheck.contains.push(thisNPC.inventory[k]);
                                                 }
-                                                // call item's processing function ####
+                                                // call item's processing function:
+                                                if (thisItemCheck.processContents) {
+                                                    window[thisItemCheck.processContents](thisItemCheck);
+                                                }
                                             }
                                             // remove from NPC's inventory:
                                             thisNPC.inventory = [];
@@ -3760,6 +3763,10 @@ function moveNPCs() {
     }
 }
 
+function makeHoney(whichItem) {
+    console.log("making honey...");
+    console.log(whichItem);
+}
 
 function movePlatforms() {
     if (thisMapData[currentMap].movingPlatforms) {
