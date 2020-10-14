@@ -719,23 +719,20 @@
 
 
     {
-
         "type": 56,
         "tileX": 18,
         "tileY": 33,
         "facing": "s"
-
-
     },
     {
-
         "type": 56,
         "tileX": 19,
         "tileY": 33,
         "facing": "w"
-
-
     },
+
+    {"type":42,"tileX":17,"tileY":33,"additional":"-1-33-35","state":"off","animation":{"off":{"length":1,"row":0},"on":{"length":1,"row":1}}},
+    {"type":42,"tileX":16,"tileY":33,"additional":"-1-33-35","state":"on","animation":{"off":{"length":1,"row":0},"on":{"length":1,"row":1}}},
 
     {
         "type": 117,
@@ -759,7 +756,7 @@
             "full":
             {
                 "length": 1,
-                "row": 0,
+                "row": 4,
                 "n": 0,
                 "e": 1,
                 "s": 2,
