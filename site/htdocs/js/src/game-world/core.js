@@ -3794,7 +3794,8 @@ function makeHoney(whichItem) {
                 honeyToProduce = 120;
             }
             console.log("honey complete");
-            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }];
+            // add honey and some beeswax:
+            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 },{ "type": 121, "quantity": 1 }];
             whichItem.state = "full";
         }
     }
