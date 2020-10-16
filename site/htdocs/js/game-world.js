@@ -8199,6 +8199,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         thisParagraphNode.classList.add('active');
     },
 
+    openContainer: function(itemsMap, itemReference) {
+        UI.showUI();
+        var contents = thisMapData[itemsMap].items[itemReference].contains;
+        console.log(contents);
+    },
+
     openChest: function(itemsMap, itemReference) {
         UI.showUI();
         var contents = thisMapData[itemsMap].items[itemReference].contains;
@@ -8263,9 +8269,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     addFromChest: function(chestSlotId) {
-     
 
-// use underscore so dungeon maps with negative ids work:
+
+        // use underscore so dungeon maps with negative ids work:
         var itemDetails = chestSlotId.split("_");
         var whichMap = itemDetails[3];
 
@@ -10075,10 +10081,9 @@ function loadNewVisibleMapAssets(whichMap) {
     }
 
 
-
-    // check for nests, and get the graphics for any creatures they will spawn:
+    // check for spawning items, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
-        if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
+        if (thisMapData[whichMap].items[i].spawns) {
             for (var j = 0; j < thisMapData[whichMap].items[i].spawns.length; j++) {
                 thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
                 if (typeof npcImages[thisNPCIdentifier] === "undefined") {
@@ -10355,7 +10360,7 @@ function loadMapAssets() {
 
         // check for nests, and get the graphics for any creatures they will spawn:
         for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
-            if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
+            if (thisMapData[visibleMaps[m]].items[i].spawns) {
                 for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].spawns.length; j++) {
                     thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].spawns[j].src;
                     if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
@@ -10626,7 +10631,7 @@ function initialiseItem(whichItem) {
         }
     }
 
-    if (currentActiveInventoryItems[whichItem.type].action == "nest") {
+    if (whichItem.spawns) {
         whichItem.timeLastSpawned = hero.totalGameTimePlayed;
         whichItem.spawnsRemaining = whichItem.maxSpawns;
     }
@@ -11896,9 +11901,6 @@ function checkForActions() {
                                 case "static":
                                     // can't interact with it - do nothing
                                     break;
-                                case "nest":
-                                    // can't interact with it - do nothing
-                                    break;
                                 case "stat":
                                     // increment this temp stat:
                                     hero.stats.temporary[actionValue]++;
@@ -11961,6 +11963,12 @@ function checkForActions() {
                                     // open chest and show contents:
                                     UI.openChest(visibleMaps[m], i);
                                     break;
+                                case "fullContainer":
+                                // if the item's state is 'full' then open its container (eg. a hive when it has honey created in it):
+                                if (thisMapData[(visibleMaps[m])].items[i].state == "full") {
+                                    UI.openContainer(visibleMaps[m], i);
+                                }
+                                break;
                                 case "post":
                                     // open the Post panel:
                                     UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
@@ -12589,7 +12597,7 @@ function updateItems() {
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
             thisItem = thisMapData[(visibleMaps[m])].items[i];
-            if (currentActiveInventoryItems[thisItem.type].action == "nest") {
+            if (thisItem.spawns) {
                 if (thisItem.spawnsRemaining > 0) {
                     if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
                         // pick a random creature from all possible:
@@ -13406,13 +13414,14 @@ function makeHoney(whichItem) {
         if (amountOfNectarCurrently >= amountOfNectarRequired) {
             if (nectarTypesFound.length == 1) {
                 // there's only a single nectar been used - find its corresponding honey from it's Action Value:
-                honeyToProduce = currentActiveInventoryItems[nectarTypesFound[0]].actionValue;
+                honeyToProduce = parseInt(currentActiveInventoryItems[nectarTypesFound[0]].actionValue);
             } else {
                 // multiple nectars, so just create a generic honey:
                 honeyToProduce = 120;
             }
             console.log("honey complete");
-            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }];
+            // add honey and some beeswax:
+            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 },{ "type": 121, "quantity": 1 }];
             whichItem.state = "full";
         }
     }

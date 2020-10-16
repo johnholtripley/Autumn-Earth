@@ -1793,6 +1793,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         thisParagraphNode.classList.add('active');
     },
 
+    openContainer: function(itemsMap, itemReference) {
+        UI.showUI();
+        var contents = thisMapData[itemsMap].items[itemReference].contains;
+        console.log(contents);
+    },
+
     openChest: function(itemsMap, itemReference) {
         UI.showUI();
         var contents = thisMapData[itemsMap].items[itemReference].contains;
@@ -1857,9 +1863,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     },
 
     addFromChest: function(chestSlotId) {
-     
 
-// use underscore so dungeon maps with negative ids work:
+
+        // use underscore so dungeon maps with negative ids work:
         var itemDetails = chestSlotId.split("_");
         var whichMap = itemDetails[3];
 
