@@ -519,6 +519,29 @@ function processNewVisibleMapData(whichNewMap) {
     loadNewVisibleMapAssets(whichNewMap);
 }
 
+function loadAdHocInventoryItemData(itemIdsRequested) {
+    var itemIdsToLoad = [];
+    for (var i = 0; i < itemIdsRequested.length; i++) {
+        if (!(currentActiveInventoryItems.hasOwnProperty(itemIdsRequested[i]))) {
+            itemIdsToLoad.push(itemIdsRequested[i]);
+        }
+    }
+    if (itemIdsToLoad.length > 0) {
+        getAdHocInventoryItemData(itemIdsToLoad.join("|"));
+    }
+}
+
+function getAdHocInventoryItemData(itemIdsToLoad) {
+    getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
+        for (var attrname in data) {
+            currentActiveInventoryItems[attrname] = data[attrname];
+        }
+    }, function(status) {
+        // try again:
+        getAdHocInventoryItemData(itemIdsToLoad);
+    });
+}
+
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
     //   console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
@@ -2340,11 +2363,11 @@ function checkForActions() {
                                     UI.openChest(visibleMaps[m], i);
                                     break;
                                 case "fullContainer":
-                                // if the item's state is 'full' then open its container (eg. a hive when it has honey created in it):
-                                if (thisMapData[(visibleMaps[m])].items[i].state == "full") {
-                                    UI.openContainer(visibleMaps[m], i);
-                                }
-                                break;
+                                    // if the item's state is 'full' then open its container (eg. a hive when it has honey created in it):
+                                    if (thisMapData[(visibleMaps[m])].items[i].state == "full") {
+                                        UI.openContainer(visibleMaps[m], i);
+                                    }
+                                    break;
                                 case "post":
                                     // open the Post panel:
                                     UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
@@ -3796,8 +3819,11 @@ function makeHoney(whichItem) {
                 honeyToProduce = 120;
             }
             console.log("honey complete");
+            // make sure this new items are loading into the invetory data:
+            loadAdHocInventoryItemData([honeyToProduce, 121]);
+
             // add honey and some beeswax:
-            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 },{ "type": 121, "quantity": 1 }];
+            whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }, { "type": 121, "quantity": 1 }];
             whichItem.state = "full";
         }
     }
@@ -4506,7 +4532,7 @@ function draw() {
                                 thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
                                 thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
                                 if (typeof thisItem.facing !== "undefined") {
-                                    thisItemOffsetRow+=facingsPossible.indexOf(thisItem.facing);
+                                    thisItemOffsetRow += facingsPossible.indexOf(thisItem.facing);
                                 }
                             }
                             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
