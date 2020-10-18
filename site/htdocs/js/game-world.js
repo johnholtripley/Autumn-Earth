@@ -8202,7 +8202,61 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
     openContainer: function(itemsMap, itemReference) {
         UI.showUI();
         var contents = thisMapData[itemsMap].items[itemReference].contains;
-        console.log(contents);
+        // show container item name in the title:
+        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].shortname;
+        // build contents:
+        var chestContents = '';
+        for (var i = 0; i < contents.length; i++) {
+            chestContents += UI.buildChestSlot(itemsMap, itemReference, i);
+        }
+        chestSlotContents.innerHTML = chestContents;
+        chestIdOpen = itemReference + "_" + itemsMap;
+        chestPanel.classList.add('active');
+    },
+
+    buildChestSlot: function(itemsMap, itemReference, contentsIndex) {
+        var thisChestObject;
+        var thisItemsContainsSlot = thisMapData[itemsMap].items[itemReference].contains[contentsIndex];
+        var thisChestSlotMarkup = '<li id="chestSlot_' + itemReference + '_' + contentsIndex + '_' + itemsMap + '">';
+
+
+        if (typeof thisItemsContainsSlot !== "undefined") {
+            if (thisItemsContainsSlot != "") {
+                if (thisItemsContainsSlot.type == "$") {
+                    // just money:
+                    thisChestSlotMarkup += '<img src="/images/game-world/inventory-items/coins.png" alt="' + thisItemsContainsSlot.quantity + ' worth of coins">';
+                    thisChestSlotMarkup += '<p><em>' + parseMoney(thisItemsContainsSlot.quantity) + ' worth of coins </em></p>';
+                    thisChestSlotMarkup += '<span class="qty">' + parseMoney(thisItemsContainsSlot.quantity) + '</span>';
+                } else if (thisItemsContainsSlot.type == "*") {
+                    // just card dust:
+                    thisChestSlotMarkup += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + thisItemsContainsSlot.quantity + ' worth of card dust">';
+                    thisChestSlotMarkup += '<p><em>' + thisItemsContainsSlot.quantity + ' worth of card dust </em></p>';
+                    thisChestSlotMarkup += '<span class="qty">' + thisItemsContainsSlot.quantity + '</span>';
+                } else {
+                    // create defaults:
+                    thisChestObject = {
+                        "quantity": 1,
+                        "quality": 100,
+                        "durability": 100,
+                        "currentWear": 0,
+                        "effectiveness": 100,
+                        "colour": 0,
+                        "enchanted": 0,
+                        "hallmark": 0,
+                        "inscription": ""
+                    }
+                    // add in any defined values:
+                    for (var attrname in thisItemsContainsSlot) {
+                        thisChestObject[attrname] = thisItemsContainsSlot[attrname];
+                    }
+                    // save all these default values to the object for adding it to the inventory later:
+                    thisMapData[itemsMap].items[itemReference].contains[contentsIndex] = thisChestObject;
+                    thisChestSlotMarkup += generateGenericSlotMarkup(thisChestObject);
+                }
+            }
+        }
+        thisChestSlotMarkup += '</li>';
+        return thisChestSlotMarkup;
     },
 
     openChest: function(itemsMap, itemReference) {
@@ -8213,48 +8267,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
         // show container item name in the title:
         chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].shortname;
-
         // build contents:
         var chestContents = '';
-        var thisChestObject;
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot_' + itemReference + '_' + i + '_' + itemsMap + '">';
-            if (typeof contents[i] !== "undefined") {
-                if (contents[i] != "") {
-                    if (contents[i].type == "$") {
-                        // just money:
-                        chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[i].quantity + ' worth of coins">';
-                        chestContents += '<p><em>' + parseMoney(contents[i].quantity) + ' worth of coins </em></p>';
-                        chestContents += '<span class="qty">' + parseMoney(contents[i].quantity) + '</span>';
-                    } else if (contents[i].type == "*") {
-                        // just card dust:
-                        chestContents += '<img src="/images/game-world/inventory-items/card-dust.png" alt="' + contents[i].quantity + ' worth of card dust">';
-                        chestContents += '<p><em>' + contents[i].quantity + ' worth of card dust </em></p>';
-                        chestContents += '<span class="qty">' + contents[i].quantity + '</span>';
-                    } else {
-                        // create defaults:
-                        thisChestObject = {
-                            "quantity": 1,
-                            "quality": 100,
-                            "durability": 100,
-                            "currentWear": 0,
-                            "effectiveness": 100,
-                            "colour": 0,
-                            "enchanted": 0,
-                            "hallmark": 0,
-                            "inscription": ""
-                        }
-                        // add in any defined values:
-                        for (var attrname in contents[i]) {
-                            thisChestObject[attrname] = contents[i][attrname];
-                        }
-                        // save all these default values to the object for adding it to the inventory later:
-                        contents[i] = thisChestObject;
-                        chestContents += generateGenericSlotMarkup(thisChestObject);
-                    }
-                }
-            }
-            chestContents += '</li>';
+            chestContents += UI.buildChestSlot(itemsMap, itemReference, i);
         }
         chestSlotContents.innerHTML = chestContents;
         chestIdOpen = itemReference + "_" + itemsMap;
@@ -8277,6 +8293,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
         var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
+        console.log(thisMapData[whichMap].items[(itemDetails[1])]);
         if (typeof whichChestItem !== "undefined") {
             if (whichChestItem.type == "$") {
                 // money:
