@@ -1805,7 +1805,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         chestSlotContents.innerHTML = chestContents;
         chestIdOpen = itemReference + "_" + itemsMap;
-        chestPanel.classList.add('active');
+        chestPanel.classList.add('active', 'fullContainer');
     },
 
     buildChestSlot: function(itemsMap, itemReference, contentsIndex) {
@@ -1873,21 +1873,20 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     closeChest: function() {
         // animate close ####
-        chestPanel.classList.remove('active');
-        audio.playSound(soundEffects['chestOpen'], 0);
+        if (!(chestPanel.classList.contains('fullContainer'))) {
+            audio.playSound(soundEffects['chestOpen'], 0);
+        }
+        chestPanel.classList.remove('active', 'fullContainer');
         chestIdOpen = -1;
     },
 
     addFromChest: function(chestSlotId) {
-
-
         // use underscore so dungeon maps with negative ids work:
         var itemDetails = chestSlotId.split("_");
         var whichMap = itemDetails[3];
-
         var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
-        console.log(thisMapData[whichMap].items[(itemDetails[1])]);
+        var itemWasRemoved = false;
         if (typeof whichChestItem !== "undefined") {
             if (whichChestItem.type == "$") {
                 // money:
@@ -1896,14 +1895,33 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 UI.updateCurrencies();
                 thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                 document.getElementById(chestSlotId).innerHTML = "";
+                itemWasRemoved = true;
             } else {
                 inventoryCheck = canAddItemToInventory([whichChestItem]);
                 if (inventoryCheck[0]) {
                     thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                     UI.showChangeInInventory(inventoryCheck[1]);
                     document.getElementById(chestSlotId).innerHTML = "";
+                    itemWasRemoved = true;
                 } else {
                     UI.showNotification("<p>I don't have room in my bags for that</p>");
+                }
+            }
+            if (itemWasRemoved) {
+                if (chestPanel.classList.contains('fullContainer')) {
+                    // see if that was the last item:
+                    var slotWithContentsFound = false;
+                    for (var i = 0; i < thisMapData[whichMap].items[(itemDetails[1])].contains.length; i++) {
+                        if (thisMapData[whichMap].items[(itemDetails[1])].contains[i] != "") {
+                            slotWithContentsFound = true;
+                        }
+                    }
+                    if (!slotWithContentsFound) {
+                        // player has taken everything - reset the item to being empty again:
+                        thisMapData[whichMap].items[(itemDetails[1])].contains = [];
+                        thisMapData[whichMap].items[(itemDetails[1])].state = 'empty';
+                        UI.closeChest();
+                    }
                 }
             }
         }
