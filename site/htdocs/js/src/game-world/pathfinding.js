@@ -34,9 +34,12 @@ if (window.Worker) {
                 //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
                 // insert the new path:
                 // http://stackoverflow.com/a/7032717/1054212
+        
                 thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
-                //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
-                //console.log((e.data[1]));
+                    console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
+                 console.log(thisNPC.movementIndex);
+                    console.log("------------------------------");
+              //  console.log((e.data[1]));
 
                 thisNPC.waitingForAPath = false;
                 if (typeof e.data[2] !== "undefined") {

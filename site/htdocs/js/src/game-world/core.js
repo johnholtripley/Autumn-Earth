@@ -1984,7 +1984,7 @@ function updateVisibleMaps() {
 
     //console.log("new maps:",newMapsToLoad);
     for (var i = 0; i < newMapsToLoad.length; i++) {
-        // console.log("loading in new map #"+newMapsToLoad[i]);
+     //    console.log("loading in new map #"+newMapsToLoad[i]);
         loadNewVisibleMap(newMapsToLoad[i]);
 
     }
@@ -3229,6 +3229,7 @@ function moveNPCs() {
                 }
 
                 if (newTile || thisNPC.forceNewMovementCheck) {
+                  
                     thisNPC.tileX = getTileX(thisNPC.x);
                     thisNPC.tileY = getTileY(thisNPC.y);
                     if (typeof thisNPC.following !== "undefined") {

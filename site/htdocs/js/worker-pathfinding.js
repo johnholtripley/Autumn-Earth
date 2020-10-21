@@ -370,6 +370,7 @@ onmessage = function(e) {
                      postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, whichMap.items[(closesMatchingItemSoFar[1])].tileX, whichMap.items[(closesMatchingItemSoFar[1])].tileY)]);
                 } else {
                     // stay still:
+                    console.log("no path");
                     postMessage([thisAgent.name, ["-", "pathEnd"], ""]);
                 }
                 break;

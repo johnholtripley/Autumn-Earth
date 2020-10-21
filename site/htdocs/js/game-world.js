@@ -5423,9 +5423,12 @@ if (window.Worker) {
                 //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
                 // insert the new path:
                 // http://stackoverflow.com/a/7032717/1054212
+        
                 thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
-                //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
-                //console.log((e.data[1]));
+                    console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
+                 console.log(thisNPC.movementIndex);
+                    console.log("------------------------------");
+              //  console.log((e.data[1]));
 
                 thisNPC.waitingForAPath = false;
                 if (typeof e.data[2] !== "undefined") {
@@ -11643,7 +11646,7 @@ function updateVisibleMaps() {
 
     //console.log("new maps:",newMapsToLoad);
     for (var i = 0; i < newMapsToLoad.length; i++) {
-        // console.log("loading in new map #"+newMapsToLoad[i]);
+     //    console.log("loading in new map #"+newMapsToLoad[i]);
         loadNewVisibleMap(newMapsToLoad[i]);
 
     }
@@ -12888,6 +12891,7 @@ function moveNPCs() {
                 }
 
                 if (newTile || thisNPC.forceNewMovementCheck) {
+                  
                     thisNPC.tileX = getTileX(thisNPC.x);
                     thisNPC.tileY = getTileY(thisNPC.y);
                     if (typeof thisNPC.following !== "undefined") {
