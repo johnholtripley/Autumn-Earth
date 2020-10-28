@@ -2072,6 +2072,9 @@ if(substr($primaryCommonName, -1) == "y") {
 if(substr($primaryCommonName, -1) == "x") {
     $primaryCommonNamePlural = $primaryCommonName."es";
 }
+if(substr($primaryCommonName, -1) == "f") {
+    $primaryCommonNamePlural = substr($primaryCommonName, 0, -1)."ves";
+}
 
 $startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 

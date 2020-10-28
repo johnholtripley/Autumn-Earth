@@ -769,8 +769,8 @@
         "maxSpawns": 1,
         "spawns": [
         {
-            "name": "butterfly",
-            "src": "orange-butterfly.png",
+            "name": "bee",
+            "src": "bee.png",
             "width": 15,
             "length": 15,
             "spriteWidth": 15,
@@ -780,8 +780,10 @@
             "movement": [
                 ["find", ["item", "##itemCategory##1##"], "walk", 0],
                 ["harvest", 1],
+                ["wait", 250],
                 ["find", ["item", "117"], "walk", 0],
-                ["deposit", 117]
+                ["deposit", 117],
+                ["wait", 250]
             ],
             "facing": "w",
             "walkThroughDoors": false,

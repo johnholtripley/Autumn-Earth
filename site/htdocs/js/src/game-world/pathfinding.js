@@ -17,7 +17,7 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-            //console.log("pathfinding returned from Worker");
+            // pathfinding returned from Worker:
             var thisNPC = null;
             for (var m = 0; m < visibleMaps.length; m++) {
 
@@ -36,21 +36,17 @@ if (window.Worker) {
                 // http://stackoverflow.com/a/7032717/1054212
         
                 thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
-                    console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
+                   // console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
                  console.log(thisNPC.movementIndex);
-                    console.log("------------------------------");
+                    
               //  console.log((e.data[1]));
 
                 thisNPC.waitingForAPath = false;
                 if (typeof e.data[2] !== "undefined") {
                     // store the target tile so it doesn't try and go straight back to it after:
                     thisNPC.lastTargetDestination = e.data[2];
-                    //    console.log("heading for "+e.data[2]);
                 }
             }
-            //    console.log(thisMapData.npcs[thisNPCsIndex].movementIndex);
-            //  console.log(thisMapData.npcs[thisNPCsIndex].movement);
-            //   console.log(thisMapData.npcs[thisNPCsIndex].movement[(thisMapData.npcs[thisNPCsIndex].movementIndex)]);
         }
     }
 }

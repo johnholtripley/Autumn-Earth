@@ -54,12 +54,10 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        // lightMapOverlay = document.getElementById("lightMapOverlay");
         lightMapOverlay = document.createElement('canvas');
         lightMapContext = lightMapOverlay.getContext('2d');
         reflectedCanvas = document.createElement('canvas');
         reflectionContext = reflectedCanvas.getContext('2d');
-
         oceanCanvas = document.createElement('canvas');
         oceanContext = oceanCanvas.getContext('2d');
         waterCanvas = document.createElement('canvas');
@@ -89,74 +87,47 @@ function init() {
 
 function getHeroGameState() {
     getJSON("/game-world/getCoreData.php?chr=" + characterId, function(data) {
-        //  thisMapData = data.map;
         // copy the data to the hero object:
         for (var attribute in data.gameState) {
             hero[attribute] = data.gameState[attribute];
         }
         newMap = findMapNumberFromGlobalCoordinates(data.gameState.tileX, data.gameState.tileY);
-        //   visibleMaps.push(newMap);
-
-
-        //visibleMapsLoading = [newMap];
-
         gameSettings = data.gameState.settings;
-
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
         if (data.gameState.allPets) {
             if (data.gameState.activePets.length > 0) {
                 hasActivePet = true;
             }
-            //   hero.activePets = data.activePets;
-            //   hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.gameState.fae) {
             fae[attrname] = data.gameState.fae[attrname];
         }
-
-
         // determine current map:
         currentMap = newMap;
-
-
-        //  hero.inventory = data.inventory;
         if (currentMap > 0) {
-            //clean old procedural maps: (don't need a response here)
+            // clean old procedural maps: (don't need a response here)
             sendDataWithoutNeedingAResponse('/game-world/generateCircularDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
-
         hero.x = getTileCentreCoordX(hero.tileX);
         hero.y = getTileCentreCoordY(hero.tileY);
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-        //updateVisibleMaps();
-
-
-
 
         colourNames = data.colours.colourNames;
         UI.buildHorticulturePanel(data.horticulture.markup);
         hero.plantBreeding = data.horticulture.data;
         questData = data.quests;
         possibleTitles = data.titles;
-
         housingData = data.housingItems;
-
-
         cardGameNameSpace.allCardData = data.cards.cards;
         hero.cardBacks = data.cards.backs;
         hero.activeCardBack = data.cards.activeBack;
         UI.changeActiveCardBack();
-
         hero.crafting = data.recipes.professions;
         allRecipes = data.recipes.all;
         currentItemGroupFilters = data.recipes.itemGroups;
-
         UI.buildQuestJournal(data.journal.markup, data.journal.regions);
-
-
-
         loadCoreAssets();
     }, function(status) {
         // error - try again:
@@ -166,7 +137,6 @@ function getHeroGameState() {
 
 
 function loadCoreAssets() {
-
     var coreImagesToLoad = [];
     coreImagesToLoad.push({
         name: "heroImg",
@@ -570,6 +540,7 @@ function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     //  console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
+        console.log("new map loading");
             thisMapData[whichNewMap] = data.mapData.map;
             //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
@@ -3242,6 +3213,7 @@ function moveNPCs() {
                     if (thisNPC.movementIndex >= thisNPC.movement.length) {
                         thisNPC.movementIndex = 0;
                     }
+
                     thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
 
 
@@ -3530,7 +3502,7 @@ function moveNPCs() {
                                         if (thisPreviousMovement == 'following') {
                                             var numberOfElementsRemoved = thisNPC.movementIndex - (j);
                                             thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                            // this needs to be one more than the equivilient for 'find' types:
+                                            // this needs to be one more than the equivilent for 'find' types:
                                             thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
                                             thisNPC.isMoving = true;
                                             thisNPC.forceNewMovementCheck = true;
