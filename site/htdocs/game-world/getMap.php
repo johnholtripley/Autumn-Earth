@@ -289,6 +289,17 @@ for ($i = 0; $i < count($mapData['map']['hotspots']); $i++) {
     $mapData['map']['hotspots'][$i]['centreX'] += $globalPosition[0] * $worldMapTileLength;
     $mapData['map']['hotspots'][$i]['centreY'] += $globalPosition[1] * $worldMapTileLength;
 }
+// moving platforms:
+if(isset($mapData['map']['movingPlatforms'])) {
+    for ($i = 0; $i < count($mapData['map']['movingPlatforms']); $i++) {
+        $mapData['map']['movingPlatforms'][$i]['startTileX'] += $globalPosition[0] * $worldMapTileLength;
+        $mapData['map']['movingPlatforms'][$i]['startTileY'] += $globalPosition[1] * $worldMapTileLength;
+        for ($j=0;$j<count($mapData['map']['movingPlatforms'][$i]['movement']);$j++) {
+            $mapData['map']['movingPlatforms'][$i]['movement'][$j][0] += $globalPosition[0] * $worldMapTileLength;
+            $mapData['map']['movingPlatforms'][$i]['movement'][$j][1] += $globalPosition[1] * $worldMapTileLength;
+        }
+    }
+}
 
 
 // check seasonal content as well:

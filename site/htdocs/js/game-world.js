@@ -10048,6 +10048,7 @@ function loadNewVisibleMapAssets(whichMap) {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].identifier = thisTerrainIdentifer;
             newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
                 tileImages[this.identifier] = newTerrainImagesToLoad[this.identifier];
+                console.log(tileImages);
             };
             newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
                 // error handling? ####
@@ -10057,6 +10058,7 @@ function loadNewVisibleMapAssets(whichMap) {
             //   } else {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
             //   }
+            console.log("loading "+thisMapData[whichMap].graphics[i].src);
 
         }
     }
@@ -10143,6 +10145,7 @@ function processNewVisibleMapData(whichNewMap) {
     shopData += ']}';
 
     */
+    intialiseMovingPlatforms(whichNewMap);
     updatePossibleWeather();
     loadNewVisibleMapAssets(whichNewMap);
 }
@@ -10672,10 +10675,6 @@ function initialiseItem(whichItem) {
 
 
 function prepareGame() {
-
-
-
-
     // get map image references:
 
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -10716,42 +10715,9 @@ function prepareGame() {
         }
     }
 
-    if (thisMapData[currentMap].movingPlatforms) {
-        // initialise moving platforms:
-        var thisPlatform, thisPlatformMovements;
-        for (var i = 0; i < thisMapData[currentMap].movingPlatforms.length; i++) {
-            thisPlatform = thisMapData[currentMap].movingPlatforms[i];
-            thisPlatform.x = getTileCentreCoordX(thisPlatform.startTileX);
-            thisPlatform.y = getTileCentreCoordY(thisPlatform.startTileY);
-            thisPlatform.z = thisPlatform.startZ;
-            thisPlatform.movementIndex = 0;
-            thisPlatform.waitingTimer = 0;
-            // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
-            thisPlatform.canMove = true;
-            /*
-            // determine offsets from platform's x and y coords (as these won't change):
-            thisPlatform.xMinEdge = -tileW / 2;
-            thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
-            thisPlatform.yMinEdge = -tileW / 2;
-            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.length - 1) * tileW);
-            */
 
 
-
-            // temp:
-
-
-            thisPlatformMovements = determinePlatformIncrements(thisPlatform);
-
-            thisPlatform.dx = thisPlatformMovements[0];
-            thisPlatform.dy = thisPlatformMovements[1];
-            thisPlatform.dz = thisPlatformMovements[2];
-
-
-        }
-    }
-
-
+intialiseMovingPlatforms(currentMap);
 
 
     // fill hero breadcrumb array with herox and heroy:
@@ -13460,39 +13426,76 @@ function makeHoney(whichItem) {
     }
 }
 
+function intialiseMovingPlatforms(whichMap) {
+    if (thisMapData[whichMap].movingPlatforms) {
+        var thisPlatform, thisPlatformMovements;
+        for (var i = 0; i < thisMapData[whichMap].movingPlatforms.length; i++) {
+            thisPlatform = thisMapData[whichMap].movingPlatforms[i];
+            thisPlatform.x = getTileCentreCoordX(thisPlatform.startTileX);
+            thisPlatform.y = getTileCentreCoordY(thisPlatform.startTileY);
+            thisPlatform.z = thisPlatform.startZ;
+            thisPlatform.movementIndex = 0;
+            thisPlatform.waitingTimer = 0;
+            // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
+            thisPlatform.canMove = true;
+            /*
+            // determine offsets from platform's x and y coords (as these won't change):
+            thisPlatform.xMinEdge = -tileW / 2;
+            thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
+            thisPlatform.yMinEdge = -tileW / 2;
+            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.length - 1) * tileW);
+            */
+
+
+
+            // temp:
+
+
+            thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+
+            thisPlatform.dx = thisPlatformMovements[0];
+            thisPlatform.dy = thisPlatformMovements[1];
+            thisPlatform.dz = thisPlatformMovements[2];
+
+
+        }
+    }
+}
 function movePlatforms() {
-    if (thisMapData[currentMap].movingPlatforms) {
-        // check for any items on platforms:
-        for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-            if (thisMapData[currentMap].items[i].isOnPlatform != undefined) {
-                if (thisMapData[currentMap].movingPlatforms[thisMapData[currentMap].items[i].isOnPlatform].canMove) {
-                    thisMapData[currentMap].items[i].x += thisMapData[currentMap].movingPlatforms[thisMapData[currentMap].items[i].isOnPlatform].dx;
-                    thisMapData[currentMap].items[i].y += thisMapData[currentMap].movingPlatforms[thisMapData[currentMap].items[i].isOnPlatform].dy;
-                    thisMapData[currentMap].items[i].z += thisMapData[currentMap].movingPlatforms[thisMapData[currentMap].items[i].isOnPlatform].dz;
+    for (var m = 0; m < visibleMaps.length; m++) {
+        if (thisMapData[visibleMaps[m]].movingPlatforms) {
+            // check for any items on platforms:
+            for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
+                if (thisMapData[visibleMaps[m]].items[i].isOnPlatform != undefined) {
+                    if (thisMapData[visibleMaps[m]].movingPlatforms[thisMapData[visibleMaps[m]].items[i].isOnPlatform].canMove) {
+                        thisMapData[visibleMaps[m]].items[i].x += thisMapData[visibleMaps[m]].movingPlatforms[thisMapData[visibleMaps[m]].items[i].isOnPlatform].dx;
+                        thisMapData[visibleMaps[m]].items[i].y += thisMapData[visibleMaps[m]].movingPlatforms[thisMapData[visibleMaps[m]].items[i].isOnPlatform].dy;
+                        thisMapData[visibleMaps[m]].items[i].z += thisMapData[visibleMaps[m]].movingPlatforms[thisMapData[visibleMaps[m]].items[i].isOnPlatform].dz;
+                    }
                 }
             }
-        }
-        var thisPlatform, thisPlatformMovements;
-        for (var i = 0; i < thisMapData[currentMap].movingPlatforms.length; i++) {
-            thisPlatform = thisMapData[currentMap].movingPlatforms[i];
-            if (thisPlatform.canMove) {
-                thisPlatform.x += thisPlatform.dx;
-                thisPlatform.y += thisPlatform.dy;
-                thisPlatform.z += thisPlatform.dz;
-                // check to see if it's reached it's next target (within in a tolerance):
-                //console.log(thisPlatform.targetX, thisPlatform.x,thisPlatform.targetY, thisPlatform.y);
-                if (Math.abs(thisPlatform.targetX - thisPlatform.x) < 0.5) {
-                    if (Math.abs(thisPlatform.targetY - thisPlatform.y) < 0.5) {
-                        if (Math.abs(thisPlatform.targetZ - thisPlatform.z) < 0.5) {
-                            // snap to target:
-                            thisPlatform.x = thisPlatform.targetX;
-                            thisPlatform.y = thisPlatform.targetY;
-                            thisPlatform.z = thisPlatform.targetZ;
-                            // find next movement:
-                            thisPlatformMovements = determinePlatformIncrements(thisPlatform);
-                            thisPlatform.dx = thisPlatformMovements[0];
-                            thisPlatform.dy = thisPlatformMovements[1];
-                            thisPlatform.dz = thisPlatformMovements[2];
+            var thisPlatform, thisPlatformMovements;
+            for (var i = 0; i < thisMapData[visibleMaps[m]].movingPlatforms.length; i++) {
+                thisPlatform = thisMapData[visibleMaps[m]].movingPlatforms[i];
+                if (thisPlatform.canMove) {
+                    thisPlatform.x += thisPlatform.dx;
+                    thisPlatform.y += thisPlatform.dy;
+                    thisPlatform.z += thisPlatform.dz;
+                    // check to see if it's reached its next target (within in a tolerance):
+                    //console.log(thisPlatform.targetX, thisPlatform.x,thisPlatform.targetY, thisPlatform.y);
+                    if (Math.abs(thisPlatform.targetX - thisPlatform.x) < 0.5) {
+                        if (Math.abs(thisPlatform.targetY - thisPlatform.y) < 0.5) {
+                            if (Math.abs(thisPlatform.targetZ - thisPlatform.z) < 0.5) {
+                                // snap to target:
+                                thisPlatform.x = thisPlatform.targetX;
+                                thisPlatform.y = thisPlatform.targetY;
+                                thisPlatform.z = thisPlatform.targetZ;
+                                // find next movement:
+                                thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+                                thisPlatform.dx = thisPlatformMovements[0];
+                                thisPlatform.dy = thisPlatformMovements[1];
+                                thisPlatform.dz = thisPlatformMovements[2];
+                            }
                         }
                     }
                 }
@@ -14189,10 +14192,11 @@ function draw() {
                     thisPlatform = thisMapData[whichVisibleMap].movingPlatforms[i];
                     thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
                     thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
+
                     if (isVisibleOnScreen(thisX, thisY)) {
                         thisGraphicCentreX = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreX;
                         thisGraphicCentreY = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreY;
-                        assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                        assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisMapData[whichVisibleMap].graphics[(thisPlatform.graphic)].src], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                     }
                 }
             }
