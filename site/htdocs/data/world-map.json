@@ -9,13 +9,13 @@
 	[1015, 25, 26, 27, 1016],
 	[1017, 1018, 1019, 1020, 1021]
 	],
-	"globalPlatforms": [
-		{
+	"globalPlatforms": {	
+		"9000": {
 			"template": 9000,
 			"startMap": 1015,
 			"startX": 44,
 			"startY": 38,
 			"speed": 4
 		}
-	]
+	}
 }

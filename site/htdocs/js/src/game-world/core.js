@@ -566,7 +566,12 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
                 }
             }
             //console.log("loadNewVisibleJSON "+newItemIds.join("."));
-            loadNewVisibleInventoryItemData(newItemIds.join("|"), whichNewMap)
+            loadNewVisibleInventoryItemData(newItemIds.join("|"), whichNewMap);
+
+            if(data.mapData.isAGlobalPlatform) {
+                initialiseGlobalPlatform(whichNewMap);
+            }
+
         },
         function(status) {
             loadNewVisibleJSON(mapFilePath, whichNewMap);
@@ -3776,8 +3781,15 @@ function checkForGlobalPlatforms(whichMap) {
     for (thisPlatform in globalPlatforms) {
         if (globalPlatforms[thisPlatform].startMap == whichMap) {
             console.log("has a global platform");
+            // load the map data, and store the tileX and tileY (reset to startX and startY) in that map object
+            loadNewVisibleMap(globalPlatforms[thisPlatform].template);
         }
     }
+}
+
+function initialiseGlobalPlatform(whichMap) {
+            globalPlatforms[whichMap].tileX = globalPlatforms[thisPlatform].startX;
+            globalPlatforms[whichMap].tileY = globalPlatforms[thisPlatform].startY;
 }
 
 function intialiseMovingPlatforms(whichMap) {
