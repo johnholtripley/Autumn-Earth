@@ -680,7 +680,7 @@ $thisItemObject = array(
 
     $mapData['map']['hiddenResources'] = $resources;
 } else {
-    $mapData['map']['hiddenResources'] = '';
+    $mapData['map']['hiddenResources'] = [];
 }
 }
 
@@ -982,6 +982,8 @@ mysqli_free_result($housingResult);
 
 generatePositionsOfHiddenResourceNodes();
 
+} else {
+    $mapData['map']['hiddenResources'] = [];
 }
 
 

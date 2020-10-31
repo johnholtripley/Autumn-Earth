@@ -42,6 +42,7 @@ window.addEventListener('resize', debouncedResize);
 function loadGlobalMapData() {
     getJSON("/data/world-map.json", function(data) {
         worldMap = data.worldMap;
+        globalPlatforms = data.globalPlatforms;
         init();
     }, function(status) {
         // error - try again:
@@ -334,6 +335,7 @@ function processInitialMap() {
 
 function updateZoneName() {
     if (previousZoneName != thisMapData[currentMap].zoneName) {
+        previousZoneName = thisMapData[currentMap].zoneName;
         UI.showZoneName(thisMapData[currentMap].zoneName);
         document.title = titleTagPrefix + ' - ' + thisMapData[currentMap].zoneName;
         cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
@@ -390,7 +392,6 @@ function loadNewVisibleMapAssets(whichMap) {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].identifier = thisTerrainIdentifer;
             newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
                 tileImages[this.identifier] = newTerrainImagesToLoad[this.identifier];
-                console.log(tileImages);
             };
             newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
                 // error handling? ####
@@ -400,7 +401,7 @@ function loadNewVisibleMapAssets(whichMap) {
             //   } else {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
             //   }
-            console.log("loading "+thisMapData[whichMap].graphics[i].src);
+            
 
         }
     }
@@ -487,6 +488,7 @@ function processNewVisibleMapData(whichNewMap) {
     shopData += ']}';
 
     */
+    checkForGlobalPlatforms(whichNewMap);
     intialiseMovingPlatforms(whichNewMap);
     updatePossibleWeather();
     loadNewVisibleMapAssets(whichNewMap);
@@ -1060,7 +1062,7 @@ function prepareGame() {
 
 
 intialiseMovingPlatforms(currentMap);
-
+checkForGlobalPlatforms(currentMap);
 
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
@@ -3764,6 +3766,16 @@ function makeHoney(whichItem) {
             // add honey and some beeswax:
             whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }, { "type": 121, "quantity": 1 }];
             whichItem.state = "full";
+        }
+    }
+}
+
+function checkForGlobalPlatforms(whichMap) {
+    // john ##### 
+    var thisPlatform;  
+    for (thisPlatform in globalPlatforms) {
+        if (globalPlatforms[thisPlatform].startMap == whichMap) {
+            console.log("has a global platform");
         }
     }
 }
