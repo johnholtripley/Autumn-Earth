@@ -646,12 +646,12 @@ if($proceduralDebug) {
     return $thisGrammar;
 }
 
-function parseStringGrammar($thisGrammar)
-{
+function parseStringGrammar($thisGrammar) {
     global $nodeList, $jointList, $canvaDimension;
     $characterCounter               = 0;
     $thisDepth                      = 0;
     $thisBranchesParents            = array();
+    $thisLoopingBranchesParents     = array();
     $thisBranchesTerminalNodes      = array();
     $nextJointTypes                 = array();
     $thisBranchesTerminalJointTypes = array();
@@ -695,6 +695,20 @@ function parseStringGrammar($thisGrammar)
                 $nextJointTypes = array("");
                 $nextJointLock  = array("");
                 break;
+            case "(":
+                $thisLoopingBranchesParents[$thisDepth] = $activeParents;
+                break;
+            case ")":
+                // create joint between last node and the original opening node:
+                for ($i = 0; $i < count($activeParents); $i++) {
+                    // make sure it's not a dead end:
+                    if ($nextJointTypes[$i] != "|") {
+                        $newJoint = addJoint($activeParents[$i]->name, $thisLoopingBranchesParents[$thisDepth][0]->name, $nextJointTypes[$i], $nextJointLock[$i]);
+                    }
+                }
+                // looping closed - restore the pointer to the opening node:
+                $activeParents = $thisLoopingBranchesParents[$thisDepth];
+                 break;
             case "{":
                 // branch opens
                 $thisDepth++;
@@ -702,7 +716,9 @@ function parseStringGrammar($thisGrammar)
                 $thisBranchesTerminalNodes[$thisDepth]      = array();
                 $thisBranchesTerminalJointTypes[$thisDepth] = array();
                 $thisBranchesTerminalJointLocks[$thisDepth] = array();
+                echo $thisDepth."...";
                 break;
+
             case "}":
                 // branching closes - add in this last branch's terminal nodes:
                 for ($i = 0; $i < count($activeParents); $i++) {
@@ -1112,9 +1128,9 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
     }
 
     // find edges that connect those (moving through unused vertices)
-    $searchVertices                                          = array();
-    $uncheckedVertices                                       = array();
-    $heuristic                                               = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
+    $searchVertices = array();
+    $uncheckedVertices = array();
+    $heuristic = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
     $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'edge' => null, 'cost' => 0, 'summedCost' => $heuristic);
     array_push($uncheckedVertices, $searchVertices[$startVertex->x . "-" . $startVertex->y]);
     $targetFound = false;
@@ -4429,7 +4445,7 @@ imagedestroy($fullImage);
 // simple branch with a node on each branch:
 // $startGrammar = "S{O,O}E";
 
-// simple branch to dead end:
+// simple branch to one dead end:
 // $startGrammer = "S{O,O|}E";
 
 // a one-way valve between 2 nodes:
@@ -4544,13 +4560,26 @@ if(!($fileIsAlreadyGenerated)) {
         $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
      
-
+    // 3 way branch:
+        $grownGrammar = "S{O,O,O}OOE";
 
     // zelda gnarled root dungeon:
     $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
 
 
+// hub rooms - where a branch returns to its first node
+$grownGrammar = "SO{(OO),(OO)|}OE";
+
        $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
+
+
+
+
+
+   //    $grownGrammar = "SO(OO)(OO)OE";
+if(isset($_GET["grammar"])) {
+$grownGrammar = $_GET["grammar"];
+}
 
         parseStringGrammar($grownGrammar);
         moveNodesApart();
