@@ -4567,7 +4567,7 @@ if(!($fileIsAlreadyGenerated)) {
     $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
 
 
-// hub rooms - where a branch returns to its first node
+// hub rooms - where a branch returns to its first node (needs a non-regular delaunay graph though)
 $grownGrammar = "SO{(OO),(OO)|}OE";
 
        $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));

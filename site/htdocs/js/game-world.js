@@ -2166,7 +2166,8 @@ function getTileY(y) {
 
 function getElevation(tileX, tileY) {
     var localTileX, localTileY, thisMap;
-       if (isOverWorldMap) {
+    // it might be a platform map that is over an overworld map, so that would need local coordinates:
+    if ((isOverWorldMap) && ((tileX >= worldMapTileLength) || (tileY >= worldMapTileLength))) {
         thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
         localTileX = getLocalCoordinatesX(tileX);
         localTileY = getLocalCoordinatesY(tileY);
@@ -2177,7 +2178,7 @@ function getElevation(tileX, tileY) {
     }
     var elevation = 0;
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
-           elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+        elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     }
 
     return elevation;
@@ -2185,7 +2186,7 @@ function getElevation(tileX, tileY) {
 
 function checkForSlopes(object) {
 
-     var globalTileX = object.tileX;
+    var globalTileX = object.tileX;
     var globalTileY = object.tileY;
     var tileX, tileY;
     var thisMap;
@@ -2203,46 +2204,46 @@ function checkForSlopes(object) {
 
 
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
-            case ">":
-            
+        case ">":
+
             // is a horizontal slope
-            console.log(object.x%tileW);
+            console.log(object.x % tileW);
             var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*(tileW-(object.x%tileW))/tileW);
+            object.z = parseInt(minMax[0]) + (parseInt(minMax[1]) * (tileW - (object.x % tileW)) / tileW);
             break;
-            case "<":
-              console.log(object.x%tileW);
+        case "<":
+            console.log(object.x % tileW);
             var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-             object.z = parseInt(minMax[0])+(parseInt(minMax[1])*((object.x%tileW))/tileW);
+            object.z = parseInt(minMax[0]) + (parseInt(minMax[1]) * ((object.x % tileW)) / tileW);
             break;
         case "v":
-        // is a vertical slope 
-      var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-     console.log(object.y%tileW+" - "+minMax[0]+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW));
-      
-            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW);
-            break;
-case "^":
-  var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-     console.log(object.y%tileW+" - "+minMax[0]+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW));
-      
-            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*((object.y%tileW))/tileW);
+            // is a vertical slope 
+            var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+            console.log(object.y % tileW + " - " + minMax[0] + (parseInt(minMax[1]) * (tileW - (object.y % tileW)) / tileW));
 
-        break;
+            object.z = parseInt(minMax[0]) + (parseInt(minMax[1]) * (tileW - (object.y % tileW)) / tileW);
+            break;
+        case "^":
+            var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+            console.log(object.y % tileW + " - " + minMax[0] + (parseInt(minMax[1]) * (tileW - (object.y % tileW)) / tileW));
+
+            object.z = parseInt(minMax[0]) + (parseInt(minMax[1]) * ((object.y % tileW)) / tileW);
+
+            break;
         default:
-        object.z = getElevation(object.tileX, object.tileY);
+            object.z = getElevation(object.tileX, object.tileY);
     }
 }
 
 function dataURItoBlob(dataURI) {
     // thanks https://stackoverflow.com/questions/9388412/data-uri-to-object-url-with-createobjecturl-in-chrome-ff#answer-43449212
-  var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  var binary = atob(dataURI.split(',')[1]);
-  var array = [];
-  for (var i = 0; i < binary.length; i++) {
-     array.push(binary.charCodeAt(i));
-  }
-  return new Blob([new Uint8Array(array)], {type: mime});
+    var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    var binary = atob(dataURI.split(',')[1]);
+    var array = [];
+    for (var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], { type: mime });
 }
 
 function getCurrentDateTimeFormatted() {
@@ -2255,7 +2256,7 @@ function getCurrentDateTimeFormatted() {
     if (mm < 10) {
         mm = '0' + mm;
     }
-    return dd + '-' + mm + '-' + today.getFullYear() + '_' + today.getHours() + "-" + today.getMinutes() + "-"+today.getSeconds();
+    return dd + '-' + mm + '-' + today.getFullYear() + '_' + today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
 }
 
 function parseTime(time) {
@@ -2307,7 +2308,7 @@ function isATerrainCollision(x, y) {
         }
         thisMap = currentMap;
     }
-    
+
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
             // is a collision:
@@ -2333,7 +2334,7 @@ function isATerrainCollision(x, y) {
 
 
 function findWhichWorldMap(tileX, tileY) {
-    return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+    return worldMap[Math.floor(tileY / worldMapTileLength)][Math.floor(tileX / worldMapTileLength)];
 }
 
 
@@ -2429,7 +2430,7 @@ function findItemWithinArmsLength() {
 
         for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
             thisItem = thisMapData[(visibleMaps[m])].items[i];
-       
+
             if (hero.tileX == thisItem.tileX) {
                 if (hero.tileY == thisItem.tileY) {
                     foundItem = thisItem;
@@ -2478,7 +2479,7 @@ function capValues(value, min, max) {
 }
 
 function keepWithinRange(value, min, max) {
-       if (value < min) {
+    if (value < min) {
         value += max;
     }
     if (value > max) {
@@ -2754,7 +2755,7 @@ function parseMoney(amount) {
 function hasLineOfSight(startX, startY, endX, endY) {
 
     var thisMap = findMapNumberFromGlobalCoordinates(startX, startY);
-  
+
 
 
 
@@ -2774,7 +2775,7 @@ function hasLineOfSight(startX, startY, endX, endY) {
         needToCheckInnerDoors = true;
     }
 
-  var localTileX = getLocalCoordinatesX(startX);
+    var localTileX = getLocalCoordinatesX(startX);
     var localTileY = getLocalCoordinatesY(startY);
     // check the starting tile:
     if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
@@ -2820,8 +2821,8 @@ function hasLineOfSight(startX, startY, endX, endY) {
             nextX += stepX;
             fraction += deltaY;
             thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
-              localTileX = getLocalCoordinatesX(nextX);
-     localTileY = getLocalCoordinatesY(nextY);
+            localTileX = getLocalCoordinatesX(nextX);
+            localTileY = getLocalCoordinatesY(nextY);
             if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable:
                 return false;
@@ -2855,7 +2856,7 @@ function hasLineOfSight(startX, startY, endX, endY) {
             fraction += deltaX;
             thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
             localTileX = getLocalCoordinatesX(nextX);
-     localTileY = getLocalCoordinatesY(nextY);
+            localTileY = getLocalCoordinatesY(nextY);
             if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable;
                 return false;
@@ -3102,18 +3103,18 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
 
 
 function sendGetData(url, successHandler, errorHandler) {
-        // send data to the server, and get a response:
+    // send data to the server, and get a response:
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
-   xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function() {
         var status;
         var data;
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
         if (xhr.readyState == 4) { // `DONE`
             status = xhr.status;
             if (status == 200) {
-                    data = xhr.responseText;
-                    successHandler && successHandler(data);
+                data = xhr.responseText;
+                successHandler && successHandler(data);
             } else {
                 errorHandler && errorHandler(status);
             }
@@ -13999,20 +14000,28 @@ function draw() {
         var thisItemOffsetRow = 0;
         var thisTerrainAnimation;
         var thisPetState;
+        var tempMapTilesX, tempMapTilesY;
 
         for (var m = 0; m < visibleMaps.length; m++) {
 
             map = thisMapData[visibleMaps[m]].terrain;
 
-            if (isOverWorldMap) {
+            if ((isOverWorldMap) && (!thisMapData[visibleMaps[m]].isAGlobalPlatform)) {
                 thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
                 thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
             } else {
                 thisMapsGlobalOffsetX = 0;
                 thisMapsGlobalOffsetY = 0;
             }
-            for (var i = 0; i < mapTilesX; i++) {
-                for (var j = 0; j < mapTilesY; j++) {
+            tempMapTilesX = mapTilesX;
+            tempMapTilesY = mapTilesY;
+            if(thisMapData[visibleMaps[m]].isAGlobalPlatform) {
+                tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
+                tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
+            }
+
+            for (var i = 0; i < tempMapTilesX; i++) {
+                for (var j = 0; j < tempMapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                     // this makes the map array more readable when editing
                     if (map[j][i] != "*") {

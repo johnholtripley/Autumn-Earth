@@ -4341,20 +4341,28 @@ function draw() {
         var thisItemOffsetRow = 0;
         var thisTerrainAnimation;
         var thisPetState;
+        var tempMapTilesX, tempMapTilesY;
 
         for (var m = 0; m < visibleMaps.length; m++) {
 
             map = thisMapData[visibleMaps[m]].terrain;
 
-            if (isOverWorldMap) {
+            if ((isOverWorldMap) && (!thisMapData[visibleMaps[m]].isAGlobalPlatform)) {
                 thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
                 thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
             } else {
                 thisMapsGlobalOffsetX = 0;
                 thisMapsGlobalOffsetY = 0;
             }
-            for (var i = 0; i < mapTilesX; i++) {
-                for (var j = 0; j < mapTilesY; j++) {
+            tempMapTilesX = mapTilesX;
+            tempMapTilesY = mapTilesY;
+            if(thisMapData[visibleMaps[m]].isAGlobalPlatform) {
+                tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
+                tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
+            }
+
+            for (var i = 0; i < tempMapTilesX; i++) {
+                for (var j = 0; j < tempMapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                     // this makes the map array more readable when editing
                     if (map[j][i] != "*") {
