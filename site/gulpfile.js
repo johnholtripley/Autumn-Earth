@@ -102,7 +102,7 @@ function watchFiles() {
 
 // define tasks:
 const css = gulp.series(gameWorldCss, scss);
-const js = gulp.series(siteScripts, alternateScripts, workerScripts, gameScripts);
+const js = gulp.parallel(siteScripts, alternateScripts, workerScripts, gameScripts);
 const build = gulp.series(css, js);
 const watch = gulp.parallel(watchFiles);
 const buildAndWatch = gulp.series(build, watch);

@@ -37,7 +37,7 @@ if (window.Worker) {
         
                 thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
                    // console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
-                 console.log(thisNPC.movementIndex);
+           //      console.log(thisNPC.movementIndex);
                     
               //  console.log((e.data[1]));
 

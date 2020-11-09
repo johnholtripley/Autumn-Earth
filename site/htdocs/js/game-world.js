@@ -2338,6 +2338,23 @@ function findWhichWorldMap(tileX, tileY) {
 }
 
 
+function findWorldMapPosition(requiredMapNumber) {
+    console.log(requiredMapNumber);
+    var currentMapIndexX, currentMapIndexY;
+    // find where the required map is in the array:
+    for (var i = 0; i < worldMap[0].length; i++) {
+        for (var j = 0; j < worldMap.length; j++) {
+            if (worldMap[j][i] == requiredMapNumber) {
+                currentMapIndexX = i;
+                currentMapIndexY = j;
+                break;
+            }
+        }
+    }
+    return [currentMapIndexX, currentMapIndexY];
+}
+
+
 
 /*
 function findRelativeWorldMapPosition(mapNumber) {
@@ -2364,20 +2381,7 @@ function findRelativeWorldMapPosition(mapNumber) {
     return ([xDiff, yDiff]);
 }
 
-function findWorldMapPosition(requiredMapNumber) {
-    var currentMapIndexX, currentMapIndexY;
-    // find where the required map is in the array:
-    for (var i = 0; i < worldMap[0].length; i++) {
-        for (var j = 0; j < worldMap.length; j++) {
-            if (worldMap[j][i] == requiredMapNumber) {
-                currentMapIndexX = i;
-                currentMapIndexY = j;
-                break;
-            }
-        }
-    }
-    return [currentMapIndexX, currentMapIndexY];
-}
+
 */
 
 
@@ -5427,7 +5431,7 @@ if (window.Worker) {
         
                 thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
                    // console.log(JSON.parse(JSON.stringify(thisNPC.movement)));
-                 console.log(thisNPC.movementIndex);
+           //      console.log(thisNPC.movementIndex);
                     
               //  console.log((e.data[1]));
 
@@ -10060,7 +10064,7 @@ function loadNewVisibleMapAssets(whichMap) {
             //   } else {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
             //   }
-            
+
 
         }
     }
@@ -10204,7 +10208,7 @@ function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     //  console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
-        console.log("new map loading");
+            //   console.log("new map loading");
             thisMapData[whichNewMap] = data.mapData.map;
             //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
@@ -10227,7 +10231,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
             //console.log("loadNewVisibleJSON "+newItemIds.join("."));
             loadNewVisibleInventoryItemData(newItemIds.join("|"), whichNewMap);
 
-            if(data.mapData.isAGlobalPlatform) {
+            if (data.mapData.map.isAGlobalPlatform) {
                 initialiseGlobalPlatform(whichNewMap);
             }
 
@@ -10725,8 +10729,8 @@ function prepareGame() {
 
 
 
-intialiseMovingPlatforms(currentMap);
-checkForGlobalPlatforms(currentMap);
+    intialiseMovingPlatforms(currentMap);
+    checkForGlobalPlatforms(currentMap);
 
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
@@ -11587,7 +11591,7 @@ function updateVisibleMaps() {
 
     //console.log("new maps:",newMapsToLoad);
     for (var i = 0; i < newMapsToLoad.length; i++) {
-     //    console.log("loading in new map #"+newMapsToLoad[i]);
+        //    console.log("loading in new map #"+newMapsToLoad[i]);
         loadNewVisibleMap(newMapsToLoad[i]);
 
     }
@@ -12832,7 +12836,7 @@ function moveNPCs() {
                 }
 
                 if (newTile || thisNPC.forceNewMovementCheck) {
-                  
+
                     thisNPC.tileX = getTileX(thisNPC.x);
                     thisNPC.tileY = getTileY(thisNPC.y);
                     if (typeof thisNPC.following !== "undefined") {
@@ -13435,8 +13439,7 @@ function makeHoney(whichItem) {
 }
 
 function checkForGlobalPlatforms(whichMap) {
-    // john ##### 
-    var thisPlatform;  
+    var thisPlatform;
     for (thisPlatform in globalPlatforms) {
         if (globalPlatforms[thisPlatform].startMap == whichMap) {
             console.log("has a global platform");
@@ -13447,8 +13450,9 @@ function checkForGlobalPlatforms(whichMap) {
 }
 
 function initialiseGlobalPlatform(whichMap) {
-            globalPlatforms[whichMap].tileX = globalPlatforms[thisPlatform].startX;
-            globalPlatforms[whichMap].tileY = globalPlatforms[thisPlatform].startY;
+    var mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].startMap);
+    globalPlatforms[whichMap].tileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
+    globalPlatforms[whichMap].tileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
 }
 
 function intialiseMovingPlatforms(whichMap) {
@@ -13486,6 +13490,7 @@ function intialiseMovingPlatforms(whichMap) {
         }
     }
 }
+
 function movePlatforms() {
     for (var m = 0; m < visibleMaps.length; m++) {
         if (thisMapData[visibleMaps[m]].movingPlatforms) {
@@ -14015,11 +14020,14 @@ function draw() {
             }
             tempMapTilesX = mapTilesX;
             tempMapTilesY = mapTilesY;
-            if(thisMapData[visibleMaps[m]].isAGlobalPlatform) {
+            if (thisMapData[visibleMaps[m]].isAGlobalPlatform) {
                 tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
                 tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
+                thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[m]].tileX;
+                thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[m]].tileY;
+                //  console.log(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY);
             }
-
+            // john ##
             for (var i = 0; i < tempMapTilesX; i++) {
                 for (var j = 0; j < tempMapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i

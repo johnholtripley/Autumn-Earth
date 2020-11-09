@@ -298,6 +298,23 @@ function findWhichWorldMap(tileX, tileY) {
 }
 
 
+function findWorldMapPosition(requiredMapNumber) {
+    console.log(requiredMapNumber);
+    var currentMapIndexX, currentMapIndexY;
+    // find where the required map is in the array:
+    for (var i = 0; i < worldMap[0].length; i++) {
+        for (var j = 0; j < worldMap.length; j++) {
+            if (worldMap[j][i] == requiredMapNumber) {
+                currentMapIndexX = i;
+                currentMapIndexY = j;
+                break;
+            }
+        }
+    }
+    return [currentMapIndexX, currentMapIndexY];
+}
+
+
 
 /*
 function findRelativeWorldMapPosition(mapNumber) {
@@ -324,20 +341,7 @@ function findRelativeWorldMapPosition(mapNumber) {
     return ([xDiff, yDiff]);
 }
 
-function findWorldMapPosition(requiredMapNumber) {
-    var currentMapIndexX, currentMapIndexY;
-    // find where the required map is in the array:
-    for (var i = 0; i < worldMap[0].length; i++) {
-        for (var j = 0; j < worldMap.length; j++) {
-            if (worldMap[j][i] == requiredMapNumber) {
-                currentMapIndexX = i;
-                currentMapIndexY = j;
-                break;
-            }
-        }
-    }
-    return [currentMapIndexX, currentMapIndexY];
-}
+
 */
 
 
