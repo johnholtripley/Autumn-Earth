@@ -13795,7 +13795,7 @@ function draw() {
                     // these need to be drawn after all other backgrounds #########
                     thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[i]].tileX;
                     thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[i]].tileY;
-                    drawnMapWidth = ((thisMapData[visibleMaps[i]].terrain[0].length/2) - 1) * tileW;
+                    drawnMapWidth = ((thisMapData[visibleMaps[i]].terrain[0].length / 2) - 1) * tileW;
 
                 } else {
                     thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
@@ -14036,7 +14036,6 @@ function draw() {
                 tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
                 thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[m]].tileX;
                 thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[m]].tileY;
-                //  console.log(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY);
             }
             // john ##
             for (var i = 0; i < tempMapTilesX; i++) {
@@ -14148,7 +14147,7 @@ function draw() {
         }
 
 
-        var shouldDrawThisItem;
+
         for (var m = 0; m < visibleMaps.length; m++) {
             whichVisibleMap = visibleMaps[m];
 
@@ -14174,11 +14173,9 @@ function draw() {
             }
 
 
-
+            var shouldDrawThisItem;
             for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
                 thisItem = thisMapData[whichVisibleMap].items[i];
-
-
                 shouldDrawThisItem = true;
                 if (gameMode == 'housing') {
                     // if this item is part of the current player's plot, don't draw it here - it'll be drawn as part of the draft (and might be deleted) 
@@ -14189,10 +14186,13 @@ function draw() {
                     }
                 }
 
-
                 if (shouldDrawThisItem) {
                     thisX = findIsoCoordsX(thisItem.x, thisItem.y);
                     thisY = findIsoCoordsY(thisItem.x, thisItem.y);
+                    if (thisMapData[whichVisibleMap].isAGlobalPlatform) {
+                        thisX = getTileIsoCentreCoordX(globalPlatforms[whichVisibleMap].tileX + thisItem.tileX, globalPlatforms[whichVisibleMap].tileY + thisItem.tileY);
+                        thisY = getTileIsoCentreCoordY(globalPlatforms[whichVisibleMap].tileX + thisItem.tileX, globalPlatforms[whichVisibleMap].tileY + thisItem.tileY);
+                    }
                     if (isVisibleOnScreen(thisX, thisY)) {
                         //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
                         thisFileColourSuffix = "";
@@ -14200,11 +14200,9 @@ function draw() {
                             thisColourName = getColourName(thisItem.colour, thisItem.type);
                             if (thisColourName != "") {
                                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-
                             }
                         }
                         thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
-
 
                         // check for User Generated Content:
                         if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
@@ -14225,8 +14223,6 @@ function draw() {
 
                         } else if (thisItem.canBeRotated) {
                             // use facing - always in the format N, E, S, W vertically:
-
-
                             thisItemOffsetCol = 0;
                             thisItemOffsetRow = facingsPossible.indexOf(thisItem.facing);
 

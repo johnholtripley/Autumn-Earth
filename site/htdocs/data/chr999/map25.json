@@ -5,10 +5,8 @@
         "region": "Teldrassil",
         "isInside": false,
                 "musicOnEnter": "ambient-darnassus-WoW-NOT-MINE",
-        "ambientSounds":
-        {
-            "birdSong": "../sounds/bird-song.mp3",
-            "birdChirrup": "../sounds/chirrup.mp3"
+         "ambientSounds": {
+            "seagull": "../sounds/seagull-NOT_MINE-wow.mp3"
         },
         "collisions": [
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
