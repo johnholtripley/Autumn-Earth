@@ -4123,13 +4123,24 @@ function draw() {
                 oceanCurrentFrame = 0;
             }
 
-            var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
+            var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY, drawnMapWidth;
             // find and draw any visible maps (and erase the ocean under these backgrounds too):
             waterContext.globalCompositeOperation = 'destination-out';
             for (var i = 0; i < visibleMaps.length; i++) {
-                thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
-                thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
+                drawnMapWidth = worldMapWidthPx / 2;
+                if (thisMapData[visibleMaps[i]].isAGlobalPlatform) {
+                    // these need to be drawn after all other backgrounds #########
+                    thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[i]].tileX;
+                    thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[i]].tileY;
+                    drawnMapWidth = ((thisMapData[visibleMaps[i]].terrain[0].length/2) - 1) * tileW;
+
+                } else {
+                    thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
+                    thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
+
+                }
+
+                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - drawnMapWidth);
                 currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
                 // draw the current map background in place:
                 if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
