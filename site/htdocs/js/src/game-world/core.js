@@ -662,6 +662,7 @@ function getItemPathAndIdentifier(whichItem) {
 }
 
 function loadMapAssets() {
+    console.log("loadMapAssets");
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
@@ -1164,6 +1165,7 @@ function loadingProgress() {
 
 
 function changeMaps(doorX, doorY) {
+
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
@@ -1174,6 +1176,7 @@ function changeMaps(doorX, doorY) {
         hero.tileY = doorData[whichDoor].startY;
 
         newMap = doorData[whichDoor].map;
+
     } else {
         newMap = jumpMapId;
         jumpMapId = null;
@@ -3764,8 +3767,7 @@ function makeHoney(whichItem) {
                 // multiple nectars, so just create a generic honey:
                 honeyToProduce = 120;
             }
-            console.log("honey complete");
-            // make sure this new items are loading into the invetory data:
+            // make sure this new items are loading into the inventory data:
             loadAdHocInventoryItemData([honeyToProduce, 121]);
 
             // add honey and some beeswax:

@@ -141,22 +141,16 @@ loadAndParseJSON($fileToUse);
 
 
 $dungeonArray = array();
-for ($i = 0;$i < $mapMaxWidth;$i++) {
+for ($i = 0;$i < $mapMaxHeight;$i++) {
   $dungeonArray[$i] = array();
-  for ($j = 0;$j < $mapMaxHeight;$j++) {
+  for ($j = 0;$j < $mapMaxWidth;$j++) {
     $dungeonArray[$i][$j] = "";
   }
 }
 
-for ($i = 0;$i < $mapMaxWidth;$i++) {
-//  if($format == "xml") {
-//$thisRow = explode(",", $loadedMapData[$i]);
-//for ($j = 0;$j < $mapMaxHeight;$j++) {
-//  $dungeonArray[$i][$j] = $thisRow[$j];
-//  }
-//} else {
+for ($i = 0;$i < $mapMaxHeight;$i++) {
   $dungeonArray[$i] = $loadedMapData[$i];
-//}
+
 }
 
 
@@ -238,8 +232,8 @@ $edges = array();
 
 
 
-for ($i = 0;$i < ($mapMaxWidth);$i++) {
-  for ($j = 0;$j < ($mapMaxHeight);$j++) {
+for ($i = 0;$i < ($mapMaxHeight);$i++) {
+  for ($j = 0;$j < ($mapMaxWidth);$j++) {
     $thisTile = $dungeonArray[$i][$j]<=$walkable;
         // 1 is not walkable for random maps:
     if($dungeonArray[$i][$j] == 1) {
@@ -273,7 +267,7 @@ $thisTileLeft = true;
     }
     
     
-    if($i==($mapMaxWidth-1)) {
+    if($i==($mapMaxHeight-1)) {
       // edge isn't walkable:
       $thisTileRight = false;
     } else {
@@ -288,7 +282,7 @@ $thisTileRight = true;
 }
     }
     
-    if($j==($mapMaxHeight-1)) {
+    if($j==($mapMaxWidth-1)) {
       // edge isn't walkable:
       $thisTileBottom = false;
     } else {
@@ -1206,7 +1200,7 @@ $json = json_decode($str, true);
 
 //var_dump($json['mapData']['map']['collisions']);
 
-for($i=0;$i<count($json['mapData']['map']['collisions'][0]);$i++) {
+for($i=0;$i<count($json['mapData']['map']['collisions']);$i++) {
   array_push($loadedMapData, str_ireplace(" ", "", $json['mapData']['map']['collisions'][$i]));
 }
 
@@ -1262,13 +1256,13 @@ $doorEntranceY = $json['mapData']['map']['doors'][$firstKey]['startY'];
 
 
 
-if($isADungeon) {
-    $mapMaxWidth = 70;
-    $mapMaxHeight = 70;
-  } else {
+//  if($isADungeon) {
+//    $mapMaxWidth = 70;
+//    $mapMaxHeight = 70;
+//  } else {
      $mapMaxWidth = count($json['mapData']['map']['terrain'][0]);
-        $mapMaxHeight = count($json['mapData']['map']['terrain']);
-  }
+    $mapMaxHeight = count($json['mapData']['map']['terrain']);
+//  }
 
 
 
@@ -1280,7 +1274,7 @@ if($isADungeon) {
 
 
 
-
+/*
 
 
 function XMLMapStartTag($parser, $name) {
@@ -1311,7 +1305,7 @@ function XMLMapTagContents($parser, $data) {
    
 }
 
-
+*/
 
 
 
