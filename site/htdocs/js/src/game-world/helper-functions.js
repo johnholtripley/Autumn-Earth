@@ -150,7 +150,8 @@ function checkForSlopes(object) {
     var globalTileY = object.tileY;
     var tileX, tileY;
     var thisMap;
-    if (isOverWorldMap) {
+    // it might be a platform map that is over an overworld map, so that would need local coordinates:
+    if ((isOverWorldMap) && ((globalTileX >= worldMapTileLength) || (globalTileY >= worldMapTileLength))) {
         tileX = getLocalCoordinatesX(globalTileX);
         tileY = getLocalCoordinatesY(globalTileY);
         thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
@@ -299,7 +300,6 @@ function findWhichWorldMap(tileX, tileY) {
 
 
 function findWorldMapPosition(requiredMapNumber) {
-    console.log(requiredMapNumber);
     var currentMapIndexX, currentMapIndexY;
     // find where the required map is in the array:
     for (var i = 0; i < worldMap[0].length; i++) {

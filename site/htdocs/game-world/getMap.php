@@ -232,8 +232,14 @@ $mapData['map']['backgroundOffsetY'] = '0';
 }
 
 $isInside = $mapData['map']['isInside'];
+$isAGlobalPlatform = false;
+if(isset($mapData['map']['isAGlobalPlatform'])) {
+if($mapData['map']['isAGlobalPlatform']) {
+    $isAGlobalPlatform = true;
+}
+}
 
-if(!$isInside) {
+if((!$isInside) && (!$isAGlobalPlatform)) {
 $globalPosition = findWorldMapPosition($map);
 // add map's global position:
 $mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
@@ -337,8 +343,14 @@ if($value['map']>0) {
 $thisDoorJsonMapResults = file_get_contents('../data/chr' .  $chr . '/map' . $value['map'] . '.json');
 $thisDoorMapJson = json_decode($thisDoorJsonMapResults, true);
 
+$thisMapIsAGlobalPlatform = false;
+if(isset($thisDoorMapJson['map']['isAGlobalPlatform'])) {
+if($thisDoorMapJson['map']['isAGlobalPlatform']) {
+$thisMapIsAGlobalPlatform = true;
+}
+}
 
-if(!($thisDoorMapJson['map']['isInside'])) {
+if(!($thisDoorMapJson['map']['isInside']) && (!$thisMapIsAGlobalPlatform)) {
 // convert to global coordinates:
     $thisDoorGlobalPosition = findWorldMapPosition($value['map']);
 

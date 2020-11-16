@@ -2190,7 +2190,8 @@ function checkForSlopes(object) {
     var globalTileY = object.tileY;
     var tileX, tileY;
     var thisMap;
-    if (isOverWorldMap) {
+    // it might be a platform map that is over an overworld map, so that would need local coordinates:
+    if ((isOverWorldMap) && ((globalTileX >= worldMapTileLength) || (globalTileY >= worldMapTileLength))) {
         tileX = getLocalCoordinatesX(globalTileX);
         tileY = getLocalCoordinatesY(globalTileY);
         thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
@@ -2339,7 +2340,6 @@ function findWhichWorldMap(tileX, tileY) {
 
 
 function findWorldMapPosition(requiredMapNumber) {
-    console.log(requiredMapNumber);
     var currentMapIndexX, currentMapIndexY;
     // find where the required map is in the array:
     for (var i = 0; i < worldMap[0].length; i++) {
@@ -10097,7 +10097,7 @@ function loadNewVisibleMapAssets(whichMap) {
     for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
         if (thisMapData[whichMap].items[i].spawns) {
             for (var j = 0; j < thisMapData[whichMap].items[i].spawns.length; j++) {
-                thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
+                thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].spawns[j].src;
                 if (typeof npcImages[thisNPCIdentifier] === "undefined") {
                     newNPCImagesToLoad[thisNPCIdentifier] = new Image();
                     newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
@@ -13442,7 +13442,6 @@ function checkForGlobalPlatforms(whichMap) {
     var thisPlatform;
     for (thisPlatform in globalPlatforms) {
         if (globalPlatforms[thisPlatform].startMap == whichMap) {
-            console.log("has a global platform");
             // load the map data, and store the tileX and tileY (reset to startX and startY) in that map object
             loadNewVisibleMap(globalPlatforms[thisPlatform].template);
         }
