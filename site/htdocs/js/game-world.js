@@ -10854,6 +10854,7 @@ function changeMaps(doorX, doorY) {
     }
     visibleMaps = [];
     loadMap();
+    audio.proximitySounds = [];
     checkProximitySounds();
 }
 
