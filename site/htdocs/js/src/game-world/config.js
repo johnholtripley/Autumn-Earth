@@ -57,6 +57,7 @@ var activeDoorY = -1;
 
 const characterId = 999;
 var currentMap = 0;
+var currentMapIsAGlobalPlatform = false;
 var newMap = 0;
 var thisMapData = {};
 var mapTilesX = 0;

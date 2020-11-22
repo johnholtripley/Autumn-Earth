@@ -173,12 +173,14 @@
           "45,43": {
                         "map": 9000,
                         "startX": 5,
-                        "startY": 6
+                        "startY": 6,
+                        "leadsToAGlobalPlatform": true
                     },
                               "46,43": {
                         "map": 9000,
                         "startX": 6,
-                        "startY": 6
+                        "startY": 6,
+                        "leadsToAGlobalPlatform": true
                     }
 
             },

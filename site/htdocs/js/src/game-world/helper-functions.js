@@ -254,7 +254,7 @@ function isATerrainCollision(x, y) {
     var globalTileY = getTileY(y);
     var tileX, tileY;
     var thisMap;
-    if (isOverWorldMap) {
+    if (isOverWorldMap && !currentMapIsAGlobalPlatform) {
         tileX = getLocalCoordinatesX(globalTileX);
         tileY = getLocalCoordinatesY(globalTileY);
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
