@@ -1106,7 +1106,9 @@ function prepareGame() {
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
+    if(!currentMapIsAGlobalPlatform) {
     mapTransition = "in";
+}
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
