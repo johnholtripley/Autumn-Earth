@@ -256,7 +256,7 @@ $mapData['map']['mapId'] = $map;
 
 
 
-if(!$isInside) {
+if((!$isInside) && (!$isAGlobalPlatform)) {
 // change local coordinates from JSON to global coordinates based on the map's position:
 // items:
 for ($i = 0; $i < count($mapData['map']['items']); $i++) {

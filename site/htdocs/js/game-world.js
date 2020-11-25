@@ -10912,7 +10912,7 @@ function tileIsClear(globalTileX, globalTileY) {
     return true;
 }
 
-function changeMaps(doorX, doorY) {
+function changeMaps(doorX, doorY, resetMaps) {
 
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
@@ -10937,17 +10937,18 @@ function changeMaps(doorX, doorY) {
     if (hero.tileY != "?") {
         hero.tileY = parseInt(hero.tileY);
     }
-    visibleMaps = [];
+ if(resetMaps) {
+  visibleMaps = [];
+ }
     loadMap();
     audio.proximitySounds = [];
     checkProximitySounds();
 }
 
 function transitionToGlobalPlatform() {
-    // john ##
     cartography.saveCartographyMask();
     shopPanel.innerHTML = '';
-    changeMaps(activeDoorX, activeDoorY);
+    changeMaps(activeDoorX, activeDoorY, false);
 }
 
 function startDoorTransition() {
@@ -11461,7 +11462,7 @@ function update() {
         }
         mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-            changeMaps(activeDoorX, activeDoorY);
+            changeMaps(activeDoorX, activeDoorY, true);
         }
     }
     if (mapTransition == "in") {
@@ -11731,7 +11732,8 @@ function heroIsInNewTile() {
     if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
         activeDoorX = hero.tileX;
         activeDoorY = hero.tileY;
-        if (typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") {
+        // don't fade in or out going to or from a global platform:
+        if ((typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") || (currentMapIsAGlobalPlatform)) {
             transitionToGlobalPlatform();
         } else {
             startDoorTransition();
