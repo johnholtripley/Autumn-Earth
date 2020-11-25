@@ -10259,10 +10259,10 @@ function loadMapJSON(mapFilePath) {
 
             currentMap = data.mapData.map.mapId;
 
-currentMapIsAGlobalPlatform = false;
-if(data.mapData.map.isAGlobalPlatform) {
-    currentMapIsAGlobalPlatform = true;
-}
+            currentMapIsAGlobalPlatform = false;
+            if (data.mapData.map.isAGlobalPlatform) {
+                currentMapIsAGlobalPlatform = true;
+            }
 
             var thisCurrentMap = currentMap;
             if (thisCurrentMap.indexOf('housing') === -1) {
@@ -10770,9 +10770,9 @@ function prepareGame() {
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
-    if(!currentMapIsAGlobalPlatform) {
-    mapTransition = "in";
-}
+    if (!currentMapIsAGlobalPlatform) {
+        mapTransition = "in";
+    }
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
@@ -11701,12 +11701,12 @@ function heroIsInNewTile() {
     cartography.updateCartographicMiniMap();
     if (isOverWorldMap) {
         cartography.updateCoordinates();
-        if(!currentMapIsAGlobalPlatform) {
-        var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
-        if (newMap != currentMap) {
-            changeCurrentMap(newMap);
+        if (!currentMapIsAGlobalPlatform) {
+            var newMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+            if (newMap != currentMap) {
+                changeCurrentMap(newMap);
+            }
         }
-    }
         updateVisibleMaps();
     }
 
@@ -11731,14 +11731,13 @@ function heroIsInNewTile() {
     if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
         activeDoorX = hero.tileX;
         activeDoorY = hero.tileY;
-        // leadsToAGlobalPlatform
-        if(typeof thisMapData[currentMap].doors[activeDoorX+","+activeDoorY].leadsToAGlobalPlatform !== "undefined") {
-transitionToGlobalPlatform();
+        if (typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") {
+            transitionToGlobalPlatform();
         } else {
-startDoorTransition();
+            startDoorTransition();
         }
-        
-        
+
+
     }
     if (activeAction == "survey") {
         surveyingStopped();
@@ -13473,6 +13472,8 @@ function initialiseGlobalPlatform(whichMap) {
     var mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].startMap);
     globalPlatforms[whichMap].tileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
     globalPlatforms[whichMap].tileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
+    globalPlatforms[whichMap].x = getTileCentreCoordX(globalPlatforms[whichMap].tileX);
+    globalPlatforms[whichMap].y = getTileCentreCoordY(globalPlatforms[whichMap].tileY);
 }
 
 function intialiseMovingPlatforms(whichMap) {
@@ -13853,8 +13854,16 @@ function draw() {
 
         // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY, heroOffsetCol, heroOffsetRow;
-        hero.isox = findIsoCoordsX(hero.x, hero.y);
-        hero.isoy = findIsoCoordsY(hero.x, hero.y);
+        var heroIsoOffsetX = 0;
+        var heroIsoOffsetY = 0;
+        if (currentMapIsAGlobalPlatform) {
+            // john ##
+            heroIsoOffsetX = globalPlatforms[currentMap].x;
+            heroIsoOffsetY = globalPlatforms[currentMap].y;
+        } 
+            hero.isox = findIsoCoordsX(hero.x+heroIsoOffsetX, hero.y+heroIsoOffsetY);
+            hero.isoy = findIsoCoordsY(hero.x+heroIsoOffsetX, hero.y+heroIsoOffsetY);
+        
 
 
         heroOffsetCol = (currentAnimationFrame + 1 - hero.state.startFrame) % hero["animation"][hero.currentAnimation]["length"];
