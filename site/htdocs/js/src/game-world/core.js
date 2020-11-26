@@ -330,7 +330,7 @@ function processInitialMap() {
         audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
     }
     fae.recentHotspots = [];
-    findInventoryItemData();
+    
 }
 
 function updateZoneName() {
@@ -614,6 +614,7 @@ function loadMapJSON(mapFilePath) {
                 appendRecipeData(data.workshops.recipeData);
             }
             processInitialMap();
+            findInventoryItemData();
             isOverWorldMap = !data.mapData.map.isInside;
             if (isOverWorldMap) {
                 updateVisibleMaps();
@@ -817,7 +818,7 @@ function loadMapAssets() {
     }
 
 
-    Loader.preload(imagesToLoad, prepareGame, loadingProgress);
+    Loader.preload(imagesToLoad, prepareGameImages, loadingProgress);
 }
 
 function getItemIdsForMap(whichMap) {
@@ -1026,33 +1027,28 @@ function initialiseItem(whichItem) {
     }
 }
 
-
-function prepareGame() {
-    // get map image references:
-
+function prepareGameImages() {
+        // get map image references:
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
 
-
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[npcGraphicsToLoad[i]] = Loader.getImage(npcGraphicsToLoad[i]);
-
     }
 
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
-        // ####
-        //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
-        //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
-    //backgroundImg = Loader.getImage("backgroundImg");
-
     backgroundImgs[currentMap] = Loader.getImage("backgroundImg" + currentMap);
     for (var i = 0; i < visibleMaps.length; i++) {
         backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg" + visibleMaps[i]);
     }
+    prepareGame();
+}
+
+function prepareGame() {
+
     // initialise and position NPCs:
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
@@ -1248,7 +1244,7 @@ function tileIsClear(globalTileX, globalTileY) {
     return true;
 }
 
-function changeMaps(doorX, doorY, resetMaps) {
+function changeMaps(doorX, doorY) {
 
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
@@ -1273,9 +1269,8 @@ function changeMaps(doorX, doorY, resetMaps) {
     if (hero.tileY != "?") {
         hero.tileY = parseInt(hero.tileY);
     }
- if(resetMaps) {
+
   visibleMaps = [];
- }
     loadMap();
     audio.proximitySounds = [];
     checkProximitySounds();
@@ -1283,8 +1278,21 @@ function changeMaps(doorX, doorY, resetMaps) {
 
 function transitionToGlobalPlatform() {
     cartography.saveCartographyMask();
-    shopPanel.innerHTML = '';
-    changeMaps(activeDoorX, activeDoorY, false);
+    // shopPanel.innerHTML = '';
+    previousZoneName = thisMapData[currentMap].zoneName;
+    gameMode = "mapLoading";
+    var doorData = thisMapData[currentMap].doors;
+    var whichDoor = activeDoorX + "," + activeDoorY;
+    hero.tileX = doorData[whichDoor].startX;
+    hero.tileY = doorData[whichDoor].startY;
+    newMap = doorData[whichDoor].map;
+    currentMap = newMap;
+    currentMapIsAGlobalPlatform = false;
+    if (thisMapData[currentMap].isAGlobalPlatform) {
+        currentMapIsAGlobalPlatform = true;
+    }
+    processInitialMap();
+    prepareGame();
 }
 
 function startDoorTransition() {
@@ -1798,7 +1806,7 @@ function update() {
         }
         mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-            changeMaps(activeDoorX, activeDoorY, true);
+            changeMaps(activeDoorX, activeDoorY);
         }
     }
     if (mapTransition == "in") {
@@ -4396,11 +4404,10 @@ function draw() {
                 thisMapsGlobalOffsetX = 0;
                 thisMapsGlobalOffsetY = 0;
             }
-            tempMapTilesX = mapTilesX;
-            tempMapTilesY = mapTilesY;
-            if (thisMapData[visibleMaps[m]].isAGlobalPlatform) {
-                tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
+          tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
                 tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
+            if (thisMapData[visibleMaps[m]].isAGlobalPlatform) {
+                
                 thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[m]].tileX;
                 thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[m]].tileY;
             }
