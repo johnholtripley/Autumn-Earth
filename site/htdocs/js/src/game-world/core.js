@@ -330,7 +330,7 @@ function processInitialMap() {
         audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
     }
     fae.recentHotspots = [];
-    
+
 }
 
 function updateZoneName() {
@@ -1028,7 +1028,7 @@ function initialiseItem(whichItem) {
 }
 
 function prepareGameImages() {
-        // get map image references:
+    // get map image references:
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
@@ -1270,7 +1270,7 @@ function changeMaps(doorX, doorY) {
         hero.tileY = parseInt(hero.tileY);
     }
 
-  visibleMaps = [];
+    visibleMaps = [];
     loadMap();
     audio.proximitySounds = [];
     checkProximitySounds();
@@ -3818,8 +3818,9 @@ function initialiseGlobalPlatform(whichMap) {
     var mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].startMap);
     globalPlatforms[whichMap].tileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
     globalPlatforms[whichMap].tileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
-    globalPlatforms[whichMap].x = getTileCentreCoordX(globalPlatforms[whichMap].tileX);
-    globalPlatforms[whichMap].y = getTileCentreCoordY(globalPlatforms[whichMap].tileY);
+    // x and y need to be top left, not the centre of the top left tile
+    globalPlatforms[whichMap].x = globalPlatforms[whichMap].tileX * tileW;
+    globalPlatforms[whichMap].y = globalPlatforms[whichMap].tileY * tileW;
 }
 
 function intialiseMovingPlatforms(whichMap) {
@@ -4163,15 +4164,16 @@ function draw() {
                     thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[i]].tileX;
                     thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[i]].tileY;
                     drawnMapWidth = ((thisMapData[visibleMaps[i]].terrain[0].length / 2) - 1) * tileW;
-
+                    currentWorldMapPosX = Math.floor((canvasWidth / 2) + findIsoCoordsX(globalPlatforms[visibleMaps[i]].x, globalPlatforms[visibleMaps[i]].y) - hero.isox - drawnMapWidth);
+                    currentWorldMapPosY = Math.floor((canvasHeight / 2) + findIsoCoordsY(globalPlatforms[visibleMaps[i]].x, globalPlatforms[visibleMaps[i]].y) - hero.isoy);
                 } else {
                     thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
                     thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-
+                    currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - drawnMapWidth);
+                    currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
                 }
 
-                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isox - drawnMapWidth);
-                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(thisMapsGlobalOffsetX, thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+
                 // draw the current map background in place:
                 if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
                     gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
@@ -4206,10 +4208,10 @@ function draw() {
             // john ##
             heroIsoOffsetX = globalPlatforms[currentMap].x;
             heroIsoOffsetY = globalPlatforms[currentMap].y;
-        } 
-            hero.isox = findIsoCoordsX(hero.x+heroIsoOffsetX, hero.y+heroIsoOffsetY);
-            hero.isoy = findIsoCoordsY(hero.x+heroIsoOffsetX, hero.y+heroIsoOffsetY);
-        
+        }
+        hero.isox = findIsoCoordsX(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
+        hero.isoy = findIsoCoordsY(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
+
 
 
         heroOffsetCol = (currentAnimationFrame + 1 - hero.state.startFrame) % hero["animation"][hero.currentAnimation]["length"];
@@ -4392,10 +4394,14 @@ function draw() {
         var thisTerrainAnimation;
         var thisPetState;
         var tempMapTilesX, tempMapTilesY;
+        var globalPlatformIsoOffsetX, globalPlatformIsoOffsetY;
 
         for (var m = 0; m < visibleMaps.length; m++) {
 
             map = thisMapData[visibleMaps[m]].terrain;
+
+            globalPlatformIsoOffsetX = 0;
+            globalPlatformIsoOffsetY = 0;
 
             if ((isOverWorldMap) && (!thisMapData[visibleMaps[m]].isAGlobalPlatform)) {
                 thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
@@ -4404,20 +4410,29 @@ function draw() {
                 thisMapsGlobalOffsetX = 0;
                 thisMapsGlobalOffsetY = 0;
             }
-          tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
-                tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
+            tempMapTilesX = thisMapData[visibleMaps[m]].terrain[0].length;
+            tempMapTilesY = thisMapData[visibleMaps[m]].terrain.length;
             if (thisMapData[visibleMaps[m]].isAGlobalPlatform) {
-                
-                thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[m]].tileX;
-                thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[m]].tileY;
+
+                //  thisMapsGlobalOffsetX = globalPlatforms[visibleMaps[m]].tileX;
+                //  thisMapsGlobalOffsetY = globalPlatforms[visibleMaps[m]].tileY;
+                thisMapsGlobalOffsetX = 0;
+                thisMapsGlobalOffsetY = 0;
+                globalPlatformIsoOffsetX = findIsoCoordsX(globalPlatforms[visibleMaps[m]].x, globalPlatforms[visibleMaps[m]].y);
+                globalPlatformIsoOffsetY = findIsoCoordsY(globalPlatforms[visibleMaps[m]].x, globalPlatforms[visibleMaps[m]].y) + tileH / 2;
+                if (!currentMapIsAGlobalPlatform) {
+                    globalPlatformIsoOffsetX -= (worldMapTileLength * tileW / 2);
+                } else {
+                    globalPlatformIsoOffsetX -= ((thisMapData[visibleMaps[m]].terrain[0].length / 2) - 1) * tileW;
+                }
             }
             for (var i = 0; i < tempMapTilesX; i++) {
                 for (var j = 0; j < tempMapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                     // this makes the map array more readable when editing
                     if (map[j][i] != "*") {
-                        thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
-                        thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY) + globalPlatformIsoOffsetX;
+                        thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY) + globalPlatformIsoOffsetY;
                         if (isVisibleOnScreen(thisX, thisY)) {
                             thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
                             thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
@@ -4563,8 +4578,13 @@ function draw() {
                     thisX = findIsoCoordsX(thisItem.x, thisItem.y);
                     thisY = findIsoCoordsY(thisItem.x, thisItem.y);
                     if (thisMapData[whichVisibleMap].isAGlobalPlatform) {
-                        thisX = getTileIsoCentreCoordX(globalPlatforms[whichVisibleMap].tileX + thisItem.tileX, globalPlatforms[whichVisibleMap].tileY + thisItem.tileY);
-                        thisY = getTileIsoCentreCoordY(globalPlatforms[whichVisibleMap].tileX + thisItem.tileX, globalPlatforms[whichVisibleMap].tileY + thisItem.tileY);
+                        thisX += findIsoCoordsX(globalPlatforms[visibleMaps[m]].x, globalPlatforms[visibleMaps[m]].y);
+                        thisY += findIsoCoordsY(globalPlatforms[visibleMaps[m]].x, globalPlatforms[visibleMaps[m]].y) + tileH / 2;
+                        if (!currentMapIsAGlobalPlatform) {
+                            thisX -= (worldMapTileLength * tileW / 2);
+                        } else {
+                            thisX -= ((thisMapData[visibleMaps[m]].terrain[0].length / 2) - 1) * tileW;
+                        }
                     }
                     if (isVisibleOnScreen(thisX, thisY)) {
                         //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
