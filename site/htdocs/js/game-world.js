@@ -11507,6 +11507,9 @@ function update() {
     moveNPCs();
     movePet();
     movePlatforms();
+    if(currentMapIsAGlobalPlatform) {
+        moveGlobalPlatform();
+    }
     updateItems();
     checkForWeatherChange();
     audio.checkForAmbientSounds();
@@ -13465,6 +13468,14 @@ function makeHoney(whichItem) {
             whichItem.contains = [{ "type": honeyToProduce, "quantity": 1 }, { "type": 121, "quantity": 1 }];
             whichItem.state = "full";
         }
+    }
+}
+
+function moveGlobalPlatform() {
+    globalPlatforms[currentMap].x -= 2;
+    if (globalPlatforms[currentMap].x < 0) {
+        // wrap around:
+        globalPlatforms[currentMap].x += worldMap[0].length * worldMapWidthPx;
     }
 }
 
