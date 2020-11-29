@@ -15,7 +15,11 @@
 			"startMap": 1015,
 			"startX": 40,
 			"startY": 37,
-			"speed": 4
+			"endMap": 1016,
+			"destinationX": 1,
+			"destinationY": 37,
+			"speedX": -2,
+			"speedY": 0
 		}
 	}
 }

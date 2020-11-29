@@ -13472,10 +13472,31 @@ function makeHoney(whichItem) {
 }
 
 function moveGlobalPlatform() {
-    globalPlatforms[currentMap].x -= 2;
-    if (globalPlatforms[currentMap].x < 0) {
-        // wrap around:
-        globalPlatforms[currentMap].x += worldMap[0].length * worldMapWidthPx;
+    var globalPlatformsCurrentMap, thisGlobalPlatformsTileX, thisGlobalPlatformsTileY;
+    if (globalPlatforms[currentMap].canMove) {
+        globalPlatforms[currentMap].x += globalPlatforms[currentMap].speedX;
+        globalPlatforms[currentMap].y += globalPlatforms[currentMap].speedY;
+        if (globalPlatforms[currentMap].x < 0) {
+            // wrap around:
+            globalPlatforms[currentMap].x += worldMap[0].length * worldMapWidthPx;
+        }
+
+        // doesn't need to be done every turn #####
+        thisGlobalPlatformsTileX = getTileX(globalPlatforms[currentMap].x);
+        thisGlobalPlatformsTileY = getTileY(globalPlatforms[currentMap].y);
+        globalPlatformsCurrentMap = findWhichWorldMap(thisGlobalPlatformsTileX, thisGlobalPlatformsTileY);
+        if (globalPlatformsCurrentMap == globalPlatforms[currentMap].endMap) {
+            // check for end (might not be exact match if using odd numbers):
+            if (Math.abs(globalPlatforms[currentMap].x - globalPlatforms[currentMap].destinationX) <= Math.abs(globalPlatforms[currentMap].speedX)) {
+                if (Math.abs(globalPlatforms[currentMap].y - globalPlatforms[currentMap].destinationY) <= Math.abs(globalPlatforms[currentMap].speedY)) {
+
+                    // snap to end position
+                    globalPlatforms[currentMap].x = globalPlatforms[currentMap].destinationX;
+                    globalPlatforms[currentMap].y = globalPlatforms[currentMap].destinationY;
+                    globalPlatforms[currentMap].canMove = false;
+                }
+            }
+        }
     }
 }
 
@@ -13491,11 +13512,17 @@ function checkForGlobalPlatforms(whichMap) {
 
 function initialiseGlobalPlatform(whichMap) {
     var mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].startMap);
-    globalPlatforms[whichMap].tileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
-    globalPlatforms[whichMap].tileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
+    var thisGlobalPlatformsTileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
+    var thisGlobalPlatformsTileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
     // x and y need to be top left, not the centre of the top left tile
-    globalPlatforms[whichMap].x = globalPlatforms[whichMap].tileX * tileW;
-    globalPlatforms[whichMap].y = globalPlatforms[whichMap].tileY * tileW;
+    globalPlatforms[whichMap].x = thisGlobalPlatformsTileX * tileW;
+    globalPlatforms[whichMap].y = thisGlobalPlatformsTileY * tileW;
+    mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].endMap);
+    var thisGlobalPlatformsEndTileX = globalPlatforms[whichMap].destinationX + (mapGlobalPosition[0] * worldMapTileLength);
+    var thisGlobalPlatformsEndTileY = globalPlatforms[whichMap].destinationY + (mapGlobalPosition[1] * worldMapTileLength);
+    globalPlatforms[whichMap].destinationX = thisGlobalPlatformsEndTileX * tileW;
+    globalPlatforms[whichMap].destinationY = thisGlobalPlatformsEndTileY * tileW;
+    globalPlatforms[whichMap].canMove = true;
 }
 
 function intialiseMovingPlatforms(whichMap) {
