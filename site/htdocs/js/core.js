@@ -408,6 +408,141 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+var artisan = {
+
+    init: function() {
+        var removeButtons = document.querySelectorAll(".deleteImageFile");
+        for (var i = 0; i < removeButtons.length; i++) {
+            removeButtons[i].onclick = artisan.removeFile;
+        }
+    },
+
+    removeFile: function(e) {
+        var whichFile = e.target.getAttribute('data-id');
+        //confirm prompt #########
+        getJSON("/artisan/remove-file.php?id=" + whichFile, function(data) {
+            if (data) {
+                if (data.success == 'true') {
+                    // if successful show it deleted:
+                    e.target.style.display = 'none';
+                    e.target.previousElementSibling.style.display = 'none';
+                } else {
+                    artisan.removeFileError(e.target);
+                }
+            }
+        }, function(status) {
+            artisan.removeFileError(e.target);
+        });
+    },
+
+    removeFileError: function(whichElement) {
+        whichElement.insertAdjacentHTML('afterend', '<div class="error">Couldn\'t delete the file - please try again</div>');
+    }
+}
+
+if (document.getElementById('artisanSection')) {
+    artisan.init();
+}
+var catalogueRoot = document.getElementById('herbariumCatalogue');
+var storedCurrentPage = "/herbarium/";
+
+function bindHerbariumModal() {
+    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
+    for (var i = 0; i < catalogueLinks.length; i++) {
+        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
+    }
+}
+
+if (catalogueRoot) {
+    var animatedElement = document.getElementById('inkEffect');
+    var modalWrapper = document.getElementById('modalWrapper');
+    var plantModalDetails = document.getElementById('plantModalDetails');
+
+
+    var animationEvent = whichAnimationEvent();
+    animationEvent && animatedElement.addEventListener(animationEvent, function() {
+        // will fire on open complete and close complete:
+        if (modalWrapper.className == "closing") {
+            modalWrapper.className = "";
+        }
+    });
+
+    function openPlantDetail(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
+plantURL = this.getAttribute('data-url');
+pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
+
+// start ajax request:
+var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+ request.open('GET', pageToRequest, true);
+        request.onreadystatechange = function() {
+            if (this.readyState === 4) {
+
+if (this.status >= 200 && this.status < 400) {
+                    // Success:
+                    var response = this.responseText;
+                    if (response != "") {
+                        plantModalDetails.innerHTML = response;
+                        bindSocialLinks();
+                    }
+                }
+            }
+              };
+        request.send();
+        request = null;
+
+
+
+
+        var thisPlantDetail = this.innerHTML;
+        plantModalDetails.innerHTML = thisPlantDetail;
+        modalWrapper.className = "opening";
+        modalWrapper.removeAttribute('aria-hidden');
+        document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
+        storedCurrentPage = window.location.pathname.toString();
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + plantURL);
+
+
+
+ 
+    }
+
+    function closePlantDetail(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        modalWrapper.className = "closing";
+        modalWrapper.setAttribute('aria-hidden', 'true');
+        document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", storedCurrentPage);
+    }
+    bindHerbariumModal();
+
+    document.getElementById('modalClose').addEventListener("click", closePlantDetail);
+}
+
+
+async function listOfflinePages() {
+if (document.getElementById('offlinePageList')) {
+    // kudos https://remysharp.com/2019/09/05/offline-listings 
+    var visitedPagesOutput = '';
+    for (const name of await caches.keys()) {
+        if (name.includes('pages')) {
+            const cache = await caches.open(name);
+            for (const request of await cache.keys()) {
+                visitedPagesOutput += '<li><a href="' + request.url + '">' + request.url + '</a></li>';
+            }
+        }
+    }
+    document.getElementById('offlinePageList').innerHTML = visitedPagesOutput;
+}
+}
+listOfflinePages();
 function AccordionWidget(el, selectedIndex) {
     // http://codepen.io/stowball/pen/eZKwRv
     // kudos Matt Stow
@@ -1147,141 +1282,6 @@ function bindSocialLinks() {
 }
 bindSocialLinks();
 
-var artisan = {
-
-    init: function() {
-        var removeButtons = document.querySelectorAll(".deleteImageFile");
-        for (var i = 0; i < removeButtons.length; i++) {
-            removeButtons[i].onclick = artisan.removeFile;
-        }
-    },
-
-    removeFile: function(e) {
-        var whichFile = e.target.getAttribute('data-id');
-        //confirm prompt #########
-        getJSON("/artisan/remove-file.php?id=" + whichFile, function(data) {
-            if (data) {
-                if (data.success == 'true') {
-                    // if successful show it deleted:
-                    e.target.style.display = 'none';
-                    e.target.previousElementSibling.style.display = 'none';
-                } else {
-                    artisan.removeFileError(e.target);
-                }
-            }
-        }, function(status) {
-            artisan.removeFileError(e.target);
-        });
-    },
-
-    removeFileError: function(whichElement) {
-        whichElement.insertAdjacentHTML('afterend', '<div class="error">Couldn\'t delete the file - please try again</div>');
-    }
-}
-
-if (document.getElementById('artisanSection')) {
-    artisan.init();
-}
-var catalogueRoot = document.getElementById('herbariumCatalogue');
-var storedCurrentPage = "/herbarium/";
-
-function bindHerbariumModal() {
-    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
-    for (var i = 0; i < catalogueLinks.length; i++) {
-        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
-    }
-}
-
-if (catalogueRoot) {
-    var animatedElement = document.getElementById('inkEffect');
-    var modalWrapper = document.getElementById('modalWrapper');
-    var plantModalDetails = document.getElementById('plantModalDetails');
-
-
-    var animationEvent = whichAnimationEvent();
-    animationEvent && animatedElement.addEventListener(animationEvent, function() {
-        // will fire on open complete and close complete:
-        if (modalWrapper.className == "closing") {
-            modalWrapper.className = "";
-        }
-    });
-
-    function openPlantDetail(e) {
-        if (e) {
-            e.preventDefault();
-        }
-
-plantURL = this.getAttribute('data-url');
-pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
-
-// start ajax request:
-var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
- request.open('GET', pageToRequest, true);
-        request.onreadystatechange = function() {
-            if (this.readyState === 4) {
-
-if (this.status >= 200 && this.status < 400) {
-                    // Success:
-                    var response = this.responseText;
-                    if (response != "") {
-                        plantModalDetails.innerHTML = response;
-                        bindSocialLinks();
-                    }
-                }
-            }
-              };
-        request.send();
-        request = null;
-
-
-
-
-        var thisPlantDetail = this.innerHTML;
-        plantModalDetails.innerHTML = thisPlantDetail;
-        modalWrapper.className = "opening";
-        modalWrapper.removeAttribute('aria-hidden');
-        document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
-        storedCurrentPage = window.location.pathname.toString();
-        var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + plantURL);
-
-
-
- 
-    }
-
-    function closePlantDetail(e) {
-        if (e) {
-            e.preventDefault();
-        }
-        modalWrapper.className = "closing";
-        modalWrapper.setAttribute('aria-hidden', 'true');
-        document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
-        var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", storedCurrentPage);
-    }
-    bindHerbariumModal();
-
-    document.getElementById('modalClose').addEventListener("click", closePlantDetail);
-}
-
-
-async function listOfflinePages() {
-if (document.getElementById('offlinePageList')) {
-    // kudos https://remysharp.com/2019/09/05/offline-listings 
-    var visitedPagesOutput = '';
-    for (const name of await caches.keys()) {
-        if (name.includes('pages')) {
-            const cache = await caches.open(name);
-            for (const request of await cache.keys()) {
-                visitedPagesOutput += '<li><a href="' + request.url + '">' + request.url + '</a></li>';
-            }
-        }
-    }
-    document.getElementById('offlinePageList').innerHTML = visitedPagesOutput;
-}
-}
-listOfflinePages();
 // font face loader:
 // https://www.bramstein.com/writing/web-font-loading-patterns.html
 

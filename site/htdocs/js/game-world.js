@@ -11507,7 +11507,7 @@ function update() {
     moveNPCs();
     movePet();
     movePlatforms();
-    if(currentMapIsAGlobalPlatform) {
+    if (currentMapIsAGlobalPlatform) {
         moveGlobalPlatform();
     }
     updateItems();
@@ -11610,7 +11610,18 @@ function updateVisibleMaps() {
 
 
     // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
-    var newMapsToLoad = newVisibleMaps.filter(function(i) { return visibleMaps.indexOf(i) < 0; });
+    var newMapsToLoad = newVisibleMaps.filter(function(i) {
+        if (visibleMaps.indexOf(i) < 0) {
+            return true;
+        } else {
+            // even if the parent map is loaded in memory, still need to check if a global map might need positioning back to its start:
+            if (!currentMapIsAGlobalPlatform) {
+                checkForGlobalPlatforms(i);
+            }
+            return false;
+        }
+
+    });
 
 
 
@@ -13505,8 +13516,15 @@ function checkForGlobalPlatforms(whichMap) {
     var thisPlatform;
     for (thisPlatform in globalPlatforms) {
         if (globalPlatforms[thisPlatform].startMap == whichMap) {
-            // load the map data, and store the tileX and tileY (reset to startX and startY) in that map object
-            loadNewVisibleMap(globalPlatforms[thisPlatform].template);
+            // check if it's already in memory, and just reset it if so
+            if (visibleMaps.indexOf(parseInt(thisPlatform)) != -1) {
+                // check it's at its destination:
+                if (!globalPlatforms[thisPlatform].canMove) {
+                    initialiseGlobalPlatform(thisPlatform);
+                }
+            } else {
+                loadNewVisibleMap(globalPlatforms[thisPlatform].template);
+            }
         }
     }
 }
