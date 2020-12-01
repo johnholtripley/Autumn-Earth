@@ -40,19 +40,6 @@
         "shops": [],
         "npcs": [],
         "doors": {
-
-   "5,6": {
-                "map": 1015,
-                "startX": 45,
-                "startY": 44
-            },
-            "6,6": {
-                "map": 1015,
-                "startX": 46,
-                "startY": 44
-            }
-
-
             },
         "items": [
             {

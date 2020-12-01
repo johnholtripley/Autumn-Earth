@@ -3830,6 +3830,7 @@ function moveGlobalPlatform() {
                     globalPlatforms[currentMap].x = globalPlatforms[currentMap].destinationX;
                     globalPlatforms[currentMap].y = globalPlatforms[currentMap].destinationY;
                     globalPlatforms[currentMap].canMove = false;
+                    thisMapData[currentMap].doors = globalPlatforms[currentMap].endDoors;
                 }
             }
         }
@@ -3858,6 +3859,7 @@ function initialiseGlobalPlatform(whichMap) {
     var thisGlobalPlatformsEndTileY = globalPlatforms[whichMap].destinationY + (mapGlobalPosition[1] * worldMapTileLength);
     globalPlatforms[whichMap].destinationX = thisGlobalPlatformsEndTileX * tileW;
     globalPlatforms[whichMap].destinationY = thisGlobalPlatformsEndTileY * tileW;
+    thisMapData[whichMap].doors = globalPlatforms[whichMap].startDoors;
     globalPlatforms[whichMap].canMove = true;
 }
 
