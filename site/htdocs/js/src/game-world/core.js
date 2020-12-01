@@ -40,7 +40,7 @@ window.addEventListener('resize', debouncedResize);
 
 
 function loadGlobalMapData() {
-    getJSON("/data/world-map.json", function(data) {
+    getJSON("/game-world/getWorldMap.php", function(data) {
         worldMap = data.worldMap;
         globalPlatforms = data.globalPlatforms;
         init();
