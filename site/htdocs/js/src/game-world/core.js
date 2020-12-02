@@ -1047,7 +1047,7 @@ function prepareGameImages() {
     prepareGame();
 }
 
-function prepareGame() {
+function prepareGame(isToOrFromAGlobalPlatform = false) {
 
     // initialise and position NPCs:
     for (var m = 0; m < visibleMaps.length; m++) {
@@ -1102,7 +1102,7 @@ function prepareGame() {
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
-    if (!currentMapIsAGlobalPlatform) {
+    if (!isToOrFromAGlobalPlatform) {
         mapTransition = "in";
     }
     mapTransitionCurrentFrames = 1;
@@ -1276,7 +1276,7 @@ function changeMaps(doorX, doorY) {
     checkProximitySounds();
 }
 
-function transitionToGlobalPlatform() {
+function transitionToOrFromGlobalPlatform() {
     cartography.saveCartographyMask();
     // shopPanel.innerHTML = '';
     previousZoneName = thisMapData[currentMap].zoneName;
@@ -1292,7 +1292,7 @@ function transitionToGlobalPlatform() {
         currentMapIsAGlobalPlatform = true;
     }
     processInitialMap();
-    prepareGame();
+    prepareGame(true);
 }
 
 function startDoorTransition() {
@@ -1711,7 +1711,6 @@ function update() {
             music.playBackTranscription();
         }
 
-        //  checkForWorldWrap(hero);
         checkHeroCollisions();
 
         var heroOldX = hero.tileX;
@@ -1754,7 +1753,6 @@ function update() {
             }
         }
         if (activeAction == "gather") {
-
             if (!(isInRange(hero.x, hero.y, gathering.itemObject.x, gathering.itemObject.y, closeDialogueDistance / 2))) {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
@@ -1762,27 +1760,19 @@ function update() {
         }
         if (postObject.active) {
             if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
-
                 UI.closePost();
             }
         }
         if (bankObject.active) {
             if (!(isInRange(hero.x, hero.y, bankObject.x, bankObject.y, closeDialogueDistance / 2))) {
-
                 UI.closeBank();
             }
         }
         if (retinueObject.active) {
             if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
-
                 UI.closeRetinuePanel();
-
             }
         }
-
-
-
-
 
     } else {
         if (jumpMapId == null) {
@@ -1829,14 +1819,13 @@ function update() {
         if (key[5]) {
             changeHeroState('run');
         } else {
-            changeHeroState('walk');
+           changeHeroState('walk');
         }
     } else {
         if ((hero.state.name == 'run') || (hero.state.name == 'walk')) {
             // hero was just moving and now isn't:
             changeHeroState('idle');
         }
-
     }
 
     moveFae();
@@ -1932,11 +1921,9 @@ function updateVisibleMaps() {
                     isValid = true;
                 }
             }
-
             if (isValid) {
                 newVisibleMaps.push(worldMap[j][i]);
             }
-
         }
     }
 
@@ -1956,7 +1943,6 @@ function updateVisibleMaps() {
             }
             return false;
         }
-
     });
 
 
@@ -2093,7 +2079,7 @@ function heroIsInNewTile() {
             activeDoorY = hero.tileY;
             // don't fade in or out going to or from a global platform:
             if ((typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") || (currentMapIsAGlobalPlatform)) {
-                transitionToGlobalPlatform();
+                transitionToOrFromGlobalPlatform();
             } else {
                 startDoorTransition();
             }
@@ -4269,20 +4255,20 @@ function draw() {
         var heroIsoOffsetX = 0;
         var heroIsoOffsetY = 0;
         if (currentMapIsAGlobalPlatform) {
-            // john ##
             heroIsoOffsetX = globalPlatforms[currentMap].x;
             heroIsoOffsetY = globalPlatforms[currentMap].y;
         }
         hero.isox = findIsoCoordsX(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
         hero.isoy = findIsoCoordsY(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
 
-
-
         heroOffsetCol = (currentAnimationFrame + 1 - hero.state.startFrame) % hero["animation"][hero.currentAnimation]["length"];
+        if(heroOffsetCol < 0) {
+            // happens particularly during map transitions
+            heroOffsetCol += hero["animation"][hero.currentAnimation]["length"];
+        }
         heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
 
         // determine if any clipping needs to occur for being in a body of water:
-
         var heroClipping = 0;
         if (typeof thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth !== "undefined") {
             heroClipping = thisMapData[currentMap].properties[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)].waterDepth;
