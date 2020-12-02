@@ -11627,7 +11627,7 @@ function updateVisibleMaps() {
 
     //console.log("new maps:",newMapsToLoad);
     for (var i = 0; i < newMapsToLoad.length; i++) {
-        //    console.log("loading in new map #"+newMapsToLoad[i]);
+     //   console.log("loading in new map #" + newMapsToLoad[i]);
         loadNewVisibleMap(newMapsToLoad[i]);
 
     }
@@ -11750,18 +11750,18 @@ function heroIsInNewTile() {
     if (thisMapData[currentMap].showOnlyLineOfSight) {
         updateLightMap();
     }
-
-    if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
-        activeDoorX = hero.tileX;
-        activeDoorY = hero.tileY;
-        // don't fade in or out going to or from a global platform:
-        if ((typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") || (currentMapIsAGlobalPlatform)) {
-            transitionToGlobalPlatform();
-        } else {
-            startDoorTransition();
+    // if this map is a global platform, and it's moving, ignore the door
+    if (!(currentMapIsAGlobalPlatform && globalPlatforms[currentMap].canMove)) {
+        if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
+            activeDoorX = hero.tileX;
+            activeDoorY = hero.tileY;
+            // don't fade in or out going to or from a global platform:
+            if ((typeof thisMapData[currentMap].doors[activeDoorX + "," + activeDoorY].leadsToAGlobalPlatform !== "undefined") || (currentMapIsAGlobalPlatform)) {
+                transitionToGlobalPlatform();
+            } else {
+                startDoorTransition();
+            }
         }
-
-
     }
     if (activeAction == "survey") {
         surveyingStopped();
@@ -13492,18 +13492,25 @@ function moveGlobalPlatform() {
             globalPlatforms[currentMap].x += worldMap[0].length * worldMapWidthPx;
         }
 
-        // doesn't need to be done every turn #####
+
         thisGlobalPlatformsTileX = getTileX(globalPlatforms[currentMap].x);
         thisGlobalPlatformsTileY = getTileY(globalPlatforms[currentMap].y);
+        if ((thisGlobalPlatformsTileX != globalPlatforms[currentMap].tileX) || (thisGlobalPlatformsTileY != globalPlatforms[currentMap].tileY)) {
+            // is a new tile:
+            updateVisibleMaps();
+        }
+        globalPlatforms[currentMap].tileX = thisGlobalPlatformsTileX;
+        globalPlatforms[currentMap].tileY = thisGlobalPlatformsTileY;
+        // doesn't need to be done every turn #####
         globalPlatformsCurrentMap = findWhichWorldMap(thisGlobalPlatformsTileX, thisGlobalPlatformsTileY);
         if (globalPlatformsCurrentMap == globalPlatforms[currentMap].endMap) {
             // check for end (might not be exact match if using odd numbers):
-            if (Math.abs(globalPlatforms[currentMap].x - globalPlatforms[currentMap].destinationX) <= Math.abs(globalPlatforms[currentMap].speedX)) {
-                if (Math.abs(globalPlatforms[currentMap].y - globalPlatforms[currentMap].destinationY) <= Math.abs(globalPlatforms[currentMap].speedY)) {
+            if (Math.abs(globalPlatforms[currentMap].x - globalPlatforms[currentMap].destinationIsoX) <= Math.abs(globalPlatforms[currentMap].speedX)) {
+                if (Math.abs(globalPlatforms[currentMap].y - globalPlatforms[currentMap].destinationIsoY) <= Math.abs(globalPlatforms[currentMap].speedY)) {
 
                     // snap to end position
-                    globalPlatforms[currentMap].x = globalPlatforms[currentMap].destinationX;
-                    globalPlatforms[currentMap].y = globalPlatforms[currentMap].destinationY;
+                    globalPlatforms[currentMap].x = globalPlatforms[currentMap].destinationIsoX;
+                    globalPlatforms[currentMap].y = globalPlatforms[currentMap].destinationIsoY;
                     globalPlatforms[currentMap].canMove = false;
                     thisMapData[currentMap].doors = globalPlatforms[currentMap].endDoors;
                 }
@@ -13531,20 +13538,19 @@ function checkForGlobalPlatforms(whichMap) {
 
 function initialiseGlobalPlatform(whichMap) {
     var mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].startMap);
-    var thisGlobalPlatformsTileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
-    var thisGlobalPlatformsTileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
+    globalPlatforms[whichMap].tileX = globalPlatforms[whichMap].startX + (mapGlobalPosition[0] * worldMapTileLength);
+    globalPlatforms[whichMap].tileY = globalPlatforms[whichMap].startY + (mapGlobalPosition[1] * worldMapTileLength);
     // x and y need to be top left, not the centre of the top left tile
-    globalPlatforms[whichMap].x = thisGlobalPlatformsTileX * tileW;
-    globalPlatforms[whichMap].y = thisGlobalPlatformsTileY * tileW;
+    globalPlatforms[whichMap].x = globalPlatforms[whichMap].tileX * tileW;
+    globalPlatforms[whichMap].y = globalPlatforms[whichMap].tileY * tileW;
     mapGlobalPosition = findWorldMapPosition(globalPlatforms[whichMap].endMap);
-    var thisGlobalPlatformsEndTileX = globalPlatforms[whichMap].destinationX + (mapGlobalPosition[0] * worldMapTileLength);
-    var thisGlobalPlatformsEndTileY = globalPlatforms[whichMap].destinationY + (mapGlobalPosition[1] * worldMapTileLength);
-    globalPlatforms[whichMap].destinationX = thisGlobalPlatformsEndTileX * tileW;
-    globalPlatforms[whichMap].destinationY = thisGlobalPlatformsEndTileY * tileW;
+    var thisGlobalPlatformsTileX = globalPlatforms[whichMap].destinationX + (mapGlobalPosition[0] * worldMapTileLength);
+    var thisGlobalPlatformsTileY = globalPlatforms[whichMap].destinationY + (mapGlobalPosition[1] * worldMapTileLength);
+    globalPlatforms[whichMap].destinationIsoX = thisGlobalPlatformsTileX * tileW;
+    globalPlatforms[whichMap].destinationIsoY = thisGlobalPlatformsTileY * tileW;
     thisMapData[whichMap].doors = globalPlatforms[whichMap].startDoors;
     globalPlatforms[whichMap].canMove = true;
 }
-
 function intialiseMovingPlatforms(whichMap) {
     if (thisMapData[whichMap].movingPlatforms) {
         var thisPlatform, thisPlatformMovements;
