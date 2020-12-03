@@ -306,6 +306,9 @@ opacity: 1;
                 left: $radioAndCheckboxSize;
             }
         }
+        & + label {
+            cursor: pointer;
+        }
     }
 }
 

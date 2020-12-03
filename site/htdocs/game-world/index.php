@@ -309,13 +309,21 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
       <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
       <label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">
       <h2>Full screen</h2>
-      <input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
+      <input type="checkbox" value="1" id="toggleFullScreen" class="switch"><label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
+      <h2>Assist</h2>
+      <input type="checkbox" value="1" id="toggleSubtitles" class="switch"><label for="toggleSubtitles"><span></span>Turn on Subtitles</label>
     </div>
 
     <div id="yesNoDialoguePanel">
       <h3 id="yesNoDialogueHeading"></h3>
       <button id="yesNoDialogueButton1"></button>
       <button id="yesNoDialogueButton2"></button>
+    </div>
+
+    <div id="subtitlesPanel">
+        <div class="draggableBar">Subtitles</div>
+        <div id="subtitlesContent">
+        </div>
     </div>
 
     <div id="quickHold"></div>

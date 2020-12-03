@@ -62,7 +62,10 @@ subtitles.audio = {
     'Small hawk': 'A hawk calls out',
     'draw-energy': 'Mystical energy is drawn from the earth',
     'cast-summon': 'Powerful magical energy is released',
-    'bees': 'Bees hum'
+    'bees': 'Bees hum',
+    'seagull': 'A gull calls out',
+    'birdSong': 'A bird sings',
+    'birdChirrup': 'A bird chirrups'
 }
 
 
@@ -277,6 +280,7 @@ var audio = {
 
     loadAmbientSounds: function(soundsToLoad) {
         for (var soundName in soundsToLoad) {
+            console.log(soundName);
             loadAudioBuffer(soundsToLoad[soundName], soundName);
         }
     },
@@ -6487,6 +6491,7 @@ const toggleActiveCards = document.getElementById('toggleActiveCards');
 const cardAlbum = document.getElementById('cardAlbum');
 const cardAlbumTabs = document.querySelectorAll('#cardAlbum .tabs');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
+const toggleSubtitlesSwitch = document.getElementById('toggleSubtitles');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
 const chestTitle = document.getElementById('chestTitle');
@@ -6502,6 +6507,8 @@ const surveyingTimeBar = document.getElementById('surveyingTimeBar');
 const craftingTimeBarOuter = document.getElementById('craftingTimeBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
+const subtitlesPanel = document.getElementById('subtitlesPanel');
+const subtitlesContent = document.getElementById('subtitlesContent');
 const questJournalEntries = document.getElementById('questJournalEntries');
 const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
 const postPanel = document.getElementById('postPanel');
@@ -6691,6 +6698,7 @@ var UI = {
 
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
+        toggleSubtitlesSwitch.onchange = UI.toggleSubtitles;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
         document.onwebkitfullscreenchange = UI.fullScreenChangeDetected;
@@ -9419,8 +9427,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
     showSubtitle: function(subtitle) {
-        console.log(subtitle);
-    }
+             subtitlesContent.insertAdjacentHTML('beforeend', '<p>'+subtitle+'</p>');
+             // scroll to the bottom of the panel to show the latest subtitle:
+             subtitlesContent.scrollTop = subtitlesContent.scrollHeight;
+    },
+       toggleSubtitles: function() {
+        if (toggleSubtitlesSwitch.checked) {
+            gameSettings.showSubtitles = true;
+            subtitlesPanel.classList.add('active');
+        } else {
+             gameSettings.showSubtitles = false;
+            subtitlesPanel.classList.remove('active');
+        }
+    },
 
 
 }
@@ -9800,6 +9819,11 @@ function getHeroGameState() {
         }
         newMap = findMapNumberFromGlobalCoordinates(data.gameState.tileX, data.gameState.tileY);
         gameSettings = data.gameState.settings;
+        if(gameSettings.showSubtitles) {
+            document.getElementById('toggleSubtitles').checked = true;
+            subtitlesPanel.classList.add('active');
+
+        }
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
         if (data.gameState.allPets) {
             if (data.gameState.activePets.length > 0) {

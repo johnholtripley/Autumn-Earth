@@ -94,6 +94,11 @@ function getHeroGameState() {
         }
         newMap = findMapNumberFromGlobalCoordinates(data.gameState.tileX, data.gameState.tileY);
         gameSettings = data.gameState.settings;
+        if(gameSettings.showSubtitles) {
+            document.getElementById('toggleSubtitles').checked = true;
+            subtitlesPanel.classList.add('active');
+
+        }
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
         if (data.gameState.allPets) {
             if (data.gameState.activePets.length > 0) {

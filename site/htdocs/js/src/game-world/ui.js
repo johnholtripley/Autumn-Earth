@@ -37,6 +37,7 @@ const toggleActiveCards = document.getElementById('toggleActiveCards');
 const cardAlbum = document.getElementById('cardAlbum');
 const cardAlbumTabs = document.querySelectorAll('#cardAlbum .tabs');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
+const toggleSubtitlesSwitch = document.getElementById('toggleSubtitles');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
 const chestTitle = document.getElementById('chestTitle');
@@ -52,6 +53,8 @@ const surveyingTimeBar = document.getElementById('surveyingTimeBar');
 const craftingTimeBarOuter = document.getElementById('craftingTimeBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
+const subtitlesPanel = document.getElementById('subtitlesPanel');
+const subtitlesContent = document.getElementById('subtitlesContent');
 const questJournalEntries = document.getElementById('questJournalEntries');
 const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
 const postPanel = document.getElementById('postPanel');
@@ -241,6 +244,7 @@ var UI = {
 
 
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
+        toggleSubtitlesSwitch.onchange = UI.toggleSubtitles;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
         //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
         document.onwebkitfullscreenchange = UI.fullScreenChangeDetected;
@@ -2969,8 +2973,19 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
     },
     showSubtitle: function(subtitle) {
-        console.log(subtitle);
-    }
+             subtitlesContent.insertAdjacentHTML('beforeend', '<p>'+subtitle+'</p>');
+             // scroll to the bottom of the panel to show the latest subtitle:
+             subtitlesContent.scrollTop = subtitlesContent.scrollHeight;
+    },
+       toggleSubtitles: function() {
+        if (toggleSubtitlesSwitch.checked) {
+            gameSettings.showSubtitles = true;
+            subtitlesPanel.classList.add('active');
+        } else {
+             gameSettings.showSubtitles = false;
+            subtitlesPanel.classList.remove('active');
+        }
+    },
 
 
 }

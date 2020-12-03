@@ -59,7 +59,10 @@ subtitles.audio = {
     'Small hawk': 'A hawk calls out',
     'draw-energy': 'Mystical energy is drawn from the earth',
     'cast-summon': 'Powerful magical energy is released',
-    'bees': 'Bees hum'
+    'bees': 'Bees hum',
+    'seagull': 'A gull calls out',
+    'birdSong': 'A bird sings',
+    'birdChirrup': 'A bird chirrups'
 }
 
 
@@ -274,6 +277,7 @@ var audio = {
 
     loadAmbientSounds: function(soundsToLoad) {
         for (var soundName in soundsToLoad) {
+            console.log(soundName);
             loadAudioBuffer(soundsToLoad[soundName], soundName);
         }
     },
