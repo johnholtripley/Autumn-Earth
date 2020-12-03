@@ -80,7 +80,7 @@ var loadAudioBuffer = function(url, name) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                soundEffects[name] = [buffer, name];
+                soundEffects[name] = buffer;
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -141,14 +141,14 @@ var audio = {
     },
 
     playSound: function(buffer, delay, numberToPlay = 0, volumeAdjustment) {
-        if(gameSettings.showSubtitles) {
+   //     if(gameSettings.showSubtitles) {
             // needs to be delayed if a delay is set ##
  
-                    UI.showSubtitle(subtitles.audio[buffer[1]]);
-                }
+        //            UI.showSubtitle(subtitles.audio[buffer[1]]);
+          //      }
 
         var source = audioContext.createBufferSource();
-        source.buffer = buffer[0];
+        source.buffer = buffer;
         source.numberToPlay = numberToPlay;
         if (typeof volumeAdjustment !== "undefined") {
             // don't use 100% of the main sound volume:
@@ -180,11 +180,11 @@ var audio = {
 
     playProximitySound: function(buffer) {
         var source = audioContext.createBufferSource();
-        if(gameSettings.showSubtitles) {
+      //  if(gameSettings.showSubtitles) {
             // needs to be delayed if a delay is set ##
-            UI.showSubtitle(subtitles.audio[buffer[1]]);
-        }
-        source.buffer = buffer[0];
+        //    UI.showSubtitle(subtitles.audio[buffer[1]]);
+        //}
+        source.buffer = buffer;
         var variableVolumeSoundGainNode = audioContext.createGain();
         variableVolumeSoundGainNode.gain.value = gameSettings.soundVolume;
         variableVolumeSoundGainNode.connect(audioContext.destination);
