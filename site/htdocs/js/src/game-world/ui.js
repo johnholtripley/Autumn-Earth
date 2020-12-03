@@ -2967,6 +2967,9 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             UI.showNotification("<p>I've already got as many as I can have.</p>");
         }
 
+    },
+    showSubtitle: function(subtitle) {
+        console.log(subtitle);
     }
 
 

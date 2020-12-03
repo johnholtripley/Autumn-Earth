@@ -32,6 +32,36 @@ var soundsToLoad = {
     'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3'
 };
 
+subtitles.audio = {
+    'coins': 'Coins clink',
+    'bookOpen': 'A book\'s pages rustle',
+    'chestOpen': 'A rusty chest opens',
+    'bagOpen': 'A bug rustles',
+    'buttonClick': '',
+    'hen': 'A hen clucks',
+    'horse': 'A horse neighs',
+    'doe': 'A doe calls out',
+    'lever': 'A switch clanks',
+    'keys': 'Some keys clink',
+    'unlock': 'A lock turns',
+    'gather1': '',
+    'gather4': '',
+    'rain': 'Raindrops fall',
+    'questComplete': 'A fanfare plays',
+    'dyeing': 'A cauldron bubbles',
+    'weaving': 'Cloth is moved gently',
+    'pouring': 'Some water pours',
+    'digging': 'Earth is being dug',
+    'cardCraft': 'A game card is formed',
+    'foundChest': 'A chest is unearthed',
+    'splash': 'Water splashes',
+    'whistle': 'Someone whistles',
+    'Small hawk': 'A hawk calls out',
+    'draw-energy': 'Mystical energy is drawn from the earth',
+    'cast-summon': 'Powerful magical energy is released',
+    'bees': 'Bees hum'
+}
+
 
 var loadAudioBuffer = function(url, name) {
     var request = new XMLHttpRequest();
@@ -45,7 +75,7 @@ var loadAudioBuffer = function(url, name) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                soundEffects[name] = buffer;
+                soundEffects[name] = [buffer, name];
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -106,8 +136,12 @@ var audio = {
     },
 
     playSound: function(buffer, delay, numberToPlay = 0, volumeAdjustment) {
+        if(gameSettings.showSubtitles) {
+            // needs to be delayed if a delay is set ##
+            UI.showSubtitle(subtitles.audio[buffer[1]]);
+        }
         var source = audioContext.createBufferSource();
-        source.buffer = buffer;
+        source.buffer = buffer[0];
         source.numberToPlay = numberToPlay;
         if (typeof volumeAdjustment !== "undefined") {
             // don't use 100% of the main sound volume:
@@ -139,8 +173,11 @@ var audio = {
 
     playProximitySound: function(buffer) {
         var source = audioContext.createBufferSource();
-
-        source.buffer = buffer;
+        if(gameSettings.showSubtitles) {
+            // needs to be delayed if a delay is set ##
+            UI.showSubtitle(subtitles.audio[buffer[1]]);
+        }
+        source.buffer = buffer[0];
         var variableVolumeSoundGainNode = audioContext.createGain();
         variableVolumeSoundGainNode.gain.value = gameSettings.soundVolume;
         variableVolumeSoundGainNode.connect(audioContext.destination);
