@@ -42,6 +42,7 @@ subtitles.audio = {
     'bagOpen': 'A bug rustles',
     'buttonClick': '',
     'hen': 'A hen clucks',
+    'henCluck': 'A hen clucks',
     'horse': 'A horse neighs',
     'doe': 'A doe calls out',
     'lever': 'A switch clanks',
@@ -145,10 +146,10 @@ var audio = {
     playSound: function(buffer, delay, numberToPlay = 0, volumeAdjustment) {
         if(gameSettings.showSubtitles) {
             // needs to be delayed if a delay is set ##
-            if(subtitles.audio[buffer[1]]) {
-            UI.showSubtitle(subtitles.audio[buffer[1]]);
-        }
-        }
+ 
+                    UI.showSubtitle(subtitles.audio[buffer[1]]);
+                }
+
         var source = audioContext.createBufferSource();
         source.buffer = buffer[0];
         source.numberToPlay = numberToPlay;
