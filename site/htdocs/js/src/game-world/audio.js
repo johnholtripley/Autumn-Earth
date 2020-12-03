@@ -277,7 +277,6 @@ var audio = {
 
     loadAmbientSounds: function(soundsToLoad) {
         for (var soundName in soundsToLoad) {
-            console.log(soundName);
             loadAudioBuffer(soundsToLoad[soundName], soundName);
         }
     },
