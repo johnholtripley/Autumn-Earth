@@ -62,7 +62,8 @@ subtitles.audio = {
     'bees': 'Bees hum',
     'seagull': 'A gull calls out',
     'birdSong': 'A bird sings',
-    'birdChirrup': 'A bird chirrups'
+    'birdChirrup': 'A bird chirrups',
+    'hourChime': 'A church bell sounds the hour'
 }
 
 
@@ -141,7 +142,9 @@ var audio = {
     playSound: function(buffer, delay, numberToPlay = 0, volumeAdjustment) {
         if(gameSettings.showSubtitles) {
             // needs to be delayed if a delay is set ##
+            if(subtitles.audio[buffer[1]]) {
             UI.showSubtitle(subtitles.audio[buffer[1]]);
+        }
         }
         var source = audioContext.createBufferSource();
         source.buffer = buffer[0];
