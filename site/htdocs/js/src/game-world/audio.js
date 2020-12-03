@@ -2,7 +2,7 @@ var audioContext = null;
 var soundGainNode;
 //var musicGainNode;
 var soundEffects = {};
-var soundsToLoad = {
+const soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
     'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
     'chestOpen': '../sounds/chest-open-NOT_MINE-wow.mp3',
@@ -29,42 +29,46 @@ var soundsToLoad = {
     'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3',
     'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
     'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
-    'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3'
+    'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3',
+    'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3'
 };
 
-subtitles.audio = {
-    'coins': 'Coins clink',
-    'bookOpen': 'A book\'s pages rustle',
-    'chestOpen': 'A rusty chest opens',
-    'bagOpen': 'A bug rustles',
-    'buttonClick': '',
-    'hen': 'A hen clucks',
-    'henCluck': 'A hen clucks',
-    'horse': 'A horse neighs',
-    'doe': 'A doe calls out',
-    'lever': 'A switch clanks',
-    'keys': 'Some keys clink',
-    'unlock': 'A lock turns',
-    'gather1': '',
-    'gather4': '',
-    'rain': 'Raindrops fall',
-    'questComplete': 'A fanfare plays',
-    'dyeing': 'A cauldron bubbles',
-    'weaving': 'Cloth is moved gently',
-    'pouring': 'Some water pours',
-    'digging': 'Earth is being dug',
-    'cardCraft': 'A game card is formed',
-    'foundChest': 'A chest is unearthed',
-    'splash': 'Water splashes',
-    'whistle': 'Someone whistles',
-    'Small hawk': 'A hawk calls out',
-    'draw-energy': 'Mystical energy is drawn from the earth',
-    'cast-summon': 'Powerful magical energy is released',
-    'bees': 'Bees hum',
-    'seagull': 'A gull calls out',
-    'birdSong': 'A bird sings',
-    'birdChirrup': 'A bird chirrups',
-    'hourChime': 'A church bell sounds the hour'
+const subtitles = {
+    'audio': {
+        'coins': 'Coins clink',
+        'bookOpen': 'A book\'s pages rustle',
+        'chestOpen': 'A rusty chest opens',
+        'bagOpen': 'A bug rustles',
+        'buttonClick': '',
+        'hen': 'A hen clucks',
+        'henCluck': 'A hen clucks',
+        'horse': 'A horse neighs',
+        'doe': 'A doe calls out',
+        'lever': 'A switch clanks',
+        'keys': 'Some keys clink',
+        'unlock': 'A lock turns',
+        'gather1': '',
+        'gather4': '',
+        'rain': 'Raindrops fall',
+        'questComplete': 'A fanfare plays',
+        'dyeing': 'A cauldron bubbles',
+        'weaving': 'Cloth is moved gently',
+        'pouring': 'Some water pours',
+        'digging': 'Earth is being dug',
+        'cardCraft': 'A game card is formed',
+        'foundChest': 'A chest is unearthed',
+        'splash': 'Water splashes',
+        'whistle': 'Someone whistles',
+        'Small hawk': 'A hawk calls out',
+        'draw-energy': 'Mystical energy is drawn from the earth',
+        'cast-summon': 'Powerful magical energy is released',
+        'bees': 'Bees hum',
+        'shipsBell': 'A ship\'s bell sounds',
+        'seagull': 'A gull calls out',
+        'birdSong': 'A bird sings',
+        'birdChirrup': 'A bird chirrups',
+        'hourChime': 'A church bell sounds the hour'
+    }
 }
 
 

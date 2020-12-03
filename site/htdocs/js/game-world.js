@@ -1,11 +1,9 @@
 'use strict';
-
-var subtitles = {};
 var audioContext = null;
 var soundGainNode;
 //var musicGainNode;
 var soundEffects = {};
-var soundsToLoad = {
+const soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
     'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
     'chestOpen': '../sounds/chest-open-NOT_MINE-wow.mp3',
@@ -32,42 +30,46 @@ var soundsToLoad = {
     'Small hawk': '../sounds/hawk-NOT_MINE-wow.mp3',
     'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
     'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
-    'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3'
+    'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3',
+    'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3'
 };
 
-subtitles.audio = {
-    'coins': 'Coins clink',
-    'bookOpen': 'A book\'s pages rustle',
-    'chestOpen': 'A rusty chest opens',
-    'bagOpen': 'A bug rustles',
-    'buttonClick': '',
-    'hen': 'A hen clucks',
-    'henCluck': 'A hen clucks',
-    'horse': 'A horse neighs',
-    'doe': 'A doe calls out',
-    'lever': 'A switch clanks',
-    'keys': 'Some keys clink',
-    'unlock': 'A lock turns',
-    'gather1': '',
-    'gather4': '',
-    'rain': 'Raindrops fall',
-    'questComplete': 'A fanfare plays',
-    'dyeing': 'A cauldron bubbles',
-    'weaving': 'Cloth is moved gently',
-    'pouring': 'Some water pours',
-    'digging': 'Earth is being dug',
-    'cardCraft': 'A game card is formed',
-    'foundChest': 'A chest is unearthed',
-    'splash': 'Water splashes',
-    'whistle': 'Someone whistles',
-    'Small hawk': 'A hawk calls out',
-    'draw-energy': 'Mystical energy is drawn from the earth',
-    'cast-summon': 'Powerful magical energy is released',
-    'bees': 'Bees hum',
-    'seagull': 'A gull calls out',
-    'birdSong': 'A bird sings',
-    'birdChirrup': 'A bird chirrups',
-    'hourChime': 'A church bell sounds the hour'
+const subtitles = {
+    'audio': {
+        'coins': 'Coins clink',
+        'bookOpen': 'A book\'s pages rustle',
+        'chestOpen': 'A rusty chest opens',
+        'bagOpen': 'A bug rustles',
+        'buttonClick': '',
+        'hen': 'A hen clucks',
+        'henCluck': 'A hen clucks',
+        'horse': 'A horse neighs',
+        'doe': 'A doe calls out',
+        'lever': 'A switch clanks',
+        'keys': 'Some keys clink',
+        'unlock': 'A lock turns',
+        'gather1': '',
+        'gather4': '',
+        'rain': 'Raindrops fall',
+        'questComplete': 'A fanfare plays',
+        'dyeing': 'A cauldron bubbles',
+        'weaving': 'Cloth is moved gently',
+        'pouring': 'Some water pours',
+        'digging': 'Earth is being dug',
+        'cardCraft': 'A game card is formed',
+        'foundChest': 'A chest is unearthed',
+        'splash': 'Water splashes',
+        'whistle': 'Someone whistles',
+        'Small hawk': 'A hawk calls out',
+        'draw-energy': 'Mystical energy is drawn from the earth',
+        'cast-summon': 'Powerful magical energy is released',
+        'bees': 'Bees hum',
+        'shipsBell': 'A ship\'s bell sounds',
+        'seagull': 'A gull calls out',
+        'birdSong': 'A bird sings',
+        'birdChirrup': 'A bird chirrups',
+        'hourChime': 'A church bell sounds the hour'
+    }
 }
 
 
@@ -718,6 +720,8 @@ var visibleMaps = [];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;
+
+const globalPlatformDelayBeforeMoving = 500;
 
 var visibleMapsLoading = [];
 function recipeSearchAndFilter() {
@@ -11023,6 +11027,7 @@ function transitionToOrFromGlobalPlatform() {
     currentMapIsAGlobalPlatform = false;
     if (thisMapData[currentMap].isAGlobalPlatform) {
         currentMapIsAGlobalPlatform = true;
+        globalPlatforms[currentMap].pauseRemaining = globalPlatformDelayBeforeMoving;
     }
     processInitialMap();
     prepareGame(true);
@@ -11806,7 +11811,7 @@ function heroIsInNewTile() {
         updateLightMap();
     }
     // if this map is a global platform, and it's moving, ignore the door
-    if (!(currentMapIsAGlobalPlatform && globalPlatforms[currentMap].canMove)) {
+    if (!(currentMapIsAGlobalPlatform && globalPlatforms[currentMap].canMove && globalPlatforms[currentMap].pauseRemaining<0)) {
         if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
             activeDoorX = hero.tileX;
             activeDoorY = hero.tileY;
@@ -13539,7 +13544,7 @@ function makeHoney(whichItem) {
 
 function moveGlobalPlatform() {
     var globalPlatformsCurrentMap, thisGlobalPlatformsTileX, thisGlobalPlatformsTileY;
-    if (globalPlatforms[currentMap].canMove) {
+    if (globalPlatforms[currentMap].canMove && globalPlatforms[currentMap].pauseRemaining < 0) {
         globalPlatforms[currentMap].x += globalPlatforms[currentMap].speedX;
         globalPlatforms[currentMap].y += globalPlatforms[currentMap].speedY;
         if (globalPlatforms[currentMap].x < 0) {
@@ -13571,6 +13576,11 @@ function moveGlobalPlatform() {
                 }
             }
         }
+
+    }
+    globalPlatforms[currentMap].pauseRemaining--;
+    if(globalPlatforms[currentMap].pauseRemaining == 0) {
+        audio.playSound(soundEffects['shipsBell'], 0);
     }
 }
 
@@ -13604,6 +13614,7 @@ function initialiseGlobalPlatform(whichMap) {
     globalPlatforms[whichMap].destinationIsoX = thisGlobalPlatformsTileX * tileW;
     globalPlatforms[whichMap].destinationIsoY = thisGlobalPlatformsTileY * tileW;
     thisMapData[whichMap].doors = globalPlatforms[whichMap].startDoors;
+    globalPlatforms[whichMap].pauseRemaining = globalPlatformDelayBeforeMoving;
     globalPlatforms[whichMap].canMove = true;
 }
 function intialiseMovingPlatforms(whichMap) {

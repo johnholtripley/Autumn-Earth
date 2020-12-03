@@ -245,4 +245,6 @@ const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;
 
+const globalPlatformDelayBeforeMoving = 500;
+
 var visibleMapsLoading = [];

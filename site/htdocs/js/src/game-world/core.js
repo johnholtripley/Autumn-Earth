@@ -1295,6 +1295,7 @@ function transitionToOrFromGlobalPlatform() {
     currentMapIsAGlobalPlatform = false;
     if (thisMapData[currentMap].isAGlobalPlatform) {
         currentMapIsAGlobalPlatform = true;
+        globalPlatforms[currentMap].pauseRemaining = globalPlatformDelayBeforeMoving;
     }
     processInitialMap();
     prepareGame(true);
@@ -2078,7 +2079,7 @@ function heroIsInNewTile() {
         updateLightMap();
     }
     // if this map is a global platform, and it's moving, ignore the door
-    if (!(currentMapIsAGlobalPlatform && globalPlatforms[currentMap].canMove)) {
+    if (!(currentMapIsAGlobalPlatform && globalPlatforms[currentMap].canMove && globalPlatforms[currentMap].pauseRemaining<0)) {
         if (thisMapData[currentMap].collisions[getLocalCoordinatesY(hero.tileY)][getLocalCoordinatesX(hero.tileX)] == "d") {
             activeDoorX = hero.tileX;
             activeDoorY = hero.tileY;
@@ -3811,7 +3812,7 @@ function makeHoney(whichItem) {
 
 function moveGlobalPlatform() {
     var globalPlatformsCurrentMap, thisGlobalPlatformsTileX, thisGlobalPlatformsTileY;
-    if (globalPlatforms[currentMap].canMove) {
+    if (globalPlatforms[currentMap].canMove && globalPlatforms[currentMap].pauseRemaining < 0) {
         globalPlatforms[currentMap].x += globalPlatforms[currentMap].speedX;
         globalPlatforms[currentMap].y += globalPlatforms[currentMap].speedY;
         if (globalPlatforms[currentMap].x < 0) {
@@ -3843,6 +3844,11 @@ function moveGlobalPlatform() {
                 }
             }
         }
+
+    }
+    globalPlatforms[currentMap].pauseRemaining--;
+    if(globalPlatforms[currentMap].pauseRemaining == 0) {
+        audio.playSound(soundEffects['shipsBell'], 0);
     }
 }
 
@@ -3876,6 +3882,7 @@ function initialiseGlobalPlatform(whichMap) {
     globalPlatforms[whichMap].destinationIsoX = thisGlobalPlatformsTileX * tileW;
     globalPlatforms[whichMap].destinationIsoY = thisGlobalPlatformsTileY * tileW;
     thisMapData[whichMap].doors = globalPlatforms[whichMap].startDoors;
+    globalPlatforms[whichMap].pauseRemaining = globalPlatformDelayBeforeMoving;
     globalPlatforms[whichMap].canMove = true;
 }
 function intialiseMovingPlatforms(whichMap) {
