@@ -220,7 +220,7 @@ function initialisePetObject(index) {
     var thisPet = hero.allPets[hero.activePets[index]];
     thisPet.x = getTileCentreCoordX(thisPet.tileX);
     thisPet.y = getTileCentreCoordY(thisPet.tileY);
-    if (!isOverWorldMap) {
+    if ((!isOverWorldMap) || (currentMapIsAGlobalPlatform)) {
         // check if it's not actually on the map:
         if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
             thisPet.z = defaultElevation;
@@ -1061,7 +1061,7 @@ function prepareGame(isToOrFromAGlobalPlatform = false) {
         }
     }
     // initialise pet:
-    var defaultElevation = hero.z;
+    defaultElevation = hero.z;
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
 

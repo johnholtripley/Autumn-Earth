@@ -3,12 +3,17 @@ function isAPetTerrainCollision(object, x, y) {
 
 
 
-
+    var thisMap;
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesX(globalTileY);
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+    if(isOverWorldMap && !currentMapIsAGlobalPlatform) {
+        thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+    } else {
+        thisMap = currentMap;
+    }
+    
 
 
 
