@@ -4455,6 +4455,11 @@ function draw() {
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
+                        if (currentMapIsAGlobalPlatform) {
+                    thisX += findIsoCoordsX(globalPlatforms[currentMap].x, globalPlatforms[currentMap].y);
+                    thisY += findIsoCoordsY(globalPlatforms[currentMap].x, globalPlatforms[currentMap].y) + tileH / 2;
+                    thisX -= ((thisMapData[currentMap].terrain[0].length / 2) - 1) * tileW;
+                }
         fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
         if (isVisibleOnScreen(thisX, thisY)) {
             assetsToDraw.push([findIsoDepth(fae.x, fae.y, fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
@@ -4609,6 +4614,13 @@ function draw() {
                 thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"][thisPetState][hero.allPets[hero.activePets[i]].facing];
                 thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
+              
+                if (currentMapIsAGlobalPlatform) {
+                    thisX += findIsoCoordsX(globalPlatforms[currentMap].x, globalPlatforms[currentMap].y);
+                    thisY += findIsoCoordsY(globalPlatforms[currentMap].x, globalPlatforms[currentMap].y) + tileH / 2;
+                    thisX -= ((thisMapData[currentMap].terrain[0].length / 2) - 1) * tileW;
+                }
+
                 if (isVisibleOnScreen(thisX, thisY)) {
                     assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, , hero.allPets[hero.activePets[i]].centreY]);
                 }
