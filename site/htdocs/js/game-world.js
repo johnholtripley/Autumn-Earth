@@ -5552,7 +5552,7 @@ function isAPetTerrainCollision(object, x, y) {
 
 function movePet() {
     if (hasActivePet) {
-        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile, thisInnerDoor;
+        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile, thisInnerDoor, localPetTileX, localPetTileY;
         for (var p = 0; p < hero.activePets.length; p++) {
             thisPet = hero.allPets[hero.activePets[p]];
             thisPetsTarget = thisPet.following;
@@ -5789,13 +5789,18 @@ function movePet() {
                             }
                             newTile = true;
                         }
-                        if (newTile) {
+                          if (newTile) {
                             thisPet.tileX = getTileX(thisPet.x);
                             thisPet.tileY = getTileY(thisPet.y);
-                            if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
+                            localPetTileX = getLocalCoordinatesX(thisPet.tileX);
+                            localPetTileY = getLocalCoordinatesX(thisPet.tileY);
+                            if ((localPetTileX < 0) || (localPetTileY < 0) || (localPetTileX >= mapTilesX) || (localPetTileY >= mapTilesY)) {
                                 //not on a valid tile yet:
                                 newTile = false;
                             }
+                        }
+                        if(newTile) {
+                            thisPet.state = "moving";
                         }
                     }
                     break;
@@ -5872,7 +5877,9 @@ function movePet() {
                 }
             }
           //  if (isOverWorldMap) {
+            if(thisPet.state != "queuing") {
                 checkForSlopes(thisPet);
+            }
             /*
             } else {
                 // make sure it's on the map, and not moving in from behind the hero:
@@ -9938,9 +9945,17 @@ function prepareCoreAssets() {
 }
 
 function initialisePet(index, tileOffsetX, tileOffsetY) {
+    console.log("called init pet ",currentMap);
+
     hero.allPets[hero.activePets[index]].tileX = hero.tileX + (tileOffsetX * (index + 1));
     hero.allPets[hero.activePets[index]].tileY = hero.tileY + (tileOffsetY * (index + 1));
-    if (!isOverWorldMap) {
+
+
+
+
+
+hero.allPets[hero.activePets[index]].state = "moving";
+    if ((!isOverWorldMap) || (currentMapIsAGlobalPlatform)) {
         // needed for Internal maps:
         if (index == 0) {
             hero.allPets[hero.activePets[index]].state = "moving";
@@ -9948,8 +9963,19 @@ function initialisePet(index, tileOffsetX, tileOffsetY) {
             // will be placed out of the normal map grid:
             hero.allPets[hero.activePets[index]].state = "queuing";
         }
+        // check the tile is within the normal map bounds:
+        var thisPetLocalX = getLocalCoordinatesX(hero.allPets[hero.activePets[index]].tileX);
+var thisPetLocalY = getLocalCoordinatesY(hero.allPets[hero.activePets[index]].tileY);
+if(typeof thisMapData[currentMap]['collisions'][thisPetLocalY] == "undefined") {
+hero.allPets[hero.activePets[index]].state = "queuing";
+} else {
+    if(typeof thisMapData[currentMap]['collisions'][thisPetLocalY][thisPetLocalX] == "undefined") {
+        hero.allPets[hero.activePets[index]].state = "queuing";
     }
-    hero.allPets[hero.activePets[index]].state = "moving";
+}
+    }
+
+    
     hero.allPets[hero.activePets[index]].facing = hero.facing;
 }
 

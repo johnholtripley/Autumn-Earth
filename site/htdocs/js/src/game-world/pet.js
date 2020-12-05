@@ -55,7 +55,7 @@ function isAPetTerrainCollision(object, x, y) {
 
 function movePet() {
     if (hasActivePet) {
-        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile, thisInnerDoor;
+        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile, thisInnerDoor, localPetTileX, localPetTileY;
         for (var p = 0; p < hero.activePets.length; p++) {
             thisPet = hero.allPets[hero.activePets[p]];
             thisPetsTarget = thisPet.following;
@@ -292,13 +292,18 @@ function movePet() {
                             }
                             newTile = true;
                         }
-                        if (newTile) {
+                          if (newTile) {
                             thisPet.tileX = getTileX(thisPet.x);
                             thisPet.tileY = getTileY(thisPet.y);
-                            if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
+                            localPetTileX = getLocalCoordinatesX(thisPet.tileX);
+                            localPetTileY = getLocalCoordinatesX(thisPet.tileY);
+                            if ((localPetTileX < 0) || (localPetTileY < 0) || (localPetTileX >= mapTilesX) || (localPetTileY >= mapTilesY)) {
                                 //not on a valid tile yet:
                                 newTile = false;
                             }
+                        }
+                        if(newTile) {
+                            thisPet.state = "moving";
                         }
                     }
                     break;
@@ -375,7 +380,9 @@ function movePet() {
                 }
             }
           //  if (isOverWorldMap) {
+            if(thisPet.state != "queuing") {
                 checkForSlopes(thisPet);
+            }
             /*
             } else {
                 // make sure it's on the map, and not moving in from behind the hero:
