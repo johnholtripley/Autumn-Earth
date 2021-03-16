@@ -13946,6 +13946,16 @@ function draw() {
         // gameContext.fill();
     } else {
 
+
+   var heroIsoOffsetX = 0;
+        var heroIsoOffsetY = 0;
+        if (currentMapIsAGlobalPlatform) {
+            heroIsoOffsetX = globalPlatforms[currentMap].x;
+            heroIsoOffsetY = globalPlatforms[currentMap].y;
+        }
+        hero.isox = findIsoCoordsX(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
+        hero.isoy = findIsoCoordsY(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
+
         //waterContext.clearRect(0, 0, canvasWidth, -canvasHeight);
         // fill it with solid, and then use destination-out to erase the background area:
 
@@ -13963,6 +13973,7 @@ function draw() {
             // need to determine a very large positive number to make sure that the iso values are always positive: (#####)
             var oceanCentreX = oceanSpriteWidth - ((hero.isox + 10000000000) % oceanSpriteWidth);
             var oceanCentreY = oceanSpriteHeight - ((hero.isoy + 10000000000) % oceanSpriteHeight);
+        
             // (oceanCentreX will vary between 0 and oceanSpriteWidth, and oceanCentreY will vary between 0 and oceanSpriteHeight)
 
             // for speed, draw the sprite to an off screen canvas, and then just copy that entirely to the game canvas where needed:
@@ -14027,14 +14038,7 @@ function draw() {
 
         // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisZ, thisNPC, thisItem, shouldFadeThisObject, thisCentreX, thisCentreY, heroOffsetCol, heroOffsetRow;
-        var heroIsoOffsetX = 0;
-        var heroIsoOffsetY = 0;
-        if (currentMapIsAGlobalPlatform) {
-            heroIsoOffsetX = globalPlatforms[currentMap].x;
-            heroIsoOffsetY = globalPlatforms[currentMap].y;
-        }
-        hero.isox = findIsoCoordsX(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
-        hero.isoy = findIsoCoordsY(hero.x + heroIsoOffsetX, hero.y + heroIsoOffsetY);
+     
 
         heroOffsetCol = (currentAnimationFrame + 1 - hero.state.startFrame) % hero["animation"][hero.currentAnimation]["length"];
         if(heroOffsetCol < 0) {

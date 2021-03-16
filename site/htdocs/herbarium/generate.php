@@ -2235,6 +2235,9 @@ if($debug) {
 $debugQueryString = '&debug=true';
 }
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.$debugQueryString.'">Seed: '.$storedSeed.'</a></p>';
+if($debug) {
+echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'">Tweet this</a></p>';
+}
 $debugQueryString = '';
 if($debug) {
 $debugQueryString = '?debug=true';
