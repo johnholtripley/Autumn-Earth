@@ -209,7 +209,7 @@ if($positionOfItemCategory !== false) {
         }
         mysqli_free_result($itemCategoryResult);
         $stringToReplace = '"##itemCategory##'.$thisItemCategory.'##"';
-        $mapDataFile = str_replace_first($stringToReplace, '['.implode($itemIDs,",").']', $mapDataFile);
+        $mapDataFile = str_replace_first($stringToReplace, '['.implode(",",$itemIDs).']', $mapDataFile);
 
 
 $positionOfItemCategory = strpos($mapDataFile, '##itemCategory##');

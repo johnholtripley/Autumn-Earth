@@ -718,11 +718,11 @@ $result = str_replace("X", "F", $result);
 	$i=0;
 	$thisFSequence = 0;
 	do {
-		if($result{$i} != "F") {
+		if($result[$i] != "F") {
 			if($thisFSequence > 0) {
 				$commandString .= "F(".$thisFSequence .")";
 			}
-			$commandString .= $result{$i};
+			$commandString .= $result[$i];
 			$thisFSequence = 0;
 		} else {
 			$thisFSequence ++;
@@ -2247,6 +2247,9 @@ echo '<p style="font-size:0.7em;"><a href="/herbarium/" target="_blank">The full
 
 $lastError = error_get_last();
 
+if(is_null($lastError)) {
+	$lastError["file"] = "";
+}
 if(stripos($lastError["file"], "generate.php") === false) {
 	// don't Tweet if any errors within this file (may be error reported in connection include for example):
 	sendToTwitter();

@@ -1774,18 +1774,15 @@ function findWorldMapPosition($requiredMapNumber) {
 function generateTreasureMap() {
     global $worldMap, $chr, $activeEvents, $worldMapTileLength;
   
-// pick a random overworld map:
+// pick a random overworld map (make sure it's not all ocean though)
+do {
     $randomRow = $worldMap[array_rand($worldMap)];
     $randomMap = $randomRow[array_rand($randomRow)];
-$randomMapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $randomMap . '.json');
-$randomMapData = json_decode($randomMapDataFile, true);
+    $randomMapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $randomMap . '.json');
+    $randomMapData = json_decode($randomMapDataFile, true);
+} while ($randomMapData['map']['zoneName'] == "The Great Sea");
 
   // find a clear location on this map:
-
-
-
-
-
 
 // code duplicated from Resource placement - could be moved into a function? #####
    // make sure not blocked by item, static npcs, or active  items or npcs:
