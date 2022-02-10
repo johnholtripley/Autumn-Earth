@@ -30,6 +30,6 @@
     "jshint": "^2.9.4"
   },
   "dependencies": {
-    "node-sass": "^5.0.0"
+    "node-sass": "^7.0.0"
   }
 }
