@@ -16,6 +16,7 @@ const cleancss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const minify = require('gulp-minify');
 
+// https://raw.githubusercontent.com/johnholtripley/Autumn-Earth/5b16b74da98b6310cf22b2126503d2f1ca187506/site/gulpfile%20-%20Copy.js
 
 // css:
 function scss() {

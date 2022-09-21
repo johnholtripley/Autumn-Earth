@@ -1,3 +1,5 @@
+// pronounced Neffer taffle
+
 function hnefataflPlayer2Concedes() {
     delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.win[0], thisChallengeNPC.hnefataflSpeech.win[1]);

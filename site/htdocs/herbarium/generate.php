@@ -16,6 +16,9 @@
 
 // seed the drawing and description generation with the generated Genus so same genus plants will be similar
 
+// http://develop.ae/herbarium/generate.php?seed=1642597827&debug=true
+// Our Our Lady's Woadvanes flower in the Spring months
+// our our duplication
 
 // drawElongatatedSshape
 
@@ -76,7 +79,7 @@ $media = $twitterConnection->upload('media/upload', ['media' => $_SERVER['DOCUME
 $data = [
   'media_id' => $media->media_id_string,
   'alt_text' => [
-    'text' => 'An image generated in the style of a medieval Herbarium'
+    'text' => 'An image of '.$latinName.' generated in the style of a medieval herbarium'
   ]
 ];
 $metadata = $twitterConnection->upload('media/metadata/create', $data, null, true);
@@ -2072,7 +2075,8 @@ if(substr($primaryCommonName, -1) == "y") {
 if(substr($primaryCommonName, -1) == "x") {
     $primaryCommonNamePlural = $primaryCommonName."es";
 }
-if(substr($primaryCommonName, -1) == "f") {
+// convert ...f to ...ves but not ...ff - that should be ...ffs
+if((substr($primaryCommonName, -1) == "f") && (substr($primaryCommonName, -2) != "ff")) {
     $primaryCommonNamePlural = substr($primaryCommonName, 0, -1)."ves";
 }
 
@@ -2090,8 +2094,8 @@ $colourVariation = (mt_rand(1,40))-40;
 } else {
 $colourVariation = (mt_rand(1,80))-40;
 }
-$lighterNames = array("light","bright","pale");
-$darkerNames = array("dark","deep", "sombre");
+$lighterNames = array("light", "bright", "pale");
+$darkerNames = array("dark", "deep", "sombre");
 if($colourVariation>20) {
 	$displayPetalColourName = $lighterNames[mt_rand(0, count($lighterNames) - 1)]." ".$displayPetalColourName;
 } else if($colourVariation<-20) {
@@ -2170,7 +2174,7 @@ if(strpos($startingText, '++otherplants++') !== false) {
 		$startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
 	
 		$plantNamesUsed++;
-		if($plantNamesUsed >= count($plantNamesUsed)) {
+		if($plantNamesUsed >= count($otherPlantNames)) {
 			$plantNamesUsed = 0;
 		}
 	} while (strpos($startingText, '++otherplants++') !== false);
@@ -2227,7 +2231,8 @@ $drawStartTime = microtime(true);
 }
 drawPlant();
 
-echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.png" width="480" height="480" alt="'.$latinName.'">';
+echo '<div style="display:flex;"><img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.png" width="480" height="480" alt="'.$latinName.'">';
+echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'"></div>';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p>Associated with the '.$combinedButterflyName.', and '.$combinedBatName.'.</p>';
 $debugQueryString = '';

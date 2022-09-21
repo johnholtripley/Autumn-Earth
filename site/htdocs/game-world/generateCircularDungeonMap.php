@@ -2669,7 +2669,7 @@ echo '<div class="sequenceBlock">';
     $templatesPlacedOnThisLevel = array();
     $uniquePerLevelTemplatesUsed = array();
 
-    if (count($templatesToUse > 0)) {
+    if (!empty($templatesToUse)) {
         $randomDrawnTileRooms = $drawnTileRooms;
         for ($i = 0; $i < count($templatesToUse); $i++) {
             // randomly order the rooms for some variation:
@@ -2971,9 +2971,9 @@ echo '<div class="sequenceBlock">';
                                     $thisTemplateOffsetY = $thisRoom[1]-1;
                                     if(mt_rand(1,2) == 2) {
                                         $thisTemplateOffsetY = $thisRoom[3] - $templateHeight +1;
-                                         if($thisTemplateOffsetY<($foundRoom[1]-1)) {
-                                        $thisTemplateOffsetY = $thisRoom[1]-1;
-                                    }
+                                        if($thisTemplateOffsetY<($thisRoom[1]-1)) {
+                                            $thisTemplateOffsetY = $thisRoom[1]-1;
+                                        }
                                     }
                                     $thisTemplateOffsetX = $thisRoom[0] - $templateWidth;
                                     $isBlocked = false;
@@ -2998,7 +2998,7 @@ echo '<div class="sequenceBlock">';
                                 $thisTemplateOffsetY = $thisRoom[1]-1;
                                 if(mt_rand(1,2) == 2) {
                                     $thisTemplateOffsetY = $thisRoom[3] - $templateHeight +1;
-                                      if($thisTemplateOffsetY<($foundRoom[1]-1)) {
+                                      if($thisTemplateOffsetY<($thisRoom[1]-1)) {
                                         $thisTemplateOffsetY = $thisRoom[1]-1;
                                     }
                                 }
