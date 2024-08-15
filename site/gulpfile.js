@@ -11,7 +11,7 @@ const postcss = require('gulp-postcss');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 const rename = require('gulp-rename');
-const sass = require('gulp-sass');
+const sass = require('gulp-dart-sass');
 const cleancss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const minify = require('gulp-minify');
@@ -46,7 +46,7 @@ function siteScripts() {
     // make sure that init is compiled last after all modules are loaded:
   return gulp
       .src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/**/!(card-game)*.js', '!htdocs/js/src/game-world/**/*.js', 'htdocs/js/src/init.js'])
-      .pipe(concat('core.js'))
+      .pipe(concat('htdocs/js/src/core.js'))
       .pipe(gulp.dest('htdocs/js'))
            .pipe(minify({ext:{
            

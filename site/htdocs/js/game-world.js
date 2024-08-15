@@ -4071,6 +4071,8 @@ function revealBoosterCard(e) {
     }
 }
 
+// pronounced Neffer taffle
+
 function hnefataflPlayer2Concedes() {
     delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.win[0], thisChallengeNPC.hnefataflSpeech.win[1]);
@@ -4165,7 +4167,7 @@ const Input = {
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
         document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
 
-        //if (navigator.getGamepads()[0]) {
+        //if (navigator.getGamepads()) {
 
             window.addEventListener("gamepadconnected", function() {
                 Input.isUsingGamePad = true;
@@ -4176,7 +4178,7 @@ const Input = {
                 Input.isUsingGamePad = false;
                 //  Input.gamePad = null;
             });
-       // }
+        //}
 
         if ("ontouchstart" in document.documentElement) {
             Input.initTouchEvents();

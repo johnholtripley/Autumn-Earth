@@ -56,30 +56,24 @@ a, button, input, select, textarea, label, summary {
 @-webkit-viewport {
   width: device-width;
 }
-
 @-moz-viewport {
   width: device-width;
 }
-
 @-ms-viewport {
   width: device-width;
 }
-
 @-o-viewport {
   width: device-width;
 }
-
 @viewport {
   width: device-width;
 }
-
 /*  http://mattstow.com/responsive-design-in-ie10-on-windows-phone-8.html  */
 @media (max-width: 25em) {
   @-ms-viewport {
     width: 320px;
   }
 }
-
 /* Improve readability when focused and hovered in all browsers: h5bp.com/h */
 a:hover, a:active {
   outline: 0;
@@ -103,7 +97,7 @@ blockquote {
 /* Redeclare monospace font family: h5bp.com/j */
 pre, code, kbd, samp {
   font-family: monospace, serif;
-  _font-family: 'courier new', monospace;
+  _font-family: "courier new", monospace;
   font-size: 1em;
 }
 
@@ -221,7 +215,7 @@ button, input {
  * 2. Allow styling of clickable form elements in iOS
  * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
  */
-button, input[type="button"], input[type="reset"], input[type="submit"] {
+button, input[type=button], input[type=reset], input[type=submit] {
   cursor: pointer;
   -webkit-appearance: button;
   *overflow: visible;
@@ -237,19 +231,19 @@ button[disabled], input[disabled] {
 /*
  * Consistent box sizing and appearance
  */
-input[type="checkbox"], input[type="radio"] {
+input[type=checkbox], input[type=radio] {
   box-sizing: border-box;
   padding: 0;
 }
 
-input[type="search"] {
+input[type=search] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
 }
 
-input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button {
+input[type=search]::-webkit-search-decoration, input[type=search]::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 
@@ -257,12 +251,12 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
  * Remove inner padding and border in FF3/4: h5bp.com/l
  */
 /**
- * Fix the cursor style for Chrome's increment/decrement buttons. For certain
- * `font-size` values of the `input`, it causes the cursor style of the
- * decrement button to change from `default` to `text`.
- */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+* Fix the cursor style for Chrome's increment/decrement buttons. For certain
+* `font-size` values of the `input`, it causes the cursor style of the
+* decrement button to change from `default` to `text`.
+*/
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -291,33 +285,27 @@ input:invalid, textarea:invalid {
   color: transparent;
 }
 
-::-webkit-input-placeholder {
-  /* Safari, Chrome and Opera */
+::-webkit-input-placeholder { /* Safari, Chrome and Opera */
   color: #ccc;
 }
 
-:-moz-placeholder {
-  /* Firefox 18- */
+:-moz-placeholder { /* Firefox 18- */
   color: #ccc;
 }
 
-::-moz-placeholder {
-  /* Firefox 19+ */
+::-moz-placeholder { /* Firefox 19+ */
   color: #ccc;
 }
 
-:-ms-input-placeholder {
-  /* IE 10+ */
+:-ms-input-placeholder { /* IE 10+ */
   color: #ccc;
 }
 
-::-ms-input-placeholder {
-  /* Edge */
+::-ms-input-placeholder { /* Edge */
   color: #ccc;
 }
 
-:placeholder-shown {
-  /* Standard one last! */
+:placeholder-shown { /* Standard one last! */
   color: #ccc;
 }
 
@@ -349,12 +337,10 @@ td {
 .clearfix {
   /* Contain floats: h5bp.com/q */
 }
-
 .clearfix:before, .clearfix:after {
   content: " ";
   display: table;
 }
-
 .clearfix:after {
   clear: both;
 }
@@ -393,8 +379,7 @@ html {
     scroll-behavior: auto !important;
   }
 }
-
-input[type="number"] {
+input[type=number] {
   -moz-appearance: textfield;
 }
 
@@ -430,7 +415,6 @@ input:not(:focus):valid {
   /* Focus style */
   /* This hides focus around selected option in FF */
 }
-
 .selectWrapper select {
   /* Make sure the select is wider than the container so we can clip the arrow */
   cursor: pointer;
@@ -448,16 +432,14 @@ input:not(:focus):valid {
   border: none;
   outline: none;
   /* Padding works surpringly well */
-  padding: .4em 19% .4em .8em;
+  padding: 0.4em 19% 0.4em 0.8em;
   font-family: helvetica, sans-serif;
   line-height: 1.2;
-  margin: .2em 0;
+  margin: 0.2em 0;
 }
-
 .selectWrapper select::-ms-expand {
   display: none;
 }
-
 .selectWrapper:after {
   font-family: icomoon;
   speak: none;
@@ -473,29 +455,27 @@ input:not(:focus):valid {
   font-variant-ligatures: common-ligatures;
   background: none;
   color: #bbb;
-  content: "\25BE";
+  content: "▾";
   font-size: 1.5em;
   padding: 0;
   position: absolute;
   right: 0.4em;
   top: 0.2em;
-  bottom: .3em;
+  bottom: 0.3em;
   z-index: 1;
   /* This hack makes the select behind the arrow clickable in some browsers */
   pointer-events: none;
 }
-
 .selectWrapper select:focus {
   outline: none;
 }
-
 .selectWrapper select:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
 
 @supports (-webkit-appearance: none) {
-  input[type="radio"] {
+  input[type=radio] {
     -webkit-appearance: none;
     clear: none;
     display: inline-block;
@@ -506,78 +486,85 @@ input:not(:focus):valid {
     border: 1px solid #fff;
     background: #fff;
     position: relative;
+    margin-right: 0.5em;
+    margin-bottom: 0;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     border-radius: 16px;
-    margin-right: 0.5em;
-    margin-bottom: 0;
   }
   @media only all {
-    input[type="radio"] {
+    input[type=radio] {
       -webkit-border-radius: 1rem;
       -moz-border-radius: 1rem;
       border-radius: 1rem;
     }
   }
-  input[type="radio"]:focus {
+  input[type=radio]:focus {
     border: 1px solid teal;
   }
-  input[type="radio"] {
+  input[type=radio] {
     position: relative;
     /* Do a bug fix to keep iOS from adding dark background. */
     background: none;
   }
-  input[type="radio"]::after {
+  input[type=radio]::after {
     content: " ";
     width: 12px;
     height: 12px;
+    left: 1px;
+    top: 1px;
+    opacity: 0;
     background: #e06900;
     display: block;
+    position: absolute;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     border-radius: 16px;
-    opacity: 0;
-    left: 1px;
-    top: 1px;
-    position: absolute;
-    -webkit-transition: opacity 0.3s;
-    -moz-transition: opacity 0.3s;
-    -o-transition: opacity 0.3s;
     transition: opacity 0.3s;
+    /*
+    -webkit-transition: $values;
+    -moz-transition: $values;
+    -o-transition: $values;
+    */
   }
   @media only all {
-    input[type="radio"]::after {
+    input[type=radio]::after {
       -webkit-border-radius: 1rem;
       -moz-border-radius: 1rem;
       border-radius: 1rem;
     }
   }
-  input[type="radio"]:checked::after {
+  input[type=radio]:checked::after {
     opacity: 1;
   }
   @supports (transform: scale(1)) {
-    input[type="radio"]::after {
+    input[type=radio]::after {
       opacity: 1;
-      -webkit-transform: scale(0);
-      -moz-transform: scale(0);
-      -o-transform: scale(0);
+      /*
+      -webkit-transform: $values;
+      -moz-transform: $values;
+      -o-transform: $values;
+      */
       transform: scale(0);
-      -webkit-transition: transform 0.3s;
-      -moz-transition: transform 0.3s;
-      -o-transition: transform 0.3s;
       transition: transform 0.3s;
+      /*
+      -webkit-transition: $values;
+      -moz-transition: $values;
+      -o-transition: $values;
+      */
     }
-    input[type="radio"]:checked::after {
-      -webkit-transform: scale(1);
-      -moz-transform: scale(1);
-      -o-transform: scale(1);
+    input[type=radio]:checked::after {
+      /*
+      -webkit-transform: $values;
+      -moz-transform: $values;
+      -o-transform: $values;
+      */
       transform: scale(1);
     }
   }
 }
-
 @supports (-webkit-appearance: none) {
-  input[type="checkbox"] {
+  input[type=checkbox] {
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
@@ -586,19 +573,19 @@ input:not(:focus):valid {
     margin-bottom: 0;
     outline: none;
   }
-  input[type="checkbox"]:focus {
+  input[type=checkbox]:focus {
     border: 1px solid teal;
   }
-  input[type="checkbox"] {
+  input[type=checkbox] {
     position: relative;
     /* Do a bug fix to keep iOS from adding dark background. */
     background: none;
   }
-  input[type="checkbox"]::after {
+  input[type=checkbox]::after {
     position: absolute;
     top: 0.05rem;
     left: 0;
-    content: '\2713';
+    content: "✓";
     font-family: icomoon;
     speak: none;
     font-style: normal;
@@ -615,18 +602,19 @@ input:not(:focus):valid {
     line-height: 1;
     text-align: center;
     opacity: 0;
-    -webkit-transition: opacity 0.4s ease;
-    -moz-transition: opacity 0.4s ease;
-    -o-transition: opacity 0.4s ease;
     transition: opacity 0.4s ease;
+    /*
+    -webkit-transition: $values;
+    -moz-transition: $values;
+    -o-transition: $values;
+    */
   }
-  input[type="checkbox"]:checked::after {
+  input[type=checkbox]:checked::after {
     opacity: 1;
   }
 }
-
 @supports (-webkit-appearance: none) {
-  input[type='checkbox'].switch {
+  input[type=checkbox].switch {
     -webkit-appearance: none;
     outline: none;
     display: inline-block;
@@ -638,12 +626,14 @@ input:not(:focus):valid {
     height: 16px;
     background: #fff;
     border-radius: 16px;
-    -webkit-transition: background 0.4s ease;
-    -moz-transition: background 0.4s ease;
-    -o-transition: background 0.4s ease;
     transition: background 0.4s ease;
+    /*
+    -webkit-transition: $values;
+    -moz-transition: $values;
+    -o-transition: $values;
+    */
   }
-  input[type='checkbox'].switch:after {
+  input[type=checkbox].switch:after {
     color: #e06900;
     line-height: 1;
     text-align: center;
@@ -658,23 +648,26 @@ input:not(:focus):valid {
     border: 1px solid #000;
     left: 0;
     top: 0;
-    -webkit-transition: left 0.4s ease;
-    -moz-transition: left 0.4s ease;
-    -o-transition: left 0.4s ease;
     transition: left 0.4s ease;
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -o-transform: scale(1);
+    /*
+    -webkit-transition: $values;
+    -moz-transition: $values;
+    -o-transition: $values;
+    */
+    /*
+    -webkit-transform: $values;
+    -moz-transform: $values;
+    -o-transform: $values;
+    */
     transform: scale(1);
   }
-  input[type='checkbox'].switch:checked {
+  input[type=checkbox].switch:checked {
     background: #64bd63;
   }
-  input[type='checkbox'].switch:checked:after {
+  input[type=checkbox].switch:checked:after {
     left: 16px;
   }
 }
-
 .js .fileInput {
   width: 0.1px;
   height: 0.1px;
@@ -683,24 +676,20 @@ input:not(:focus):valid {
   position: absolute;
   z-index: -1;
 }
-
 .js .fileInputLabel {
   color: #fff;
   cursor: pointer;
   background: #000;
   display: inline-block;
 }
-
 .js .fileInput:focus + label,
 .js .fileInputLabel:hover {
   background-color: #e06900;
 }
-
 .js .fileInput:focus + label {
   outline: 1px dotted #fff;
   outline: -webkit-focus-ring-color auto 5px;
 }
-
 .js .inputfile + label span {
   pointer-events: none;
 }
@@ -711,38 +700,37 @@ input:not(:focus):valid {
   display: inline-block;
   text-transform: uppercase;
   padding: 1% 4%;
-  -webkit-transition: background 0.4s ease;
-  -moz-transition: background 0.4s ease;
-  -o-transition: background 0.4s ease;
   transition: background 0.4s ease;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
   /* use:
- a {
-   font-weight: bold;
-    text-decoration: none;
-    color: #c00;
+   a {
+     font-weight: bold;
+      text-decoration: none;
+      color: #c00;
 
-    @include attention() {
-        outline: none;
-        color: #09f;
-    }
+      @include attention() {
+          outline: none;
+          color: #09f;
+      }
 
+  }
+  */
 }
-*/
-}
-
-.button:link, .button:visited {
-  color: #fff;
-}
-
 .button:hover, .button:active, .button:focus {
   color: #fff;
   background: #7a3900;
+}
+.button:link, .button:visited {
+  color: #fff;
 }
 
 .primary-button {
   font-size: 28px;
 }
-
 @media only all {
   .primary-button {
     font-size: 1.75rem;
@@ -765,29 +753,26 @@ progress {
   /* Of all IE, only IE10 supports progress element that too partially. It only allows to change the background-color of the progress value using the 'color' attribute. */
   color: teal;
   /*
-Webkit browsers provide two pseudo classes that can be use to style HTML5 progress element.
--webkit-progress-bar -> To style the progress element container
--webkit-progress-value -> To style the progress element value.
-*/
+  Webkit browsers provide two pseudo classes that can be use to style HTML5 progress element.
+  -webkit-progress-bar -> To style the progress element container
+  -webkit-progress-value -> To style the progress element value.
+  */
   /* Firefox provides a single pseudo class to style the progress element value and not for container. -moz-progress-bar */
   /* Similarly, for Mozilla. Unfortunately combining the styles for different browsers will break every other browser. Hence, we need a separate block. */
 }
-
 progress[value]::-webkit-progress-bar {
   background-color: whiteSmoke;
   border-radius: 3px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5) inset;
 }
-
 progress[value]::-webkit-progress-value {
   position: relative;
   background: #e06900;
   border-radius: 3px;
 }
-
 progress[value]::-webkit-progress-value:after {
   /* Only webkit/blink browsers understand pseudo elements on pseudo classes. A rare phenomenon! */
-  content: '';
+  content: "";
   position: absolute;
   width: 5px;
   height: 5px;
@@ -796,16 +781,13 @@ progress[value]::-webkit-progress-value:after {
   background-color: white;
   border-radius: 100%;
 }
-
 progress[value]::-moz-progress-bar {
   background: #e06900;
   border-radius: 3px;
 }
-
 progress::-moz-progress-bar {
   background: #e06900;
 }
-
 progress.active {
   display: block;
 }
@@ -839,11 +821,11 @@ h6 {
   overflow-wrap: break-word;
   word-wrap: break-word;
   /*
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
-*/
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+  */
 }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -895,24 +877,21 @@ body, input, select, .selectWrapper, textarea, button {
 }
 
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
+  letter-spacing: 0.02em;
   font-size: 14px;
   line-height: 21px;
   margin: 0px 0px 12px 0px;
-  letter-spacing: 0.02em;
 }
-
 @media only all {
   p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     font-size: 0.875rem;
   }
 }
-
 @media only all {
   p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     line-height: 1.3125rem;
   }
 }
-
 @media only all {
   p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     margin: 0rem 0rem 0.75rem 0rem;
@@ -958,14 +937,12 @@ sub {
     font-variant-position: sub;
   }
 }
-
 @supports (font-variant-position: sub) or (font-feature-settings: "subs" 1) {
   sub {
     vertical-align: inherit;
     font-size: inherit;
   }
 }
-
 sup {
   font-feature-settings: "sups" 1;
 }
@@ -976,14 +953,12 @@ sup {
     font-variant-position: super;
   }
 }
-
 @supports (font-variant-position: super) or (font-feature-settings: "sups" 1) {
   sup {
     vertical-align: inherit;
     font-size: inherit;
   }
 }
-
 .js body,
 .js input,
 .js select,
@@ -992,7 +967,6 @@ sup {
 .js textarea {
   font-family: "new century schoolbook", "century schoolbook", century, georgia, "times new roman", serif;
 }
-
 .js h1,
 .js h2,
 .js h3,
@@ -1009,7 +983,6 @@ sup {
 .fontsLoaded textarea {
   font-family: Merriweather, "new century schoolbook", "century schoolbook", century, georgia, "times new roman", serif;
 }
-
 .fontsLoaded h1,
 .fontsLoaded h2,
 .fontsLoaded h3,
@@ -1040,7 +1013,6 @@ abbr {
   font-weight: normal;
   font-style: normal;
 }
-
 /*
 // faux-bold looks nicer
 @font-face {
@@ -1063,7 +1035,6 @@ abbr {
   font-weight: normal;
   font-style: italic;
 }
-
 @font-face {
   font-family: AlegreyaSC;
   font-display: fallback;
@@ -1072,20 +1043,17 @@ abbr {
   font-weight: bold;
   font-style: normal;
 }
-
 .row {
-  /* Contain floats: h5bp.com/q */
   width: 97%;
   margin-left: 1.5%;
   margin-right: 1.5%;
   position: relative;
+  /* Contain floats: h5bp.com/q */
 }
-
 .row:before, .row:after {
   content: " ";
   display: table;
 }
-
 .row:after {
   clear: both;
 }
@@ -1095,7 +1063,6 @@ abbr {
   margin-left: -3%;
   margin-right: -3%;
 }
-
 .row .row .column,
 .row .row .columns {
   -webkit-box-sizing: border-box;
@@ -1119,7 +1086,6 @@ ul.row, ol.row {
     max-width: none;
   }
 }
-
 .column, .columns {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1139,11 +1105,11 @@ ul.row, ol.row {
 }
 
 .small-1 {
-  width: 8.33333%;
+  width: 8.3333333333%;
 }
 
 .small-2 {
-  width: 16.66667%;
+  width: 16.6666666667%;
 }
 
 .small-3 {
@@ -1151,11 +1117,11 @@ ul.row, ol.row {
 }
 
 .small-4 {
-  width: 33.33333%;
+  width: 33.3333333333%;
 }
 
 .small-5 {
-  width: 41.66667%;
+  width: 41.6666666667%;
 }
 
 .small-6 {
@@ -1163,11 +1129,11 @@ ul.row, ol.row {
 }
 
 .small-7 {
-  width: 58.33333%;
+  width: 58.3333333333%;
 }
 
 .small-8 {
-  width: 66.66667%;
+  width: 66.6666666667%;
 }
 
 .small-9 {
@@ -1175,11 +1141,11 @@ ul.row, ol.row {
 }
 
 .small-10 {
-  width: 83.33333%;
+  width: 83.3333333333%;
 }
 
 .small-11 {
-  width: 91.66667%;
+  width: 91.6666666667%;
 }
 
 .small-12 {
@@ -1188,121 +1154,118 @@ ul.row, ol.row {
 
 @media (min-width: 30em) {
   .medium-1 {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
   .medium-2 {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .medium-3 {
     width: 25%;
   }
   .medium-4 {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .medium-5 {
-    width: 41.66667%;
+    width: 41.6666666667%;
   }
   .medium-6 {
     width: 50%;
   }
   .medium-7 {
-    width: 58.33333%;
+    width: 58.3333333333%;
   }
   .medium-8 {
-    width: 66.66667%;
+    width: 66.6666666667%;
   }
   .medium-9 {
     width: 75%;
   }
   .medium-10 {
-    width: 83.33333%;
+    width: 83.3333333333%;
   }
   .medium-11 {
-    width: 91.66667%;
+    width: 91.6666666667%;
   }
   .medium-12 {
     width: 100%;
   }
 }
-
 @media (min-width: 54em) {
   .wide-1 {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
   .wide-2 {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .wide-3 {
     width: 25%;
   }
   .wide-4 {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .wide-5 {
-    width: 41.66667%;
+    width: 41.6666666667%;
   }
   .wide-6 {
     width: 50%;
   }
   .wide-7 {
-    width: 58.33333%;
+    width: 58.3333333333%;
   }
   .wide-8 {
-    width: 66.66667%;
+    width: 66.6666666667%;
   }
   .wide-9 {
     width: 75%;
   }
   .wide-10 {
-    width: 83.33333%;
+    width: 83.3333333333%;
   }
   .wide-11 {
-    width: 91.66667%;
+    width: 91.6666666667%;
   }
   .wide-12 {
     width: 100%;
   }
 }
-
 @media (min-width: 70em) {
   .widest-1 {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
   .widest-2 {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .widest-3 {
     width: 25%;
   }
   .widest-4 {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .widest-5 {
-    width: 41.66667%;
+    width: 41.6666666667%;
   }
   .widest-6 {
     width: 50%;
   }
   .widest-7 {
-    width: 58.33333%;
+    width: 58.3333333333%;
   }
   .widest-8 {
-    width: 66.66667%;
+    width: 66.6666666667%;
   }
   .widest-9 {
     width: 75%;
   }
   .widest-10 {
-    width: 83.33333%;
+    width: 83.3333333333%;
   }
   .widest-11 {
-    width: 91.66667%;
+    width: 91.6666666667%;
   }
   .widest-12 {
     width: 100%;
   }
 }
-
 .small-1up > .column {
   width: 100%;
 }
@@ -1312,7 +1275,7 @@ ul.row, ol.row {
 }
 
 .small-3up > .column {
-  width: 33.33333%;
+  width: 33.3333333333%;
 }
 
 .small-4up > .column {
@@ -1324,11 +1287,11 @@ ul.row, ol.row {
 }
 
 .small-6up > .column {
-  width: 16.66667%;
+  width: 16.6666666667%;
 }
 
 .small-7up > .column {
-  width: 14.28571%;
+  width: 14.2857142857%;
 }
 
 .small-8up > .column {
@@ -1336,7 +1299,7 @@ ul.row, ol.row {
 }
 
 .small-9up > .column {
-  width: 11.11111%;
+  width: 11.1111111111%;
 }
 
 .small-10up > .column {
@@ -1344,11 +1307,11 @@ ul.row, ol.row {
 }
 
 .small-11up > .column {
-  width: 9.09091%;
+  width: 9.0909090909%;
 }
 
 .small-12up > .column {
-  width: 8.33333%;
+  width: 8.3333333333%;
 }
 
 @media (max-width: 29.99em) {
@@ -1386,7 +1349,6 @@ ul.row, ol.row {
     clear: left;
   }
 }
-
 @media (min-width: 30em) {
   .medium-1up > .column {
     width: 100%;
@@ -1395,7 +1357,7 @@ ul.row, ol.row {
     width: 50%;
   }
   .medium-3up > .column {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .medium-4up > .column {
     width: 25%;
@@ -1404,28 +1366,27 @@ ul.row, ol.row {
     width: 20%;
   }
   .medium-6up > .column {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .medium-7up > .column {
-    width: 14.28571%;
+    width: 14.2857142857%;
   }
   .medium-8up > .column {
     width: 12.5%;
   }
   .medium-9up > .column {
-    width: 11.11111%;
+    width: 11.1111111111%;
   }
   .medium-10up > .column {
     width: 10%;
   }
   .medium-11up > .column {
-    width: 9.09091%;
+    width: 9.0909090909%;
   }
   .medium-12up > .column {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
 }
-
 @media (min-width: 30em) and (max-width: 53.99em) {
   .medium-2up > .column:nth-child(2n+1) {
     clear: left;
@@ -1461,7 +1422,6 @@ ul.row, ol.row {
     clear: left;
   }
 }
-
 @media (min-width: 54em) {
   .wide-1up > .column {
     width: 100%;
@@ -1470,7 +1430,7 @@ ul.row, ol.row {
     width: 50%;
   }
   .wide-3up > .column {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .wide-4up > .column {
     width: 25%;
@@ -1479,28 +1439,27 @@ ul.row, ol.row {
     width: 20%;
   }
   .wide-6up > .column {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .wide-7up > .column {
-    width: 14.28571%;
+    width: 14.2857142857%;
   }
   .wide-8up > .column {
     width: 12.5%;
   }
   .wide-9up > .column {
-    width: 11.11111%;
+    width: 11.1111111111%;
   }
   .wide-10up > .column {
     width: 10%;
   }
   .wide-11up > .column {
-    width: 9.09091%;
+    width: 9.0909090909%;
   }
   .wide-12up > .column {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
 }
-
 @media (min-width: 54em) and (max-width: 69.99em) {
   .wide-2up > .column:nth-child(2n+1) {
     clear: left;
@@ -1536,7 +1495,6 @@ ul.row, ol.row {
     clear: left;
   }
 }
-
 @media (min-width: 70em) {
   .widest-1up > .column {
     width: 100%;
@@ -1551,7 +1509,7 @@ ul.row, ol.row {
     clear: left;
   }
   .widest-3up > .column {
-    width: 33.33333%;
+    width: 33.3333333333%;
   }
   .widest-3up > .column:nth-child(3n+1) {
     clear: left;
@@ -1569,13 +1527,13 @@ ul.row, ol.row {
     clear: left;
   }
   .widest-6up > .column {
-    width: 16.66667%;
+    width: 16.6666666667%;
   }
   .widest-6up > .column:nth-child(6n+1) {
     clear: left;
   }
   .widest-7up > .column {
-    width: 14.28571%;
+    width: 14.2857142857%;
   }
   .widest-7up > .column:nth-child(7n+1) {
     clear: left;
@@ -1587,7 +1545,7 @@ ul.row, ol.row {
     clear: left;
   }
   .widest-9up > .column {
-    width: 11.11111%;
+    width: 11.1111111111%;
   }
   .widest-9up > .column:nth-child(9n+1) {
     clear: left;
@@ -1599,19 +1557,18 @@ ul.row, ol.row {
     clear: left;
   }
   .widest-11up > .column {
-    width: 9.09091%;
+    width: 9.0909090909%;
   }
   .widest-11up > .column:nth-child(11n+1) {
     clear: left;
   }
   .widest-12up > .column {
-    width: 8.33333%;
+    width: 8.3333333333%;
   }
   .widest-12up > .column:nth-child(12n+1) {
     clear: left;
   }
 }
-
 .equalHeights {
   display: table;
   display: flex;
@@ -1685,42 +1642,41 @@ mark {
    ========================================================================== */
 a {
   color: #ffd227;
-  -webkit-transition: color 0.4s ease;
-  -moz-transition: color 0.4s ease;
-  -o-transition: color 0.4s ease;
   transition: color 0.4s ease;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
   /* use:
- a {
-   font-weight: bold;
-    text-decoration: none;
-    color: #c00;
+   a {
+     font-weight: bold;
+      text-decoration: none;
+      color: #c00;
 
-    @include attention() {
-        outline: none;
-        color: #09f;
-    }
+      @include attention() {
+          outline: none;
+          color: #09f;
+      }
 
+  }
+  */
 }
-*/
-}
-
 a:visited {
   color: #ffd227;
 }
-
 a:hover, a:active, a:focus {
   color: #ffd227;
 }
 
 kbd {
+  padding: 0 0.4em;
+  background: #999;
+  font-family: "Andale Mono", "courier new", courier, "droid sans mono", monospace;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  padding: 0 0.4em;
-  background: #999;
-  font-family: 'Andale Mono', 'courier new', courier, 'droid sans mono', monospace;
 }
-
 @media only all {
   kbd {
     -webkit-border-radius: 0.125rem;
@@ -1809,7 +1765,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   font-weight: normal;
   font-style: normal;
 }
-
 .icon {
   font-family: icomoon;
   speak: none;
@@ -1885,7 +1840,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   margin: 0;
   padding: 0;
 }
-
 #homeEventsList h6 {
   margin: 0;
 }
@@ -1893,7 +1847,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 #loginAndSearchPanel {
   padding-top: 100px;
 }
-
 @media only all {
   #loginAndSearchPanel {
     padding-top: 6.25rem;
@@ -1916,10 +1869,12 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   position: relative;
   width: 100%;
   left: 0;
-  -webkit-transition: left 0.4s ease-out;
-  -moz-transition: left 0.4s ease-out;
-  -o-transition: left 0.4s ease-out;
   transition: left 0.4s ease-out;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
 }
 
 #mastHead {
@@ -1982,17 +1937,14 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     }
   }
 }
-
 .offCanvas {
   height: 100%;
 }
-
 .offCanvas body,
 .offCanvas #wrapper,
 .offCanvas #offCanvasWrapper {
   height: 100%;
 }
-
 .offCanvas #navigationInner {
   height: 100%;
   overflow-y: scroll;
@@ -2038,10 +1990,12 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   #offCanvasOverlay {
     background: #fff;
     background: rgba(0, 0, 0, 0);
-    -webkit-transition: background 0.4s ease;
-    -moz-transition: background 0.4s ease;
-    -o-transition: background 0.4s ease;
     transition: background 0.4s ease;
+    /*
+    -webkit-transition: $values;
+    -moz-transition: $values;
+    -o-transition: $values;
+    */
   }
   .offCanvas #offCanvasOverlay {
     position: fixed;
@@ -2053,7 +2007,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     background: rgba(0, 0, 0, 0.6);
   }
 }
-
 @media (max-width: 53.99em) and (-webkit-transform-3d), (max-width: 53.99em) and (transform-3d) {
   .js #navigation {
     left: 0;
@@ -2088,11 +2041,9 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     transform: translate3d(0, 0, 0);
   }
 }
-
 #navigation button {
   display: none;
 }
-
 @media (min-width: 54em) {
   #navigation ul {
     float: right;
@@ -2117,8 +2068,7 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     display: block;
   }
 }
-
-#navigation ul ul[aria-hidden='true'] {
+#navigation ul ul[aria-hidden=true] {
   display: none;
 }
 
@@ -2127,9 +2077,8 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   cursor: pointer;
   margin: 0;
 }
-
 .js #navigation button:after {
-  content: "\25be";
+  content: "▾";
   font-family: icomoon;
   speak: none;
   font-style: normal;
@@ -2156,17 +2105,15 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     display: inline;
   }
 }
-
 .masonry {
+  max-width: none;
   -webkit-column-count: 1;
   -moz-column-count: 1;
   column-count: 1;
   -webkit-column-gap: 0;
   -moz-column-gap: 0;
   column-gap: 0;
-  max-width: none;
 }
-
 @media (min-width: 30em) {
   .masonry {
     -webkit-column-count: 3;
@@ -2174,7 +2121,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     column-count: 3;
   }
 }
-
 @media (min-width: 54em) {
   .masonry {
     -webkit-column-count: 4;
@@ -2182,7 +2128,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     column-count: 4;
   }
 }
-
 @media (min-width: 70em) {
   .masonry {
     -webkit-column-count: 5;
@@ -2195,7 +2140,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   margin: 0;
   padding: 5px;
 }
-
 @media (min-width: 30em) {
   .masonry-cell {
     -webkit-column-break-inside: avoid;
@@ -2235,7 +2179,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   flex-direction: column;
   flex-basis: 50%;
 }
-
 @media (min-width: 30em) {
   .masonry-cluster-group {
     -webkit-box-orient: horizontal;
@@ -2266,7 +2209,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     flex-direction: row;
   }
 }
-
 .masonry-vertical-cluster .masonry-cluster-group {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -2284,7 +2226,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   background: #ffd227;
   color: #fff;
 }
-
 #loadMore:disabled {
   background: transparent;
   color: #000;
@@ -2293,91 +2234,78 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 .paginatedBlock {
   overflow: hidden;
 }
-
 .paginatedBlock .animateIn {
   -webkit-animation: 1s linear 0s 1 slideUp;
   -moz-animation: 1s linear 0s 1 slideUp;
   -o-animation: 1s linear 0s 1 slideUp;
   animation: 1s linear 0s 1 slideUp;
 }
-
 .paginatedBlock .animateOffset0 {
   -webkit-animation-duration: 0s;
   -moz-animation-duration: 0s;
   -o-animation-duration: 0s;
   animation-duration: 0s;
 }
-
 .paginatedBlock .animateOffset1 {
   -webkit-animation-duration: 0.15s;
   -moz-animation-duration: 0.15s;
   -o-animation-duration: 0.15s;
   animation-duration: 0.15s;
 }
-
 .paginatedBlock .animateOffset2 {
   -webkit-animation-duration: 0.3s;
   -moz-animation-duration: 0.3s;
   -o-animation-duration: 0.3s;
   animation-duration: 0.3s;
 }
-
 .paginatedBlock .animateOffset3 {
   -webkit-animation-duration: 0.45s;
   -moz-animation-duration: 0.45s;
   -o-animation-duration: 0.45s;
   animation-duration: 0.45s;
 }
-
 .paginatedBlock .animateOffset4 {
   -webkit-animation-duration: 0.6s;
   -moz-animation-duration: 0.6s;
   -o-animation-duration: 0.6s;
   animation-duration: 0.6s;
 }
-
 .paginatedBlock .animateOffset5 {
   -webkit-animation-duration: 0.75s;
   -moz-animation-duration: 0.75s;
   -o-animation-duration: 0.75s;
   animation-duration: 0.75s;
 }
-
 .paginatedBlock .animateOffset6 {
   -webkit-animation-duration: 0.9s;
   -moz-animation-duration: 0.9s;
   -o-animation-duration: 0.9s;
   animation-duration: 0.9s;
 }
-
 .paginatedBlock .animateOffset7 {
   -webkit-animation-duration: 1.05s;
   -moz-animation-duration: 1.05s;
   -o-animation-duration: 1.05s;
   animation-duration: 1.05s;
 }
-
 .paginatedBlock .animateOffset8 {
   -webkit-animation-duration: 1.2s;
   -moz-animation-duration: 1.2s;
   -o-animation-duration: 1.2s;
   animation-duration: 1.2s;
 }
-
 .paginatedBlock .animateOffset9 {
   -webkit-animation-duration: 1.35s;
   -moz-animation-duration: 1.35s;
   -o-animation-duration: 1.35s;
   animation-duration: 1.35s;
 }
-
 .paginatedBlock .animateOffset10 {
   -webkit-animation-duration: 1.5s;
   -moz-animation-duration: 1.5s;
   -o-animation-duration: 1.5s;
   animation-duration: 1.5s;
 }
-
 .paginatedBlock .animateOffset11 {
   -webkit-animation-duration: 1.65s;
   -moz-animation-duration: 1.65s;
@@ -2393,7 +2321,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     transform: translateY(0px);
   }
 }
-
 @-moz-keyframes slideUp {
   from {
     transform: translateY(200px);
@@ -2402,7 +2329,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     transform: translateY(0px);
   }
 }
-
 @-o-keyframes slideUp {
   from {
     transform: translateY(200px);
@@ -2411,7 +2337,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     transform: translateY(0px);
   }
 }
-
 @keyframes slideUp {
   from {
     transform: translateY(200px);
@@ -2420,8 +2345,7 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     transform: translateY(0px);
   }
 }
-
-.dialog[aria-hidden="true"] {
+.dialog[aria-hidden=true] {
   display: none;
 }
 
@@ -2439,7 +2363,7 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 }
 
 .dialog-content {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   z-index: 3;
   position: fixed;
   top: 50%;
@@ -2464,7 +2388,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     padding: 2em;
   }
 }
-
 .dialog-overlay {
   background-color: rgba(43, 46, 56, 0.9);
 }
@@ -2496,7 +2419,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     right: 1em;
   }
 }
-
 .js-accordion-trigger {
   background: #cecece;
   border: 1px solid;
@@ -2505,18 +2427,15 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   padding: 2%;
   text-decoration: none;
 }
-
-.js-accordion-trigger[aria-selected="true"] {
+.js-accordion-trigger[aria-selected=true] {
   background: #ffd227;
 }
-
 .js-accordion-trigger:before {
   content: "+";
   display: inline-block;
   width: 15px;
 }
-
-.js-accordion-trigger[aria-expanded="true"]:before {
+.js-accordion-trigger[aria-expanded=true]:before {
   content: "–";
 }
 
@@ -2525,17 +2444,17 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   overflow: hidden;
   border: 1px solid;
   border-top: none;
-  -webkit-transition: max-height ease 0.5s;
-  -moz-transition: max-height ease 0.5s;
-  -o-transition: max-height ease 0.5s;
   transition: max-height ease 0.5s;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
   visibility: visible;
 }
-
-.js-accordion-panel[aria-hidden="true"] {
+.js-accordion-panel[aria-hidden=true] {
   visibility: hidden;
 }
-
 .js-accordion-panel.is-hidden {
   max-height: 0;
 }
@@ -2554,7 +2473,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   cursor: default;
   position: relative;
 }
-
 .tooltip:before {
   bottom: 2em;
   left: -5em;
@@ -2566,7 +2484,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   transition: all 0.5s ease;
   width: 10em;
 }
-
 .tooltip:after {
   bottom: 1.5em;
   left: 50%;
@@ -2580,7 +2497,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   display: block;
   width: 0;
 }
-
 .tooltip:before, .tooltip:after {
   position: absolute;
   color: #000;
@@ -2588,12 +2504,13 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   opacity: 0;
   pointer-events: none;
   text-align: center;
-  -webkit-transition: opacity 0.75s ease;
-  -moz-transition: opacity 0.75s ease;
-  -o-transition: opacity 0.75s ease;
   transition: opacity 0.75s ease;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
 }
-
 .tooltip:focus:before, .tooltip:focus:after, .tooltip:active:before, .tooltip:active:after, .tooltip:hover:before, .tooltip:hover:after {
   opacity: 1;
 }
@@ -2604,7 +2521,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   outline-offset: -10px;
   padding: 20px;
 }
-
 .canDragAndDrop.isDraggedOver {
   background: #666;
 }
@@ -2614,13 +2530,11 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     filter: brightness(0.8) contrast(1.2);
   }
 }
-
 #hnefataflGameWrapper {
   max-width: 612px;
   margin: 2% auto;
   float: none;
 }
-
 #hnefataflGameWrapper .canvasWrapper {
   padding-bottom: 100%;
 }
@@ -2628,7 +2542,6 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 .LinkedImage img {
   font-size: 0.8em;
 }
-
 .LinkedImage img:after {
   content: "sorry - broken image (url: " attr(src) ")";
   display: block;
@@ -2642,57 +2555,56 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   -o-background-size: 100% auto;
   background-size: 100% auto;
 }
-
 #herbariumCatalogue li div {
   padding: 20px 0px;
 }
-
 @media only all {
   #herbariumCatalogue li div {
     padding: 1.25rem 0rem;
   }
 }
-
 @media (min-width: 70em) {
   #herbariumCatalogue .inbetweenRow {
     width: 25%;
   }
 }
-
 #herbariumCatalogue .offset1 {
-  -webkit-transform: rotate(1deg) translateY(-2.5%);
-  -moz-transform: rotate(1deg) translateY(-2.5%);
-  -o-transform: rotate(1deg) translateY(-2.5%);
+  /*
+  -webkit-transform: $values;
+  -moz-transform: $values;
+  -o-transform: $values;
+  */
   transform: rotate(1deg) translateY(-2.5%);
 }
-
 #herbariumCatalogue .offset2 {
-  -webkit-transform: rotate(-1deg) scale(0.98, 0.98);
-  -moz-transform: rotate(-1deg) scale(0.98, 0.98);
-  -o-transform: rotate(-1deg) scale(0.98, 0.98);
+  /*
+  -webkit-transform: $values;
+  -moz-transform: $values;
+  -o-transform: $values;
+  */
   transform: rotate(-1deg) scale(0.98, 0.98);
 }
-
 #herbariumCatalogue .offset3 {
-  -webkit-transform: rotate(-1deg) translate(6%, 1.5%);
-  -moz-transform: rotate(-1deg) translate(6%, 1.5%);
-  -o-transform: rotate(-1deg) translate(6%, 1.5%);
+  /*
+  -webkit-transform: $values;
+  -moz-transform: $values;
+  -o-transform: $values;
+  */
   transform: rotate(-1deg) translate(6%, 1.5%);
 }
-
 #herbariumCatalogue .offset4 {
-  -webkit-transform: translateY(2.5%);
-  -moz-transform: translateY(2.5%);
-  -o-transform: translateY(2.5%);
+  /*
+  -webkit-transform: $values;
+  -moz-transform: $values;
+  -o-transform: $values;
+  */
   transform: translateY(2.5%);
 }
-
 #herbariumCatalogue .imageOffset img {
   float: right;
   margin-right: -20%;
   margin-left: auto;
 }
-
 #herbariumCatalogue img {
   float: left;
   display: block;
@@ -2704,34 +2616,28 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
   position: relative;
   z-index: 1;
 }
-
 #herbariumCatalogue p {
   color: #000;
   opacity: 0.85;
   font-size: 13px;
   line-height: 19px;
 }
-
 @media only all {
   #herbariumCatalogue p {
     font-size: 0.8125rem;
   }
 }
-
 @media only all {
   #herbariumCatalogue p {
     line-height: 1.1875rem;
   }
 }
-
 #herbariumCatalogue p a {
   color: #e06900;
 }
-
 #herbariumCatalogue h4 {
   font-style: italic;
 }
-
 #herbariumCatalogue h5 a, #herbariumCatalogue h4 a {
   color: inherit;
 }
@@ -2756,7 +2662,6 @@ img.drawAroundPlant {
   width: 100%;
   overflow: hidden;
 }
-
 #modalWrapper.opening, #modalWrapper.closing {
   visibility: visible;
 }
@@ -2768,10 +2673,12 @@ img.drawAroundPlant {
   margin: 5% auto;
   position: relative;
   z-index: 4;
-  -webkit-transition: opacity 0.8s ease;
-  -moz-transition: opacity 0.8s ease;
-  -o-transition: opacity 0.8s ease;
   transition: opacity 0.8s ease;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
 }
 
 .opening #modalContent {
@@ -2788,9 +2695,11 @@ img.drawAroundPlant {
   position: absolute;
   left: 50%;
   top: 50%;
-  -webkit-transform: translateY(-50%) translateX(-2%);
-  -moz-transform: translateY(-50%) translateX(-2%);
-  -o-transform: translateY(-50%) translateX(-2%);
+  /*
+  -webkit-transform: $values;
+  -moz-transform: $values;
+  -o-transform: $values;
+  */
   transform: translateY(-50%) translateX(-2%);
   height: 100%;
   /* our sprite is composed of 25 frames */
@@ -2834,7 +2743,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-98%);
   }
 }
-
 @-moz-keyframes ink-fill {
   from {
     transform: translateY(-50%) translateX(-2%);
@@ -2843,7 +2751,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-98%);
   }
 }
-
 @-o-keyframes ink-fill {
   from {
     transform: translateY(-50%) translateX(-2%);
@@ -2852,7 +2759,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-98%);
   }
 }
-
 @keyframes ink-fill {
   from {
     transform: translateY(-50%) translateX(-2%);
@@ -2861,7 +2767,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-98%);
   }
 }
-
 @-webkit-keyframes remove-ink {
   from {
     transform: translateY(-50%) translateX(-98%);
@@ -2870,7 +2775,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-2%);
   }
 }
-
 @-moz-keyframes remove-ink {
   from {
     transform: translateY(-50%) translateX(-98%);
@@ -2879,7 +2783,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-2%);
   }
 }
-
 @-o-keyframes remove-ink {
   from {
     transform: translateY(-50%) translateX(-98%);
@@ -2888,7 +2791,6 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-2%);
   }
 }
-
 @keyframes remove-ink {
   from {
     transform: translateY(-50%) translateX(-98%);
@@ -2897,56 +2799,53 @@ img.drawAroundPlant {
     transform: translateY(-50%) translateX(-2%);
   }
 }
-
 #recipeCards .column div {
   border: 1px solid #666;
   margin-bottom: 12px;
 }
-
 #recipeCards ol {
   margin-left: 20px;
 }
 
 #footer ul {
   /* use:
- a {
-   font-weight: bold;
-    text-decoration: none;
-    color: #c00;
+   a {
+     font-weight: bold;
+      text-decoration: none;
+      color: #c00;
 
-    @include attention() {
-        outline: none;
-        color: #09f;
-    }
+      @include attention() {
+          outline: none;
+          color: #09f;
+      }
 
+  }
+  */
 }
-*/
-}
-
 #footer ul:hover a, #footer ul:active a, #footer ul:focus a {
   opacity: 0.6;
 }
-
 #footer ul a {
-  -webkit-transition: opacity 0.4s ease;
-  -moz-transition: opacity 0.4s ease;
-  -o-transition: opacity 0.4s ease;
   transition: opacity 0.4s ease;
+  /*
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  */
   /* use:
- a {
-   font-weight: bold;
-    text-decoration: none;
-    color: #c00;
+   a {
+     font-weight: bold;
+      text-decoration: none;
+      color: #c00;
 
-    @include attention() {
-        outline: none;
-        color: #09f;
-    }
+      @include attention() {
+          outline: none;
+          color: #09f;
+      }
 
+  }
+  */
 }
-*/
-}
-
 #footer ul a:hover, #footer ul a:active, #footer ul a:focus {
   opacity: 1;
 }
@@ -2955,7 +2854,6 @@ img.drawAroundPlant {
   max-width: 220px;
   margin: 12px auto;
 }
-
 @media only all {
   #mastHead img {
     margin: 0.75rem auto;
@@ -2969,8 +2867,7 @@ img.drawAroundPlant {
 @media print {
   * {
     background: transparent !important;
-    color: #000 !important;
-    /* Black prints faster: h5bp.com/s */
+    color: #000 !important; /* Black prints faster: h5bp.com/s */
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -2996,8 +2893,8 @@ img.drawAroundPlant {
     font-family: "new century schoolbook", "century schoolbook", century, georgia, "times new roman", serif;
   }
   /*
-     * Don't show links for images, or javascript/internal links
-     */
+   * Don't show links for images, or javascript/internal links
+   */
   .ir a:after,
   a[href^="javascript:"]:after,
   a[href^="#"]:after {
@@ -3009,8 +2906,7 @@ img.drawAroundPlant {
     page-break-inside: avoid;
   }
   thead {
-    display: table-header-group;
-    /* h5bp.com/t */
+    display: table-header-group; /* h5bp.com/t */
   }
   p, li, figure, tr,
   img {
@@ -3019,12 +2915,7 @@ img.drawAroundPlant {
   img {
     max-width: 100% !important;
   }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
   }
   #autumnEarth img {

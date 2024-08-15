@@ -41,7 +41,8 @@ $startTime = microtime(true);
 }
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
+//require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-2.0.0/vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 

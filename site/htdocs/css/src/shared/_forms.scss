@@ -119,9 +119,9 @@ input:not(:focus):valid {
         border: 1px solid #fff;
         background: #fff;
         position: relative;
-        @include border-radius($radioAndCheckboxSize);
         margin-right: 0.5em;
         margin-bottom: 0;
+        @include border-radius($radioAndCheckboxSize);
     }
 
     input[type="radio"]:focus {
@@ -138,13 +138,13 @@ input:not(:focus):valid {
         content: " ";
         width: ($radioAndCheckboxSize*0.75);
         height: ($radioAndCheckboxSize*0.75);
-        background: $titleColour;
-        display: block;
-        @include border-radius($radioAndCheckboxSize);
-        opacity: 0;
         left: 1px;
         top: 1px;
+        opacity: 0;
+        background: $titleColour;
+        display: block;
         position: absolute;
+        @include border-radius($radioAndCheckboxSize);
         @include transition(opacity 0.3s);
     }
 
@@ -315,15 +315,16 @@ input:not(:focus):valid {
     text-decoration: none;
     background: $titleColour;
     display: inline-block;
-    &:link,&:visited {
-    color: #fff;
-}
+
     text-transform: uppercase;
     padding: 1% 4%;
     @include transition(background 0.4s ease);
     @include attention() {
         color: #fff;
         background: darken($titleColour,20);
+    }
+    &:link,&:visited {
+        color: #fff;
     }
 }
 .primary-button {

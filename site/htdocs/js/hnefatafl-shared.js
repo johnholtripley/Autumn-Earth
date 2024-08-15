@@ -76,7 +76,7 @@ var hnefataflNameSpace = {
 
         hnefataflNameSpace.gameMode = "loading";
         // preload all images:
-        Loader.preload(hnefataflNameSpace.imagesToLoad, hnefataflNameSpace.initCardGame, loadingProgress);
+        Loader.preload(hnefataflNameSpace.imagesToLoad, hnefataflNameSpace.initGame, loadingProgress);
     },
 
     getTilePosition: function(tilePosition) {
@@ -104,6 +104,7 @@ var hnefataflNameSpace = {
         if (e) {
             e.preventDefault();
         }
+    
         if (currentPlayerCanClick) {
             var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
             var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - hnefataflNameSpace.pageLoadScroll;
@@ -279,7 +280,8 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.checkVictoryConditions();
     },
 
-    initCardGame: function() {
+    initGame: function() {
+        console.log("init game called");
         hnefataflNameSpace.getCanvasPosition();
         hnefataflNameSpace.gameCanvas = document.getElementById("hnefataflGame");
         if (hnefataflNameSpace.gameCanvas.getContext) {
@@ -304,9 +306,6 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.isPlayer1AI = true;
         hnefataflNameSpace.aiIsWorking = false;
         hnefataflNameSpace.AIisWaitingToMove = true;
-
-        hnefataflNameSpace.whoCanClick = hnefataflNameSpace.currentPlayersTurn;
-
 
         hnefataflNameSpace.gameMode = "play";
         if (typeof gameMode !== "undefined") {

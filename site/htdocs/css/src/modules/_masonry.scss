@@ -1,6 +1,8 @@
 // thanks to https://medium.com/@_jh3y/how-to-pure-css-masonry-layouts-a8ede07ba31a#.he611s8ga
 
 .masonry {
+    // design specific:
+    max-width: none;
     @include column-count(1);
     -webkit-column-gap: 0;
     -moz-column-gap: 0;
@@ -14,8 +16,7 @@
     @include mq($widest) {
         @include column-count(5);
     }
-    // design specific:
-    max-width: none;
+    
 }
 
 .masonry-cell {
