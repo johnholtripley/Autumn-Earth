@@ -281,7 +281,6 @@ var hnefataflNameSpace = {
     },
 
     initGame: function() {
-        console.log("init game called");
         hnefataflNameSpace.getCanvasPosition();
         hnefataflNameSpace.gameCanvas = document.getElementById("hnefataflGame");
         if (hnefataflNameSpace.gameCanvas.getContext) {
@@ -303,7 +302,7 @@ var hnefataflNameSpace = {
         // needs to be player's choice: ##########
         hnefataflNameSpace.player1 = "w";
         hnefataflNameSpace.player2 = "b";
-        hnefataflNameSpace.isPlayer1AI = true;
+        hnefataflNameSpace.isPlayer1AI = false;
         hnefataflNameSpace.aiIsWorking = false;
         hnefataflNameSpace.AIisWaitingToMove = true;
 

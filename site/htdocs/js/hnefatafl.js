@@ -3,7 +3,13 @@
 // config ----------------------------------------------------
 
 
+/*
+TO DO
 
+
+
+
+*/
 
 
 var lastTime = 0;
@@ -38,23 +44,16 @@ function loadingProgress() {
     // console.log("loading - " + Loader.getProgress());
 }
 
-
-
-
-
 function hnefataflPlayer1Wins() {
-
+    console.log("Player 1 wins");
 }
 
 function hnefataflPlayer2Wins() {
-    
+    console.log("Player 2 wins");
 }
 
 
-
-
 function gameLoop() {
-
     window.requestAnimationFrame(gameLoop);
     switch (hnefataflNameSpace.gameMode) {
         case "loading":
@@ -78,7 +77,4 @@ function gameLoop() {
             console.log("game over");
             break;
     }
-
 }
-
-

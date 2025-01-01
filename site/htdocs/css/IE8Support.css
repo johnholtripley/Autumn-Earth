@@ -722,7 +722,7 @@ input:not(:focus):valid {
 }
 .button:hover, .button:active, .button:focus {
   color: #fff;
-  background: #7a3900;
+  background: rgb(122, 57.1875, 0);
 }
 .button:link, .button:visited {
   color: #fff;
@@ -1786,7 +1786,7 @@ hr {
 }
 
 ins {
-  background: #8d7000;
+  background: rgb(141, 111.625, 0);
   color: #000;
   text-decoration: none;
 }
@@ -1985,7 +1985,7 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 }
 
 .highlight {
-  background: #5a4700;
+  background: rgb(90, 71.25, 0);
 }
 
 #autumnEarth img {

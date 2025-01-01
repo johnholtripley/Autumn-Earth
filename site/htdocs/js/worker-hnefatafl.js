@@ -5,6 +5,26 @@ self.importScripts('shared-hnefatafl-worker-functions.min.js');
 var hnefataflNameSpace = {};
 
 function findBestAIMove() {
+
+
+    const moveWeightings = [
+        {
+            // "name": "move-to-edge", 
+            // if can move to edge and not already on an edge
+            "score": 1
+        },
+        {
+            // "name": "king-can-escape", 
+            "score": 10
+        },
+        {
+            // "name": "take-opponent", 
+            "score": 2
+        }
+    ];
+
+
+
     // find random piece:
     var directionsToCheck = [
         [-1, 0],
