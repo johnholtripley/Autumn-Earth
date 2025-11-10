@@ -387,6 +387,10 @@ onmessage = function(e) {
                 // e.data[5] is the pets index:
                 postMessage(['pet', e.data[5], findPath(thisAgent.tileX, thisAgent.tileY, e.data[3], e.data[4])]);
                 break;
+            case 'breadth-first':
+                var thisAgent = e.data[1];
+                breadthFirstSearch(thisAgent);
+                break;
             case 'npcFindFollowing':
                 var thisAgent = e.data[1];
                 thisMapData = e.data[2];
@@ -400,4 +404,11 @@ onmessage = function(e) {
                 break;
         }
     }
+}
+
+function breadthFirstSearch(thisAgent) {
+    // https://www.redblobgames.com/pathfinding/tower-defense/
+    console.log("breadth first search running for "+thisAgent.name);
+    
+
 }
