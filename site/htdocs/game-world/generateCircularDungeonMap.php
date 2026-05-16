@@ -7,6 +7,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateBook.php");
 
 
 
+
+
 if (isset($_GET["debug"])) {
     $proceduralDebug = true;
 } else {
@@ -94,6 +96,7 @@ $thisPlayersId = $chr;
     $thisPlayersId = $_GET['chr'];
 }
 }
+
 
 
 foreach ($dungeonDetails as $thisDungeonsName => $thisDungeonObject) {
@@ -526,6 +529,10 @@ function chooseRandomElements($inputString) {
 
 function init() {
     global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $proceduralMap, $map, $chr, $randomDungeonName, $randomDungeonSeed;
+ 
+
+
+
 if($isIncluded) {
 $thisMapsId = intval($map);
 $thisPlayersId = $chr;
@@ -590,6 +597,11 @@ $dungeonName = $randomDungeonName;
     // make sure the level is unique even if the same seed is used:
     $storedSeed -= intval($thisMapsId);
   
+ if($proceduralDebug) {
+echo '<code>'.$unadjustedSeed.'</code>';
+}
+
+
     mt_srand($storedSeed);
 }
 
@@ -1916,7 +1928,7 @@ if($proceduralDebug) {
 
 
 function outputJSONContent() {
-global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $proceduralMapTilesX, $proceduralMapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed, $isIncluded, $proceduralMapTrack;
+global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $proceduralMapTilesX, $proceduralMapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $templateInnerDoorsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed, $isIncluded, $proceduralMapTrack, $allDrawbridgeDoorsPlaced;
 
 
 
@@ -2006,9 +2018,13 @@ $elevationString = '"properties": [';
   for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
   $elevationString .= '[';   
             for ($j = 0; $j < $proceduralMapTilesY; $j++) {
-                if($proceduralMapTrack[$i][$j] != ".") {
-                    // make anything walking on a track be raised slightly:
-                    $elevationString.= '{"elevation":8}, ';
+                if(isset($proceduralMapTrack[$i][$j])) {
+                    if($proceduralMapTrack[$i][$j] != ".") {
+                        // make anything walking on a track be raised slightly:
+                        $elevationString.= '{"elevation":8}, ';
+                    } else {
+                        $elevationString.= '{}, ';
+                    }
                 } else {
                     $elevationString.= '{}, ';
                 }
@@ -2036,40 +2052,84 @@ $elevations = json_decode('{'.$elevationString.'}', true);
 $graphicsToAdd = array();
 $graphicsBeingUsedForThisMap = json_decode('['.$dungeonDetails[$dungeonName]['graphics'].']');
 for ($i=0;$i<count($graphicsBeingUsedForThisMap);$i++) {
-$graphicsToAdd[$graphicsBeingUsedForThisMap[$i]->src] = $i;
-
+    $graphicsToAdd[$graphicsBeingUsedForThisMap[$i]->src] = $i;
 }
 
 $templateGraphicsToAppend = '';
 
 
-for ($t = 0; $t < count($allTemplateJSON); $t++) {
-    $templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
-    $templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
-    $graphicsBeingUsedForThisTemplate = $allTemplateJSON[$t]['template']['graphics'];
-    for ($i = 0; $i < $templateHeight; $i++) {
-        for ($j = 0; $j < $templateWidth; $j++) {
-            // don't overwrite underlying terrain with any "?" items in the template:
-            if($allTemplateJSON[$t]['template']['terrain'][$i][$j] !== "?") {
-        if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
-            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
-        } else {
-            // check if the same filename has already been added and use that reference instead to avoid duplicating images:
-            if(array_key_exists(($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src']),$graphicsToAdd)) {
-            // already being used, so use the reference already held:
-            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])];
-            } else {
-            // add and store for later:
-            $numberOfGraphicsSoFar = count($graphicsToAdd);
-            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsSoFar;
-            $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])] = $numberOfGraphicsSoFar;
-            $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$allTemplateJSON[$t]['template']['terrain'][$i][$j]]);
+if(isset($allTemplateJSON)){
+    for ($t = 0; $t < count($allTemplateJSON); $t++) {
+        $templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
+        $templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
+        $graphicsBeingUsedForThisTemplate = $allTemplateJSON[$t]['template']['graphics'];
+        for ($i = 0; $i < $templateHeight; $i++) {
+            for ($j = 0; $j < $templateWidth; $j++) {
+                // don't overwrite underlying terrain with any "?" items in the template:
+                if($allTemplateJSON[$t]['template']['terrain'][$i][$j] !== "?") {
+                    if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
+                        $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
+                    } else {
+                        // terrain:
+                        // check if the same filename has already been added and use that reference instead to avoid duplicating images:
+                        if(array_key_exists(($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src']),$graphicsToAdd)) {
+                            // already being used, so use the reference already held:
+                            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])];
+                        } else {
+                            // add and store for later:
+                            $numberOfGraphicsSoFar = count($graphicsToAdd);
+                            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsSoFar;
+                            $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])] = $numberOfGraphicsSoFar;
+                            $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$allTemplateJSON[$t]['template']['terrain'][$i][$j]]);
+                        }
+                    }
+                    $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
+                    $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
+                }
             }
         }
-        $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
-        $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
-        }
-    }
+
+        // check inner door graphics as well:
+        if(isset($allTemplateJSON[$t]['template']['innerDoors'])) {
+            
+            $templateInnerDoorsToAppendJSON = json_decode('{'.$templateInnerDoorsToAppend.'}');
+         
+            foreach ($templateInnerDoorsToAppendJSON as $innerDoorGraphicKey => $innerDoorGraphicValue) {
+                $whichTemplateGraphicNeeded = $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->graphic;
+                 
+                if(isset($templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->original_graphic)) {
+                    $whichTemplateGraphicNeeded = $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->original_graphic;
+                     
+                }
+
+                if(array_key_exists($graphicsBeingUsedForThisTemplate[$whichTemplateGraphicNeeded]['src'], $graphicsToAdd)) {
+                    // use the reference already held:
+                    $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->original_graphic = $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->graphic;
+                    $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->graphic = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[$whichTemplateGraphicNeeded]['src'])];
+                } else {
+                    $numberOfGraphicsSoFar = count($graphicsToAdd);
+                    // store the reference so it can be checked again if the template is reused:
+                    $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->original_graphic = $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->graphic;
+                    
+                    $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->graphic = $numberOfGraphicsSoFar;
+
+                    $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$whichTemplateGraphicNeeded]);
+                    $graphicsToAdd[($graphicsBeingUsedForThisTemplate[$whichTemplateGraphicNeeded]['src'])] = $numberOfGraphicsSoFar;
+                }
+
+                if(isset($templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->drawbridge)) {
+                    if($templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->drawbridge) {
+                        array_push($allDrawbridgeDoorsPlaced, $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->tileX . "_" . $templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->tileY);
+                    }
+                }
+
+            }
+
+            
+            // substr(1,-1) to remove the added { and } earlier:
+            $templateInnerDoorsToAppend = substr(json_encode($templateInnerDoorsToAppendJSON),1,-1);    
+
+        }     
     }
 }
 
@@ -2102,8 +2162,8 @@ for ($i = 0; $i < count($drawnTileDoors); $i++) {
 $thisDoorIsLocked = false;
 $thisdoorsGraphic = 3;
  if($drawnTileDoors[$i][2] != -1) {
-$thisDoorIsLocked = true;
-$thisdoorsGraphic = 2;
+    $thisDoorIsLocked = true;
+    $thisdoorsGraphic = 2;
  }
  $thisDoorsReference = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
 $outputJSON .= '"'.$thisDoorsReference.'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": '.$thisdoorsGraphic.', "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
@@ -2116,7 +2176,30 @@ $outputJSON = rtrim($outputJSON, ', ');
 
 }
 
+if($templateInnerDoorsToAppend != '') {
 
+
+             echo '<hr>';
+            var_dump($templateInnerDoorsToAppend);
+            echo '<hr>';
+
+            $templateInnerDoorsToAppendJSON = json_decode('{'.$templateInnerDoorsToAppend.'}');
+         
+            foreach ($templateInnerDoorsToAppendJSON as $innerDoorGraphicKey => $innerDoorGraphicValue) {
+                unset($templateInnerDoorsToAppendJSON->$innerDoorGraphicKey->original_graphic);
+            }
+            // substr(1,-1) to remove the added { and } earlier:
+            $templateInnerDoorsToAppend = substr(json_encode($templateInnerDoorsToAppendJSON),1,-1);
+
+
+            echo '<hr>';
+            var_dump($templateInnerDoorsToAppend);
+            echo '<hr>';
+      
+
+
+    $outputJSON .= ','.$templateInnerDoorsToAppend;
+}
 
 
 
@@ -2618,7 +2701,7 @@ $storePositionZero = $position[0];
 
 
    function findRelevantTemplates() {
-    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $proceduralMap, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $proceduralDebug;
+    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $proceduralMap, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $templateInnerDoorsToAppend, $proceduralDebug;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT']."/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -2662,6 +2745,7 @@ echo '<div class="sequenceBlock">';
     $templateGraphicsToAppend = '';
     $templateNPCsToAppend = '';
     $templateHotspotsToAppend = '';
+    $templateInnerDoorsToAppend = '';
     $templateItemsToAppend = '';
     $templateOffsetX = array();
     $templateOffsetY = array();
@@ -2681,6 +2765,7 @@ echo '<div class="sequenceBlock">';
             $rotation = 1;
             $flip = 1;
             // determine this template's dimensions:
+
             $templateNonRotatedHeight = count($templateJSON['template']['terrain']);
             $templateNonRotatedWidth = count($templateJSON['template']['terrain'][0]);
             $templateType = $templateJSON['template']['type'];
@@ -2694,6 +2779,9 @@ echo '<div class="sequenceBlock">';
             if ($templateJSON['template']['rotatable']) {
                 $rotation = mt_rand(1, 4);
                 $flip = mt_rand(1, 2);
+
+
+
              //   if($proceduralDebug) {echo "#".$i." - ".$rotation.", ".$flip.", type: ".$templateType."<br>";}
                 // case 1 is no rotation
                 switch ($rotation) {
@@ -2718,12 +2806,11 @@ echo '<div class="sequenceBlock">';
                 $templateHeight = count($templateJSON['template']['terrain']);
                 $templateWidth = count($templateJSON['template']['terrain'][0]);
 
+                // rotate items, npcs, innerdoors and hotspot positions:
 
 
 
-          
 
-                // rotate items, npcs and hotspot positions:
                 switch ($rotation) {
                     case 2:
                         for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
@@ -2750,7 +2837,13 @@ echo '<div class="sequenceBlock">';
                             $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
                         }
 
-                       
+                        if(isset($templateJSON['template']['innerDoors'])) {
+                            foreach ($templateJSON['template']['innerDoors'] as $templateRotationInnerDoorKey => $templateRotationInnerDoorValue) {
+                                $newPosition = rotateCoordinates90Clockwise(array($templateRotationInnerDoorValue['tileX'], $templateRotationInnerDoorValue['tileY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileX'] = $newPosition[0];
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileY'] = $newPosition[1];
+                            }
+                        }
 
 
                         break;
@@ -2779,6 +2872,15 @@ echo '<div class="sequenceBlock">';
                         }
 
 
+                        if(isset($templateJSON['template']['innerDoors'])) {
+                            foreach ($templateJSON['template']['innerDoors'] as $templateRotationInnerDoorKey => $templateRotationInnerDoorValue) {
+                                $newPosition = rotateCoordinates90Anticlockwise(array($templateRotationInnerDoorValue['tileX'], $templateRotationInnerDoorValue['tileY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileX'] = $newPosition[0];
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileY'] = $newPosition[1];
+                            }
+                        }
+
+
 
 
                         break;
@@ -2801,6 +2903,16 @@ echo '<div class="sequenceBlock">';
                             $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
                             $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
                         }
+
+                          if(isset($templateJSON['template']['innerDoors'])) {
+                            foreach ($templateJSON['template']['innerDoors'] as $templateRotationInnerDoorKey => $templateRotationInnerDoorValue) {
+                                $newPosition = rotateCoordinates180(array($templateRotationInnerDoorValue['tileX'], $templateRotationInnerDoorValue['tileY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileX'] = $newPosition[0];
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileY'] = $newPosition[1];
+                            }
+                        }
+
+
                         break;
                 }
 
@@ -2852,6 +2964,13 @@ echo '<div class="sequenceBlock">';
                         $newPosition = flipCoordinatesHorizontally(array($thisItem['tileX'], $thisItem['tileY']), $templateWidth, $templateHeight);
                         $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
                         $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
+                    }
+                    if(isset($templateJSON['template']['innerDoors'])) {
+                        foreach ($templateJSON['template']['innerDoors'] as $templateRotationInnerDoorKey => $templateRotationInnerDoorValue) {
+                                $newPosition = flipCoordinatesHorizontally(array($templateRotationInnerDoorValue['tileX'], $templateRotationInnerDoorValue['tileY']), $templateWidth, $templateHeight);
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileX'] = $newPosition[0];
+                                $templateJSON['template']['innerDoors'][$templateRotationInnerDoorKey]['tileY'] = $newPosition[1];
+                            }
                     }
                     if ($templateType == "outer") {
                         $newPosition = flipCoordinatesHorizontally(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateWidth, $templateHeight);
@@ -3151,22 +3270,53 @@ echo '(placed at '.$thisTemplateOffsetX.", ".$thisTemplateOffsetY.")";
                         $templateHotspotsToAppend .= json_encode($thisHotspot).', ';
                     }
 
+                    if(isset($templateJSON['template']['innerDoors'])) { 
+                        foreach ($templateJSON['template']['innerDoors'] as $thisInnerDoorKey => $thisInnerDoor) {
+
+
+                            // map their location:
+                            $thisInnerDoor['tileX'] += $thisTemplateOffsetX;
+                            $thisInnerDoor['tileY'] += $thisTemplateOffsetY;
+                            $thisNewInnerDoorKey = $thisMapsId."-".$thisInnerDoor['tileX']."-".$thisInnerDoor['tileY'];
+
+                
+                     
+                            // find the lever with this reference in their 'additional' parameter and update that:
+                            for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
+                                $thisItem = $templateJSON['template']['items'][$j];
+                                if(isset($thisItem['additional'])) {
+                                    // additional can be comma separated:
+                                    $allConnectedInnerDoorKeys = explode(",", $thisItem['additional']);
+                                    
+                                    foreach ($allConnectedInnerDoorKeys as $allConnectedInnerDoorKeysKey => $allConnectedInnerDoorKeysValue) {
+                                       
+                                        if($allConnectedInnerDoorKeysValue == $thisInnerDoorKey) {
+                                            $allConnectedInnerDoorKeys[$allConnectedInnerDoorKeysKey] = $thisNewInnerDoorKey;
+                                        }
+                                    }
+                                  
+                                    $templateJSON['template']['items'][$j]['additional'] = implode(",", $allConnectedInnerDoorKeys);
+                                }
+                            }
+
+
+                            $templateInnerDoorsToAppend .= '"'. $thisNewInnerDoorKey .'": '.json_encode($thisInnerDoor).', ';
+                        }
+                    }
+
 
                     for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
                         $thisItem = $templateJSON['template']['items'][$j];
                         // map their location:
-
-
-
                         $thisItem['tileX'] += $thisTemplateOffsetX;
                         $thisItem['tileY'] += $thisTemplateOffsetY;
 
                         $templateItemsToAppend .= json_encode($thisItem).', ';
                     }
                 }
-                  if($proceduralDebug) {
-echo '<br>';
-}
+                if($proceduralDebug) {
+                    echo '<br>';
+                }
             }
         }
         // remove last comma:
@@ -3174,6 +3324,7 @@ echo '<br>';
         // remove last comma:
         $templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
         $templateHotspotsToAppend = rtrim($templateHotspotsToAppend, ', ');
+        $templateInnerDoorsToAppend = rtrim($templateInnerDoorsToAppend, ', ');
     }
     if($proceduralDebug) {
 echo '</div>';
@@ -4252,7 +4403,9 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function createBackgroundImage() {
-    global $dungeonDetails, $dungeonName, $tileW,$tileH, $thisPlayersId, $thisMapsId, $proceduralMap, $proceduralMapTrack, $proceduralMapTilesX, $proceduralMapTilesY;
+    global $dungeonDetails, $dungeonName, $tileW, $tileH, $thisPlayersId, $thisMapsId, $proceduralMap, $proceduralMapTrack, $proceduralMapTilesX, $proceduralMapTilesY, $allDrawbridgeDoorsPlaced;
+
+
 
     // create unique background image for this map:
     if($dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground']) {
@@ -4280,10 +4433,14 @@ function createBackgroundImage() {
         for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
             for ($j = 0; $j < $proceduralMapTilesY; $j++) {
                 if($proceduralMap[$j][$i] == '.') {
-                    $thisX = getTileIsoCentreCoordX($i, $j);
-                    $thisY = getTileIsoCentreCoordY($i, $j);
-                    $whichHardFloorAsset = mt_rand(1,2);
-                    imagecopy ( $fullImage, ${'roomFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'roomFloorTile'.$whichHardFloorAsset}), imagesy(${'roomFloorTile'.$whichHardFloorAsset}) );
+                    // check there isn't a drawbridge here first
+                    $potentialDrawbridgeReference = $i."_".$j;
+                    if(!in_array($potentialDrawbridgeReference, $allDrawbridgeDoorsPlaced)) {
+                        $thisX = getTileIsoCentreCoordX($i, $j);
+                        $thisY = getTileIsoCentreCoordY($i, $j);
+                        $whichHardFloorAsset = mt_rand(1,2);
+                        imagecopy ( $fullImage, ${'roomFloorTile'.$whichHardFloorAsset}, floor($thisX - $tileW/2 + $canvasOffsetX ), floor($thisY - $tileH/2 + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'roomFloorTile'.$whichHardFloorAsset}), imagesy(${'roomFloorTile'.$whichHardFloorAsset}) );
+                    }
                 } else if(($proceduralMap[$j][$i] == '|') || ($proceduralMap[$j][$i] == 'd') || ($proceduralMap[$j][$i] == 'D')) {
                     $thisX = getTileIsoCentreCoordX($i, $j);
                     $thisY = getTileIsoCentreCoordY($i, $j);
@@ -4340,6 +4497,7 @@ $allItemsToDraw = array();
 
 imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
 $decodedJSON = json_decode($outputJSON, true);
+
 for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
   ${'assetImg'.$i} = imagecreatefrompng($rootFolder.'terrain/'.$decodedJSON["map"]["graphics"][$i]["src"]);
 
@@ -4617,6 +4775,7 @@ $grownGrammar = $_GET["grammar"];
         $dungeonDetails[$dungeonName]['needsDynamicallyCreatedBackground'] = true;
     }
     addRandomItems();
+    $allDrawbridgeDoorsPlaced = array();
     outputJSONContent();
     createBackgroundImage();
     if($proceduralDebug) {

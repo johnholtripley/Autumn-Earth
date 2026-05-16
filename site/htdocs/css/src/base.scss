@@ -1,33 +1,33 @@
 
 $understandsMQs: true;
 
-@import "variables";
-@import "shared/mixins";
-@import "shared/boilerplate";
-@import "shared/forms";
-@import "shared/typography";
-@import "shared/grid";
+@use "variables";
+@use "shared/mixins";
+@use "shared/boilerplate";
+@use "shared/forms";
+@use "shared/typography";
+@use "shared/grid";
 
-@import "global";
+@use "global";
 
-@import "modules/offcanvas";
-@import "modules/navigation";
-@import "modules/masonry";
-@import "modules/pagination";
-@import "modules/accessible-modal-dialog";
-@import "modules/accessible-accordion";
-@import "modules/tooltip";
-@import "modules/drag-and-drop";
-@import "modules/user-preference";
+@use "modules/offcanvas";
+@use "modules/navigation";
+@use "modules/masonry";
+@use "modules/pagination";
+@use "modules/accessible-modal-dialog";
+@use "modules/accessible-accordion";
+@use "modules/tooltip";
+@use "modules/drag-and-drop";
+@use "modules/user-preference";
 
-@import "sections/hnefatafl";
-@import "sections/forum";
-@import "sections/herbarium";
-@import "sections/codex";
-@import "sections/footer";
-@import "sections/header";
+@use "sections/hnefatafl";
+@use "sections/forum";
+@use "sections/herbarium";
+@use "sections/codex";
+@use "sections/footer";
+@use "sections/header";
 
-@import "shared/print";
+@use "shared/print";
 
 
 

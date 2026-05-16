@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 body {
     margin: 0;
    background: $secondaryColour;
@@ -16,7 +18,8 @@ hr {
 }
 
 ins {
-    background: darken($accentColour,30%);
+    //background: darken($accentColour,30%);
+    background: color.adjust($accentColour, $lightness: -30%);
     color: #000;
     text-decoration: none;
 }
@@ -65,10 +68,11 @@ a {
 
 
 kbd {
-    @include border-radius(2);
+    
     padding: 0 0.4em;
     background: #999;
     font-family: 'Andale Mono', 'courier new', courier, 'droid sans mono', monospace;
+    @include border-radius(2);
 }
 
 
@@ -222,7 +226,8 @@ width: 84px;
 }
 
 .highlight {
-    background: darken($accentColour,40);
+    // background: darken($accentColour,40);
+    background: color.adjust($accentColour, $lightness: -40);
    // color: #212121;
 }
 

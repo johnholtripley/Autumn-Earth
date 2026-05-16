@@ -181,7 +181,7 @@ font-size: 0;
     position: absolute;
     left: 0;
     top: 50%;
-    margin-top: -$cardHeight/2;
+    margin-top: calc(-1 * $cardHeight/2);
     width: 100%;
     @include transition(opacity 0.6s ease 1.5s);
 

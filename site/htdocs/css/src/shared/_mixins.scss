@@ -1,7 +1,7 @@
-
+@use 'sass:math';
 
 @function strip-units($number) {
-  @return $number / ($number * 0 + 1);
+  @return math.div($number, ($number * 0 + 1));
 }
 
 @function convertRootPxToEm($value) {
@@ -14,12 +14,12 @@
     @return 0em + $value;
   }
   @else {
-    @return 0em + strip-units($value)/16;
+    @return math.div(0em + strip-units($value), 16);
   }
 }
 
 @function convertPxToRem($px) {
- @return 0rem + strip-units($px)/16;
+ @return math.div(0rem + strip-units($px), 16);
 }
 
 @mixin pxRem($property,$values) {
@@ -143,58 +143,75 @@
 
  @mixin transform($values...) {
 // adding ... allows multiple values to be passed in
+/*
 -webkit-transform: $values;
 -moz-transform: $values;
 -o-transform: $values;
+*/
 transform: $values;
 }
 
  @mixin transform-origin($values...) {
 // adding ... allows multiple values to be passed in
+/*
 -webkit-transform-origin: $values;
 -moz-transform-origin: $values;
 -o-transform-origin: $values;
+*/
 transform-origin: $values;
 }
 
  @mixin transition($values...) {
+  transition: $values;
 // adding ... allows multiple values to be passed in
+/*
 -webkit-transition: $values;
 -moz-transition: $values;
 -o-transition: $values;
-transition: $values;
+*/
+
 }
 
  @mixin transition-duration($values...) {
 // adding ... allows multiple values to be passed in
+/*
 -webkit-transition-duration: $values;
 -moz-transition-duration: $values;
 -o-transition-duration: $values;
+*/
 transition-duration: $values;
 }
 
  @mixin transition-delay($values) {
+  /*
 -webkit-transition-delay: $values;
 -moz-transition-delay: $values;
 -o-transition-delay: $values;
+*/
 transition-delay: $values;
 }
 
 @mixin perspective($value) {
+  /*
   -webkit-perspective: $value;
   -moz-perspective: $value;
+  */
   perspective: $value;
 }
 
 @mixin backface-visibility($value) {
+  /*
   -webkit-backface-visibility: $value;
   -moz-backface-visibility: $value;
+  */
   backface-visibility: $value;
 }
 
 @mixin transform-style($value) {
+  /*
   -webkit-transform-style: $value;
   -moz-transform-style: $value;
+  */
   transform-style: $value;
 }
 

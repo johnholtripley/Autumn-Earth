@@ -1,9 +1,9 @@
 .row {
-  @include clearfix;
   width: (100%-$gutter);
-  margin-left: ($gutter/2);
-  margin-right: ($gutter/2);
+  margin-left: calc($gutter/2);
+  margin-right: calc($gutter/2);
   position: relative;
+  @include clearfix;
 }
 
 .row .row {
@@ -15,7 +15,7 @@
     .columns {
         @include border-box;
         // needs to account for the wider parent:
-        $rowOffset: 1-(strip-units($gutter)*2/100);
+        $rowOffset: calc(1 - (strip-units($gutter)*2/100));
         padding-left: ($gutter)*$rowOffset;
         padding-right: ($gutter)*$rowOffset;
     }
@@ -29,7 +29,7 @@ ul.row, ol.row {
 
 
 
-$maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
+$maxWidthTrigger: calc($maxWidth*((100 + strip-units($gutter)*2)/100));
 @include mq($maxWidthTrigger) {
   .row {
     width: 100%;
@@ -43,8 +43,8 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 
 .column, .columns {
   @include border-box;
-  padding-left: ($gutter/2);
-  padding-right: ($gutter/2);
+  padding-left: calc($gutter/2);
+  padding-right: calc($gutter/2);
   width: 100%;
   float: left;
   min-height: 1px;
@@ -63,14 +63,14 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 
 @for $i from 1 through $gridColumns {
   .small-#{$i} {
-    width: 100% * ($i/$gridColumns);
+    width: 100% * calc($i/$gridColumns);
   }
 }
 
 @include mq($medium) {
   @for $i from 1 through $gridColumns {
     .medium-#{$i} {
-      width: 100% * ($i/$gridColumns);
+      width: 100% * calc($i/$gridColumns);
     }
   }
 }
@@ -78,7 +78,7 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 @include mq($wide) {
   @for $i from 1 through $gridColumns {
     .wide-#{$i} {
-      width: 100% * ($i/$gridColumns);
+      width: 100% * calc($i/$gridColumns);
     }
   }
 }
@@ -86,14 +86,14 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 @include mq($widest) {
   @for $i from 1 through $gridColumns {
     .widest-#{$i} {
-      width: 100% * ($i/$gridColumns);
+      width: 100% * calc($i/$gridColumns);
     }
   }
 }
 
 @for $i from 1 through $gridColumns {
   .small-#{$i}up > .column {
-    width: 100% / ($i);
+    width: calc(100% / ($i));
   }
 }
 
@@ -109,7 +109,7 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 @include mq($medium) {
   @for $i from 1 through $gridColumns {
     .medium-#{$i}up > .column {
-      width: 100% / ($i);
+      width: calc(100% / ($i));
     }
   }
 }
@@ -125,7 +125,7 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 @include mq($wide) {
   @for $i from 1 through $gridColumns {
     .wide-#{$i}up > .column {
-      width: 100% / ($i);
+      width: calc(100% / ($i));
     }
   }
 }
@@ -141,7 +141,7 @@ $maxWidthTrigger: $maxWidth*((100+strip-units($gutter)*2)/100);
 @include mq($widest) {
   @for $i from 1 through $gridColumns {
     .widest-#{$i}up > .column {
-      width: 100% / ($i);
+      width: calc(100% / ($i));
       &:nth-child(#{$i}n+1) {
         clear: left;
       }

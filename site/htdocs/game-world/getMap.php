@@ -268,12 +268,14 @@ for ($i = 0; $i < count($mapData['map']['npcs']); $i++) {
     $mapData['map']['npcs'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
     $mapData['map']['npcs'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
     if(isset($mapData['map']['npcs'][$i]["speech"])) {
-        for ($j = 0; $j < count($mapData['map']['npcs'][$i]["speech"]); $j++) {
-            if(isset($mapData['map']['npcs'][$i]["speech"][$j][1])) {
-                if($mapData['map']['npcs'][$i]["speech"][$j][1] == "homeStone") {
-                    $homeStoneLocation = explode(",",$mapData['map']['npcs'][$i]["speech"][$j][2]);
-                    $mapData['map']['npcs'][$i]["speech"][$j][2] = ($homeStoneLocation[0] + ($globalPosition[0] * $worldMapTileLength)).",".($homeStoneLocation[1] + ($globalPosition[1] * $worldMapTileLength));
-               
+        if(is_array($mapData['map']['npcs'][$i]["speech"])) {
+            for ($j = 0; $j < count($mapData['map']['npcs'][$i]["speech"]); $j++) {
+                if(isset($mapData['map']['npcs'][$i]["speech"][$j][1])) {
+                    if($mapData['map']['npcs'][$i]["speech"][$j][1] == "homeStone") {
+                        $homeStoneLocation = explode(",",$mapData['map']['npcs'][$i]["speech"][$j][2]);
+                        $mapData['map']['npcs'][$i]["speech"][$j][2] = ($homeStoneLocation[0] + ($globalPosition[0] * $worldMapTileLength)).",".($homeStoneLocation[1] + ($globalPosition[1] * $worldMapTileLength));
+                   
+                    }
                 }
             }
         }
@@ -290,6 +292,15 @@ $newKey = $thisNewX .",".$thisNewY;
 $mapData['map']['doors'][$newKey] = $mapData['map']['doors'][$key];
 unset($mapData['map']['doors'][$key]);
 }
+
+// inner doors:
+if(isset($mapData['map']['innerDoors'])) {
+    foreach ($mapData['map']['innerDoors'] as $key => $value) {
+        $mapData['map']['innerDoors'][$key]['tileX'] += $globalPosition[0] * $worldMapTileLength;
+        $mapData['map']['innerDoors'][$key]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+    }
+}
+
 // hotspots:
 for ($i = 0; $i < count($mapData['map']['hotspots']); $i++) {
     $mapData['map']['hotspots'][$i]['centreX'] += $globalPosition[0] * $worldMapTileLength;

@@ -105,10 +105,11 @@ body, input, select, .selectWrapper, textarea, button {
 
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     // load web font if JS is disabled:
+    letter-spacing: 0.02em;
 @include pxRem("font-size", $baseFontSize);
      @include pxRem("line-height", round($verticalRhythm*$baseFontSize));
   @include pxRem("margin", 0 0 12 0);
-    letter-spacing: 0.02em;
+    
    
    
 }

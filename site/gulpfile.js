@@ -11,7 +11,7 @@ const postcss = require('gulp-postcss');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 const rename = require('gulp-rename');
-const sass = require('gulp-sass');
+const sass = require('gulp-dart-sass');
 const cleancss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const minify = require('gulp-minify');
@@ -46,13 +46,13 @@ function siteScripts() {
     // make sure that init is compiled last after all modules are loaded:
   return gulp
       .src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/**/!(card-game)*.js', '!htdocs/js/src/game-world/**/*.js', 'htdocs/js/src/init.js'])
-      .pipe(concat('core.js'))
+      .pipe(concat('htdocs/js/src/core.js'))
       .pipe(gulp.dest('htdocs/js'))
-           .pipe(minify({ext:{
+           /*.pipe(minify({ext:{
            
             min:'.min.js'
         }
-        }))
+        }))*/
       .pipe(gulp.dest('htdocs/js'));
 }
 
@@ -60,11 +60,11 @@ function alternateScripts() {
     // minify predefined list of unique scripts:
   return gulp
       .src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js|hnefatafl.js|hnefatafl-shared.js|worker-hnefatafl.js)'])
-        .pipe(minify({ext:{
+        /*.pipe(minify({ext:{
            
             min:'.min.js'
         }
-        }))
+        }))*/
       .pipe(gulp.dest('htdocs/'));
 }
 
@@ -72,11 +72,11 @@ function workerScripts() {
     // minify predefined list of unique scripts:
   return gulp
       .src(['htdocs/js/src/game-world/shared-worker-functions.js','htdocs/js/src/game-world/shared-hnefatafl-worker-functions.js'])
-       .pipe(minify({ext:{
+       /*.pipe(minify({ext:{
            
             min:'.min.js'
         }
-        }))
+        }))*/
       .pipe(gulp.dest('htdocs/'));
 }
 
@@ -87,11 +87,11 @@ function gameScripts() {
       .pipe(concat('game-world.js'))
       .pipe(gulp.dest('htdocs/js'))
 
-        .pipe(minify({ext:{
+        /*.pipe(minify({ext:{
            
             min:'.min.js'
         }
-        }))
+        }))*/
       .pipe(gulp.dest('htdocs/js'));
 }
 

@@ -253,7 +253,7 @@ function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
     var tileX, tileY;
-    var thisMap;
+    var thisMap, thisPotentialInnerDoor;
     if (isOverWorldMap && !currentMapIsAGlobalPlatform) {
         tileX = getLocalCoordinatesX(globalTileX);
         tileY = getLocalCoordinatesY(globalTileY);
@@ -268,6 +268,23 @@ function isATerrainCollision(x, y) {
             return 1;
         }
         thisMap = currentMap;
+    }
+
+    // check for inner doors of drawbridge type - these will be terrain collisions that can be overridden:
+    if(typeof thisMapData[thisMap].innerDoors !== "undefined") {
+        thisPotentialInnerDoor = thisMap+"-"+tileX+"-"+tileY;
+        if(thisMapData[thisMap].innerDoors.hasOwnProperty(thisPotentialInnerDoor)) {
+            if(thisMapData[thisMap].innerDoors[thisPotentialInnerDoor].hasOwnProperty('drawbridge')) {
+                if(thisMapData[thisMap].innerDoors[thisPotentialInnerDoor]['drawbridge']) {
+                    if(thisMapData[thisMap].innerDoors[thisPotentialInnerDoor]['isOpen']) {
+                        return 0;
+                    } else {
+                        return 1;
+                    }
+                }
+
+            }
+        }
     }
 
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {

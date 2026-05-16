@@ -1,46 +1,5 @@
 
-function breadthFirstSearch(thisAgent) {
-    console.log("running ecology test breadth first");
-    // https://www.redblobgames.com/pathfinding/tower-defense/
-    // ######################
-    // move this back to workerpathfinding once tested ###################
-    // ######################
-    var targetX = 6;
-    var targetY = 6;
-    // var frontier = [];
-    var reached = [];
-    var i, currentTileX, currentTileY, thisTile, thisTileSplit;
-    const neighbours = [
-        [0,1],
-        [0,-1],
-        [1,0],
-        [-1,0]
-    ];
-    currentTileX = thisAgent.tileX;
-    currentTileY = thisAgent.tileY;
 
-    // don't use array keys - can't iterate in a controlled order
-    frontier[currentTileX+"-"+currentTileY] = {};
-    reached[currentTileX+"-"+currentTileY] = true;
-    
-    // console.log(frontier);
-
-    do {
-       
-        frontier.shift();
-        currentTileX = parseInt(thisTileSplit[0]);
-        currentTileY = parseInt(thisTileSplit[1]);
-        for(i = 0; i<neighbours.length; i++) {
-            if(typeof reached[(currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1])] == "undefined") {
-                // check valid map coords
-                frontier[(currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1])] = {};
-                reached[(currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1])] = true;
-            } 
-        }
-         delete frontier[currentTileX+"-"+currentTileY];
-    } while (frontier.length>0);
-
-}
 
 
 

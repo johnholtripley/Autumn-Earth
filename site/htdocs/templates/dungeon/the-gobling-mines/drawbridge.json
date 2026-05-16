@@ -1,0 +1,120 @@
+{
+    "template": {
+        "rotatable": true,
+        "uniquePerLevel": false,
+        "uniquePerSession": false,
+        "type": "outer",
+        "entranceX": 4, 
+        "entranceY": 12, 
+        "collisions": [
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 1, 0, 0, 0, 1, 1]
+        ],
+        "terrain": [
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, 0, 0, "*", 0, 0, 1],
+            [1, 0, 0, "*", 0, 0, 1],
+            [1, 0, 0, "*", 0, 0, 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", "*", 1],
+            [1, 1, "*", "*", "*", 1, 1]
+        ],
+        "elevation": [
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
+            ],
+        "graphics": [
+            {"src": "blank.png", "centreX": 24, "centreY": 12},
+            {"src": "blue-block.png", "centreX": 24, "centreY": 45 },
+            {"src": "wood.png", "centreX": 24, "centreY": 12}
+        ],
+        "npcs": [
+
+           
+        ],
+
+        "innerDoors": {
+            "-x-3-4":{
+                "tileX": 3, 
+                "tileY": 4, 
+                "isOpen": false, 
+                "isLocked": true, 
+                "drawbridge": true,
+                "graphic": 2, 
+                "animation": { 
+                    "opening": { "length": 8, "row": 0 },
+                    "closing": { "length": 8, "row": 1 } 
+                }
+            },
+            "-x-3-5":{
+                "tileX": 3, 
+                "tileY": 5, 
+                "isOpen": false, 
+                "isLocked": true, 
+                "drawbridge": true,
+                "graphic": 2, 
+                "animation": { 
+                    "opening": { "length": 8, "row": 0 },
+                    "closing": { "length": 8, "row": 1 } 
+                }
+            },
+            "-x-3-6":{
+                "tileX": 3, 
+                "tileY": 6, 
+                "isOpen": false, 
+                "isLocked": true, 
+                "drawbridge": true,
+                "graphic": 2, 
+                "animation": { 
+                    "opening": { "length": 8, "row": 0 },
+                    "closing": { "length": 8, "row": 1 } 
+                }
+            }
+        },
+
+
+        "items": [{
+
+            "type": 42,
+            "tileX": 3,
+            "tileY": 10,
+            "additional": "-x-3-4,-x-3-5,-x-3-6",
+            "state": "off",
+            "animation": {
+                "off": {"length": 1,"row":0},
+                "on": {"length": 1,"row":1}
+            }
+        },
+        {"type": 48, "tileX": 3, "tileY": 1, "contains": [{ "type": 1 }, { "type": 3 }, { "type": "$", "quantity": 2500 }]}
+      ],
+      "hotspots": []
+    }
+}

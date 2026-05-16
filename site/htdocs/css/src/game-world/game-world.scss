@@ -1,21 +1,21 @@
 $understandsMQs: true;
-@import "../variables";
-@import "../shared/mixins";
+@use "../variables";
+@use "../shared/mixins";
 
 
-@import "core";
-@import "panels";
-@import "books";
-@import "hnefatafl";
-@import "card-game";
-@import "crafting";
-@import "currencies";
-@import "custom-form-elements";
-@import "dialogue";
-@import "inscription";
-@import "ui";
-@import "weather";
-@import "post";
-@import "retinue";
-@import "housing";
+@use "core";
+@use "panels";
+@use "books";
+@use "hnefatafl";
+@use "card-game";
+@use "crafting";
+@use "currencies";
+@use "custom-form-elements";
+@use "dialogue";
+@use "inscription";
+@use "ui";
+@use "weather";
+@use "post";
+@use "retinue";
+@use "housing";
 

@@ -178,7 +178,11 @@
         "spriteWidth": 427,
         "spriteHeight": 455
     }
-}],
+},{"src": "wood.png","centreX": 24,"centreY": 12},
+
+{"src": "block.png","centreX": 24,"centreY": 45}
+
+],
 "weather": [""],
 "shops": [
 {
@@ -284,10 +288,7 @@
         "walkThroughDoors": false,
         "speed": 2,
         "speech": [
-
-
         ],
-
         "isCollidable": true,
         "isMoving": false,
         "animation":
@@ -300,6 +301,29 @@
                 "s": 0,
                 "w": 0
             }
+        },
+        "ecology": {
+            "production": [{
+                "type": "meat",
+                "current": 0,
+                "maximum": 0,
+                "regrowth": 0
+            }],
+            "food": {
+                "type": ["plant"],
+                "current": 100,
+                "maximum": 0,
+                "bite_size": 0
+            
+            },
+            "shelter": {
+                "type": ["forest"],
+                "home": null
+            },
+            "desires": [{
+                "type": "",
+                "maximum": 0
+            }]
         }
     },
     {
@@ -704,6 +728,41 @@
 ],
 "doors":
 {},
+"innerDoors": {
+
+
+
+    "23-26-36":{
+    "tileX": 26, "tileY": 36, "isOpen": false, "isLocked": true, "drawbridge": true, "graphic": 1, 
+        "animation": { 
+            "opening": { "length": 8, "row": 0 }, 
+            "closing": { "length": 8, "row": 1 } 
+        }
+    },
+        "23-27-36":{
+    "tileX": 27, "tileY": 36, "isOpen": false, "isLocked": true, "drawbridge": true, "graphic": 1, 
+        "animation": { 
+            "opening": { "length": 8, "row": 0 }, 
+            "closing": { "length": 8, "row": 1 } 
+        }
+    },
+        "23-28-36":{
+    "tileX": 28, "tileY": 36, "isOpen": false, "isLocked": true, "drawbridge": true, "graphic": 1, 
+        "animation": { 
+            "opening": { "length": 8, "row": 0 }, 
+            "closing": { "length": 8, "row": 1 } 
+        }
+    },
+
+        "23-26-40":{
+    "tileX": 26, "tileY": 40, "isOpen": false, "isLocked": true, "graphic": 2, 
+        "animation": { 
+            "opening": { "length": 8, "row": 0 }, 
+            "closing": { "length": 8, "row": 1 } 
+        }
+    }
+
+    },
 "items": [
     {
         "type": 6,
@@ -716,6 +775,9 @@
         }]
 
     },
+
+    {"type": 42, "tileX": 23, "tileY": 36, "additional": "23-26-36,23-27-36,23-28-36", "state": "off", "animation": {"off": {"length": 1,"row":0},"on": {"length": 1,"row":1}}},
+    {"type": 42, "tileX": 23, "tileY": 40, "additional": "23-26-40", "state": "off", "animation": {"off": {"length": 1,"row":0},"on": {"length": 1,"row":1}}},
 
 
     {
@@ -736,7 +798,7 @@
 
     {
         "type": 117,
-        "tileX": 21,
+        "tileX": 41,
         "tileY": 33,
         "facing": "e",
         "contains": [],
@@ -841,6 +903,7 @@
         "activeForQuest": 15
     }
 ],
+
 "hotspots": [],
 "hiddenResourceCategories": [4],
 "hiddenResourceTier": 7

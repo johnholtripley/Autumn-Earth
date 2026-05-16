@@ -730,11 +730,10 @@ function loadMapAssets() {
                 name: "backgroundImg" + visibleMaps[m],
                 src: backgroundSource
             });
-
-
-
         }
+
         //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
+        console.log(thisMapData[visibleMaps[m]].graphics);
         for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
             thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
             //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
@@ -1194,17 +1193,20 @@ function tileIsClear(globalTileX, globalTileY) {
     //    var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesY(globalTileY);
+    var thisMap;
+
     if (isOverWorldMap) {
+        thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return false;
         }
     } else {
+        console.log("dungeon",currentMap);
+        thisMap = currentMap;
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
             return false;
         }
     }
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
-
 
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
@@ -2133,30 +2135,66 @@ function checkProximitySounds() {
 
 
 function openInnerDoor(whichInnerDoor) {
-    // animation ######
-    thisMapData[currentMap].innerDoors[whichInnerDoor]['isOpen'] = true;
-    if (thisMapData[currentMap].showOnlyLineOfSight) {
-        updateLightMap();
+    var i;
+    // innerDoor could be a comma separated list:
+    const allConnectedInnerDoors = whichInnerDoor.split(",");
+    for (var i = 0; i < allConnectedInnerDoors.length; i++) {
+        thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['isOpen'] = true;
+        if (thisMapData[currentMap].showOnlyLineOfSight) {
+            updateLightMap();
+        }
     }
 }
 
 function closeInnerDoor(whichInnerDoor) {
-    // make sure nothing's blocking the door (as it would become stuck):
-    if (tileIsClear(thisMapData[currentMap].innerDoors[whichInnerDoor]['tileX'], thisMapData[currentMap].innerDoors[whichInnerDoor]['tileY'])) {
-        thisMapData[currentMap].innerDoors[whichInnerDoor]['isOpen'] = false;
-        if (thisMapData[currentMap].showOnlyLineOfSight) {
-            updateLightMap();
+    var isValid, i;
+    // innerDoor could be a comma separated list:
+    const allConnectedInnerDoors = whichInnerDoor.split(",");
+    for (var i = 0; i < allConnectedInnerDoors.length; i++) {
+        // make sure nothing's blocking the door (as it would become stuck) - but don't do this for drawbridges as they will be collisions until active
+        isValid = false;
+        if (tileIsClear(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['tileX'], thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['tileY'])) {
+            isValid = true;
         }
+
+        if(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])].hasOwnProperty('drawbridge') ) {
+            if(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['drawbridge'] == true) {
+                isValid = true;
+            }
+        }
+
+        if (isValid) {
+            thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['isOpen'] = false;
+            if (thisMapData[currentMap].showOnlyLineOfSight) {
+                updateLightMap();
+            }
+        } 
     }
 }
 
 function toggleInnerDoor(whichInnerDoor) {
-    // make sure nothing's blocking the door (as it would become stuck):
-    if (tileIsClear(thisMapData[currentMap].innerDoors[whichInnerDoor]['tileX'], thisMapData[currentMap].innerDoors[whichInnerDoor]['tileY'])) {
-        thisMapData[currentMap].innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData[currentMap].innerDoors[whichInnerDoor]['isOpen']);
-        if (thisMapData[currentMap].showOnlyLineOfSight) {
-            updateLightMap();
+    var isValid, i;
+    // innerDoor could be a comma separated list:
+    const allConnectedInnerDoors = whichInnerDoor.split(",");
+    for (var i = 0; i < allConnectedInnerDoors.length; i++) {
+        // make sure nothing's blocking the door (as it would become stuck) - but don't do this for drawbridges as they will be collisions until active
+        isValid = false;
+        if (tileIsClear(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['tileX'], thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['tileY'])) {
+            isValid = true;
         }
+
+        if(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])].hasOwnProperty('drawbridge') ) {
+            if(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['drawbridge'] == true) {
+                isValid = true;
+            }
+        }
+
+        if (isValid) {
+            thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['isOpen'] = !(thisMapData[currentMap].innerDoors[(allConnectedInnerDoors[i])]['isOpen']);
+            if (thisMapData[currentMap].showOnlyLineOfSight) {
+                updateLightMap();
+            }
+        } 
     }
 }
 
@@ -2168,7 +2206,6 @@ function unlockInnerDoor(whichInnerDoor) {
     }
     // play sound ####
 }
-
 
 function getCatalogueMarkup(itemIds, catalogueName) {
     getJSON('http://develop.ae/game-world/getCatalogueContents.php?itemIds=' + itemIds + '&name=' + catalogueName, function(data) {
@@ -4590,10 +4627,22 @@ function draw() {
 
 
             if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
-                var thisDoorImage;
+                var thisDoorImage, shouldBeDrawn, isoDepth;
                 for (var i in thisMapData[visibleMaps[m]].innerDoors) {
-                    // check for open status to get the right graphic ###########
-                    if (!thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) {
+                    // check for open status to get the right graphic - need to check if it's a door or a drawbridge type
+                    shouldBeDrawn = false;
+                    if(thisMapData[visibleMaps[m]].innerDoors[i].hasOwnProperty('drawbridge')) {
+                        if ((thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) && (thisMapData[visibleMaps[m]].innerDoors[i].hasOwnProperty('drawbridge') == true)) {
+                            shouldBeDrawn = true;
+                        }
+
+                    } else {
+                        if (!thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) {
+                            shouldBeDrawn = true;
+                        }
+                    }
+
+                    if(shouldBeDrawn) {
                         thisX = getTileIsoCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
                         thisY = getTileIsoCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
                         if (isVisibleOnScreen(thisX, thisY)) {
@@ -4601,7 +4650,12 @@ function draw() {
                             thisDoorImage = thisMapData[visibleMaps[m]].graphics[(thisDoorImage)].src;
                             thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreX;
                             thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreY;
-                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileY']), 0), "img", tileImages[thisDoorImage], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                            isoDepth = findIsoDepth(getTileCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileY']), 0);
+                            if(thisMapData[visibleMaps[m]].innerDoors[i].hasOwnProperty('drawbridge')) {
+                                // shouldn't test for this twice ideally ###
+                                isoDepth = 1;
+                            }
+                            assetsToDraw.push([isoDepth, "img", tileImages[thisDoorImage], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                         }
                     }
                 }

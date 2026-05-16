@@ -41,7 +41,8 @@ $startTime = microtime(true);
 }
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
+//require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-2.0.0/vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 
@@ -53,10 +54,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 //}
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection, $debug;include("auth.php");
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection, $debug;
+	include("auth.php");
 	
 $twitterConnection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
+
 $twitterConnection->setTimeouts(10, 15);
+
+
+var_dump($request_token);
 
 /*
 if($isLive) {
@@ -74,7 +80,7 @@ $mediaURLLength = 0;
 
 $media = $twitterConnection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
 
-
+var_dump($media);
 
 $data = [
   'media_id' => $media->media_id_string,
@@ -2250,15 +2256,17 @@ $debugQueryString = '?debug=true';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].$debugQueryString.'">New seed</a></p>';
 echo '<p style="font-size:0.7em;"><a href="/herbarium/" target="_blank">The full Herbarium</a> | <a href="https://twitter.com/HerbariumArcana" target="_blank">Twitter</a></p>';
 
+error_clear_last();
 $lastError = error_get_last();
 
 if(is_null($lastError)) {
 	$lastError["file"] = "";
 }
-if(stripos($lastError["file"], "generate.php") === false) {
+
+//if(stripos($lastError["file"], "generate.php") === false) {
 	// don't Tweet if any errors within this file (may be error reported in connection include for example):
 	sendToTwitter();
-}
+//}
 
 if($debug) {
 echo '<p style="font-size:0.7em;">'.$commandString.'</p>';

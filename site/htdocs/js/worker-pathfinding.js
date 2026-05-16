@@ -1,5 +1,6 @@
 'use strict';
-self.importScripts('shared-worker-functions.min.js');
+// restore this after ecology breadth first testing is complete #############
+//self.importScripts('shared-worker-functions.min.js');
 
 
 function loadGlobalMapData() {
@@ -22,8 +23,9 @@ var thisMapData, visibleMaps, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTi
 
 
 // ideally load these in from a shared resource: ##
-const tileW = 48;
-const worldMapTileLength = 50;
+// restore these after ecology breadth first testing is complete #############
+//const tileW = 48;
+//const worldMapTileLength = 50;
 
 
 /*
@@ -56,10 +58,12 @@ function isATerrainCollision(globalTileX, globalTileY) {
     if (isOverWorldMap) {
 
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
+            console.log("out of bounds");
             return 1;
         }
     } else {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+            console.log("out of bounds");
             return 1;
         }
     }
@@ -74,9 +78,15 @@ function isATerrainCollision(globalTileX, globalTileY) {
         return 1;
     }
     */
+
+// remove this after breadth testing:
+thisMap = 23;
+
+
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
             // is a collision:
+            console.log("hit terrain");
             return 1;
             break;
         case "<":
@@ -407,8 +417,56 @@ onmessage = function(e) {
 }
 
 function breadthFirstSearch(thisAgent) {
+    console.log("running ecology test breadth first");
     // https://www.redblobgames.com/pathfinding/tower-defense/
-    console.log("breadth first search running for "+thisAgent.name);
+    // ######################
+    // move this back to workerpathfinding once tested ###################
+    // ideally load these in from a shared resource: ##
+
+    // ######################
+    var targetX = 6;
+    var targetY = 6;
+    // var frontier = [];
+    // var reached = [];
+    var i, currentTileX, currentTileY, thisTile, thisTileSplit;
+    const neighbours = [
+        [0,1],
+        [0,-1],
+        [1,0],
+        [-1,0]
+    ];
+    currentTileX = thisAgent.tileX;
+    currentTileY = thisAgent.tileY;
+
+    frontier.push(currentTileX+"-"+currentTileY);
+    reached.push(currentTileX+"-"+currentTileY);
     
+    var index = 0;
+   
+     
+    //while ((frontier.length>0) && (index<41)) {
+        //console.log(timer, (1000 % timer), (timer % 1000));
+        setInterval(() => {
+            if ((frontier.length>0) && (index<1524)) {
+                thisTile = frontier[0];
+                frontier.shift();
+                thisTileSplit = thisTile.split("-");
+                currentTileX = parseInt(thisTileSplit[0]);
+                currentTileY = parseInt(thisTileSplit[1]);
+                for(i = 0; i<neighbours.length; i++) {
+                    if(!(reached.includes((currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1])))) {
+                        if (!isATerrainCollision((currentTileX+neighbours[i][0]), (currentTileY+neighbours[i][1]))) {
+                            frontier.push((currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1]));
+                            reached.push((currentTileX+neighbours[i][0])+"-"+(currentTileY+neighbours[i][1]));
+                        }
+                    } 
+                }
+                index++;
+                draw();
+            }
+        }, 25);
+    //}
+
+   
 
 }
