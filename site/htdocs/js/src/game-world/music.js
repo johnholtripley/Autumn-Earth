@@ -15,6 +15,12 @@ const music = {
             "sequence": ["c4-d", "c4-f", "c4-a", "c4-a", "c4-b"],
             "action": "changeWeather",
             "actionValue": "rain"
+        },
+        {
+            "name": "saria's song (2, 4, 7, 2, 4, 7)",
+            "sequence": ["c4-d", "c4-f", "c4-b", "c4-d", "c4-f", "c4-b"],
+            "action": "openDoors",
+            "actionValue": ""
         }
     ],
     lastSixTriggerNotesPlayed: ["-","-","-","-","-","-"],
@@ -50,14 +56,37 @@ const music = {
     },
     checkForTriggerSongs: function() {
         const lastSixNotesPlayed = music.lastSixTriggerNotesPlayed.join(",");
-        var i, thisTriggerSongStringToCheck;
+        var i, thisTriggerSongStringToCheck, thisInnerDoor;
         for (i=0;i<hero.triggerSongsKnown.length;i++) {
             thisTriggerSongStringToCheck = music.allTriggerSongs[i].sequence.join(",");
-            
             if(lastSixNotesPlayed.includes(thisTriggerSongStringToCheck)) {
+                
                 switch (music.allTriggerSongs[i].action) {
                     case "changeWeather":
-                        changeWeather(music.allTriggerSongs[i].actionValue);
+                        if (isOverWorldMap) {
+                            audio.playSound(soundEffects['secretDiscovered'], 1);
+                            changeWeather(music.allTriggerSongs[i].actionValue);
+                        }
+                    break;
+                    case "openDoors":
+                        //innerDoors
+                        //song-door-1
+                        //isInRange
+
+                        if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
+                            for (var j in thisMapData[currentMap].innerDoors) {
+                                thisInnerDoor = thisMapData[currentMap].innerDoors[j];
+                                if(j.includes('song-door')) {
+                                    if ((isInRange(hero.x, hero.y, getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), 6 * tileW))) {
+                                        audio.playSound(soundEffects['secretDiscovered'], 1);
+                                        thisInnerDoor.isOpen = true;
+                                    }
+                                }
+                            }
+                        }
+
+
+
                     break;
                 }
                 // reset it:

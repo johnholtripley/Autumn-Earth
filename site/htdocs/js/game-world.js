@@ -32,8 +32,9 @@ const soundsToLoad = {
     'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
     'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3',
     'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3',
-    'fae-alert': '../sounds/fae-alert-NOT_MINE_ZELDA.mp3',
-    'fae-move': '../sounds/fae-away-NOT_MINE_ZELDA.mp3'
+    'faeAlert': '../sounds/fae-alert-NOT_MINE_ZELDA.mp3',
+    'faeMove': '../sounds/fae-away-NOT_MINE_ZELDA.mp3',
+    'secretDiscovered': '../sounds/secret-discovered-NOT_MINE_ZELDA.wav'
 };
 
 const subtitles = {
@@ -71,8 +72,9 @@ const subtitles = {
         'birdSong': 'A bird sings',
         'birdChirrup': 'A bird chirrups',
         'hourChime': 'A church bell sounds the hour',
-        'fae-alert': 'Your Fae is alerting you to something',
-        'fae-move': ''
+        'faeAlert': 'Your Fae is alerting you to something',
+        'faeMove': '',
+        'secretDiscovered': 'You discovered a secret'
     }
 }
 
@@ -5390,6 +5392,12 @@ const music = {
             "sequence": ["c4-d", "c4-f", "c4-a", "c4-a", "c4-b"],
             "action": "changeWeather",
             "actionValue": "rain"
+        },
+        {
+            "name": "saria's song (2, 4, 7, 2, 4, 7)",
+            "sequence": ["c4-d", "c4-f", "c4-b", "c4-d", "c4-f", "c4-b"],
+            "action": "openDoors",
+            "actionValue": ""
         }
     ],
     lastSixTriggerNotesPlayed: ["-","-","-","-","-","-"],
@@ -5425,14 +5433,37 @@ const music = {
     },
     checkForTriggerSongs: function() {
         const lastSixNotesPlayed = music.lastSixTriggerNotesPlayed.join(",");
-        var i, thisTriggerSongStringToCheck;
+        var i, thisTriggerSongStringToCheck, thisInnerDoor;
         for (i=0;i<hero.triggerSongsKnown.length;i++) {
             thisTriggerSongStringToCheck = music.allTriggerSongs[i].sequence.join(",");
-            
             if(lastSixNotesPlayed.includes(thisTriggerSongStringToCheck)) {
+                
                 switch (music.allTriggerSongs[i].action) {
                     case "changeWeather":
-                        changeWeather(music.allTriggerSongs[i].actionValue);
+                        if (isOverWorldMap) {
+                            audio.playSound(soundEffects['secretDiscovered'], 1);
+                            changeWeather(music.allTriggerSongs[i].actionValue);
+                        }
+                    break;
+                    case "openDoors":
+                        //innerDoors
+                        //song-door-1
+                        //isInRange
+
+                        if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
+                            for (var j in thisMapData[currentMap].innerDoors) {
+                                thisInnerDoor = thisMapData[currentMap].innerDoors[j];
+                                if(j.includes('song-door')) {
+                                    if ((isInRange(hero.x, hero.y, getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), 6 * tileW))) {
+                                        audio.playSound(soundEffects['secretDiscovered'], 1);
+                                        thisInnerDoor.isOpen = true;
+                                    }
+                                }
+                            }
+                        }
+
+
+
                     break;
                 }
                 // reset it:
@@ -10573,7 +10604,6 @@ function loadMapAssets() {
         }
 
         //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
-        console.log(thisMapData[visibleMaps[m]].graphics);
         for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
             thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
             //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
@@ -11890,7 +11920,7 @@ function checkForHotspots() {
                                 fae.targetY = thisTileCentreY;
                                 // add this to the list of hotspots so it doesn't return to it again and again:
                                 fae.recentHotspots.push(i);
-                                audio.playSound(soundEffects['fae-alert'], 0);
+                                audio.playSound(soundEffects['faeAlert'], 0);
                                 fae.currentState = "away";
                             }
                         }

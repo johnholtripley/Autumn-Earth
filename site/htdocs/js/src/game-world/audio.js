@@ -31,8 +31,9 @@ const soundsToLoad = {
     'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
     'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3',
     'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3',
-    'fae-alert': '../sounds/fae-alert-NOT_MINE_ZELDA.mp3',
-    'fae-move': '../sounds/fae-away-NOT_MINE_ZELDA.mp3'
+    'faeAlert': '../sounds/fae-alert-NOT_MINE_ZELDA.mp3',
+    'faeMove': '../sounds/fae-away-NOT_MINE_ZELDA.mp3',
+    'secretDiscovered': '../sounds/secret-discovered-NOT_MINE_ZELDA.wav'
 };
 
 const subtitles = {
@@ -70,8 +71,9 @@ const subtitles = {
         'birdSong': 'A bird sings',
         'birdChirrup': 'A bird chirrups',
         'hourChime': 'A church bell sounds the hour',
-        'fae-alert': 'Your Fae is alerting you to something',
-        'fae-move': ''
+        'faeAlert': 'Your Fae is alerting you to something',
+        'faeMove': '',
+        'secretDiscovered': 'You discovered a secret'
     }
 }
 

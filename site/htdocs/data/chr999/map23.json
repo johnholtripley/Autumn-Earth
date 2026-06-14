@@ -739,14 +739,14 @@
             "closing": { "length": 8, "row": 1 } 
         }
     },
-        "23-27-36":{
+    "23-27-36":{
     "tileX": 27, "tileY": 36, "isOpen": false, "isLocked": true, "drawbridge": true, "graphic": 1, 
         "animation": { 
             "opening": { "length": 8, "row": 0 }, 
             "closing": { "length": 8, "row": 1 } 
         }
     },
-        "23-28-36":{
+    "23-28-36":{
     "tileX": 28, "tileY": 36, "isOpen": false, "isLocked": true, "drawbridge": true, "graphic": 1, 
         "animation": { 
             "opening": { "length": 8, "row": 0 }, 
@@ -754,13 +754,29 @@
         }
     },
 
-        "23-26-40":{
+    "23-26-40":{
     "tileX": 26, "tileY": 40, "isOpen": false, "isLocked": true, "graphic": 2, 
         "animation": { 
             "opening": { "length": 8, "row": 0 }, 
             "closing": { "length": 8, "row": 1 } 
         }
+    },
+
+
+
+
+    "song-door-1":{
+    "tileX": 26, "tileY": 44, "isOpen": false, "isLocked": true, "graphic": 2, 
+        "animation": { 
+            "opening": { "length": 8, "row": 0 }, 
+            "closing": { "length": 8, "row": 1 } 
+        }
     }
+
+
+
+
+
 
     },
 "items": [
