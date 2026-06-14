@@ -106,6 +106,7 @@ $outputJSON .= '"titlesEarned": '.$titlesEarned.',';
 $possibleCurrentTitles = explode(",",   str_replace("[", "", str_replace("]", "", $titlesEarned)));
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
 $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
+$outputJSON .= '"triggerSongsKnown": '.$triggerSongsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
 $heroRecipesKnown =  explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown)));
 $outputJSON .= '"holding": '.$holding.',';

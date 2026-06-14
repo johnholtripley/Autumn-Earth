@@ -1992,7 +1992,10 @@ switch ($proceduralMap[$i][$j]) {
         
         break;
     case "#":
-        $terrainString.= '1, ';
+     
+            $terrainString.= $dungeonDetails[$dungeonName]['wallGraphics'][mt_rand(0, count($dungeonDetails[$dungeonName]['wallGraphics']) - 1)];
+            $terrainString.= ', ';
+        
         break;
     default:
         $terrainString.= '"*", ';
@@ -2179,9 +2182,7 @@ $outputJSON = rtrim($outputJSON, ', ');
 if($templateInnerDoorsToAppend != '') {
 
 
-             echo '<hr>';
-            var_dump($templateInnerDoorsToAppend);
-            echo '<hr>';
+     
 
             $templateInnerDoorsToAppendJSON = json_decode('{'.$templateInnerDoorsToAppend.'}');
          
@@ -2192,9 +2193,7 @@ if($templateInnerDoorsToAppend != '') {
             $templateInnerDoorsToAppend = substr(json_encode($templateInnerDoorsToAppendJSON),1,-1);
 
 
-            echo '<hr>';
-            var_dump($templateInnerDoorsToAppend);
-            echo '<hr>';
+        
       
 
 

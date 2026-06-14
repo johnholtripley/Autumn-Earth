@@ -9,6 +9,7 @@ $dungeonDetails = array(
 'the-dwarrow-mines' => array(
 'fullName' => 'The Dwarrow Mines',
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
+'wallGraphics' => array(1),
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
  // random, grid, wonky-grid, offset-grid
 'underlyingGridLayout' => 'offset-grid',
@@ -37,7 +38,8 @@ $dungeonDetails = array(
 	),
 'the-barrow-mines' => array(
 'fullName' => 'The Barrow Mines',
-'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
+'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12},{"src": "rubble-1.png", "centreX": 24, "centreY": 12}, {"src": "rubble-2.png", "centreX": 24, "centreY": 12},{"src": "rubble-3.png", "centreX": 24, "centreY": 12},{"src": "rubble-4.png", "centreX": 24, "centreY": 12}',
+'wallGraphics' => array(5,6,7,8),
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
 'underlyingGridLayout' => 'wonky-grid',
 'roomType' => 'cavern',
@@ -45,7 +47,7 @@ $dungeonDetails = array(
 'needsErosion' => true,
 'percentChanceOfTracks' => 0,
 'fullyExpandRooms' => true,
-'needsDynamicallyCreatedBackground' => false,
+'needsDynamicallyCreatedBackground' => true,
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',
@@ -60,6 +62,7 @@ $dungeonDetails = array(
 'the-gobling-mines' => array(
 'fullName' => 'The Gobling Mines',
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
+'wallGraphics' => array(1),
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
  // random, grid, wonky-grid, offset-grid
 'underlyingGridLayout' => 'offset-grid',

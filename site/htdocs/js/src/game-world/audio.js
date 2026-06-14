@@ -30,7 +30,9 @@ const soundsToLoad = {
     'draw-energy': '../sounds/cast-spell-NOT_MINE-wow.mp3',
     'cast-summon': '../sounds/cast-summon-NOT_MINE-wow.mp3',
     'bees': '../sounds/bee-loop-NOT_MINE-youtube.mp3',
-    'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3'
+    'shipsBell': '../sounds/ships-bell-NOT_MINE-wow.mp3',
+    'fae-alert': '../sounds/fae-alert-NOT_MINE_ZELDA.mp3',
+    'fae-move': '../sounds/fae-away-NOT_MINE_ZELDA.mp3'
 };
 
 const subtitles = {
@@ -67,7 +69,9 @@ const subtitles = {
         'seagull': 'A gull calls out',
         'birdSong': 'A bird sings',
         'birdChirrup': 'A bird chirrups',
-        'hourChime': 'A church bell sounds the hour'
+        'hourChime': 'A church bell sounds the hour',
+        'fae-alert': 'Your Fae is alerting you to something',
+        'fae-move': ''
     }
 }
 

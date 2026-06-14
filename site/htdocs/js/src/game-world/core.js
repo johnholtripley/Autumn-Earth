@@ -2050,6 +2050,7 @@ function checkForHotspots() {
                                 fae.targetY = thisTileCentreY;
                                 // add this to the list of hotspots so it doesn't return to it again and again:
                                 fae.recentHotspots.push(i);
+                                audio.playSound(soundEffects['fae-alert'], 0);
                                 fae.currentState = "away";
                             }
                         }

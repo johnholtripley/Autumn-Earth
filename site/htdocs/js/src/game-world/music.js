@@ -7,6 +7,17 @@ const music = {
     activePlayBackTranscription: [],
     playbackTranscriptionStartTime: '',
     notesToLoad: ["c3-a", "c3-as", "c3-b", "c3-c", "c3-cs", "c3-d", "c3-ds", "c3-e", "c3-f", "c3-fs", "c3-g", "c3-gs", "c4-a", "c4-as", "c4-b", "c4-c", "c4-cs", "c4-d", "c4-ds", "c4-e", "c4-f", "c4-fs", "c4-g", "c4-gs", "c5-a", "c5-as", "c5-b", "c5-c", "c5-cs", "c5-d", "c5-ds", "c5-e", "c5-f", "c5-fs", "c5-g", "c5-gs", "c6-c"],
+    // trigger songs are Zelda Ocarina of Time style sequences that trigger actions when played in proximity:
+    // which ones the hero knows is stored in hero.triggerSongsKnown
+    allTriggerSongs: [
+        {
+            "name": "serenade of water (2, 4, 6, 6, 7)",
+            "sequence": ["c4-d", "c4-f", "c4-a", "c4-a", "c4-b"],
+            "action": "changeWeather",
+            "actionValue": "rain"
+        }
+    ],
+    lastSixTriggerNotesPlayed: ["-","-","-","-","-","-"],
     loadInstrumentSounds: function(whichInstrument) {
         for (var i = 0; i < music.notesToLoad.length; i++) {
             loadAudioBuffer('../music/instruments/' + whichInstrument + '/' + music.notesToLoad[i] + '.mp3', whichInstrument + "-" + music.notesToLoad[i]);
@@ -18,6 +29,7 @@ const music = {
     },
     exitMusicMode: function() {
         music.currentInstrument = '';
+        music.lastSixTriggerNotesPlayed = ["-","-","-","-","-","-"];
         if (music.isTranscribing) {
             music.stopTranscription();
         }
@@ -32,6 +44,26 @@ const music = {
             music.currentTranscription.push([(performance.now() - music.currentTranscriptionStartTime), whichNote]);
         }
         audio.playSound(soundEffects[music.currentInstrument + '-' + whichNote], 0);
+        music.lastSixTriggerNotesPlayed.push(whichNote);
+        music.lastSixTriggerNotesPlayed.shift();
+        music.checkForTriggerSongs();
+    },
+    checkForTriggerSongs: function() {
+        const lastSixNotesPlayed = music.lastSixTriggerNotesPlayed.join(",");
+        var i, thisTriggerSongStringToCheck;
+        for (i=0;i<hero.triggerSongsKnown.length;i++) {
+            thisTriggerSongStringToCheck = music.allTriggerSongs[i].sequence.join(",");
+            
+            if(lastSixNotesPlayed.includes(thisTriggerSongStringToCheck)) {
+                switch (music.allTriggerSongs[i].action) {
+                    case "changeWeather":
+                        changeWeather(music.allTriggerSongs[i].actionValue);
+                    break;
+                }
+                // reset it:
+                music.lastSixTriggerNotesPlayed = ["-","-","-","-","-","-"];
+            }
+        }
     },
     checkKeyPresses: function() {
         var whichOctave = 4;
